@@ -63,7 +63,7 @@ install(PROGRAMS kimtoy.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})
 install(FILES org.kde.impanel.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
 add_subdirectory(thumbnailer)
-add_subdirectory(po)
+# add_subdirectory(po)
 
 ########################## ibus glue ##########################
 add_subdirectory(ibus-kconfig)
