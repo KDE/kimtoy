@@ -1,0 +1,368 @@
+# Copyright (C) YEAR This_file_is_part_of_KIMToy
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Ni Hui <shuizhuyuanluo@126.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2011-09-05 21:58+0800\n"
+"PO-Revision-Date: 2011-09-05 21:59+0800\n"
+"Last-Translator: Ni Hui <shuizhuyuanluo@126.com>\n"
+"Language-Team: Chinese Simplified <kde-i18n-doc@kde.org>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: statusbar.cpp:101
+msgid "&About KIMToy..."
+msgstr "关于 KIMToy(&A)..."
+
+#: main.cpp:33
+msgid "(c) 2011, Ni Hui"
+msgstr "(c) 2011，Ni Hui"
+
+#: statusbar.cpp:93
+msgid "A&utostart"
+msgstr "自动启动(&U)"
+
+#. i18n: file: appearance.ui:202
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_UseCustomColor)
+#: rc.cpp:56
+msgid "Always use custom color settings"
+msgstr "总是使用自定义颜色设置"
+
+#. i18n: file: appearance.ui:195
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_UseCustomFont)
+#: rc.cpp:53
+msgid "Always use custom font settings"
+msgstr "总是使用自定义字体设置"
+
+#: statusbar.cpp:309
+msgid "Appearance"
+msgstr "外观"
+
+#. i18n: file: inputmethod.ui:66
+#. i18n: ectx: property (text), widget (QLabel, FcitxArgumentsLabel)
+#. i18n: file: inputmethod.ui:195
+#. i18n: ectx: property (text), widget (QLabel, IBusArgumentsLabel)
+#. i18n: file: inputmethod.ui:311
+#. i18n: ectx: property (text), widget (QLabel, SCIMArgumentsLabel)
+#: rc.cpp:74 rc.cpp:101 rc.cpp:128
+msgid "Arguments:"
+msgstr "参数："
+
+#: main.cpp:34
+msgid "Author"
+msgstr "作者"
+
+#. i18n: file: appearance.ui:79
+#. i18n: ectx: property (text), widget (QLabel, candidateColorLabel)
+#: rc.cpp:23
+msgid "Candidate color: "
+msgstr "候选词颜色："
+
+#. i18n: file: appearance.ui:56
+#. i18n: ectx: property (text), widget (QLabel, candidateFontLabel)
+#: rc.cpp:17
+msgid "Candidate font: "
+msgstr "候选词字体："
+
+#. i18n: file: inputmethod.ui:59
+#. i18n: ectx: property (text), widget (QLabel, FcitxCommandLabel)
+#. i18n: file: inputmethod.ui:181
+#. i18n: ectx: property (text), widget (QLabel, IBusCommandLabel)
+#. i18n: file: inputmethod.ui:297
+#. i18n: ectx: property (text), widget (QLabel, SCIMCommandLabel)
+#: rc.cpp:71 rc.cpp:98 rc.cpp:125
+msgid "Command:"
+msgstr "命令："
+
+#. i18n: file: appearance.ui:188
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_NoStatusBarTheme)
+#: rc.cpp:50
+msgid "Do not apply theme to status bar"
+msgstr "不对状态栏使用主题"
+
+#. i18n: file: performance.ui:105
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableBackgroundBlur)
+#: rc.cpp:164
+msgid "Enable background blur"
+msgstr "启用背景模糊"
+
+#. i18n: file: appearance.ui:27
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_BackgroundTransparency)
+#: rc.cpp:8
+msgid "Enable background transparency"
+msgstr "启用背景透明"
+
+#. i18n: file: performance.ui:52
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnablePreeditResizing)
+#: rc.cpp:152
+msgid "Enable preedit bar realtime resizing"
+msgstr "启用预编辑栏实时缩放"
+
+#. i18n: file: appearance.ui:20
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_VerticalPreeditBar)
+#: rc.cpp:5
+msgid "Enable vertical preedit bar mode"
+msgstr "启用垂直预编辑栏模式"
+
+#. i18n: file: performance.ui:23
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableWindowMask)
+#: rc.cpp:146
+msgid "Enable window shape mask"
+msgstr "启用窗口形状蒙板"
+
+#. i18n: file: inputmethod.ui:41
+#. i18n: ectx: attribute (title), widget (QWidget, FcitxTab)
+#: rc.cpp:65
+msgid "Fcitx"
+msgstr "Fcitx"
+
+#. i18n: file: appearance.ui:38
+#. i18n: ectx: attribute (title), widget (QWidget, tab_3)
+#: rc.cpp:11
+msgid "Font and color"
+msgstr "字体和颜色"
+
+#. i18n: file: inputmethod.ui:132
+#. i18n: ectx: property (text), widget (QLabel, FcitxGTK_IM_MODULELabel)
+#. i18n: file: inputmethod.ui:251
+#. i18n: ectx: property (text), widget (QLabel, IBusGTK_IM_MODULELabel)
+#. i18n: file: inputmethod.ui:367
+#. i18n: ectx: property (text), widget (QLabel, SCIMGTK_IM_MODULELabel)
+#: rc.cpp:86 rc.cpp:113 rc.cpp:140
+msgid "GTK_IM_MODULE="
+msgstr "GTK_IM_MODULE="
+
+#. i18n: file: performance.ui:72
+#. i18n: ectx: property (text), widget (QPushButton, pushButton)
+#. i18n: file: performance.ui:82
+#. i18n: ectx: property (text), widget (QPushButton, pushButton_2)
+#. i18n: file: performance.ui:112
+#. i18n: ectx: property (text), widget (QPushButton, pushButton_3)
+#: rc.cpp:155 rc.cpp:158 rc.cpp:167
+msgid "Help"
+msgstr "帮助"
+
+#. i18n: file: inputmethod.ui:163
+#. i18n: ectx: attribute (title), widget (QWidget, IBusTab)
+#: rc.cpp:92
+msgid "IBus"
+msgstr "IBus"
+
+#. i18n: file: performance.ui:122
+#. i18n: ectx: property (text), widget (QLabel, BackgroundBlurLabel)
+#: rc.cpp:170
+msgid ""
+"If checked, the background of preedit bar and status bar will gain blur "
+"effect so that it would be easier to tell apart the content on them. "
+"Besides, you would better enable background transparency and window shape "
+"mask to make this eye candy work properly and nicely. The blur effect may "
+"issue serious performance drawback on some graphics cards with certain "
+"driver. Do not check this option on if your system is that alike."
+msgstr ""
+"如果选中，预编辑栏和状态栏的背景将具有模糊特效以便让其中的内容更易于分辨。另"
+"外，最好同时启用背景透明和窗口形状蒙板让此效果更加完美。在某些显卡和驱动上，"
+"模糊特效可能会导致严重的性能下降，那么请勿选中此选项。"
+
+#. i18n: file: performance.ui:92
+#. i18n: ectx: property (text), widget (QLabel, PreeditResizingLabel)
+#: rc.cpp:161
+msgid ""
+"If checked, the preedit bar would resize itself whenever needed. However, "
+"realtime resizing may cost much resource for pixmap calculation and "
+"painting. If not checked, the preedit bar would resize itself using a "
+"certain content size strategy to reduce calculation and speed up painting."
+msgstr ""
+"如果选中，预编辑栏将在需要时调整其大小。然而，实时调整可能会耗费大量资源用于"
+"像素图计算和绘制。如果未选中，预编辑栏会利用特定的尺寸策略进行调整从而减少计"
+"算并加速绘制。"
+
+#. i18n: file: performance.ui:30
+#. i18n: ectx: property (text), widget (QLabel, WindowMaskLabel)
+#: rc.cpp:149
+msgid ""
+"If checked, the status bar and preedit bar window would have its shape mask. "
+"Some themes has non-rectangle shape, so enable shape mask can make the "
+"window be just the same shape as the theme pixmap is. However, shape mask "
+"feature may probably slow the whole application a lot. Please consider "
+"enabling window composite and background transparent instead if appliable."
+msgstr ""
+"如果选中，状态栏和预编辑栏窗口将拥有其形状蒙板。有些主题带有非矩形的形状，因"
+"此启用形状蒙板可使窗口形状如同主题像素图形状一致。然而，形状蒙板特性很可能会"
+"使整个应用程序明显变慢。如果可行的话，请转而考虑启用窗口混成和背景透明。"
+
+#. i18n: file: appearance.ui:169
+#. i18n: ectx: property (text), widget (QLabel, themeLabel)
+#: rc.cpp:47
+msgid "Import theme: "
+msgstr "导入主题："
+
+#: statusbar.cpp:308
+msgid "Input method"
+msgstr "输入法"
+
+#: statusbar.cpp:89
+msgid "Input method toy"
+msgstr "输入法玩具"
+
+#: main.cpp:31 statusbar.cpp:86 statusbar.cpp:88
+msgid "KIMToy"
+msgstr "KIMToy"
+
+#. i18n: file: appearance.ui:93
+#. i18n: ectx: property (text), widget (QLabel, LabelColorLabel)
+#: rc.cpp:29
+msgid "Label color: "
+msgstr "标签颜色："
+
+#. i18n: file: appearance.ui:86
+#. i18n: ectx: property (text), widget (QLabel, LabelFontLabel)
+#: rc.cpp:26
+msgid "Label font: "
+msgstr "标签字体："
+
+#: main.cpp:34
+msgid "Ni Hui"
+msgstr "Ni Hui"
+
+#. i18n: file: appearance.ui:131
+#. i18n: ectx: property (text), widget (QRadioButton, NoTheme)
+#: rc.cpp:35
+msgid "No theme"
+msgstr "无主题"
+
+#: statusbar.cpp:310
+msgid "Performance"
+msgstr "性能"
+
+#. i18n: file: appearance.ui:69
+#. i18n: ectx: property (text), widget (QLabel, preedtColorLabel)
+#: rc.cpp:20
+msgid "Preedit color: "
+msgstr "预编辑颜色："
+
+#. i18n: file: appearance.ui:46
+#. i18n: ectx: property (text), widget (QLabel, preeditFontLabel)
+#: rc.cpp:14
+msgid "Preedit font: "
+msgstr "预编辑字体："
+
+#. i18n: file: inputmethod.ui:146
+#. i18n: ectx: property (text), widget (QLabel, FcitxQT_IM_MODULELabel)
+#. i18n: file: inputmethod.ui:265
+#. i18n: ectx: property (text), widget (QLabel, IBusQT_IM_MODULELabel)
+#. i18n: file: inputmethod.ui:381
+#. i18n: ectx: property (text), widget (QLabel, SCIMQT_IM_MODULELabel)
+#: rc.cpp:89 rc.cpp:116 rc.cpp:143
+msgid "QT_IM_MODULE="
+msgstr "QT_IM_MODULE="
+
+#. i18n: file: inputmethod.ui:47
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_RunFcitx)
+#: rc.cpp:68
+msgid "Run Fcitx at startup"
+msgstr "启动时运行 Fcitx"
+
+#. i18n: file: inputmethod.ui:169
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_RunIBus)
+#: rc.cpp:95
+msgid "Run IBus at startup"
+msgstr "启动时运行 IBus"
+
+#. i18n: file: inputmethod.ui:288
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_RunSCIM)
+#: rc.cpp:122
+msgid "Run SCIM at startup"
+msgstr "启动时运行 SCIM"
+
+#. i18n: file: inputmethod.ui:17
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_RunInputMethod)
+#: rc.cpp:59
+msgid "Run input method at startup"
+msgstr "启动时运行输入法"
+
+#. i18n: file: inputmethod.ui:282
+#. i18n: ectx: attribute (title), widget (QWidget, SCIMTab)
+#: rc.cpp:119
+msgid "SCIM"
+msgstr "SCIM"
+
+#. i18n: file: inputmethod.ui:27
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_TerminateInputMethod)
+#: rc.cpp:62
+msgid "Terminate input method at quit"
+msgstr "退出时终止输入法"
+
+#: main.cpp:32
+msgid "The KDE input method toy"
+msgstr "KDE 输入法玩具"
+
+#. i18n: file: appearance.ui:122
+#. i18n: ectx: attribute (title), widget (QWidget, tab_4)
+#: rc.cpp:32
+msgid "Theme"
+msgstr "主题"
+
+#. i18n: file: appearance.ui:158
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: rc.cpp:44
+msgid "Theme settings"
+msgstr "主题设置"
+
+#. i18n: file: appearance.ui:145
+#. i18n: ectx: property (text), widget (QRadioButton, UseCustomTheme)
+#: rc.cpp:41
+msgid "Use custom theme"
+msgstr "使用自定义主题"
+
+#. i18n: file: appearance.ui:138
+#. i18n: ectx: property (text), widget (QRadioButton, UseDefaultPlasmaTheme)
+#: rc.cpp:38
+msgid "Use default plasma theme"
+msgstr "使用默认 plasma 主题"
+
+#. i18n: file: inputmethod.ui:90
+#. i18n: ectx: property (text), widget (QLabel, FcitxXIMLabel)
+#. i18n: file: inputmethod.ui:209
+#. i18n: ectx: property (text), widget (QLabel, IBusXIMLabel)
+#. i18n: file: inputmethod.ui:325
+#. i18n: ectx: property (text), widget (QLabel, SCIMXIMLabel)
+#: rc.cpp:77 rc.cpp:104 rc.cpp:131
+msgid "XIM="
+msgstr "XIM="
+
+#. i18n: file: inputmethod.ui:104
+#. i18n: ectx: property (text), widget (QLabel, FcitxXIM_PROGRAMLabel)
+#. i18n: file: inputmethod.ui:223
+#. i18n: ectx: property (text), widget (QLabel, IBusXIM_PROGRAMLabel)
+#. i18n: file: inputmethod.ui:339
+#. i18n: ectx: property (text), widget (QLabel, SCIMXIM_PROGRAMLabel)
+#: rc.cpp:80 rc.cpp:107 rc.cpp:134
+msgid "XIM_PROGRAM="
+msgstr "XIM_PROGRAM="
+
+#. i18n: file: inputmethod.ui:118
+#. i18n: ectx: property (text), widget (QLabel, FcitxXMODIFIERSLabel)
+#. i18n: file: inputmethod.ui:237
+#. i18n: ectx: property (text), widget (QLabel, IBusXMODIFIERSLabel)
+#. i18n: file: inputmethod.ui:353
+#. i18n: ectx: property (text), widget (QLabel, SCIMXMODIFIERSLabel)
+#: rc.cpp:83 rc.cpp:110 rc.cpp:137
+msgid "XMODIFIERS="
+msgstr "XMODIFIERS="
+
+#: rc.cpp:2
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "shuizhuyuanluo@126.com"
+
+#: rc.cpp:1
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Ni Hui"

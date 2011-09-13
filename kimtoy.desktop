@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=KIMToy
+Name[zh_CN]=KIMToy
+GenericName=Input Method Frontend
+GenericName[zh_CN]=输入法前端
+Exec=kimtoy
+Type=Application
+Terminal=false
+Icon=draw-freehand
+Categories=Qt;KDE;Utility;
+
+X-KDE-autostart-phase=1
+X-KDE-autostart-after=panel
+X-KDE-autostart-condition=kimtoyrc:behavior:AutostartKIMToy:false

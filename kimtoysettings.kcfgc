@@ -1,0 +1,4 @@
+File=kimtoysettings.kcfg
+ClassName=KIMToySettings
+Singleton=true
+Mutators=true

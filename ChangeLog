@@ -1,0 +1,72 @@
+2011-09-06 v1.0.1
+fix build issue with ibus-1.3.99.20110817
+
+2011-09-05 v1.0
+adapt command options and environment variables to fcitx-4.1
+plasma theme support
+new option to enable blur effect behind preedit bar and status bar
+
+2011-08-21 v0.9
+no longer draw the ugly page up/down arrows
+change the function for filling themed area
+autohide the panel when the input method is disabled
+do not overlap the editing line when the preedit bar is positioned at the screen bottom
+filter *.ssf files in selecting theme file dialog
+fix the issue causing kimtoy to unexpectedly quit when closing configuration or about dialog
+link kimtoy-ibus-panel with libgio-2.0
+fix the issue that the color settings can not be saved
+apply KDE global font settings by default
+add ibus kconfig config service module(not enabled by default)
+
+2011-08-15 v0.8.1
+fix a major layout issue in loading sogou surface
+
+2011-08-13 v0.8
+reimplement kimtoy-ibus-panel using glib2 built-in dbus api
+performance optimizing in kimtoy-ibus-panel
+add thumbnailer for sogou surface package file
+support both ibus 1.3.x and 1.4 unstable
+
+2011-06-29 v0.7
+fix vertical preedit bar layout issue when candidate count is over five
+fix the information dialog text
+the status bar icons now will show tooltips
+the 10th candidate label is displayed zero now when using ibus backend
+
+2011-06-27 v0.6
+add options to enable/disable window mask and realtime resizing
+fix pager symbol width calculation
+fix the problem using multiple painter in preedit bar
+fix the problem that the preedit bar does not appear in some cases
+only show candidates when using ibus-sunpinyin
+
+2011-06-16 v0.5
+add transparent background support
+add vertical preedit bar mode
+add an option to enable KIMToy autostart when login to desktop
+left click now popup the systray menu
+fix crash if the theme file is missing or corrupted
+add Chinese Simplified translation
+optimizing for preedit bar painting event by cacheing pixmaps and mask regions
+fix a minor issue in calculating text area width
+small adjustment in configuration appearance page
+
+2011-06-13 v0.4
+important stable fix in kimtoy-ibus-panel(add multithread lock).
+draw preedit/aux in one line.
+custom font and color settings.
+sogou input theme import support.
+
+2011-06-10 v0.3
+complete rewrite kimtoy-ibus-panel in pure C, no more python or pygtk dependences.
+now the environment virables can be set when session starts.
+some ui tweaks in configuration dialog.
+QT_IM_MODULE env for ibus now defaults to ibus.
+
+2011-04-20 v0.2
+autostart input method feature.
+the glue code for ibus/scim now included in KIMToy, no more kimpanel dependence.
+the collapse button on statusbar was removed.
+
+2011-04-18 v0.1
+Initial public release.

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name="kimtoyrc"/>
+    <include>QFont</include>
+    <include>QColor</include>
+    <include>KGlobalSettings</include>
+    <include>KStandardDirs</include>
+    <group name="inputmethod">
+        <entry name="RunInputMethod" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="TerminateInputMethod" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="RunFcitx" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="FcitxCmd" type="Url">
+            <default>fcitx</default>
+        </entry>
+        <entry name="FcitxArgs" type="String">
+            <default>-u fcitx-kimpanel-ui</default>
+        </entry>
+        <entry name="FcitxXIM" type="String">
+            <default>fcitx</default>
+        </entry>
+        <entry name="FcitxXIM_PROGRAM" type="String">
+            <default>fcitx</default>
+        </entry>
+        <entry name="FcitxXMODIFIERS" type="String">
+            <default>@im=fcitx</default>
+        </entry>
+        <entry name="FcitxGTK_IM_MODULE" type="String">
+            <default>fcitx</default>
+        </entry>
+        <entry name="FcitxQT_IM_MODULE" type="String">
+            <default>fcitx</default>
+        </entry>
+        <entry name="RunIBus" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="IBusCmd" type="Url">
+            <default>ibus-daemon</default>
+        </entry>
+        <entry name="IBusArgs" type="String">
+            <default code="true">
+                QString( "--panel=" ) + KStandardDirs::locate( "appdata", "kimtoy-ibus-panel" )
+            </default>
+        </entry>
+        <entry name="IBusXIM" type="String">
+            <default>ibus</default>
+        </entry>
+        <entry name="IBusXIM_PROGRAM" type="String">
+            <default></default>
+        </entry>
+        <entry name="IBusXMODIFIERS" type="String">
+            <default>@im=ibus</default>
+        </entry>
+        <entry name="IBusGTK_IM_MODULE" type="String">
+            <default>ibus</default>
+        </entry>
+        <entry name="IBusQT_IM_MODULE" type="String">
+            <default>ibus</default>
+        </entry>
+        <entry name="RunSCIM" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="SCIMCmd" type="Url">
+            <default>scim</default>
+        </entry>
+        <entry name="SCIMArgs" type="String">
+            <default></default>
+        </entry>
+        <entry name="SCIMXIM" type="String">
+            <default></default>
+        </entry>
+        <entry name="SCIMXIM_PROGRAM" type="String">
+            <default>scim -d</default>
+        </entry>
+        <entry name="SCIMXMODIFIERS" type="String">
+            <default>@im=SCIM</default>
+        </entry>
+        <entry name="SCIMGTK_IM_MODULE" type="String">
+            <default>scim</default>
+        </entry>
+        <entry name="SCIMQT_IM_MODULE" type="String">
+            <default></default>
+        </entry>
+    </group>
+    <group name="appearance">
+        <entry name="PreeditFont" type="Font">
+            <default code="true">KGlobalSettings::fixedFont()</default>
+        </entry>
+        <entry name="PreeditColor" type="Color">
+            <default code="true">Qt::black</default>
+        </entry>
+        <entry name="LabelFont" type="Font">
+            <default code="true">KGlobalSettings::generalFont()</default>
+        </entry>
+        <entry name="LabelColor" type="Color">
+            <default code="true">Qt::red</default>
+        </entry>
+        <entry name="CandidateFont" type="Font">
+            <default code="true">KGlobalSettings::generalFont()</default>
+        </entry>
+        <entry name="CandidateColor" type="Color">
+            <default code="true">Qt::black</default>
+        </entry>
+        <entry name="VerticalPreeditBar" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="BackgroundTransparency" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ThemeType" type="Enum">
+            <choices>
+                <choice name="NoTheme"/>
+                <choice name="UseDefaultPlasmaTheme"/>
+                <choice name="UseCustomTheme"/>
+            </choices>
+            <default>UseDefaultPlasmaTheme</default>
+        </entry>
+        <entry name="ImportTheme" type="Url">
+            <default></default>
+        </entry>
+        <entry name="NoStatusBarTheme" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="UseCustomFont" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="UseCustomColor" type="Bool">
+            <default>false</default>
+        </entry>
+    </group>
+    <group name="performance">
+        <entry name="EnableWindowMask" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="EnablePreeditResizing" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="EnableBackgroundBlur" type="Bool">
+            <default>true</default>
+        </entry>
+    </group>
+    <group name="behavior">
+        <entry name="AutostartKIMToy" type="Bool">
+            <default>false</default>
+        </entry>
+    </group>
+</kcfg>

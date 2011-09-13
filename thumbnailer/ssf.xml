@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-ssf">
+    <comment>Sogou surface file</comment>
+    <comment xml:lang="zh_CN">搜狗皮肤文件</comment>
+    <glob pattern="*.ssf"/>
+  </mime-type>
+</mime-info>

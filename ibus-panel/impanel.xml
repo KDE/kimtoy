@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- filename: impanel.xml -->
+<component>
+	<name>org.freedesktop.IBus.Panel</name>
+	<description>IMPanel Panel Component</description>
+	<exec>${libexecdir}/ibus-impanel</exec>
+	<version>@VERSION@</version>
+	<author>Ni Hui &lt;shuizhuyuanluo@126.com&gt;</author>
+	<license>GPL</license>
+	<homepage>http://code.google.com/p/ibus</homepage>
+	<textdomain>ibus</textdomain>
+</component>

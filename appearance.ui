@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Appearance</class>
+ <widget class="QWidget" name="Appearance">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>356</width>
+    <height>419</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="kcfg_VerticalPreeditBar">
+     <property name="text">
+      <string>Enable vertical preedit bar mode</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="kcfg_BackgroundTransparency">
+     <property name="text">
+      <string>Enable background transparency</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Font and color</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="preeditFontLabel">
+           <property name="text">
+            <string>Preedit font: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="KFontRequester" name="kcfg_PreeditFont"/>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="candidateFontLabel">
+           <property name="text">
+            <string>Candidate font: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="KFontRequester" name="kcfg_CandidateFont"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="KColorButton" name="kcfg_CandidateColor"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="preedtColorLabel">
+           <property name="text">
+            <string>Preedit color: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="KColorButton" name="kcfg_PreeditColor"/>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="candidateColorLabel">
+           <property name="text">
+            <string>Candidate color: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="LabelFontLabel">
+           <property name="text">
+            <string>Label font: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="LabelColorLabel">
+           <property name="text">
+            <string>Label color: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="KFontRequester" name="kcfg_LabelFont"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="KColorButton" name="kcfg_LabelColor"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Theme</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="KButtonGroup" name="kcfg_ThemeType">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QRadioButton" name="NoTheme">
+            <property name="text">
+             <string>No theme</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="UseDefaultPlasmaTheme">
+            <property name="text">
+             <string>Use default plasma theme</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="UseCustomTheme">
+            <property name="text">
+             <string>Use custom theme</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="title">
+          <string>Theme settings</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QFormLayout" name="formLayout_4">
+            <item row="0" column="0">
+             <widget class="QLabel" name="themeLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Import theme: </string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="KUrlRequester" name="kcfg_ImportTheme">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="filter">
+               <string notr="true">*.ssf</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="kcfg_NoStatusBarTheme">
+            <property name="text">
+             <string>Do not apply theme to status bar</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="kcfg_UseCustomFont">
+            <property name="text">
+             <string>Always use custom font settings</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="kcfg_UseCustomColor">
+            <property name="text">
+             <string>Always use custom color settings</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KButtonGroup</class>
+   <extends>QGroupBox</extends>
+   <header>kbuttongroup.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KFontRequester</class>
+   <extends>QWidget</extends>
+   <header>kfontrequester.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>NoTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>111</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>290</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseCustomTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>themeLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>78</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseCustomTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_ImportTheme</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseDefaultPlasmaTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>themeLabel</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>78</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseDefaultPlasmaTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_ImportTheme</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>NoTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>themeLabel</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>111</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>67</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>NoTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_ImportTheme</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>111</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseCustomTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>305</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseDefaultPlasmaTheme</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>305</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
