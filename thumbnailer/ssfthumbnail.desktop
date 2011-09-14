@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=Sogou Surface File
-Name[zh_CN]=搜狗皮肤文件
 X-KDE-ServiceTypes=ThumbCreator
 MimeType=application/x-ssf;
 CacheThumbnail=false

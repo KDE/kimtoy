@@ -1,8 +1,6 @@
 [Desktop Entry]
 Name=KIMToy
-Name[zh_CN]=KIMToy
 GenericName=Input Method Frontend
-GenericName[zh_CN]=输入法前端
 Exec=kimtoy
 Type=Application
 Terminal=false
