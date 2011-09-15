@@ -34,6 +34,7 @@
 #include <KIconLoader>
 #include <KZip>
 #include <KZipFileEntry>
+#include <Plasma/WindowEffects>
 
 #include "preeditbar.h"
 #include "statusbar.h"
@@ -437,9 +438,24 @@ void ThemerSogou::resizePreEditBar( const QSize& size )
             }
         }
     }
+
+    /// calculate mask if necessary
+    if ( KIMToySettings::self()->enableWindowMask()
+        || KIMToySettings::self()->enableBackgroundBlur() ) {
+        updatePreEditBarMask( size );
+    }
 }
 
-void ThemerSogou::maskPreEditBar( PreEditBar* widget )
+void ThemerSogou::resizeStatusBar( const QSize& size )
+{
+    /// calculate mask if necessary
+    if ( KIMToySettings::self()->enableWindowMask()
+        || KIMToySettings::self()->enableBackgroundBlur() ) {
+        updateStatusBarMask( size );
+    }
+}
+
+void ThemerSogou::updatePreEditBarMask( const QSize& size )
 {
     PreEditBarSkin& skin = KIMToySettings::self()->verticalPreeditBar()
                         ? v_preEditBarSkin : h_preEditBarSkin;
@@ -470,8 +486,8 @@ void ThemerSogou::maskPreEditBar( PreEditBar* widget )
     const int middlepixh = vsb - vst;
     const int middlepixw = hsr - hsl;
 
-    const int leftrightheight = widget->height() - skin.topleft.height() - skin.bottomleft.height();
-    const int topbottomwidth = widget->width() - skin.topleft.width() - skin.topright.width();
+    const int leftrightheight = size.height() - skin.topleft.height() - skin.bottomleft.height();
+    const int topbottomwidth = size.width() - skin.topleft.width() - skin.topright.width();
 
     /// corners
     QRegion topleft = skin.topleftRegion;
@@ -584,16 +600,37 @@ void ThemerSogou::maskPreEditBar( PreEditBar* widget )
     }
     center.translate( hsl, vst );
 
-    widget->setMask( topleft | top | topright | left | center | right | bottomleft | bottom | bottomright );
+    m_preEditBarMask = topleft | top | topright | left | center | right | bottomleft | bottom | bottomright;
+}
+
+void ThemerSogou::updateStatusBarMask( const QSize& size )
+{
+    m_statusBarSkin = m_statusBarSkin.scaled( size );
+    m_statusBarMask = m_statusBarSkin.mask();
+}
+
+void ThemerSogou::maskPreEditBar( PreEditBar* widget )
+{
+    widget->setMask( m_preEditBarMask );
 }
 
 void ThemerSogou::maskStatusBar( StatusBar* widget )
 {
-    QRegion mask = m_statusBarSkin.mask();
+    QRegion mask = m_statusBarMask;
     foreach ( const QLayoutItem* item, widget->m_layout->m_items ) {
         mask |= item->geometry();
     }
     widget->setMask( mask );
+}
+
+void ThemerSogou::blurPreEditBar( PreEditBar* widget )
+{
+    Plasma::WindowEffects::enableBlurBehind( widget->winId(), true, m_preEditBarMask );
+}
+
+void ThemerSogou::blurStatusBar( StatusBar* widget )
+{
+    Plasma::WindowEffects::enableBlurBehind( widget->winId(), true, m_statusBarMask );
 }
 
 void ThemerSogou::drawPreEditBar( PreEditBar* widget )

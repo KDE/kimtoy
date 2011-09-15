@@ -48,12 +48,17 @@ class ThemerSogou : public Themer
         virtual QSize sizeHintStatusBar( const StatusBar* widget ) const;
         virtual void layoutStatusBar( StatusBarLayout* layout ) const;
         virtual void resizePreEditBar( const QSize& size );
+        virtual void resizeStatusBar( const QSize& size );
         virtual void maskPreEditBar( PreEditBar* widget );
         virtual void maskStatusBar( StatusBar* widget );
+        virtual void blurPreEditBar( PreEditBar* widget );
+        virtual void blurStatusBar( StatusBar* widget );
         virtual void drawPreEditBar( PreEditBar* widget );
         virtual void drawStatusBar( StatusBar* widget );
         virtual void drawPropertyWidget( PropertyWidget* widget );
     private:
+        void updatePreEditBarMask( const QSize& size );
+        void updateStatusBarMask( const QSize& size );
 
 /**
  * preedit bar layout
@@ -99,6 +104,8 @@ class ThemerSogou : public Themer
         QPixmap m_statusBarSkin;
 
         QPoint m_pwpos[6];/// NOTE hardcode to 6
+        QRegion m_preEditBarMask;
+        QRegion m_statusBarMask;
 
         explicit ThemerSogou();
         static ThemerSogou* m_self;
