@@ -1,6 +1,10 @@
 [Desktop Entry]
 Type=Service
 Name=Sogou Surface File
+Name[pt]=Ficheiro de Superfície do Sogou
+Name[sv]=Sogou-ytfil
+Name[uk]=Файл поверхні сьогу
+Name[x-test]=xxSogou Surface Filexx
 X-KDE-ServiceTypes=ThumbCreator
 MimeType=application/x-ssf;
 CacheThumbnail=false
