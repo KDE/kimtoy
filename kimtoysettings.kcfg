@@ -9,12 +9,6 @@
     <include>KGlobalSettings</include>
     <include>KStandardDirs</include>
     <group name="inputmethod">
-        <entry name="RunInputMethod" type="Bool">
-            <default>false</default>
-        </entry>
-        <entry name="TerminateInputMethod" type="Bool">
-            <default>false</default>
-        </entry>
         <entry name="RunFcitx" type="Bool">
             <default>false</default>
         </entry>

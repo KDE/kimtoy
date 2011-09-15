@@ -21,8 +21,6 @@
 
 #include "kimtoy.h"
 
-#include <stdlib.h>
-
 #include <QTimer>
 #include <QDir>
 #include <QFile>
@@ -59,24 +57,16 @@ KIMToy::KIMToy() : KUniqueApplication()
     m_statusBar = new StatusBar;
     m_statusBar->show();
 
-    if ( KIMToySettings::self()->runInputMethod() )
-        QTimer::singleShot( 0, this, SLOT(init()) );
+    QTimer::singleShot( 0, this, SLOT(init()) );
 }
 
 KIMToy::~KIMToy()
 {
     delete m_statusBar;
 
-    if ( KIMToySettings::self()->runInputMethod() && KIMToySettings::self()->terminateInputMethod() ) {
-        killProcess( KIMToySettings::self()->fcitxCmd() );
-        killProcess( KIMToySettings::self()->iBusCmd() );
-        killProcess( KIMToySettings::self()->sCIMCmd() );
-//         /// NOTE: workaround here for kimtoy-scim-panel
-//         KProcess::startDetached( "killall", QStringList() << "-9" << "kimtoy-scim-panel" );
-    }
-
 //     EnvSettings::load();
     if ( KIMToySettings::self()->runFcitx() ) {
+        killProcess( KIMToySettings::self()->fcitxCmd() );
         EnvSettings::setXIM( KIMToySettings::self()->fcitxXIM() );
         EnvSettings::setXIM_PROGRAM( KIMToySettings::self()->fcitxXIM_PROGRAM() );
         EnvSettings::setXMODIFIERS( KIMToySettings::self()->fcitxXMODIFIERS() );
@@ -85,6 +75,7 @@ KIMToy::~KIMToy()
         EnvSettings::save();
     }
     else if ( KIMToySettings::self()->runIBus() ) {
+        killProcess( KIMToySettings::self()->iBusCmd() );
         EnvSettings::setXIM( KIMToySettings::self()->iBusXIM() );
         EnvSettings::setXIM_PROGRAM( KIMToySettings::self()->iBusXIM_PROGRAM() );
         EnvSettings::setXMODIFIERS( KIMToySettings::self()->iBusXMODIFIERS() );
@@ -93,6 +84,9 @@ KIMToy::~KIMToy()
         EnvSettings::save();
     }
     else if ( KIMToySettings::self()->runSCIM() ) {
+        killProcess( KIMToySettings::self()->sCIMCmd() );
+//         /// NOTE: workaround here for kimtoy-scim-panel
+//         KProcess::startDetached( "killall", QStringList() << "-9" << "kimtoy-scim-panel" );
         EnvSettings::setXIM( KIMToySettings::self()->sCIMXIM() );
         EnvSettings::setXIM_PROGRAM( KIMToySettings::self()->sCIMXIM_PROGRAM() );
         EnvSettings::setXMODIFIERS( KIMToySettings::self()->sCIMXMODIFIERS() );

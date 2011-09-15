@@ -12,27 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
-    <widget class="QCheckBox" name="kcfg_RunInputMethod">
-     <property name="text">
-      <string>Run input method at startup</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QCheckBox" name="kcfg_TerminateInputMethod">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Terminate input method at quit</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -399,50 +379,18 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KUrlRequester</class>
-   <extends>QFrame</extends>
-   <header>kurlrequester.h</header>
-  </customwidget>
-  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
   </customwidget>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>kcfg_RunInputMethod</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>tabWidget</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>199</x>
-     <y>19</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_RunInputMethod</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_TerminateInputMethod</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>199</x>
-     <y>19</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>43</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>kcfg_RunFcitx</sender>
    <signal>toggled(bool)</signal>
