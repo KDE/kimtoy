@@ -184,15 +184,6 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     x += w;
     p.restore();
 
-    /// draw " >>"
-    p.save();
-    p.setPen( Qt::blue );
-    h = qMax( h, p.fontMetrics().height() );
-    w = p.fontMetrics().width( " >>" );
-    p.drawText( x, y, w, h, Qt::AlignCenter, " >>" );
-    x += w;
-    p.restore();
-
     skin = skin.scaled( width, height, Qt::KeepAspectRatio );
     img = skin.toImage();
 
