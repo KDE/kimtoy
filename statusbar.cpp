@@ -127,17 +127,17 @@ StatusBar::StatusBar()
     m_moving = false;
 
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.connect( "", "", "", "Enable",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
                         this, SLOT(slotEnable(bool)) );
-    connection.connect( "", "", "", "RegisterProperties",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
                         this, SLOT(slotRegisterProperties(const QStringList&)) );
-    connection.connect( "", "", "", "UpdateProperty",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
                         this, SLOT(slotUpdateProperty(const QString&)) );
-    connection.connect( "", "", "", "RemoveProperty",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "RemoveProperty",
                         this, SLOT(slotRemoveProperty(const QString&)) );
-    connection.connect( "", "", "", "ExecDialog",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
                         this, SLOT(slotExecDialog(const QString&)) );
-    connection.connect( "", "", "", "ExecMenu",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
                         this, SLOT(slotExecMenu(const QStringList&)) );
 
     KConfigGroup group( KGlobal::config(), "General" );

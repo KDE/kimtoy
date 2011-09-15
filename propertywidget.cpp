@@ -42,6 +42,7 @@ void PropertyWidget::setProperty( const QString& name,
     m_name = name;
     m_iconName = iconName;
     m_description = description;
+    setToolTip( description );
     update();
 }
 

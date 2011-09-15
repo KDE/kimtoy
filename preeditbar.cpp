@@ -52,23 +52,23 @@ PreEditBar::PreEditBar()
     lookuptableVisible = false;
 
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.connect( "", "", "", "UpdateSpotLocation",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateSpotLocation",
                         this, SLOT(slotUpdateSpotLocation(int,int)) );
-    connection.connect( "", "", "", "ShowPreedit",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowPreedit",
                         this, SLOT(slotShowPreedit(bool)) );
-    connection.connect( "", "", "", "ShowAux",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowAux",
                         this, SLOT(slotShowAux(bool)) );
-    connection.connect( "", "", "", "ShowLookupTable",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowLookupTable",
                         this, SLOT(slotShowLookupTable(bool)) );
-    connection.connect( "", "", "", "UpdatePreeditCaret",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditCaret",
                         this, SLOT(slotUpdatePreeditCaret(int)) );
-    connection.connect( "", "", "", "UpdatePreeditText",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditText",
                         this, SLOT(slotUpdatePreeditText(const QString&,
                                                          const QString&)) );
-    connection.connect( "", "", "", "UpdateAux",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateAux",
                         this, SLOT(slotUpdateAux(const QString&,
                                                  const QString&)) );
-    connection.connect( "", "", "", "UpdateLookupTable",
+    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTable",
                         this, SLOT(slotUpdateLookupTable(const QStringList&,
                                                          const QStringList&,
                                                          const QStringList&,

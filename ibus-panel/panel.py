@@ -57,77 +57,77 @@ class KIMIbusClient(dbus.service.Object):
     def __init__(self, object_path):
         dbus.service.Object.__init__(self, dbus.SessionBus(), object_path)
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='s')
     def ExecDialog(self, prop):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='as')
     def ExecMenu(self, props):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='as')
     def RegisterProperties(self, props):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='s')
     def UpdateProperty(self, prop):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='s')
     def RemoveProperty(self, prop):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='b')
     def Enable(self, b):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='b')
     def ShowAux(self, b):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='b')
     def ShowPreedit(self, b):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='b')
     def ShowLookupTable(self, b):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='asasasbb')
     def UpdateLookupTable(self, labels,items,xs,bool1,bool2):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='i')
     def UpdatePreeditCaret(self, pos):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='ss')
     def UpdatePreeditText(self, test, attr):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='ss')
     def UpdateAux(self, test, attr):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='ii')
     def UpdateSpotLocation(self, x, y):
         pass
 
-    @dbus.service.signal(dbus_interface='org.ibus.panel',
+    @dbus.service.signal(dbus_interface='org.kde.kimpanel.inputmethod',
                          signature='i')
     def UpdateScreen(self, id):
         pass
@@ -165,7 +165,7 @@ class KIMPanel(PanelBase):
                 signal_name='SelectCandidate',
                 dbus_interface='org.kde.impanel')
 
-        self.__kimclient = KIMIbusClient('/org/ibus/panel')
+        self.__kimclient = KIMIbusClient('/kimpanel')
 
         self.__focus_ic = None
 

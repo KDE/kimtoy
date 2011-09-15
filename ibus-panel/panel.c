@@ -56,7 +56,7 @@ static guint owner_id;
 
 static const gchar introspection_xml[] =
     "<node>"
-    "  <interface name='org.ibus.panel'>"
+    "  <interface name='org.kde.kimpanel.inputmethod'>"
     "    <signal name='Enable'>"
     "      <arg type='b' name='enable'/>"
     "    </signal>"
@@ -340,7 +340,7 @@ on_bus_acquired (GDBusConnection *connection,
 
     guint registration_id;
     registration_id = g_dbus_connection_register_object (connection,
-                                                         "/org/ibus/panel",
+                                                         "/kimpanel",
                                                          introspection_data->interfaces[0],
                                                          NULL,  /*&interface_vtable*/
                                                          NULL,  /* user_data */
@@ -450,7 +450,7 @@ ibus_panel_impanel_init (IBusPanelImpanel *impanel)
 
     introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
     owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
-                               "org.ibus.panel",
+                               "org.kde.kimpanel.inputmethod",
                                G_BUS_NAME_OWNER_FLAGS_REPLACE,
                                on_bus_acquired,
                                on_name_acquired,
@@ -569,7 +569,7 @@ ibus_panel_impanel_focus_in (IBusPanelService *panel,
     ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdateProperty",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
                                    g_variant_new ("(s)", propstr),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -632,7 +632,7 @@ ibus_panel_impanel_register_properties (IBusPanelService *panel,
     g_variant_builder_add (&builder, "s", about_propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "RegisterProperties",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
                                    g_variant_new ("(as)", &builder),
                                    NULL);
 
@@ -667,7 +667,7 @@ ibus_panel_impanel_set_cursor_location (IBusPanelService *panel,
     gint sy = y + h;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdateSpotLocation",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateSpotLocation",
                                    g_variant_new ("(ii)", sx, sy),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -692,7 +692,7 @@ ibus_panel_impanel_update_auxiliary_text (IBusPanelService *panel,
     const gchar *attr = "";
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdateAux",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateAux",
                                    g_variant_new ("(ss)", t, attr),
                                    NULL);
 
@@ -767,7 +767,7 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
     gboolean has_next = 1;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdateLookupTable",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTable",
                                    g_variant_new ("(asasasbb)",
                                                   &builder_labels,
                                                   &builder_candidates,
@@ -811,12 +811,12 @@ ibus_panel_impanel_update_preedit_text (IBusPanelService *panel,
     const gchar *attr = "";
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdatePreeditText",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditText",
                                    g_variant_new ("(ss)", t, attr),
                                    NULL);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdatePreeditCaret",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditCaret",
                                    g_variant_new ("(i)", cursor_pos),
                                    NULL);
 
@@ -854,7 +854,7 @@ ibus_panel_impanel_update_property (IBusPanelService *panel,
     ibus_property_to_propstr(prop, propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdateProperty",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
                                    g_variant_new ("(s)", propstr),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -902,7 +902,7 @@ ibus_panel_impanel_hide_auxiliary_text (IBusPanelService *panel)
     gboolean toShow = 0;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ShowAux",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowAux",
                                    g_variant_new ("(b)", toShow),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -936,7 +936,7 @@ ibus_panel_impanel_hide_lookup_table (IBusPanelService *panel)
     gboolean toShow = 0;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ShowLookupTable",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowLookupTable",
                                    g_variant_new ("(b)", toShow),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -956,7 +956,7 @@ ibus_panel_impanel_hide_preedit_text (IBusPanelService *panel)
     gboolean toShow = 0;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ShowPreedit",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowPreedit",
                                    g_variant_new ("(b)", toShow),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -1018,7 +1018,7 @@ ibus_panel_impanel_show_auxiliary_text (IBusPanelService *panel)
     gboolean toShow = 1;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ShowAux",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowAux",
                                    g_variant_new ("(b)", toShow),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -1052,7 +1052,7 @@ ibus_panel_impanel_show_lookup_table (IBusPanelService *panel)
     gboolean toShow = 1;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ShowLookupTable",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowLookupTable",
                                    g_variant_new ("(b)", toShow),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -1072,7 +1072,7 @@ ibus_panel_impanel_show_preedit_text (IBusPanelService *panel)
     gboolean toShow = 1;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ShowPreedit",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowPreedit",
                                    g_variant_new ("(b)", toShow),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -1136,12 +1136,12 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
     ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "UpdateProperty",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
                                    g_variant_new ("(s)", propstr),
                                    NULL);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "Enable",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
                                    g_variant_new ("(b)", enable),
                                    NULL);
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -1158,7 +1158,7 @@ ibus_panel_impanel_exec_dialog (IBusPanelService *panel)
     ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ExecDialog",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
                                    g_variant_new ("(s)", propstr),
                                    NULL);
 }
@@ -1199,7 +1199,7 @@ ibus_panel_impanel_exec_menu (IBusPanelService *panel)
     g_variant_builder_add (&builder, "s", disable_propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
-                                   NULL, "/panel", "org.ibus.panel", "ExecMenu",
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
                                    g_variant_new ("(as)", &builder),
                                    NULL);
 
