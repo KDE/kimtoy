@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=KIMToy
 Name[cs]=KIMToy
+Name[es]=KIMToy
 Name[pt]=KIMToy
 Name[sv]=Kimtoy
 Name[uk]=KIMToy
 Name[x-test]=xxKIMToyxx
 GenericName=Input Method Frontend
+GenericName[es]=Interfaz de método de entrada
 GenericName[pt]=Interface dos Métodos de Introdução de Dados
 GenericName[sv]=Gränssnitt för inmatningsmetod
 GenericName[uk]=Оболонка способів введення
