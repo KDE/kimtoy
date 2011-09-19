@@ -239,7 +239,7 @@ _from_qvariant (GValue         *value,
         {
             char lt = qv.toString().at(0).toAscii();
             QString lqv = qv.toString().mid(1);
-            qWarning() << "lqv" << lqv;
+//             qWarning() << "lqv" << lqv;
             switch (lt) {
                 case 'S':
                     g_value_init (value, G_TYPE_STRING);
