@@ -109,6 +109,15 @@
         <entry name="BackgroundTransparency" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="BackgroundColorizing" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="PreeditBarColorize" type="Color">
+            <default code="true">Qt::transparent</default>
+        </entry>
+        <entry name="StatusBarColorize" type="Color">
+            <default code="true">Qt::transparent</default>
+        </entry>
         <entry name="ThemeType" type="Enum">
             <choices>
                 <choice name="NoTheme"/>

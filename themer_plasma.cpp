@@ -23,6 +23,7 @@
 
 #include <QBitmap>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
 
 #include <KIconLoader>
@@ -187,6 +188,13 @@ void ThemerPlasma::blurStatusBar( StatusBar* widget )
 void ThemerPlasma::drawPreEditBar( PreEditBar* widget )
 {
     QPainter p( widget );
+
+    if ( KIMToySettings::self()->backgroundColorizing() ) {
+        QPainterPath path;
+        path.addRegion( m_preeditBarSvg.mask() );
+        p.fillPath( path, KIMToySettings::self()->preeditBarColorize() );
+    }
+
     m_preeditBarSvg.paintFrame( &p );
 
     qreal left, top, right, bottom;
@@ -254,6 +262,13 @@ void ThemerPlasma::drawPreEditBar( PreEditBar* widget )
 void ThemerPlasma::drawStatusBar( StatusBar* widget )
 {
     QPainter p( widget );
+
+    if ( KIMToySettings::self()->backgroundColorizing() ) {
+        QPainterPath path;
+        path.addRegion( m_statusBarSvg.mask() );
+        p.fillPath( path, KIMToySettings::self()->statusBarColorize() );
+    }
+
     m_statusBarSvg.paintFrame( &p );
 }
 

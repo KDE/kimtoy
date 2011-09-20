@@ -441,7 +441,8 @@ void ThemerSogou::resizePreEditBar( const QSize& size )
 
     /// calculate mask if necessary
     if ( KIMToySettings::self()->enableWindowMask()
-        || KIMToySettings::self()->enableBackgroundBlur() ) {
+        || KIMToySettings::self()->enableBackgroundBlur()
+        || KIMToySettings::self()->backgroundColorizing() ) {
         updatePreEditBarMask( size );
     }
 }
@@ -450,7 +451,8 @@ void ThemerSogou::resizeStatusBar( const QSize& size )
 {
     /// calculate mask if necessary
     if ( KIMToySettings::self()->enableWindowMask()
-        || KIMToySettings::self()->enableBackgroundBlur() ) {
+        || KIMToySettings::self()->enableBackgroundBlur()
+        || KIMToySettings::self()->backgroundColorizing() ) {
         updateStatusBarMask( size );
     }
 }
@@ -644,6 +646,12 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
 
     QPainter p( widget );
 
+    if ( KIMToySettings::self()->backgroundColorizing() ) {
+        QPainterPath path;
+        path.addRegion( m_preEditBarMask );
+        p.fillPath( path, KIMToySettings::self()->preeditBarColorize() );
+    }
+
     int hstm, hsl, vstm, vst;
     if ( KIMToySettings::self()->verticalPreeditBar() ) {
         hstm = v_hstm;
@@ -782,6 +790,13 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
 void ThemerSogou::drawStatusBar( StatusBar* widget )
 {
     QPainter p( widget );
+
+    if ( KIMToySettings::self()->backgroundColorizing() ) {
+        QPainterPath path;
+        path.addRegion( m_statusBarMask );
+        p.fillPath( path, KIMToySettings::self()->statusBarColorize() );
+    }
+
     p.drawPixmap( 0, 0, m_statusBarSkin );
 }
 

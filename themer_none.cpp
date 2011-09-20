@@ -142,6 +142,10 @@ void ThemerNone::drawPreEditBar( PreEditBar* widget )
 {
     QPainter p( widget );
 
+    if ( KIMToySettings::self()->backgroundColorizing() ) {
+        p.fillRect( widget->rect(), KIMToySettings::self()->preeditBarColorize() );
+    }
+
     if ( widget->preeditVisible || widget->auxVisible ) {
         /// draw preedit / aux text
         p.setFont( m_preEditFont );
@@ -202,6 +206,10 @@ void ThemerNone::drawPreEditBar( PreEditBar* widget )
 
 void ThemerNone::drawStatusBar( StatusBar* widget )
 {
+    if ( KIMToySettings::self()->backgroundColorizing() ) {
+        QPainter p( widget );
+        p.fillRect( widget->rect(), KIMToySettings::self()->statusBarColorize() );
+    }
 }
 
 void ThemerNone::drawPropertyWidget( PropertyWidget* widget )
