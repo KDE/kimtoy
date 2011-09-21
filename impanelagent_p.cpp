@@ -70,6 +70,11 @@ void IMPanelAgentPrivate::pReloadConfig()
     emit ReloadConfig();
 }
 
+void IMPanelAgentPrivate::pConfigure()
+{
+    emit Configure();
+}
+
 IMPanelAgentPrivate::IMPanelAgentPrivate()
 : IMPanel()
 {

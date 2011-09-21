@@ -34,6 +34,7 @@ namespace IMPanelAgent
     void PanelCreated();
     void Exit();
     void ReloadConfig();
+    void Configure();
 }
 
 #endif // IMPANELAGENT_H

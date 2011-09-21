@@ -39,6 +39,7 @@ class IMPanel : public QObject
         void PanelCreated();
         void Exit();
         void ReloadConfig();
+        void Configure();
 };
 
 #endif // IMPANEL_H

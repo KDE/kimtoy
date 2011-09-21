@@ -332,6 +332,22 @@ impanel_trigger_property_callback (GDBusConnection *connection,
 }
 
 static void
+impanel_configure_callback (GDBusConnection *connection,
+                            const gchar     *sender_name,
+                            const gchar     *object_path,
+                            const gchar     *interface_name,
+                            const gchar     *signal_name,
+                            GVariant        *parameters,
+                            gpointer         user_data)
+{
+    pid_t pid = fork();
+    if (pid == 0) {
+        execlp ("ibus-setup", "ibus-setup", (char *)0);
+        exit (0);
+    }
+}
+
+static void
 on_bus_acquired (GDBusConnection *connection,
                  const gchar     *name,
                  gpointer         user_data)
@@ -356,6 +372,16 @@ on_bus_acquired (GDBusConnection *connection,
                                         NULL,
                                         G_DBUS_SIGNAL_FLAGS_NONE,
                                         impanel_trigger_property_callback,
+                                        user_data,
+                                        NULL);
+    g_dbus_connection_signal_subscribe (connection,
+                                        "org.kde.impanel",
+                                        "org.kde.impanel",
+                                        "Configure",
+                                        "/org/kde/impanel",
+                                        NULL,
+                                        G_DBUS_SIGNAL_FLAGS_NONE,
+                                        impanel_configure_callback,
                                         user_data,
                                         NULL);
 }

@@ -38,6 +38,7 @@
 #include <list>
 
 #include <QtCore/QObject>
+#include <QtCore/QProcess>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QThread>
@@ -291,7 +292,8 @@ public:
         QDBusConnection("scim_panel").connect("","","org.kde.impanel","PanelCreated",this,SLOT(PanelCreated()));
         QDBusConnection("scim_panel").connect("","","org.kde.impanel","Exit",this,SLOT(Exit()));
         QDBusConnection("scim_panel").connect("","","org.kde.impanel","ReloadConfig",this,SLOT(ReloadConfig()));
-        
+        QDBusConnection("scim_panel").connect("","","org.kde.impanel","Configure",this,SLOT(Configure()));
+
         logo_prop = Property("/Logo","SCIM",String(SCIM_ICON_DIR) + "/trademark.png","SCIM Input Method");
         show_help_prop = Property("/StartHelp","Help","help-about","About SCIM...");
         factory_prop_prefix = QString::fromUtf8("/Factory/");
@@ -304,7 +306,7 @@ public:
         Q_FOREACH (const HelperInfo &info, _helper_list) {
             if (((info.option & SCIM_HELPER_STAND_ALONE) != 0) && 
                 ((info.option & SCIM_HELPER_AUTO_START) == 0)) {
-                
+
                 props << Property(String(helper_prop_prefix.toUtf8().constData()) + info.uuid,
                     info.name,
                     info.icon,
@@ -399,7 +401,7 @@ public Q_SLOTS:
         }
 
         list_result << Property2String(show_help_prop);
-        
+
         message = QDBusMessage::createSignal("/kimpanel",
             "org.kde.kimpanel.inputmethod",
             "RegisterProperties");
@@ -419,6 +421,10 @@ public Q_SLOTS:
         _panel_agent->reload_config();
         if (!_config.null())
             _config->reload();
+    }
+    void Configure() {
+        SCIM_DEBUG_MAIN(1) << Q_FUNC_INFO<<"\n";
+        QProcess::startDetached("scim-setup");
     }
 
 protected:

@@ -37,6 +37,7 @@ class IMPanelAgentPrivate : public IMPanel
         void pPanelCreated();
         void pExit();
         void pReloadConfig();
+        void pConfigure();
     private:
         explicit IMPanelAgentPrivate();
         static IMPanelAgentPrivate* m_self;

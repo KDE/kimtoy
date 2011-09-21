@@ -62,3 +62,8 @@ void IMPanelAgent::ReloadConfig()
 {
     IMPanelAgentPrivate::self()->pReloadConfig();
 }
+
+void IMPanelAgent::Configure()
+{
+    IMPanelAgentPrivate::self()->pConfigure();
+}
