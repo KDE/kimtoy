@@ -1,4 +1,4 @@
 #! /bin/bash 
 $EXTRACTRC *.ui *.kcfg >> rc.cpp
-$XGETTEXT *.cpp -o $podir/kimtoy.pot
+$XGETTEXT *.cpp *.h -o $podir/kimtoy.pot
 rm -f rc.cpp
