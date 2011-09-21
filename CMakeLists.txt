@@ -19,6 +19,7 @@ set(kimtoy_SRCS
     impanel.cpp
     impanelagent.cpp
     impanelagent_p.cpp
+    inputmethods.cpp
     kimtoy.cpp
     main.cpp
     preeditbar.cpp

@@ -24,10 +24,53 @@
 
 #include "ui_inputmethod.h"
 
+#include <KIconLoader>
+#include <KLocale>
+
+#include "inputmethods.h"
+
 class InputMethodWidget : public QWidget, public Ui::InputMethod
 {
     public:
-        explicit InputMethodWidget() { setupUi( this ); }
+        explicit InputMethodWidget() {
+            setupUi( this );
+
+            QString version;
+            bool ok;
+
+            ok = FcitxInputMethod::self()->getVersion( version );
+            kcfg_RunFcitx->setEnabled( ok );
+            if ( ok ) {
+                FcitxVersionWidget->setText( i18n( "Found version: %1", version ) );
+                FcitxVersionWidget->setPixmap( MainBarIcon( "flag-green" ) );
+            }
+            else {
+                FcitxVersionWidget->setText( i18n( "Not found" ) );
+                FcitxVersionWidget->setPixmap( MainBarIcon( "flag-red" ) );
+            }
+
+            ok = IBusInputMethod::self()->getVersion( version );
+            kcfg_RunIBus->setEnabled( ok );
+            if ( ok ) {
+                IBusVersionWidget->setText( i18n( "Found version: %1", version ) );
+                IBusVersionWidget->setPixmap( MainBarIcon( "flag-green" ) );
+            }
+            else {
+                IBusVersionWidget->setText( i18n( "Not found" ) );
+                IBusVersionWidget->setPixmap( MainBarIcon( "flag-red" ) );
+            }
+
+            ok = SCIMInputMethod::self()->getVersion( version );
+            kcfg_RunSCIM->setEnabled( ok );
+            if ( ok ) {
+                SCIMVersionWidget->setText( i18n( "Found version: %1", version ) );
+                SCIMVersionWidget->setPixmap( MainBarIcon( "flag-green" ) );
+            }
+            else {
+                SCIMVersionWidget->setText( i18n( "Not found" ) );
+                SCIMVersionWidget->setPixmap( MainBarIcon( "flag-red" ) );
+            }
+        }
 };
 
 #endif // INPUTMETHOD_H

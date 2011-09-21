@@ -40,7 +40,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QLabel" name="FcitxArgumentsLabel">
            <property name="text">
             <string>Arguments:</string>
@@ -48,13 +48,9 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="KUrlRequester" name="kcfg_FcitxCmd">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
+          <widget class="KUrlRequester" name="kcfg_FcitxCmd"/>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="KLineEdit" name="kcfg_FcitxArgs">
            <property name="enabled">
             <bool>false</bool>
@@ -64,75 +60,78 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="FcitxXIMLabel">
            <property name="text">
             <string>XIM=</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="3" column="1">
           <widget class="KLineEdit" name="kcfg_FcitxXIM">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
+         <item row="4" column="0">
           <widget class="QLabel" name="FcitxXIM_PROGRAMLabel">
            <property name="text">
             <string>XIM_PROGRAM=</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="KLineEdit" name="kcfg_FcitxXIM_PROGRAM">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
+         <item row="5" column="0">
           <widget class="QLabel" name="FcitxXMODIFIERSLabel">
            <property name="text">
             <string>XMODIFIERS=</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
+         <item row="5" column="1">
           <widget class="KLineEdit" name="kcfg_FcitxXMODIFIERS">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="5" column="0">
+         <item row="6" column="0">
           <widget class="QLabel" name="FcitxGTK_IM_MODULELabel">
            <property name="text">
             <string>GTK_IM_MODULE=</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
+         <item row="6" column="1">
           <widget class="KLineEdit" name="kcfg_FcitxGTK_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="6" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="FcitxQT_IM_MODULELabel">
            <property name="text">
             <string>QT_IM_MODULE=</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="7" column="1">
           <widget class="KLineEdit" name="kcfg_FcitxQT_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="KTitleWidget" name="FcitxVersionWidget"/>
          </item>
         </layout>
        </item>
@@ -163,95 +162,94 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="KUrlRequester" name="kcfg_IBusCmd">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
+          <widget class="KUrlRequester" name="kcfg_IBusCmd"/>
          </item>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QLabel" name="IBusArgumentsLabel">
            <property name="text">
             <string>Arguments:</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="KLineEdit" name="kcfg_IBusArgs">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="IBusXIMLabel">
            <property name="text">
             <string>XIM=</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="3" column="1">
           <widget class="KLineEdit" name="kcfg_IBusXIM">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
+         <item row="4" column="0">
           <widget class="QLabel" name="IBusXIM_PROGRAMLabel">
            <property name="text">
             <string>XIM_PROGRAM=</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="KLineEdit" name="kcfg_IBusXIM_PROGRAM">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
+         <item row="5" column="0">
           <widget class="QLabel" name="IBusXMODIFIERSLabel">
            <property name="text">
             <string>XMODIFIERS=</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
+         <item row="5" column="1">
           <widget class="KLineEdit" name="kcfg_IBusXMODIFIERS">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="5" column="0">
+         <item row="6" column="0">
           <widget class="QLabel" name="IBusGTK_IM_MODULELabel">
            <property name="text">
             <string>GTK_IM_MODULE=</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
+         <item row="6" column="1">
           <widget class="KLineEdit" name="kcfg_IBusGTK_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="6" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="IBusQT_IM_MODULELabel">
            <property name="text">
             <string>QT_IM_MODULE=</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="7" column="1">
           <widget class="KLineEdit" name="kcfg_IBusQT_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="KTitleWidget" name="IBusVersionWidget"/>
          </item>
         </layout>
        </item>
@@ -279,95 +277,94 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="KUrlRequester" name="kcfg_SCIMCmd">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
+          <widget class="KUrlRequester" name="kcfg_SCIMCmd"/>
          </item>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QLabel" name="SCIMArgumentsLabel">
            <property name="text">
             <string>Arguments:</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="KLineEdit" name="kcfg_SCIMArgs">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="SCIMXIMLabel">
            <property name="text">
             <string>XIM=</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="3" column="1">
           <widget class="KLineEdit" name="kcfg_SCIMXIM">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
+         <item row="4" column="0">
           <widget class="QLabel" name="SCIMXIM_PROGRAMLabel">
            <property name="text">
             <string>XIM_PROGRAM=</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="KLineEdit" name="kcfg_SCIMXIM_PROGRAM">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
+         <item row="5" column="0">
           <widget class="QLabel" name="SCIMXMODIFIERSLabel">
            <property name="text">
             <string>XMODIFIERS=</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
+         <item row="5" column="1">
           <widget class="KLineEdit" name="kcfg_SCIMXMODIFIERS">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="5" column="0">
+         <item row="6" column="0">
           <widget class="QLabel" name="SCIMGTK_IM_MODULELabel">
            <property name="text">
             <string>GTK_IM_MODULE=</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
+         <item row="6" column="1">
           <widget class="KLineEdit" name="kcfg_SCIMGTK_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="6" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="SCIMQT_IM_MODULELabel">
            <property name="text">
             <string>QT_IM_MODULE=</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="7" column="1">
           <widget class="KLineEdit" name="kcfg_SCIMQT_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="KTitleWidget" name="SCIMVersionWidget"/>
          </item>
         </layout>
        </item>
@@ -382,6 +379,11 @@
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTitleWidget</class>
+   <extends>QWidget</extends>
+   <header>ktitlewidget.h</header>
   </customwidget>
   <customwidget>
    <class>KUrlRequester</class>
@@ -404,22 +406,6 @@
     <hint type="destinationlabel">
      <x>279</x>
      <y>170</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_RunFcitx</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_FcitxCmd</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>224</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>279</x>
-     <y>140</y>
     </hint>
    </hints>
   </connection>
@@ -522,22 +508,6 @@
   <connection>
    <sender>kcfg_RunIBus</sender>
    <signal>toggled(bool)</signal>
-   <receiver>kcfg_IBusCmd</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>224</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>279</x>
-     <y>140</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_RunIBus</sender>
-   <signal>toggled(bool)</signal>
    <receiver>kcfg_IBusGTK_IM_MODULE</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -628,22 +598,6 @@
     <hint type="destinationlabel">
      <x>279</x>
      <y>170</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_RunSCIM</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_SCIMCmd</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>224</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>279</x>
-     <y>140</y>
     </hint>
    </hints>
   </connection>
