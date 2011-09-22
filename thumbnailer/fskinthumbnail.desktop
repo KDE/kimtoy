@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Name=Fcitx Surface File
+X-KDE-ServiceTypes=ThumbCreator
+MimeType=application/x-fskin;
+CacheThumbnail=false
+IgnoreMaximumSize=true
+X-KDE-Library=fskinthumbnail
