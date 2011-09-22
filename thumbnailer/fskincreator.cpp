@@ -229,7 +229,7 @@ bool FskinCreator::create( const QString& path, int width, int height, QImage& i
     /// top bottom
     p.drawPixmap( ml, 0, width - ml - mr, mt, skin,
                   ml, 0, skin.width() - ml - mr, mt );
-    p.drawPixmap( ml, height - mb, width - ml - mr, mt, skin,
+    p.drawPixmap( ml, height - mb, width - ml - mr, mb, skin,
                   ml, skin.height() - mb, skin.width() - ml - mr, mb );
 
     /// middle
