@@ -77,6 +77,8 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     bool display = false;
     bool scheme_h1 = false;
     QPixmap skin;
+    int hstm = 0;
+    int sl = 0, sr = 0;
     int fontPixelSize = 12;
     QString font_ch, font_en;
     QString color_ch, color_en;
@@ -117,6 +119,11 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
                 if ( pix )
                     skin.loadFromData( pix->data() );
             }
+            else if ( key == "layout_horizontal" ) {
+                hstm = value.split( ',' ).at( 0 ).trimmed().toInt();
+                sl = value.split( ',' ).at( 1 ).trimmed().toInt();
+                sr = value.split( ',' ).at( 2 ).trimmed().toInt();
+            }
             else if ( key == "pinyin_marge" ) {
                 QStringList list = value.split( ',' );
                 pt = list.at( 0 ).trimmed().toInt();
@@ -148,7 +155,25 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     candidateColor = QColor( color_ch );
     labelColor = candidateColor;
 
-    QPainter p( &skin );
+    int pinyinh = QFontMetrics( preEditFont ).height();
+    int zhongwenh = qMax( QFontMetrics( labelFont ).height(), QFontMetrics( candidateFont ).height() );
+
+    height = skin.height();
+    QPixmap pixmap( width, height );
+    pixmap.fill( Qt::transparent );
+
+    QPainter p( &pixmap );
+
+    /// left right
+    p.drawPixmap( 0, 0, sl, height, skin, 0, 0, sl, skin.height() );
+    p.drawPixmap( width - sr, 0, sr, height, skin, skin.width() - sr, 0, sr, skin.height() );
+
+    /// middle
+    QPixmap middlepix = skin.copy( sl, 0, skin.width() - sl - sr, skin.height() );
+    if ( hstm == 0 )
+        p.drawPixmap( sl, 0, middlepix.scaled( width - sl - sr, height ) );
+    else
+        p.drawTiledPixmap( sl, 0, width - sl - sr, height, middlepix );
 
     int y = 0;
 
@@ -156,7 +181,6 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     p.save();
     p.setFont( preEditFont );
     p.setPen( preEditColor );
-    int pinyinh = QFontMetrics( preEditFont ).height();
     y += pt;
     p.drawText( pl, pt, width - pl - pr, pinyinh, Qt::AlignLeft, "ABC pinyin" );
     int pixelsWide = QFontMetrics( preEditFont ).width( "ABC pinyin" );
@@ -169,23 +193,21 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     int x = zl;
     y += zt;
     int w = 0;
-    int h = qMax( QFontMetrics( labelFont ).height(), QFontMetrics( candidateFont ).height() );
     /// draw label
     p.setFont( labelFont );
     p.setPen( labelColor );
     w = p.fontMetrics().width( "1" );
-    p.drawText( x, y, w, h, Qt::AlignCenter, "1" );
+    p.drawText( x, y, w, zhongwenh, Qt::AlignCenter, "1" );
     x += w;
     /// draw candidate
     p.setFont( candidateFont );
     p.setPen( candidateColor );
     w = p.fontMetrics().width( "candidate" );
-    p.drawText( x, y, w, h, Qt::AlignCenter, "candidate" );
+    p.drawText( x, y, w, zhongwenh, Qt::AlignCenter, "candidate" );
     x += w;
     p.restore();
 
-    skin = skin.scaled( width, height, Qt::KeepAspectRatio );
-    img = skin.toImage();
+    img = pixmap.toImage();
 
     return true;
 }
