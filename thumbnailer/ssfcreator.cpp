@@ -62,7 +62,6 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
         return false;
 
     QFont preEditFont;
-    QFont labelFont;
     QFont candidateFont;
     QColor preEditColor;
     QColor labelColor;
@@ -147,7 +146,6 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     candidateFont.setFamily( font_ch );
     candidateFont.setPixelSize( fontPixelSize );
     candidateFont.setBold( true );
-    labelFont = candidateFont;
 
     color_en = color_en.leftJustified( 8, '0' ).replace( "0x", "#" );
     color_ch = color_ch.leftJustified( 8, '0' ).replace( "0x", "#" );
@@ -156,9 +154,19 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     labelColor = candidateColor;
 
     int pinyinh = QFontMetrics( preEditFont ).height();
-    int zhongwenh = qMax( QFontMetrics( labelFont ).height(), QFontMetrics( candidateFont ).height() );
+    int zhongwenh = QFontMetrics( candidateFont ).height();
+    int pinyinw = QFontMetrics( preEditFont ).width( "ABC pinyin" );
+    int zhongwenw = QFontMetrics( candidateFont ).width( "1candidate" );
+
+    /// save target size
+    int targetHeight = height;
+    int targetWidth = width;
 
     height = skin.height();
+    width = qMax( pl + pinyinw + pr, zl + zhongwenw + zr );
+    width = qMax( width, targetWidth );
+    width = qMax( width, skin.width() );
+
     QPixmap pixmap( width, height );
     pixmap.fill( Qt::transparent );
 
@@ -193,19 +201,22 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     int x = zl;
     y += zt;
     int w = 0;
+    p.setFont( candidateFont );
     /// draw label
-    p.setFont( labelFont );
     p.setPen( labelColor );
     w = p.fontMetrics().width( "1" );
     p.drawText( x, y, w, zhongwenh, Qt::AlignCenter, "1" );
     x += w;
     /// draw candidate
-    p.setFont( candidateFont );
     p.setPen( candidateColor );
     w = p.fontMetrics().width( "candidate" );
     p.drawText( x, y, w, zhongwenh, Qt::AlignCenter, "candidate" );
     x += w;
     p.restore();
+
+    if ( targetWidth < width || targetHeight < height ) {
+        pixmap = pixmap.scaled( targetWidth, targetHeight, Qt::KeepAspectRatio );
+    }
 
     img = pixmap.toImage();
 

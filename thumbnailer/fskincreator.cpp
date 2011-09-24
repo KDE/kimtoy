@@ -199,8 +199,20 @@ bool FskinCreator::create( const QString& path, int width, int height, QImage& i
         }
     } while ( !line.isNull() );
 
+    font.setBold( true );
+
     int fontHeight = QFontMetrics( font ).height();
+    int pinyinw = QFontMetrics( font ).width( "ABC pinyin" );
+    int zhongwenw = QFontMetrics( font ).width( "1candidate" );
+
+    /// save target size
+    int targetHeight = height;
+    int targetWidth = width;
+
     height = mt + ych + mb;
+    width = qMax( ml + pinyinw + mr, ml + zhongwenw + mr );
+    width = qMax( width, targetWidth );
+    width = qMax( width, skin.width() );
 
     yen = mt + yen - fontHeight;
     ych = mt + ych - fontHeight;
@@ -241,10 +253,8 @@ bool FskinCreator::create( const QString& path, int width, int height, QImage& i
     p.drawPixmap( width - xfa, yfa, farrow );
 
     /// draw preedit / aux text
-    font.setBold( true );
     p.setFont( font );
     p.setPen( color_en );
-    int pinyinw = p.fontMetrics().width( "ABC pinyin" );
     p.drawText( ml, yen, pinyinw, fontHeight, Qt::AlignCenter, "ABC pinyin" );
     p.drawLine( ml + pinyinw, yen, ml + pinyinw, yen + fontHeight );
 
@@ -255,6 +265,10 @@ bool FskinCreator::create( const QString& path, int width, int height, QImage& i
     p.setPen( color_ch_1st );
     int candidatew = p.fontMetrics().width( "candidate" );
     p.drawText( ml + labelw, ych, candidatew, fontHeight, Qt::AlignCenter, "candidate" );
+
+    if ( targetWidth < width || targetHeight < height ) {
+        pixmap = pixmap.scaled( targetWidth, targetHeight, Qt::KeepAspectRatio );
+    }
 
     img = pixmap.toImage();
 
