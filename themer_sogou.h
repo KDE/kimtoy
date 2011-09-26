@@ -24,6 +24,8 @@
 
 #include "themer.h"
 
+#include <QHash>
+
 class PreEditBarSkin
 {
     public:
@@ -36,6 +38,30 @@ class PreEditBarSkin
         QRegion topleftRegion, topRegion, toprightRegion;
         QRegion leftRegion, centerRegion, rightRegion;
         QRegion bottomleftRegion, bottomRegion, bottomrightRegion;
+};
+
+class OverlayPixmap
+{
+    public:
+/**
+ * overlay layout
+ *
+ *  lt|                t              |rt
+ * ---+===============================+---
+ *    |      ##### preedit #####      |
+ *   l|-------------center------------|r
+ *    |      #### candidate ####      |
+ * ---+===============================+---
+ *  lb|                b              |rb
+ *
+ */
+        QPixmap pixmap;
+        /// TODO: only entire window is supported atm --- nihui
+        int alignTarget;// 0->entire window, 1->preedit window, 2->candidate window
+        int alignArea;// 1->lt, 2->t, 3->rt, 4->l, 5->center, 6->r, 7->lb, 8->b, 9->rb
+        int alignHMode;// 0->align center, 1->align left, 2->align right
+        int alignVMode;// 0->align center, 1->align top, 2->align bottom
+        int mt, mb, ml, mr;// margins
 };
 
 class ThemerSogou : public Themer
@@ -88,6 +114,10 @@ class ThemerSogou : public Themer
         int h_zt, h_zb, h_zl, h_zr;
         int v_zt, v_zb, v_zl, v_zr;
 
+        QHash<QString, OverlayPixmap> h_overlays;// horizontal overlay pixmap
+        QHash<QString, OverlayPixmap> v_overlays;// vertical overlay pixmap
+        int h_opt, h_opb, h_opl, h_opr;
+        int v_opt, v_opb, v_opl, v_opr;
 
 /**
  * status bar layout

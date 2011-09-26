@@ -43,6 +43,56 @@
 
 #include "kimtoysettings.h"
 
+static void calculateOverlaySurrounding( const QHash<QString, OverlayPixmap>& overlays, int& opt, int& opb, int& opl, int& opr )
+{
+    opl = 0;
+    opr = 0;
+    opt = 0;
+    opb = 0;
+    QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
+    while ( it != end ) {
+        const OverlayPixmap& op = it.value();
+        switch ( op.alignArea ) {
+            case 1:
+                opl = qMax( opl, op.pixmap.width() );
+                opt = qMax( opt, op.pixmap.height() );
+                break;
+            case 2:
+                opt = qMax( opt, op.pixmap.height() );
+                break;
+            case 3:
+                opr = qMax( opr, op.pixmap.width() );
+                opt = qMax( opt, op.pixmap.height() );
+                break;
+            case 4:
+                opl = qMax( opl, op.pixmap.width() );
+                break;
+            case 5:
+                /// center pixmap, no addition
+                break;
+            case 6:
+                opr = qMax( opr, op.pixmap.width() );
+                break;
+            case 7:
+                opl = qMax( opl, op.pixmap.width() );
+                opb = qMax( opb, op.pixmap.height() );
+                break;
+            case 8:
+                opb = qMax( opb, op.pixmap.height() );
+                break;
+            case 9:
+                opr = qMax( opr, op.pixmap.width() );
+                opb = qMax( opb, op.pixmap.height() );
+                break;
+            default:
+                /// never arrive here
+                break;
+        }
+        ++it;
+    }
+}
+
 /**
  *          |         |          |
  * ---------+---------+---------vst
@@ -132,6 +182,8 @@ bool ThemerSogou::loadTheme()
     QString font_ch, font_en;
     QString pinyin_color, zhongwen_color;
     int i = 0;
+    h_overlays.clear();
+    v_overlays.clear();
 
     QTextStream ss( data );
     QString line;
@@ -203,6 +255,29 @@ bool ThemerSogou::loadTheme()
                 h_zl = list.at( 2 ).trimmed().toInt();
                 h_zr = list.at( 3 ).trimmed().toInt();
             }
+            else if ( key.endsWith( "_display" ) ) {
+                QString name = key.left( key.length() - 8 );
+                h_overlays.insert( name, OverlayPixmap() );
+            }
+            else if ( key.endsWith( "_align" ) ) {
+                QString name = key.left( key.length() - 6 );
+                QStringList numbers = value.split( ',' );
+                OverlayPixmap& op = h_overlays[ name ];
+                op.mt = numbers.at( 0 ).toInt();
+                op.mb = numbers.at( 1 ).toInt();
+                op.ml = numbers.at( 2 ).toInt();
+                op.mr = numbers.at( 3 ).toInt();
+                op.alignVMode = numbers.at( 4 ).toInt() + numbers.at( 5 ).toInt();/// FIXME: right or wrong?
+                op.alignHMode = numbers.at( 6 ).toInt() + numbers.at( 7 ).toInt();/// FIXME: right or wrong?
+                op.alignArea = numbers.at( 8 ).toInt();
+                op.alignTarget = numbers.at( 9 ).toInt();
+            }
+            else if ( h_overlays.contains( key ) ) {
+                const KArchiveEntry* e = zip.directory()->entry( value );
+                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                if ( pix )
+                    h_overlays[ key ].pixmap.loadFromData( pix->data() );
+            }
         }
         else if ( scheme_v1 ) {
             if ( key == "pic" ) {
@@ -235,6 +310,29 @@ bool ThemerSogou::loadTheme()
                 v_zl = list.at( 2 ).trimmed().toInt();
                 v_zr = list.at( 3 ).trimmed().toInt();
             }
+            else if ( key.endsWith( "_display" ) ) {
+                QString name = key.left( key.length() - 8 );
+                v_overlays.insert( name, OverlayPixmap() );
+            }
+            else if ( key.endsWith( "_align" ) ) {
+                QString name = key.left( key.length() - 6 );
+                QStringList numbers = value.split( ',' );
+                OverlayPixmap& op = v_overlays[ name ];
+                op.mt = numbers.at( 0 ).toInt();
+                op.mb = numbers.at( 1 ).toInt();
+                op.ml = numbers.at( 2 ).toInt();
+                op.mr = numbers.at( 3 ).toInt();
+                op.alignVMode = numbers.at( 4 ).toInt() + numbers.at( 5 ).toInt();/// FIXME: right or wrong?
+                op.alignHMode = numbers.at( 6 ).toInt() + numbers.at( 7 ).toInt();/// FIXME: right or wrong?
+                op.alignArea = numbers.at( 8 ).toInt();
+                op.alignTarget = numbers.at( 9 ).toInt();
+            }
+            else if ( v_overlays.contains( key ) ) {
+                const KArchiveEntry* e = zip.directory()->entry( value );
+                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                if ( pix )
+                    v_overlays[ key ].pixmap.loadFromData( pix->data() );
+            }
         }
         else if ( statusbar ) {
             if ( key == "pic" ) {
@@ -266,6 +364,10 @@ bool ThemerSogou::loadTheme()
 
     h_preEditBarSkin = PreEditBarSkin( h1skin, h_hsl, h_hsr, h_vst, h_vsb );
     v_preEditBarSkin = PreEditBarSkin( v1skin, v_hsl, v_hsr, v_vst, v_vsb );
+
+    /// calculate overlay pixmap surrounding size
+    calculateOverlaySurrounding( h_overlays, h_opt, h_opb, h_opl, h_opr );
+    calculateOverlaySurrounding( v_overlays, v_opt, v_opb, v_opl, v_opr );
 
     m_preEditFont.setFamily( font_en );
     m_preEditFont.setPixelSize( fontPixelSize );
@@ -300,7 +402,7 @@ QSize ThemerSogou::sizeHintPreEditBar( const PreEditBar* widget ) const
 
         /// preedit and aux
         int pinyinauxw = QFontMetrics( m_preEditFont ).width( widget->m_text + widget->m_auxText );
-        w = qMax( pinyinauxw + v_pl + v_pr, w );
+        w = qMax( pinyinauxw + v_pl + v_pr + v_opl + v_opr, w );
         widgetsh += m_preEditFontHeight;
 
         /// lookuptable
@@ -311,16 +413,16 @@ QSize ThemerSogou::sizeHintPreEditBar( const PreEditBar* widget ) const
             lookuptablew = qMax( QFontMetrics( m_candidateFont ).width( tmp ), lookuptablew );
             widgetsh += m_candidateFontHeight;
         }
-        w = qMax( lookuptablew + v_zl + v_zr, w );
+        w = qMax( lookuptablew + v_zl + v_zr + v_opl + v_opr, w );
 
-        h = qMax( widgetsh, h );
+        h = qMax( widgetsh + v_opt + v_opb, h );
     }
     else {
         int widgetsh = h_pt + h_pb + h_zt + h_zb;
 
         /// preedit and aux
         int pinyinauxw = QFontMetrics( m_preEditFont ).width( widget->m_text + widget->m_auxText );
-        w = qMax( pinyinauxw + h_pl + h_pr, w );
+        w = qMax( pinyinauxw + h_pl + h_pr + h_opl + h_opr, w );
         widgetsh += m_preEditFontHeight;
 
         /// lookuptable
@@ -330,10 +432,10 @@ QSize ThemerSogou::sizeHintPreEditBar( const PreEditBar* widget ) const
             tmp += widget->m_labels.at( i ).trimmed() + widget->m_candidates.at( i ).trimmed();
         }
         int lookuptablew = QFontMetrics( m_candidateFont ).width( tmp );
-        w = qMax( lookuptablew + h_zl + h_zr, w );
+        w = qMax( lookuptablew + h_zl + h_zr + h_opl + h_opr, w );
         widgetsh += m_candidateFontHeight;
 
-        h = qMax( widgetsh, h );
+        h = qMax( widgetsh + h_opt + h_opb, h );
     }
 
     if ( !KIMToySettings::self()->enablePreeditResizing() ) {
@@ -462,18 +564,21 @@ void ThemerSogou::updatePreEditBarMask( const QSize& size )
     PreEditBarSkin& skin = KIMToySettings::self()->verticalPreeditBar()
                         ? v_preEditBarSkin : h_preEditBarSkin;
     int hstm, hsl, hsr, vstm, vst, vsb;
+    int opt, opb, opl, opr;
 
     if ( KIMToySettings::self()->verticalPreeditBar() ) {
         hstm = v_hstm;
         hsl = v_hsl, hsr = v_hsr;
         vstm = v_vstm;
         vst = v_vst, vsb = v_vsb;
+        opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
     }
     else {
         hstm = h_hstm;
         hsl = h_hsl, hsr = h_hsr;
         vstm = h_vstm;
         vst = h_vst, vsb = h_vsb;
+        opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
     }
 
     /**
@@ -603,6 +708,118 @@ void ThemerSogou::updatePreEditBarMask( const QSize& size )
     center.translate( hsl, vst );
 
     m_preEditBarMask = topleft | top | topright | left | center | right | bottomleft | bottom | bottomright;
+
+    /// overlay pixmap regions
+    const QHash<QString, OverlayPixmap>& overlays = KIMToySettings::self()->verticalPreeditBar()
+                                                    ? v_overlays : h_overlays;
+    QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
+    while ( it != end ) {
+        const OverlayPixmap& op = it.value();
+        QRegion opRegion = op.pixmap.mask();
+        switch ( op.alignArea ) {
+            case 1:
+                opRegion.translate( -op.mr, -op.mb );
+                break;
+            case 2:
+                if ( op.alignHMode == 0 ) {
+                    opRegion.translate( ( size.width() + opl - opr + op.pixmap.width() ) / 2, 0 );
+                    opRegion.translate( 0, -op.mb );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    opRegion.translate( opl, 0 );
+                    opRegion.translate( op.ml, -op.mb );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    opRegion.translate( size.width() - opr - op.pixmap.width(), 0 );
+                    opRegion.translate( -op.mr, -op.mb );
+                }
+                break;
+            case 3:
+                opRegion.translate( size.width() - opr, 0 );
+                opRegion.translate( op.ml, -op.mb );
+                break;
+            case 4:
+                if ( op.alignVMode == 0 ) {
+                    opRegion.translate( 0, ( size.height() - opb + opt + op.pixmap.height() ) / 2 );
+                    opRegion.translate( -op.mr, 0 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    opRegion.translate( 0, opt );
+                    opRegion.translate( -op.mr, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    opRegion.translate( 0, size.height() - opb - op.pixmap.height() );
+                    opRegion.translate( -op.mr, -op.mb );
+                }
+                break;
+            case 5:
+                if ( op.alignHMode == 0 ) {
+                    opRegion.translate( ( size.width() + opl - opr + op.pixmap.width() ) / 2, 0 );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    opRegion.translate( opl, 0 );
+                    opRegion.translate( op.ml, 0 );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    opRegion.translate( size.width() - opr - op.pixmap.width(), 0 );
+                    opRegion.translate( -op.mr, 0 );
+                }
+                if ( op.alignVMode == 0 ) {
+                    opRegion.translate( 0, ( size.height() - opb + opt + op.pixmap.height() ) / 2 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    opRegion.translate( 0, opt );
+                    opRegion.translate( 0, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    opRegion.translate( 0, size.height() - opb - op.pixmap.height() );
+                    opRegion.translate( 0, -op.mb );
+                }
+                break;
+            case 6:
+                if ( op.alignVMode == 0 ) {
+                    opRegion.translate( size.width() - opr, ( size.height() - opb + opt + op.pixmap.height() ) / 2 );
+                    opRegion.translate( op.ml, 0 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    opRegion.translate( size.width() - opr, opt );
+                    opRegion.translate( op.ml, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    opRegion.translate( size.width() - opr, size.height() - opb - op.pixmap.height() );
+                    opRegion.translate( op.ml, -op.mb );
+                }
+                break;
+            case 7:
+                opRegion.translate( 0, size.height() - opb );
+                opRegion.translate( -op.mr, op.mt );
+                break;
+            case 8:
+                if ( op.alignHMode == 0 ) {
+                    opRegion.translate( ( size.width() + opl - opr + op.pixmap.width() ) / 2, size.height() - opb );
+                    opRegion.translate( 0, op.mt );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    opRegion.translate( opl, size.height() - opb );
+                    opRegion.translate( op.ml, op.mt );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    opRegion.translate( size.width() - opr - op.pixmap.width(), size.height() - opb );
+                    opRegion.translate( -op.mr, op.mt );
+                }
+                break;
+            case 9:
+                opRegion.translate( size.width() - opr, size.height() - opb );
+                opRegion.translate( op.ml, op.mt );
+                break;
+            default:
+                /// never arrive here
+                break;
+        }
+        m_preEditBarMask |= opRegion;
+        ++it;
+    }
 }
 
 void ThemerSogou::updateStatusBarMask( const QSize& size )
@@ -643,6 +860,7 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
 
     int pt = 0, pb = 0, pl = 0, pr = 0;
     int zt = 0, zb = 0, zl = 0, zr = 0;
+    int opt = 0, opb = 0, opl = 0, opr = 0;
 
     QPainter p( widget );
 
@@ -660,6 +878,7 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         vst = v_vst;
         pt = v_pt, pb = v_pb, pl = v_pl, pr = v_pr;
         zt = v_zt, zb = v_zb, zl = v_zl, zr = v_zr;
+        opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
     }
     else {
         hstm = h_hstm;
@@ -668,6 +887,7 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         vst = h_vst;
         pt = h_pt, pb = h_pb, pl = h_pl, pr = h_pr;
         zt = h_zt, zb = h_zb, zl = h_zl, zr = h_zr;
+        opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
     }
 
     /**
@@ -718,6 +938,119 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
     else {
         /// tilling
         p.drawTiledPixmap( hsl, vst, topbottomwidth, leftrightheight, skin.center );
+    }
+
+    /// draw overlay pixmap
+    const QHash<QString, OverlayPixmap>& overlays = KIMToySettings::self()->verticalPreeditBar()
+                                                    ? v_overlays : h_overlays;
+    QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
+    while ( it != end ) {
+        const OverlayPixmap& op = it.value();
+        p.save();
+        switch ( op.alignArea ) {
+            case 1:
+                p.translate( -op.mr, -op.mb );
+                break;
+            case 2:
+                if ( op.alignHMode == 0 ) {
+                    p.translate( ( widget->width() + opl - opr + op.pixmap.width() ) / 2, 0 );
+                    p.translate( 0, -op.mb );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    p.translate( opl, 0 );
+                    p.translate( op.ml, -op.mb );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    p.translate( widget->width() - opr - op.pixmap.width(), 0 );
+                    p.translate( -op.mr, -op.mb );
+                }
+                break;
+            case 3:
+                p.translate( widget->width() - opr, 0 );
+                p.translate( op.ml, -op.mb );
+                break;
+            case 4:
+                if ( op.alignVMode == 0 ) {
+                    p.translate( 0, ( widget->height() - opb + opt + op.pixmap.height() ) / 2 );
+                    p.translate( -op.mr, 0 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    p.translate( 0, opt );
+                    p.translate( -op.mr, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    p.translate( 0, widget->height() - opb - op.pixmap.height() );
+                    p.translate( -op.mr, -op.mb );
+                }
+                break;
+            case 5:
+                if ( op.alignHMode == 0 ) {
+                    p.translate( ( widget->width() + opl - opr + op.pixmap.width() ) / 2, 0 );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    p.translate( opl, 0 );
+                    p.translate( op.ml, 0 );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    p.translate( widget->width() - opr - op.pixmap.width(), 0 );
+                    p.translate( -op.mr, 0 );
+                }
+                if ( op.alignVMode == 0 ) {
+                    p.translate( 0, ( widget->height() - opb + opt + op.pixmap.height() ) / 2 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    p.translate( 0, opt );
+                    p.translate( 0, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    p.translate( 0, widget->height() - opb - op.pixmap.height() );
+                    p.translate( 0, -op.mb );
+                }
+                break;
+            case 6:
+                if ( op.alignVMode == 0 ) {
+                    p.translate( widget->width() - opr, ( widget->height() - opb + opt + op.pixmap.height() ) / 2 );
+                    p.translate( op.ml, 0 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    p.translate( widget->width() - opr, opt );
+                    p.translate( op.ml, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    p.translate( widget->width() - opr, widget->height() - opb - op.pixmap.height() );
+                    p.translate( op.ml, -op.mb );
+                }
+                break;
+            case 7:
+                p.translate( 0, widget->height() - opb );
+                p.translate( -op.mr, op.mt );
+                break;
+            case 8:
+                if ( op.alignHMode == 0 ) {
+                    p.translate( ( widget->width() + opl - opr + op.pixmap.width() ) / 2, widget->height() - opb );
+                    p.translate( 0, op.mt );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    p.translate( opl, widget->height() - opb );
+                    p.translate( op.ml, op.mt );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    p.translate( widget->width() - opr - op.pixmap.width(), widget->height() - opb );
+                    p.translate( -op.mr, op.mt );
+                }
+                break;
+            case 9:
+                p.translate( widget->width() - opr, widget->height() - opb );
+                p.translate( op.ml, op.mt );
+                break;
+            default:
+                /// never arrive here
+                break;
+        }
+        p.drawPixmap( 0, 0, op.pixmap );
+        p.restore();
+        ++it;
     }
 
 
