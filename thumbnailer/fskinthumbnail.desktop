@@ -1,6 +1,11 @@
 [Desktop Entry]
 Type=Service
 Name=Fcitx Surface File
+Name[pt]=Ficheiro de Superfície do Fcitx
+Name[pt_BR]=Arquivo de superfície do Fcitx
+Name[sv]=Fcitx-ytfil
+Name[uk]=Файл поверхні Fcitx
+Name[x-test]=xxFcitx Surface Filexx
 X-KDE-ServiceTypes=ThumbCreator
 MimeType=application/x-fskin;
 CacheThumbnail=false
