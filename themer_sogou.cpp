@@ -184,6 +184,10 @@ bool ThemerSogou::loadTheme()
     int i = 0;
     h_overlays.clear();
     v_overlays.clear();
+    h_separatorColor = Qt::transparent;
+    v_separatorColor = Qt::transparent;
+    h_sepl = 0, h_sepr = 0;
+    v_sepl = 0, v_sepr = 0;
 
     QTextStream ss( data );
     QString line;
@@ -228,18 +232,27 @@ bool ThemerSogou::loadTheme()
                     h1skin.loadFromData( pix->data() );
             }
             else if ( key == "layout_horizontal" ) {
-                h_hstm = value.split( ',' ).at( 0 ).trimmed().toInt();
-                h_hsl = value.split( ',' ).at( 1 ).trimmed().toInt();
-                h_hsr = value.split( ',' ).at( 2 ).trimmed().toInt();
+                QStringList list = value.split( ',' );
+                h_hstm = list.at( 0 ).trimmed().toInt();
+                h_hsl = list.at( 1 ).trimmed().toInt();
+                h_hsr = list.at( 2 ).trimmed().toInt();
             }
             else if ( key == "layout_vertical" ) {
-                h_vstm = value.split( ',' ).at( 0 ).trimmed().toInt();
-                h_vst = value.split( ',' ).at( 1 ).trimmed().toInt();
-                h_vsb = value.split( ',' ).at( 2 ).trimmed().toInt();
+                QStringList list = value.split( ',' );
+                h_vstm = list.at( 0 ).trimmed().toInt();
+                h_vst = list.at( 1 ).trimmed().toInt();
+                h_vsb = list.at( 2 ).trimmed().toInt();
                 //WARNING: it seems that v_vst/v_vsb is always unused in sogou theme
                 h_vstm = 0;//WARNING: assume scale mode --- nihui
                 h_vst = 1;
                 h_vsb = 1;
+            }
+            else if ( key == "separator" ) {
+                QStringList list = value.split( ',' );
+                QString sep_color = list.at( 0 ).trimmed();
+                h_separatorColor = sep_color.leftJustified( 8, '0' ).replace( "0x", "#" );
+                h_sepl = list.at( 1 ).trimmed().toInt();
+                h_sepr = list.at( 2 ).trimmed().toInt();
             }
             else if ( key == "pinyin_marge" ) {
                 QStringList list = value.split( ',' );
@@ -287,14 +300,23 @@ bool ThemerSogou::loadTheme()
                     v1skin.loadFromData( pix->data() );
             }
             else if ( key == "layout_horizontal" ) {
-                v_hstm = value.split( ',' ).at( 0 ).trimmed().toInt();
-                v_hsl = value.split( ',' ).at( 1 ).trimmed().toInt();
-                v_hsr = value.split( ',' ).at( 2 ).trimmed().toInt();
+                QStringList list = value.split( ',' );
+                v_hstm = list.at( 0 ).trimmed().toInt();
+                v_hsl = list.at( 1 ).trimmed().toInt();
+                v_hsr = list.at( 2 ).trimmed().toInt();
             }
             else if ( key == "layout_vertical" ) {
-                v_vstm = value.split( ',' ).at( 0 ).trimmed().toInt();
-                v_vst = value.split( ',' ).at( 1 ).trimmed().toInt();
-                v_vsb = value.split( ',' ).at( 2 ).trimmed().toInt();
+                QStringList list = value.split( ',' );
+                v_vstm = list.at( 0 ).trimmed().toInt();
+                v_vst = list.at( 1 ).trimmed().toInt();
+                v_vsb = list.at( 2 ).trimmed().toInt();
+            }
+            else if ( key == "separator" ) {
+                QStringList list = value.split( ',' );
+                QString sep_color = list.at( 0 ).trimmed();
+                v_separatorColor = sep_color.leftJustified( 8, '0' ).replace( "0x", "#" );
+                v_sepl = list.at( 1 ).trimmed().toInt();
+                v_sepr = list.at( 2 ).trimmed().toInt();
             }
             else if ( key == "pinyin_marge" ) {
                 QStringList list = value.split( ',' );
@@ -861,6 +883,8 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
     int pt = 0, pb = 0, pl = 0, pr = 0;
     int zt = 0, zb = 0, zl = 0, zr = 0;
     int opt = 0, opb = 0, opl = 0, opr = 0;
+    QColor separatorColor = Qt::transparent;
+    int sepl = 0, sepr = 0;
 
     QPainter p( widget );
 
@@ -879,6 +903,8 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         pt = v_pt, pb = v_pb, pl = v_pl, pr = v_pr;
         zt = v_zt, zb = v_zb, zl = v_zl, zr = v_zr;
         opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
+        separatorColor = v_separatorColor;
+        sepl = v_sepl, sepr = v_sepr;
     }
     else {
         hstm = h_hstm;
@@ -888,6 +914,8 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         pt = h_pt, pb = h_pb, pl = h_pl, pr = h_pr;
         zt = h_zt, zb = h_zb, zl = h_zl, zr = h_zr;
         opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
+        separatorColor = h_separatorColor;
+        sepl = h_sepl, sepr = h_sepr;
     }
 
     /**
@@ -1053,6 +1081,11 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         ++it;
     }
 
+    if ( separatorColor != Qt::transparent ) {
+        /// draw separator
+        int sepy = opt + pt + m_preEditFontHeight + pb;
+        p.drawLine( opl + sepl, sepy, widget->width() - opr - sepr, sepy );
+    }
 
     p.translate( opl, opt );
     int y = 0;

@@ -95,6 +95,8 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     QString color_ch, color_en;
     QHash<QString, OverlayPixmap> overlays;
     int opt = 0, opb = 0, opl = 0, opr = 0;
+    QColor separatorColor = Qt::transparent;
+    int sepl = 0, sepr = 0;
 
     QTextStream ss( data );
     QString line;
@@ -133,9 +135,17 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
                     skin.loadFromData( pix->data() );
             }
             else if ( key == "layout_horizontal" ) {
-                hstm = value.split( ',' ).at( 0 ).trimmed().toInt();
-                sl = value.split( ',' ).at( 1 ).trimmed().toInt();
-                sr = value.split( ',' ).at( 2 ).trimmed().toInt();
+                QStringList list = value.split( ',' );
+                hstm = list.at( 0 ).trimmed().toInt();
+                sl = list.at( 1 ).trimmed().toInt();
+                sr = list.at( 2 ).trimmed().toInt();
+            }
+            else if ( key == "separator" ) {
+                QStringList list = value.split( ',' );
+                QString sep_color = list.at( 0 ).trimmed();
+                separatorColor = sep_color.leftJustified( 8, '0' ).replace( "0x", "#" );
+                sepl = list.at( 1 ).trimmed().toInt();
+                sepr = list.at( 2 ).trimmed().toInt();
             }
             else if ( key == "pinyin_marge" ) {
                 QStringList list = value.split( ',' );
@@ -373,6 +383,12 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
         p.drawPixmap( 0, 0, op.pixmap );
         p.restore();
         ++it;
+    }
+
+    if ( separatorColor != Qt::transparent ) {
+        /// draw separator
+        int sepy = opt + pt + pinyinh + pb;
+        p.drawLine( opl + sepl, sepy, width - opr - sepr, sepy );
     }
 
     p.translate( opl, opt );

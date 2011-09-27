@@ -114,10 +114,17 @@ class ThemerSogou : public Themer
         int h_zt, h_zb, h_zl, h_zr;
         int v_zt, v_zb, v_zl, v_zr;
 
+        /// optional
         QHash<QString, OverlayPixmap> h_overlays;// horizontal overlay pixmap
         QHash<QString, OverlayPixmap> v_overlays;// vertical overlay pixmap
         int h_opt, h_opb, h_opl, h_opr;
         int v_opt, v_opb, v_opl, v_opr;
+
+        /// optional
+        QColor h_separatorColor;
+        QColor v_separatorColor;
+        int h_sepl, h_sepr;
+        int v_sepl, v_sepr;
 
 /**
  * status bar layout
