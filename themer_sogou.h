@@ -22,23 +22,10 @@
 #ifndef THEMER_SOGOU_H
 #define THEMER_SOGOU_H
 
+#include "skinpixmap.h"
 #include "themer.h"
 
 #include <QHash>
-
-class PreEditBarSkin
-{
-    public:
-        explicit PreEditBarSkin();
-        explicit PreEditBarSkin( const QPixmap& skinpix, int hsl, int hsr, int vst, int vsb );
-        int skinw, skinh;
-        QPixmap topleft,    top,        topright;
-        QPixmap left,       center,     right;
-        QPixmap bottomleft, bottom,     bottomright;
-        QRegion topleftRegion, topRegion, toprightRegion;
-        QRegion leftRegion, centerRegion, rightRegion;
-        QRegion bottomleftRegion, bottomRegion, bottomrightRegion;
-};
 
 class OverlayPixmap
 {
@@ -88,27 +75,19 @@ class ThemerSogou : public Themer
 
 /**
  * preedit bar layout
- * +===============================+---------
- * |              ^|pt             |   |
- * |<-pl->##### preedit #####<-pr->|<---vst
- * |              ^|pb             |   |
- * +-------------------------------+ skin height
- * |              ^|zt             |   |
- * |<-zl->#### candidate ####<-zr->|<---vsb
- * |              ^|zb             |   |
- * +===============================+---------
- * |    hsl|<-stretchable->|hsr    |
- * |<------|--skin width---|------>|
+ * +===============================+
+ * |              ^|pt             |
+ * |<-pl->##### preedit #####<-pr->|
+ * |              ^|pb             |
+ * +-------------------------------+
+ * |              ^|zt             |
+ * |<-zl->#### candidate ####<-zr->|
+ * |              ^|zb             |
+ * +===============================+
  */
         // prefix h_->horizontal mode, v_->vertical mode
-        PreEditBarSkin h_preEditBarSkin;
-        PreEditBarSkin v_preEditBarSkin;
-        int h_hstm, v_hstm;// horizontal stretch mode, 0->scale, 1->repeat
-        int h_hsl, v_hsl;// horizontal stretchable left
-        int h_hsr, v_hsr;// horizontal stretchable right
-        int h_vstm, v_vstm;// vertical stretch mode, 0->scale, 1->repeat
-        int h_vst, v_vst;// vertical stretchable top
-        int h_vsb, v_vsb;// vertical stretchable bottom
+        SkinPixmap h_preEditBarSkin;
+        SkinPixmap v_preEditBarSkin;
         int h_pt, h_pb, h_pl, h_pr;
         int v_pt, v_pb, v_pl, v_pr;
         int h_zt, h_zb, h_zl, h_zr;

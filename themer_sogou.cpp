@@ -93,45 +93,6 @@ static void calculateOverlaySurrounding( const QHash<QString, OverlayPixmap>& ov
     }
 }
 
-/**
- *          |         |          |
- * ---------+---------+---------vst
- *          |         | ^vstm    |
- * ---------+---------+---------vsb
- *          |<--hstm->|          |
- * --------hsl-------hsr-------skinw-----skinh
- */
-
-PreEditBarSkin::PreEditBarSkin()
-{
-    skinw = 0;
-    skinh = 0;
-}
-
-PreEditBarSkin::PreEditBarSkin( const QPixmap& skinpix, int hsl, int hsr, int vst, int vsb )
-{
-    skinw = skinpix.width();
-    skinh = skinpix.height();
-    topleft = skinpix.copy( 0, 0, hsl, vst );
-    top = skinpix.copy( hsl, 0, hsr - hsl, vst );
-    topright = skinpix.copy( hsr, 0, skinw - hsr, vst );
-    left = skinpix.copy( 0, vst, hsl, vsb - vst );
-    center = skinpix.copy( hsl, vst, hsr - hsl, vsb - vst );
-    right = skinpix.copy( hsr, vst, skinw - hsr, vsb - vst );
-    bottomleft = skinpix.copy( 0, vsb, hsl, skinh - vsb );
-    bottom = skinpix.copy( hsl, vsb, hsr - hsl, skinh - vsb );
-    bottomright = skinpix.copy( hsr, vsb, skinw - hsr, skinh - vsb );
-    topleftRegion = topleft.mask();
-    topRegion = top.mask();
-    toprightRegion = topright.mask();
-    leftRegion = left.mask();
-    centerRegion = center.mask();
-    rightRegion = right.mask();
-    bottomleftRegion = bottomleft.mask();
-    bottomRegion = bottom.mask();
-    bottomrightRegion = bottomright.mask();
-}
-
 ThemerSogou* ThemerSogou::m_self = 0;
 
 ThemerSogou* ThemerSogou::self()
@@ -181,6 +142,8 @@ bool ThemerSogou::loadTheme()
     int fontPixelSize = 12;
     QString font_ch, font_en;
     QString pinyin_color, zhongwen_color;
+    int h_hsl = 0, h_hsr = 0, h_vst = 0, h_vsb = 0, h_hstm = 0, h_vstm = 0;
+    int v_hsl = 0, v_hsr = 0, v_vst = 0, v_vsb = 0, v_hstm = 0, v_vstm = 0;
     int i = 0;
     h_overlays.clear();
     v_overlays.clear();
@@ -384,8 +347,8 @@ bool ThemerSogou::loadTheme()
     if ( v_hsl > v_hsr ) qSwap( v_hsl, v_hsr );
     if ( v_vst > v_vsb ) qSwap( v_vst, v_vsb );
 
-    h_preEditBarSkin = PreEditBarSkin( h1skin, h_hsl, h_hsr, h_vst, h_vsb );
-    v_preEditBarSkin = PreEditBarSkin( v1skin, v_hsl, v_hsr, v_vst, v_vsb );
+    h_preEditBarSkin = SkinPixmap( h1skin, h_hsl, h_hsr, h_vst, h_vsb, h_hstm, h_vstm );
+    v_preEditBarSkin = SkinPixmap( v1skin, v_hsl, v_hsr, v_vst, v_vsb, v_hstm, v_vstm );
 
     /// calculate overlay pixmap surrounding size
     calculateOverlaySurrounding( h_overlays, h_opt, h_opb, h_opl, h_opr );
@@ -414,10 +377,10 @@ bool ThemerSogou::loadTheme()
 
 QSize ThemerSogou::sizeHintPreEditBar( const PreEditBar* widget ) const
 {
-    const PreEditBarSkin& skin = KIMToySettings::self()->verticalPreeditBar()
+    const SkinPixmap& skin = KIMToySettings::self()->verticalPreeditBar()
                             ? v_preEditBarSkin : h_preEditBarSkin;
-    int w = skin.skinw;
-    int h = skin.skinh;
+    int w = skin.skinw();
+    int h = skin.skinh();
 
     if ( KIMToySettings::self()->verticalPreeditBar() ) {
         int widgetsh = v_pt + v_pb + v_zt + v_zb;
@@ -463,8 +426,8 @@ QSize ThemerSogou::sizeHintPreEditBar( const PreEditBar* widget ) const
     if ( !KIMToySettings::self()->enablePreeditResizing() ) {
         /// align with skin width + 70 * x
         const int align = 70;
-        if ( w > skin.skinw ) {
-            w = skin.skinw + ( ( w - skin.skinw - 1 ) / align + 1 ) * align;
+        if ( w > skin.skinw() ) {
+            w = skin.skinw() + ( ( w - skin.skinw() - 1 ) / align + 1 ) * align;
         }
     }
 
@@ -487,80 +450,11 @@ void ThemerSogou::layoutStatusBar( StatusBarLayout* layout ) const
 
 void ThemerSogou::resizePreEditBar( const QSize& size )
 {
-    PreEditBarSkin& skin = KIMToySettings::self()->verticalPreeditBar()
-                        ? v_preEditBarSkin : h_preEditBarSkin;
-    int hstm, vstm;
-
     if ( KIMToySettings::self()->verticalPreeditBar() ) {
-        hstm = v_hstm;
-        vstm = v_vstm;
+        v_preEditBarSkin.resizePixmap( size );
     }
     else {
-        hstm = h_hstm;
-        vstm = h_vstm;
-    }
-
-    /**
-        *          |         |          |
-        * ---------+---------+---------vst
-        *          |         | ^vstm    |
-        * ---------+---------+---------vsb
-        *          |<--hstm->|          |
-        * --------hsl-------hsr-------skinw-----skinh
-        */
-
-    const int leftrightheight = size.height() - skin.topleft.height() - skin.bottomleft.height();
-    const int topbottomwidth = size.width() - skin.topleft.width() - skin.topright.width();
-
-    /// corners
-
-    /// edges
-    if ( hstm == 0 ) {
-        /// scale
-        if ( skin.top.width() != topbottomwidth ) {
-            skin.top = skin.top.scaled( topbottomwidth, skin.top.height() );
-            skin.bottom = skin.bottom.scaled( topbottomwidth, skin.bottom.height() );
-            skin.topRegion = skin.top.mask();
-            skin.bottomRegion = skin.bottom.mask();
-        }
-    }
-    if ( vstm == 0 ) {
-        /// scale
-        if ( skin.left.height() != leftrightheight ) {
-            skin.left = skin.left.scaled( skin.left.width(), leftrightheight );
-            skin.right = skin.right.scaled( skin.right.width(), leftrightheight );
-            skin.leftRegion = skin.left.mask();
-            skin.rightRegion = skin.right.mask();
-        }
-    }
-
-    /// center
-    if ( hstm == 0 ) {
-        /// scale
-        if ( vstm == 0 ) {
-            /// scale
-            if ( skin.center.width() != topbottomwidth || skin.center.height() != leftrightheight ) {
-                skin.center = skin.center.scaled( topbottomwidth, leftrightheight );
-                skin.centerRegion = skin.center.mask();
-            }
-        }
-        else {
-            /// tilling
-            if ( skin.center.width() != topbottomwidth ) {
-                skin.center = skin.center.scaled( topbottomwidth, skin.center.height() );
-                skin.centerRegion = skin.center.mask();
-            }
-        }
-    }
-    else {
-        /// tilling
-        if ( vstm == 0 ) {
-            /// scale
-            if ( skin.center.height() != leftrightheight ) {
-                skin.center = skin.center.scaled( skin.center.width(), leftrightheight );
-                skin.centerRegion = skin.center.mask();
-            }
-        }
+        h_preEditBarSkin.resizePixmap( size );
     }
 
     /// calculate mask if necessary
@@ -583,153 +477,18 @@ void ThemerSogou::resizeStatusBar( const QSize& size )
 
 void ThemerSogou::updatePreEditBarMask( const QSize& size )
 {
-    PreEditBarSkin& skin = KIMToySettings::self()->verticalPreeditBar()
-                        ? v_preEditBarSkin : h_preEditBarSkin;
-    int hstm, hsl, hsr, vstm, vst, vsb;
     int opt, opb, opl, opr;
 
     if ( KIMToySettings::self()->verticalPreeditBar() ) {
-        hstm = v_hstm;
-        hsl = v_hsl, hsr = v_hsr;
-        vstm = v_vstm;
-        vst = v_vst, vsb = v_vsb;
+        v_preEditBarSkin.resizeRegion( size );
+        m_preEditBarMask = v_preEditBarSkin.currentRegion();
         opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
     }
     else {
-        hstm = h_hstm;
-        hsl = h_hsl, hsr = h_hsr;
-        vstm = h_vstm;
-        vst = h_vst, vsb = h_vsb;
+        h_preEditBarSkin.resizeRegion( size );
+        m_preEditBarMask = h_preEditBarSkin.currentRegion();
         opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
     }
-
-    /**
-        *          |         |          |
-        * ---------+---------+---------vst
-        *          |         | ^vstm    |
-        * ---------+---------+---------vsb
-        *          |<--hstm->|          |
-        * --------hsl-------hsr-------skinw-----skinh
-        */
-
-    const int middlepixh = vsb - vst;
-    const int middlepixw = hsr - hsl;
-
-    const int leftrightheight = size.height() - skin.topleft.height() - skin.bottomleft.height();
-    const int topbottomwidth = size.width() - skin.topleft.width() - skin.topright.width();
-
-    /// corners
-    QRegion topleft = skin.topleftRegion;
-    QRegion topright = skin.toprightRegion;
-    topright.translate( hsl + topbottomwidth, 0 );
-    QRegion bottomleft = skin.bottomleftRegion;
-    bottomleft.translate( 0, vst + leftrightheight );
-    QRegion bottomright = skin.bottomrightRegion;
-    bottomright.translate( hsl + topbottomwidth, vst + leftrightheight );
-
-    /// edges
-    QRegion left, top, right, bottom;
-    if ( hstm == 0 ) {
-        /// scale
-        top = skin.topRegion;
-        bottom = skin.bottomRegion;
-    }
-    else {
-        /// tilling
-        top = QRegion( QRect( 0, 0, topbottomwidth, vst ) );
-        bottom = QRegion( QRect( 0, 0, topbottomwidth, skin.bottom.height() ) );
-        QRegion toppixRegion( skin.topRegion );
-        QRegion bottompixRegion( skin.bottomRegion );
-        QRegion tmpRegion = toppixRegion;
-        QRegion tmp2Region = bottompixRegion;
-        for ( int i = 0; i < topbottomwidth; i += middlepixw ) {
-            toppixRegion |= tmpRegion;
-            bottompixRegion |= tmp2Region;
-            tmpRegion.translate( middlepixw, 0 );
-            tmp2Region.translate( middlepixw, 0 );
-        }
-        top &= toppixRegion;
-        bottom &= bottompixRegion;
-    }
-    if ( vstm == 0 ) {
-        /// scale
-        left = skin.leftRegion;
-        right = skin.rightRegion;
-    }
-    else {
-        /// tilling
-        left = QRegion( QRect( 0, 0, hsl, leftrightheight ) );
-        right = QRegion( QRect( 0, 0, skin.right.width(), leftrightheight ) );
-        QRegion leftpixRegion( skin.leftRegion );
-        QRegion rightpixRegion( skin.rightRegion );
-        QRegion tmpRegion = leftpixRegion;
-        QRegion tmp2Region = rightpixRegion;
-        for ( int i = 0; i < leftrightheight; i += middlepixh ) {
-            leftpixRegion |= tmpRegion;
-            rightpixRegion |= tmp2Region;
-            tmpRegion.translate( 0, middlepixh );
-            tmp2Region.translate( 0, middlepixh );
-        }
-        left &= leftpixRegion;
-        right &= rightpixRegion;
-    }
-    left.translate( 0, vst );
-    top.translate( hsl, 0 );
-    right.translate( hsl + topbottomwidth, vst );
-    bottom.translate( hsl, vst + leftrightheight );
-
-    /// center
-    QRegion center( QRect( 0, 0, topbottomwidth, leftrightheight ) );
-    if ( hstm == 0 ) {
-        /// scale
-        if ( vstm == 0 ) {
-            /// scale
-            center = skin.centerRegion;
-        }
-        else {
-            /// tilling
-            QRegion centerpixRegion( skin.centerRegion );
-            QRegion tmpRegion = centerpixRegion;
-            int i;
-            for ( i = 0; i < leftrightheight; i += middlepixh ) {
-                centerpixRegion |= tmpRegion;
-                tmpRegion.translate( 0, middlepixh );
-            }
-            center &= centerpixRegion;
-        }
-    }
-    else {
-        /// tilling
-        if ( vstm == 0 ) {
-            /// scale
-            QRegion centerpixRegion( skin.centerRegion );
-            QRegion tmpRegion = centerpixRegion;
-            int i;
-            for ( i = 0; i < topbottomwidth; i += middlepixw ) {
-                centerpixRegion |= tmpRegion;
-                tmpRegion.translate( middlepixw, 0 );
-            }
-            center &= centerpixRegion;
-        }
-        else {
-            /// tilling
-            QRegion centerpixRegion( skin.centerRegion );
-            QRegion tmpRegion = centerpixRegion;
-            int i, j;
-            for ( i = 0; i < topbottomwidth; i += middlepixw ) {
-                QRegion tmp2Region = tmpRegion;
-                for ( j = 0; j < leftrightheight; j += middlepixh ) {
-                    centerpixRegion |= tmp2Region;
-                    tmp2Region.translate( 0, middlepixh );
-                }
-                tmpRegion.translate( middlepixw, 0 );
-            }
-            center &= centerpixRegion;
-        }
-    }
-    center.translate( hsl, vst );
-
-    m_preEditBarMask = topleft | top | topright | left | center | right | bottomleft | bottom | bottomright;
 
     /// overlay pixmap regions
     const QHash<QString, OverlayPixmap>& overlays = KIMToySettings::self()->verticalPreeditBar()
@@ -876,10 +635,6 @@ void ThemerSogou::blurStatusBar( StatusBar* widget )
 
 void ThemerSogou::drawPreEditBar( PreEditBar* widget )
 {
-//     kWarning() << "###" << widget->size();
-    const PreEditBarSkin& skin = KIMToySettings::self()->verticalPreeditBar()
-                        ? v_preEditBarSkin : h_preEditBarSkin;
-
     int pt = 0, pb = 0, pl = 0, pr = 0;
     int zt = 0, zb = 0, zl = 0, zr = 0;
     int opt = 0, opb = 0, opl = 0, opr = 0;
@@ -894,12 +649,8 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         p.fillPath( path, KIMToySettings::self()->preeditBarColorize() );
     }
 
-    int hstm, hsl, vstm, vst;
     if ( KIMToySettings::self()->verticalPreeditBar() ) {
-        hstm = v_hstm;
-        hsl = v_hsl;
-        vstm = v_vstm;
-        vst = v_vst;
+        v_preEditBarSkin.drawPixmap( &p, widget->width(), widget->height() );
         pt = v_pt, pb = v_pb, pl = v_pl, pr = v_pr;
         zt = v_zt, zb = v_zb, zl = v_zl, zr = v_zr;
         opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
@@ -907,65 +658,12 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         sepl = v_sepl, sepr = v_sepr;
     }
     else {
-        hstm = h_hstm;
-        hsl = h_hsl;
-        vstm = h_vstm;
-        vst = h_vst;
+        h_preEditBarSkin.drawPixmap( &p, widget->width(), widget->height() );
         pt = h_pt, pb = h_pb, pl = h_pl, pr = h_pr;
         zt = h_zt, zb = h_zb, zl = h_zl, zr = h_zr;
         opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
         separatorColor = h_separatorColor;
         sepl = h_sepl, sepr = h_sepr;
-    }
-
-    /**
-        *          |         |          |
-        * ---------+---------+---------vst
-        *          |         | ^vstm    |
-        * ---------+---------+---------vsb
-        *          |<--hstm->|          |
-        * --------hsl-------hsr-------skinw-----skinh
-        */
-
-    const int leftrightheight = widget->height() - skin.topleft.height() - skin.bottomleft.height();
-    const int topbottomwidth = widget->width() - skin.topleft.width() - skin.topright.width();
-
-    /// corners
-    p.drawPixmap( 0, 0, skin.topleft );
-    p.drawPixmap( hsl + topbottomwidth, 0, skin.topright );
-    p.drawPixmap( 0, vst + leftrightheight, skin.bottomleft );
-    p.drawPixmap( hsl + topbottomwidth, vst + leftrightheight, skin.bottomright );
-
-    /// edges
-    if ( hstm == 0 ) {
-        /// scale
-        p.drawPixmap( hsl, 0, skin.top );
-        p.drawPixmap( hsl, vst + leftrightheight, skin.bottom );
-    }
-    else {
-        /// tilling
-        p.drawTiledPixmap( hsl, 0, topbottomwidth, vst, skin.top );
-        p.drawTiledPixmap( hsl, vst + leftrightheight, topbottomwidth, skin.bottom.height(), skin.bottom );
-    }
-    if ( vstm == 0 ) {
-        /// scale
-        p.drawPixmap( 0, vst, skin.left );
-        p.drawPixmap( hsl + topbottomwidth, vst, skin.right );
-    }
-    else {
-        /// tilling
-        p.drawTiledPixmap( 0, vst, hsl, leftrightheight, skin.left );
-        p.drawTiledPixmap( hsl + topbottomwidth, vst, skin.right.width(), leftrightheight, skin.right );
-    }
-
-    /// center
-    if ( hstm == 0 && vstm == 0 ) {
-        /// scale
-        p.drawPixmap( hsl, vst, skin.center );
-    }
-    else {
-        /// tilling
-        p.drawTiledPixmap( hsl, vst, topbottomwidth, leftrightheight, skin.center );
     }
 
     /// draw overlay pixmap

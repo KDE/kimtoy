@@ -24,6 +24,7 @@ set(kimtoy_SRCS
     main.cpp
     preeditbar.cpp
     propertywidget.cpp
+    skinpixmap.cpp
     statusbar.cpp
     statusbarlayout.cpp
     themer.cpp
