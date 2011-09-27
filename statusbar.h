@@ -32,6 +32,7 @@ class KStatusNotifierItem;
 class PreEditBar;
 class StatusBarLayout;
 // class Themer;
+class ThemerFcitx;
 class ThemerNone;
 class ThemerPlasma;
 class ThemerSogou;
@@ -63,6 +64,7 @@ class StatusBar : public QWidget
         void updateSize();
     private:
 //         friend class Themer;
+        friend class ThemerFcitx;
         friend class ThemerNone;
         friend class ThemerPlasma;
         friend class ThemerSogou;

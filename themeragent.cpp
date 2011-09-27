@@ -23,6 +23,7 @@
 
 #include <QSize>
 
+#include "themer_fcitx.h"
 #include "themer_none.h"
 #include "themer_plasma.h"
 #include "themer_sogou.h"
@@ -41,7 +42,10 @@ void ThemerAgent::loadSettings()
             m_themer = ThemerPlasma::self();
             break;
         case KIMToySettings::EnumThemeType::UseCustomTheme:
-            m_themer = ThemerSogou::self();
+            if ( KIMToySettings::self()->importTheme().path().endsWith( ".fskin" ) )
+                m_themer = ThemerFcitx::self();
+            else
+                m_themer = ThemerSogou::self();
             break;
         default:
             break;

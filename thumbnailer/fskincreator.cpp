@@ -29,7 +29,6 @@
 #include <QString>
 #include <QTextStream>
 #include <KTar>
-#include <KZipFileEntry>
 #include <kdemacros.h>
 
 extern "C" {
@@ -121,6 +120,9 @@ bool FskinCreator::create( const QString& path, int width, int height, QImage& i
         QString key = line.split( '=' ).at( 0 );
         QString value = line.split( '=' ).at( 1 );
 
+        if ( value.isEmpty() )
+            continue;
+
         if ( skinfont ) {
             if ( key == "FontSize" ) {
                 font.setPixelSize( value.toInt() );
@@ -144,7 +146,7 @@ bool FskinCreator::create( const QString& path, int width, int height, QImage& i
         else if ( skininputbar ) {
             if ( key == "BackImg" ) {
                 const KArchiveEntry* e = subdir->entry( value );
-                const KArchiveFile* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if ( pix )
                     skin.loadFromData( pix->data() );
             }
@@ -174,13 +176,13 @@ bool FskinCreator::create( const QString& path, int width, int height, QImage& i
             }
             else if ( key == "BackArrow" ) {
                 const KArchiveEntry* e = subdir->entry( value );
-                const KArchiveFile* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if ( pix )
                     barrow.loadFromData( pix->data() );
             }
             else if ( key == "ForwardArrow" ) {
                 const KArchiveEntry* e = subdir->entry( value );
-                const KArchiveFile* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if ( pix )
                     farrow.loadFromData( pix->data() );
             }

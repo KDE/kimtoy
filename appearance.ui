@@ -250,7 +250,7 @@
                <bool>false</bool>
               </property>
               <property name="filter">
-               <string notr="true">*.ssf</string>
+               <string>*.ssf *.fskin</string>
               </property>
              </widget>
             </item>

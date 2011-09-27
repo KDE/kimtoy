@@ -26,6 +26,7 @@
 #include <QLayoutItem>
 
 // class Themer;
+class ThemerFcitx;
 class ThemerNone;
 class ThemerPlasma;
 class ThemerSogou;
@@ -46,6 +47,7 @@ class StatusBarLayout : public QLayout
         virtual void setGeometry( const QRect& rect );
     private:
 //         friend class Themer;
+        friend class ThemerFcitx;
         friend class ThemerNone;
         friend class ThemerPlasma;
         friend class ThemerSogou;

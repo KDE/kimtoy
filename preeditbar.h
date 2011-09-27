@@ -25,6 +25,7 @@
 #include <QWidget>
 
 // class Themer;
+class ThemerFcitx;
 class ThemerNone;
 class ThemerPlasma;
 class ThemerSogou;
@@ -66,6 +67,7 @@ class PreEditBar : public QWidget
         bool lookuptableVisible;
 
 //         friend class Themer;
+        friend class ThemerFcitx;
         friend class ThemerNone;
         friend class ThemerPlasma;
         friend class ThemerSogou;

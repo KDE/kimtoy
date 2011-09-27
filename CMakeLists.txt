@@ -28,6 +28,7 @@ set(kimtoy_SRCS
     statusbar.cpp
     statusbarlayout.cpp
     themer.cpp
+    themer_fcitx.cpp
     themer_none.cpp
     themer_plasma.cpp
     themer_sogou.cpp

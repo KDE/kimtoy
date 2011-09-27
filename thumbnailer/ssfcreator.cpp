@@ -115,6 +115,9 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
         key = line.split( '=' ).at( 0 );
         value = line.split( '=' ).at( 1 );
 
+        if ( value.isEmpty() )
+            continue;
+
         if ( display ) {
             if ( key == "font_size" )
                 fontPixelSize = value.trimmed().toInt();

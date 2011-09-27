@@ -172,6 +172,9 @@ bool ThemerSogou::loadTheme()
         key = line.split( '=' ).at( 0 );
         value = line.split( '=' ).at( 1 );
 
+        if ( value.isEmpty() )
+            continue;
+
         if ( general ) {
             /// extract meta info
         }

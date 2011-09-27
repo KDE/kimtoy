@@ -25,6 +25,7 @@
 #include <QWidget>
 
 // class Themer;
+class ThemerFcitx;
 class ThemerNone;
 class ThemerPlasma;
 class ThemerSogou;
@@ -46,6 +47,7 @@ class PropertyWidget : public QWidget
         virtual void paintEvent( QPaintEvent* event );
     private:
 //         friend class Themer;
+        friend class ThemerFcitx;
         friend class ThemerNone;
         friend class ThemerPlasma;
         friend class ThemerSogou;
