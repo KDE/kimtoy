@@ -38,6 +38,18 @@ extern "C" {
     }
 }
 
+class OverlayPixmap
+{
+    public:
+        QPixmap pixmap;
+        /// TODO: only entire window is supported atm --- nihui
+        int alignTarget;// 0->entire window, 1->preedit window, 2->candidate window
+        int alignArea;// 1->lt, 2->t, 3->rt, 4->l, 5->center, 6->r, 7->lb, 8->b, 9->rb
+        int alignHMode;// 0->align center, 1->align left, 2->align right
+        int alignVMode;// 0->align center, 1->align top, 2->align bottom
+        int mt, mb, ml, mr;// margins
+};
+
 SsfCreator::SsfCreator()
 {
 }
@@ -81,6 +93,8 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     int fontPixelSize = 12;
     QString font_ch, font_en;
     QString color_ch, color_en;
+    QHash<QString, OverlayPixmap> overlays;
+    int opt = 0, opb = 0, opl = 0, opr = 0;
 
     QTextStream ss( data );
     QString line;
@@ -137,8 +151,75 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
                 zl = list.at( 2 ).trimmed().toInt();
                 zr = list.at( 3 ).trimmed().toInt();
             }
+            else if ( key.endsWith( "_display" ) ) {
+                QString name = key.left( key.length() - 8 );
+                overlays.insert( name, OverlayPixmap() );
+            }
+            else if ( key.endsWith( "_align" ) ) {
+                QString name = key.left( key.length() - 6 );
+                QStringList numbers = value.split( ',' );
+                OverlayPixmap& op = overlays[ name ];
+                op.mt = numbers.at( 0 ).toInt();
+                op.mb = numbers.at( 1 ).toInt();
+                op.ml = numbers.at( 2 ).toInt();
+                op.mr = numbers.at( 3 ).toInt();
+                op.alignVMode = numbers.at( 4 ).toInt() + numbers.at( 5 ).toInt();/// FIXME: right or wrong?
+                op.alignHMode = numbers.at( 6 ).toInt() + numbers.at( 7 ).toInt();/// FIXME: right or wrong?
+                op.alignArea = numbers.at( 8 ).toInt();
+                op.alignTarget = numbers.at( 9 ).toInt();
+            }
+            else if ( overlays.contains( key ) ) {
+                const KArchiveEntry* e = zip.directory()->entry( value );
+                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                if ( pix )
+                    overlays[ key ].pixmap.loadFromData( pix->data() );
+            }
         }
     } while ( !line.isNull() );
+
+    /// calculate overlay pixmap surrounding
+    QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
+    while ( it != end ) {
+        const OverlayPixmap& op = it.value();
+        switch ( op.alignArea ) {
+            case 1:
+                opl = qMax( opl, op.pixmap.width() );
+                opt = qMax( opt, op.pixmap.height() );
+                break;
+            case 2:
+                opt = qMax( opt, op.pixmap.height() );
+                break;
+            case 3:
+                opr = qMax( opr, op.pixmap.width() );
+                opt = qMax( opt, op.pixmap.height() );
+                break;
+            case 4:
+                opl = qMax( opl, op.pixmap.width() );
+                break;
+            case 5:
+                /// center pixmap, no addition
+                break;
+            case 6:
+                opr = qMax( opr, op.pixmap.width() );
+                break;
+            case 7:
+                opl = qMax( opl, op.pixmap.width() );
+                opb = qMax( opb, op.pixmap.height() );
+                break;
+            case 8:
+                opb = qMax( opb, op.pixmap.height() );
+                break;
+            case 9:
+                opr = qMax( opr, op.pixmap.width() );
+                opb = qMax( opb, op.pixmap.height() );
+                break;
+            default:
+                /// never arrive here
+                break;
+        }
+        ++it;
+    }
 
     preEditFont.setFamily( font_en );
     preEditFont.setPixelSize( fontPixelSize );
@@ -162,9 +243,9 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     int targetHeight = height;
     int targetWidth = width;
 
-    height = skin.height();
+    height = qMax( pt + pinyinh + pb + zt + zhongwenh + zb + opt + opb, skin.height() );
     width = qMax( pl + pinyinw + pr, zl + zhongwenw + zr );
-    width = qMax( width, targetWidth );
+    width = qMax( width + opl + opr, targetWidth );
     width = qMax( width, skin.width() );
 
     QPixmap pixmap( width, height );
@@ -183,6 +264,118 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     else
         p.drawTiledPixmap( sl, 0, width - sl - sr, height, middlepix );
 
+    /// draw overlay pixmap
+    it = overlays.constBegin();
+    end = overlays.constEnd();
+    while ( it != end ) {
+        const OverlayPixmap& op = it.value();
+        p.save();
+        switch ( op.alignArea ) {
+            case 1:
+                p.translate( -op.mr, -op.mb );
+                break;
+            case 2:
+                if ( op.alignHMode == 0 ) {
+                    p.translate( ( width + opl - opr + op.pixmap.width() ) / 2, 0 );
+                    p.translate( 0, -op.mb );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    p.translate( opl, 0 );
+                    p.translate( op.ml, -op.mb );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    p.translate( width - opr - op.pixmap.width(), 0 );
+                    p.translate( -op.mr, -op.mb );
+                }
+                break;
+            case 3:
+                p.translate( width - opr, 0 );
+                p.translate( op.ml, -op.mb );
+                break;
+            case 4:
+                if ( op.alignVMode == 0 ) {
+                    p.translate( 0, ( height - opb + opt + op.pixmap.height() ) / 2 );
+                    p.translate( -op.mr, 0 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    p.translate( 0, opt );
+                    p.translate( -op.mr, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    p.translate( 0, height - opb - op.pixmap.height() );
+                    p.translate( -op.mr, -op.mb );
+                }
+                break;
+            case 5:
+                if ( op.alignHMode == 0 ) {
+                    p.translate( ( width + opl - opr + op.pixmap.width() ) / 2, 0 );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    p.translate( opl, 0 );
+                    p.translate( op.ml, 0 );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    p.translate( width - opr - op.pixmap.width(), 0 );
+                    p.translate( -op.mr, 0 );
+                }
+                if ( op.alignVMode == 0 ) {
+                    p.translate( 0, ( height - opb + opt + op.pixmap.height() ) / 2 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    p.translate( 0, opt );
+                    p.translate( 0, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    p.translate( 0, height - opb - op.pixmap.height() );
+                    p.translate( 0, -op.mb );
+                }
+                break;
+            case 6:
+                if ( op.alignVMode == 0 ) {
+                    p.translate( width - opr, ( height - opb + opt + op.pixmap.height() ) / 2 );
+                    p.translate( op.ml, 0 );
+                }
+                else if ( op.alignVMode == 1 ) {
+                    p.translate( width - opr, opt );
+                    p.translate( op.ml, op.mt );
+                }
+                else if ( op.alignVMode == 2 ) {
+                    p.translate( width - opr, height - opb - op.pixmap.height() );
+                    p.translate( op.ml, -op.mb );
+                }
+                break;
+            case 7:
+                p.translate( 0, height - opb );
+                p.translate( -op.mr, op.mt );
+                break;
+            case 8:
+                if ( op.alignHMode == 0 ) {
+                    p.translate( ( width + opl - opr + op.pixmap.width() ) / 2, height - opb );
+                    p.translate( 0, op.mt );
+                }
+                else if ( op.alignHMode == 1 ) {
+                    p.translate( opl, height - opb );
+                    p.translate( op.ml, op.mt );
+                }
+                else if ( op.alignHMode == 2 ) {
+                    p.translate( width - opr - op.pixmap.width(), height - opb );
+                    p.translate( -op.mr, op.mt );
+                }
+                break;
+            case 9:
+                p.translate( width - opr, height - opb );
+                p.translate( op.ml, op.mt );
+                break;
+            default:
+                /// never arrive here
+                break;
+        }
+        p.drawPixmap( 0, 0, op.pixmap );
+        p.restore();
+        ++it;
+    }
+
+    p.translate( opl, opt );
     int y = 0;
 
     /// draw preedit / aux text

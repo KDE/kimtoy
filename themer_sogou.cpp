@@ -1054,6 +1054,7 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
     }
 
 
+    p.translate( opl, opt );
     int y = 0;
 
     y += pt;
