@@ -47,15 +47,24 @@ SkinPixmap::SkinPixmap( const QPixmap& skinpix, int hsl, int hsr, int vst, int v
     m_hsl = hsl, m_hsr = hsr;
     m_vst = vst, m_vsb = vsb;
     m_hstm = hstm, m_vstm = vstm;
-    m_topleft = skinpix.copy( 0, 0, hsl, vst );
-    m_top = skinpix.copy( hsl, 0, hsr - hsl, vst );
-    m_topright = skinpix.copy( hsr, 0, m_skinw - hsr, vst );
-    m_left = skinpix.copy( 0, vst, hsl, vsb - vst );
-    m_center = skinpix.copy( hsl, vst, hsr - hsl, vsb - vst );
-    m_right = skinpix.copy( hsr, vst, m_skinw - hsr, vsb - vst );
-    m_bottomleft = skinpix.copy( 0, vsb, hsl, m_skinh - vsb );
-    m_bottom = skinpix.copy( hsl, vsb, hsr - hsl, m_skinh - vsb );
-    m_bottomright = skinpix.copy( hsr, vsb, m_skinw - hsr, m_skinh - vsb );
+    o_topleft = skinpix.copy( 0, 0, hsl, vst );
+    o_top = skinpix.copy( hsl, 0, hsr - hsl, vst );
+    o_topright = skinpix.copy( hsr, 0, m_skinw - hsr, vst );
+    o_left = skinpix.copy( 0, vst, hsl, vsb - vst );
+    o_center = skinpix.copy( hsl, vst, hsr - hsl, vsb - vst );
+    o_right = skinpix.copy( hsr, vst, m_skinw - hsr, vsb - vst );
+    o_bottomleft = skinpix.copy( 0, vsb, hsl, m_skinh - vsb );
+    o_bottom = skinpix.copy( hsl, vsb, hsr - hsl, m_skinh - vsb );
+    o_bottomright = skinpix.copy( hsr, vsb, m_skinw - hsr, m_skinh - vsb );
+    m_topleft = o_topleft;
+    m_top = o_top;
+    m_topright = o_topright;
+    m_left = o_left;
+    m_center = o_center;
+    m_right = o_right;
+    m_bottomleft = o_bottomleft;
+    m_bottom = o_bottom;
+    m_bottomright = o_bottomright;
     m_topleftRegion = m_topleft.mask();
     m_topRegion = m_top.mask();
     m_toprightRegion = m_topright.mask();
@@ -78,8 +87,8 @@ void SkinPixmap::resizePixmap( const QSize& size )
     if ( m_hstm == 0 ) {
         /// scale
         if ( m_top.width() != topbottomwidth ) {
-            m_top = m_top.scaled( topbottomwidth, m_top.height() );
-            m_bottom = m_bottom.scaled( topbottomwidth, m_bottom.height() );
+            m_top = o_top.scaled( topbottomwidth, m_top.height() );
+            m_bottom = o_bottom.scaled( topbottomwidth, m_bottom.height() );
             m_topRegion = m_top.mask();
             m_bottomRegion = m_bottom.mask();
         }
@@ -87,8 +96,8 @@ void SkinPixmap::resizePixmap( const QSize& size )
     if ( m_vstm == 0 ) {
         /// scale
         if ( m_left.height() != leftrightheight ) {
-            m_left = m_left.scaled( m_left.width(), leftrightheight );
-            m_right = m_right.scaled( m_right.width(), leftrightheight );
+            m_left = o_left.scaled( m_left.width(), leftrightheight );
+            m_right = o_right.scaled( m_right.width(), leftrightheight );
             m_leftRegion = m_left.mask();
             m_rightRegion = m_right.mask();
         }
@@ -100,14 +109,14 @@ void SkinPixmap::resizePixmap( const QSize& size )
         if ( m_vstm == 0 ) {
             /// scale
             if ( m_center.width() != topbottomwidth || m_center.height() != leftrightheight ) {
-                m_center = m_center.scaled( topbottomwidth, leftrightheight );
+                m_center = o_center.scaled( topbottomwidth, leftrightheight );
                 m_centerRegion = m_center.mask();
             }
         }
         else {
             /// tilling
             if ( m_center.width() != topbottomwidth ) {
-                m_center = m_center.scaled( topbottomwidth, m_center.height() );
+                m_center = o_center.scaled( topbottomwidth, m_center.height() );
                 m_centerRegion = m_center.mask();
             }
         }
@@ -117,7 +126,7 @@ void SkinPixmap::resizePixmap( const QSize& size )
         if ( m_vstm == 0 ) {
             /// scale
             if ( m_center.height() != leftrightheight ) {
-                m_center = m_center.scaled( m_center.width(), leftrightheight );
+                m_center = o_center.scaled( m_center.width(), leftrightheight );
                 m_centerRegion = m_center.mask();
             }
         }

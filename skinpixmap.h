@@ -40,6 +40,11 @@ class SkinPixmap
         int m_skinw, m_skinh;
         int m_hsl, m_hsr, m_vst, m_vsb;
         int m_hstm, m_vstm;// stretch mode, 0->scale, 1->repeat
+        /// original pixmaps
+        QPixmap o_topleft,    o_top,        o_topright;
+        QPixmap o_left,       o_center,     o_right;
+        QPixmap o_bottomleft, o_bottom,     o_bottomright;
+        /// scaled pixmaps
         QPixmap m_topleft,    m_top,        m_topright;
         QPixmap m_left,       m_center,     m_right;
         QPixmap m_bottomleft, m_bottom,     m_bottomright;
