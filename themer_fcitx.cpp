@@ -232,8 +232,8 @@ bool ThemerFcitx::loadTheme()
         }
     } while ( !line.isNull() );
 
-    preEditBarSkin = SkinPixmap( preEditBarPixmap, ml, mr, mt, mb, 0, 0 );
-    statusBarSkin = SkinPixmap( statusBarPixmap, sml, smr, smt, smb, 0, 0 );
+    preEditBarSkin = SkinPixmap( preEditBarPixmap, ml, preEditBarPixmap.width() - mr, mt, preEditBarPixmap.height() - mb, 0, 0 );
+    statusBarSkin = SkinPixmap( statusBarPixmap, sml, statusBarPixmap.width() - smr, smt, statusBarPixmap.height() - smb, 0, 0 );
 
     font.setBold( true );
 
@@ -257,7 +257,7 @@ QSize ThemerFcitx::sizeHintPreEditBar( const PreEditBar* widget ) const
     int pinyinauxw = QFontMetrics( m_preEditFont ).width( widget->m_text + widget->m_auxText );
     w = qMax( pinyinauxw + ml + mr, w );
 
-    int candidateh = mt + ych - m_candidateFontHeight;
+    int candidateh = mt + ych - m_candidateFontHeight + mb;
     /// lookuptable
     if ( KIMToySettings::self()->verticalPreeditBar() ) {
         int count = qMin( widget->m_labels.count(), widget->m_candidates.count() );
