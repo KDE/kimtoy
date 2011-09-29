@@ -1,3 +1,18 @@
+2011-09-29 v1.1
+add option to custom background colorizing
+adjust input method configuration page
+update kimpanel dbus protocol
+display text correctly when property icon is missing
+adjust status bar layout
+fix the issue that the preedit bar becomes broken in some conditions
+fix the issue that the preedit bar and status bar is hidden by osd-lyrics
+support the custom overlay pixmap feature in sogou theme
+support custom seperator feature in sogou theme
+only blur the themed region when using sogou theme
+add thumbnailer for fcitx surface package file
+support importing fcitx-4.1 .fskin themes
+fix the layout issue of text in thumbnail image
+
 2011-09-06 v1.0.1
 fix build issue with ibus-1.3.99.20110817
 
