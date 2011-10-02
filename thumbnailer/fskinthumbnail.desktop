@@ -7,6 +7,7 @@ Name[pt_BR]=Arquivo de superfície do Fcitx
 Name[sv]=Fcitx-ytfil
 Name[uk]=Файл поверхні Fcitx
 Name[x-test]=xxFcitx Surface Filexx
+Name[zh_CN]=Fcitx 皮肤文件
 X-KDE-ServiceTypes=ThumbCreator
 MimeType=application/x-fskin;
 CacheThumbnail=false
