@@ -275,7 +275,7 @@ bool SsfCreator::create( const QString& path, int width, int height, QImage& img
     if ( hstm == 0 )
         p.drawPixmap( sl, 0, middlepix.scaled( width - sl - sr, height ) );
     else
-        p.drawTiledPixmap( sl, 0, width - sl - sr, height, middlepix );
+        p.drawTiledPixmap( sl, 0, width - sl - sr, height, middlepix.scaled( middlepix.width(), height ) );
 
     /// draw overlay pixmap
     it = overlays.constBegin();
