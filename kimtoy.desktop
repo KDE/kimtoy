@@ -2,6 +2,7 @@
 Name=KIMToy
 Name[cs]=KIMToy
 Name[es]=KIMToy
+Name[fr]=KIMToy
 Name[nl]=KIMToy
 Name[pt]=KIMToy
 Name[pt_BR]=KIMToy
@@ -11,6 +12,7 @@ Name[x-test]=xxKIMToyxx
 Name[zh_CN]=KIMToy
 GenericName=Input Method Frontend
 GenericName[es]=Interfaz de método de entrada
+GenericName[fr]=Interface de méthode de saisie
 GenericName[nl]=Frontend van invoermethode
 GenericName[pt]=Interface dos Métodos de Introdução de Dados
 GenericName[pt_BR]=Infraestrutura de método de entrada
