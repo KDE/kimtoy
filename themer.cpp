@@ -56,10 +56,12 @@ void Themer::loadSettings()
 
 void Themer::resizePreEditBar( const QSize& size )
 {
+    Q_UNUSED(size);
 }
 
 void Themer::resizeStatusBar( const QSize& size )
 {
+    Q_UNUSED(size);
 }
 
 void Themer::blurPreEditBar( PreEditBar* widget )

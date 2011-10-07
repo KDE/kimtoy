@@ -439,6 +439,7 @@ QSize ThemerSogou::sizeHintPreEditBar( const PreEditBar* widget ) const
 
 QSize ThemerSogou::sizeHintStatusBar( const StatusBar* widget ) const
 {
+    Q_UNUSED(widget);
     return m_statusBarSkin.size();
 }
 

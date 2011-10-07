@@ -62,5 +62,6 @@ void PropertyWidget::mouseReleaseEvent( QMouseEvent* event )
 
 void PropertyWidget::paintEvent( QPaintEvent* event )
 {
+    Q_UNUSED(event);
     ThemerAgent::drawPropertyWidget( this );
 }

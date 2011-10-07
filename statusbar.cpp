@@ -197,6 +197,7 @@ void StatusBar::resizeEvent( QResizeEvent* event )
 
 void StatusBar::paintEvent( QPaintEvent* event )
 {
+    Q_UNUSED(event);
     ThemerAgent::drawStatusBar( this );
 }
 

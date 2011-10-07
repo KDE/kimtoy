@@ -116,17 +116,24 @@ void PreEditBar::resizeEvent( QResizeEvent* event )
 
 void PreEditBar::paintEvent( QPaintEvent* event )
 {
+    Q_UNUSED(event);
     ThemerAgent::drawPreEditBar( this );
 }
 
 void PreEditBar::slotUpdateSpotLocation( int x, int y )
 {
-    x = qMin( x, QApplication::desktop()->availableGeometry().width() - width() );
-    if ( y + height() > QApplication::desktop()->availableGeometry().height() ) {
+    QRect screenRect = QApplication::desktop()->screenGeometry(QPoint(x, y));
+    x = qMin(x, screenRect.x() + screenRect.width() - width());
+    if(y > screenRect.y() + screenRect.height()) {
+        y = screenRect.height();
+    }
+
+    if(y + height() > screenRect.y() + screenRect.height()) {
         /// minus 20 to make preedit bar never overlap the input context
         y -= height() + 20;
     }
-    move( x, y );
+    if(QPoint(x, y) != pos())
+        move(x, y);
 }
 
 void PreEditBar::slotShowPreedit( bool show )
