@@ -8,6 +8,7 @@
     <include>QColor</include>
     <include>KGlobalSettings</include>
     <include>KStandardDirs</include>
+    <include>Plasma/Theme</include>
     <group name="inputmethod">
         <entry name="RunFcitx" type="Bool">
             <default>false</default>
@@ -118,17 +119,6 @@
         <entry name="StatusBarColorize" type="Color">
             <default code="true">Qt::transparent</default>
         </entry>
-        <entry name="ThemeType" type="Enum">
-            <choices>
-                <choice name="NoTheme"/>
-                <choice name="UseDefaultPlasmaTheme"/>
-                <choice name="UseCustomTheme"/>
-            </choices>
-            <default>UseDefaultPlasmaTheme</default>
-        </entry>
-        <entry name="ImportTheme" type="Url">
-            <default></default>
-        </entry>
         <entry name="NoStatusBarTheme" type="Bool">
             <default>false</default>
         </entry>
@@ -137,6 +127,16 @@
         </entry>
         <entry name="UseCustomColor" type="Bool">
             <default>false</default>
+        </entry>
+    </group>
+    <group name="theme">
+        <entry name="ThemeFolder" type="Url">
+            <default></default>
+        </entry>
+        <entry name="ThemeUri" type="String">
+            <default code="true">
+                QString( "__plasma__" ) + Plasma::Theme::defaultTheme()->themeName()
+            </default>
         </entry>
     </group>
     <group name="performance">

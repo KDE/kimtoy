@@ -34,21 +34,21 @@ static Themer* m_themer = 0;
 
 void ThemerAgent::loadSettings()
 {
-    switch ( KIMToySettings::self()->themeType() ) {
-        case KIMToySettings::EnumThemeType::NoTheme:
-            m_themer = ThemerNone::self();
-            break;
-        case KIMToySettings::EnumThemeType::UseDefaultPlasmaTheme:
-            m_themer = ThemerPlasma::self();
-            break;
-        case KIMToySettings::EnumThemeType::UseCustomTheme:
-            if ( KIMToySettings::self()->importTheme().path().endsWith( ".fskin" ) )
-                m_themer = ThemerFcitx::self();
-            else
-                m_themer = ThemerSogou::self();
-            break;
-        default:
-            break;
+    QString themeUri = KIMToySettings::self()->themeUri();
+    if ( themeUri == "__none__" ) {
+        m_themer = ThemerNone::self();
+    }
+    else if ( themeUri.startsWith( "__plasma__" ) ) {
+        m_themer = ThemerPlasma::self();
+    }
+    else if ( themeUri.endsWith( ".fskin" ) ) {
+        m_themer = ThemerFcitx::self();
+    }
+    else if ( themeUri.endsWith( ".ssf" ) ) {
+        m_themer = ThemerSogou::self();
+    }
+    else {
+        m_themer = ThemerNone::self();
     }
 }
 
@@ -56,7 +56,6 @@ void ThemerAgent::loadTheme()
 {
     bool success = m_themer->loadTheme();
     if ( !success ) {
-        KIMToySettings::self()->setThemeType( KIMToySettings::EnumThemeType::NoTheme );
         m_themer = ThemerNone::self();
         m_themer->loadTheme();
     }

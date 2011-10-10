@@ -113,7 +113,7 @@ ThemerSogou::~ThemerSogou()
 
 bool ThemerSogou::loadTheme()
 {
-    QString file = KIMToySettings::self()->importTheme().path();
+    QString file = KIMToySettings::self()->themeUri();
     if ( !QFile::exists( file ) )
         return false;
 

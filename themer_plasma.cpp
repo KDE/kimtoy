@@ -59,25 +59,30 @@ ThemerPlasma::~ThemerPlasma()
 
 bool ThemerPlasma::loadTheme()
 {
-    m_statusBarSvg.setImagePath( "widgets/background" );
+    QString themeUri = KIMToySettings::self()->themeUri();
+
+    Plasma::Theme plasmaTheme;
+    // "__plasma__" + themeName
+    plasmaTheme.setThemeName( themeUri.mid( 10 ) );
+
+    const QString imagePath = plasmaTheme.imagePath( "widgets/background" );
+    m_statusBarSvg.setImagePath( imagePath );
     m_statusBarSvg.setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
-    m_preeditBarSvg.setImagePath( "widgets/background" );
+    m_preeditBarSvg.setImagePath( imagePath );
     m_preeditBarSvg.setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
-    Plasma::Theme* theme = Plasma::Theme::defaultTheme();
-
-    m_preEditFont = theme->font( Plasma::Theme::DefaultFont );
-    m_labelFont = theme->font( Plasma::Theme::DesktopFont );
-    m_candidateFont = theme->font( Plasma::Theme::DefaultFont );
+    m_preEditFont = plasmaTheme.font( Plasma::Theme::DefaultFont );
+    m_labelFont = plasmaTheme.font( Plasma::Theme::DesktopFont );
+    m_candidateFont = plasmaTheme.font( Plasma::Theme::DefaultFont );
 
     m_preEditFontHeight = QFontMetrics( m_preEditFont ).height();
     m_labelFontHeight = QFontMetrics( m_labelFont ).height();
     m_candidateFontHeight = QFontMetrics( m_candidateFont ).height();
 
-    m_candidateColor = theme->color( Plasma::Theme::TextColor );
-    m_preEditColor = theme->color( Plasma::Theme::TextColor );
-    m_labelColor = theme->color( Plasma::Theme::HighlightColor );
+    m_candidateColor = plasmaTheme.color( Plasma::Theme::TextColor );
+    m_preEditColor = plasmaTheme.color( Plasma::Theme::TextColor );
+    m_labelColor = plasmaTheme.color( Plasma::Theme::HighlightColor );
 
     return true;
 }

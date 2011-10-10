@@ -55,6 +55,7 @@
 #include "kimtoysettings.h"
 #include "inputmethod.h"
 #include "appearance.h"
+#include "theme.h"
 #include "performance.h"
 
 static void extractProperty( const QString& str,
@@ -308,6 +309,7 @@ void StatusBar::preferences()
     dialog->setFaceType( KPageDialog::List );
     dialog->addPage( new InputMethodWidget, i18n( "Input method" ), "draw-freehand" );
     dialog->addPage( new AppearanceWidget, i18n( "Appearance" ), "preferences-desktop-color" );
+    dialog->addPage( new ThemeWidget, i18n( "Theme" ), "tools-wizard" );
     dialog->addPage( new PerformanceWidget, i18n( "Performance" ), "preferences-system-performance" );
     connect( dialog, SIGNAL(settingsChanged(const QString&)),
              this, SLOT(loadSettings()) );

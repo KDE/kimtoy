@@ -27,6 +27,8 @@ set(kimtoy_SRCS
     skinpixmap.cpp
     statusbar.cpp
     statusbarlayout.cpp
+    themelistview.cpp
+    themelistmodel.cpp
     themer.cpp
     themer_fcitx.cpp
     themer_none.cpp
@@ -38,6 +40,7 @@ set(kimtoy_SRCS
 kde4_add_ui_files(kimtoy_SRCS
     appearance.ui
     inputmethod.ui
+    theme.ui
     performance.ui
 )
 
