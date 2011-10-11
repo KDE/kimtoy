@@ -27,6 +27,7 @@ set(kimtoy_SRCS
     skinpixmap.cpp
     statusbar.cpp
     statusbarlayout.cpp
+    theme.cpp
     themelistview.cpp
     themelistmodel.cpp
     themer.cpp
@@ -61,11 +62,13 @@ target_link_libraries(kimtoy
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_PLASMA_LIBS}
+    ${KDE4_KNEWSTUFF3_LIBS}
 )
 
 install(TARGETS kimtoy ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS kimtoy.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(PROGRAMS kimtoy.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})
+install(FILES kimtoy.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 install(FILES org.kde.impanel.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
 add_subdirectory(thumbnailer)

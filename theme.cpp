@@ -19,33 +19,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef THEME_H
-#define THEME_H
+#include "theme.h"
 
-#include "ui_theme.h"
+#include <KFileDialog>
+#include <KIO/CopyJob>
+#include <knewstuff3/downloaddialog.h>
 
-#include <QTimer>
-#include <KIcon>
+#include "kimtoysettings.h"
 
-#include "themelistview.h"
-
-class ThemeWidget : public QWidget, public Ui::Theme
+void ThemeWidget::installTheme()
 {
-    Q_OBJECT
-    public:
-        explicit ThemeWidget() {
-            setupUi( this );
-            refreshButton->setIcon( KIcon( "view-refresh" ) );
-            installButton->setIcon( KIcon( "utilities-file-archiver" ) );
-            downloadButton->setIcon( KIcon( "get-hot-new-stuff" ) );
-            connect( refreshButton, SIGNAL(clicked()), kcfg_ThemeUri, SLOT(reload()) );
-            connect( installButton, SIGNAL(clicked()), this, SLOT(installTheme()) );
-            connect( downloadButton, SIGNAL(clicked()), this, SLOT(downloadTheme()) );
-            QTimer::singleShot( 0, kcfg_ThemeUri, SLOT(reload()) );
-        }
-    private Q_SLOTS:
-        void installTheme();
-        void downloadTheme();
-};
+    KUrl fileUrl = KFileDialog::getOpenUrl();
+    KUrl destUrl( KIMToySettings::self()->themeFolder() );
+    KIO::copy( fileUrl, destUrl, KIO::HideProgressInfo );
+}
 
-#endif // THEME_H
+void ThemeWidget::downloadTheme()
+{
+    KNS3::DownloadDialog dialog;
+    dialog.exec();
+    if ( !dialog.changedEntries().isEmpty() ) {
+        kcfg_ThemeUri->reload();
+    }
+}

@@ -34,7 +34,7 @@ class ThemeListView : public QListView
         QString themeUri() const;
         void setThemeUri( const QString& themeUri );
     public Q_SLOTS:
-        void refresh();
+        void reload();
     Q_SIGNALS:
         void themeUriChanged( const QString& newThemeUri );
     protected:

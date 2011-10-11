@@ -147,10 +147,19 @@ void ThemeListModel::loadPlasmaThemes()
 
 void ThemeListModel::loadFileThemes()
 {
-//     QDir dir("/home/nihui/dev/kimtoy-sandbox/pifuwork/");
+    // load local themes
     QString themeFolder = KIMToySettings::self()->themeFolder().path();
+//     kWarning() << themeFolder;
     QDir dir( themeFolder );
     QFileInfoList es = dir.entryInfoList( QStringList() << "*.fskin" << "*.ssf" );
+
+    // load downloaded themes
+    QString knsFolder = KStandardDirs::locateLocal( "appdata", "themes/" );
+//     kWarning() << knsFolder;
+    if ( knsFolder != themeFolder ) {
+        QDir knsThemeDir( knsFolder );
+        es << knsThemeDir.entryInfoList( QStringList() << "*.fskin" << "*.ssf" );
+    }
 
     KFileItemList items;
     foreach ( const QFileInfo& e, es ) {

@@ -73,7 +73,7 @@ void ThemeListView::setThemeUri( const QString& themeUri )
     }
 }
 
-void ThemeListView::refresh()
+void ThemeListView::reload()
 {
     ThemeListModel* tm = static_cast<ThemeListModel*>(model());
     tm->reloadThemes();

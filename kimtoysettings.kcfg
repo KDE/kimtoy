@@ -131,7 +131,9 @@
     </group>
     <group name="theme">
         <entry name="ThemeFolder" type="Url">
-            <default></default>
+            <default code="true">
+                KStandardDirs::locateLocal( "appdata", "themes/" )
+            </default>
         </entry>
         <entry name="ThemeUri" type="String">
             <default code="true">
