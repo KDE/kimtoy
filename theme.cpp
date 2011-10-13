@@ -23,15 +23,33 @@
 
 #include <KFileDialog>
 #include <KIO/CopyJob>
+#include <KLocale>
+#include <KMessageBox>
 #include <knewstuff3/downloaddialog.h>
 
 #include "kimtoysettings.h"
 
 void ThemeWidget::installTheme()
 {
-    KUrl fileUrl = KFileDialog::getOpenUrl();
-    KUrl destUrl( KIMToySettings::self()->themeFolder() );
-    KIO::copy( fileUrl, destUrl, KIO::HideProgressInfo );
+    QString filePath = KFileDialog::getOpenFileName();
+
+    if ( filePath.isEmpty() )
+        return;
+
+    if ( !filePath.endsWith( ".ssf" ) && !filePath.endsWith( ".fskin" ) ) {
+        KMessageBox::error( this, i18n( "Unsupported theme type." ) );
+        return;
+    }
+
+    KUrl destUrl = KIMToySettings::self()->themeFolder();
+
+    if ( filePath.startsWith( destUrl.path() ) ) {
+        KMessageBox::error( this, i18n( "This theme has already been installed." ) );
+        return;
+    }
+
+    KJob* job = KIO::copy( KUrl( filePath ), destUrl, KIO::HideProgressInfo );
+    connect( job, SIGNAL(finished(KJob*)), kcfg_ThemeUri, SLOT(reload()) );
 }
 
 void ThemeWidget::downloadTheme()

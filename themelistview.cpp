@@ -38,6 +38,8 @@ ThemeListView::ThemeListView( QWidget* parent )
     setEditTriggers( QAbstractItemView::NoEditTriggers );
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
     setSelectionMode( QAbstractItemView::SingleSelection );
+    setAutoScroll( false );
+    setAlternatingRowColors( true );
 
     ThemeListModel* tm = new ThemeListModel( this );
     ThemeListDelegate* td = new ThemeListDelegate;
@@ -89,7 +91,7 @@ void ThemeListView::resizeEvent( QResizeEvent* event )
 
 void ThemeListView::slotCurrentChanged( const QModelIndex& current, const QModelIndex& previous )
 {
-    kWarning();
+    Q_UNUSED(previous)
 
     m_themeUri = current.data( Qt::DisplayRole ).toString();
     emit themeUriChanged( m_themeUri );
