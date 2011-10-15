@@ -39,11 +39,11 @@
 
 PreEditBar::PreEditBar()
 {
-    setWindowFlags( Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint );
-    KWindowSystem::setState( winId(), NET::SkipTaskbar | NET::SkipPager | NET::StaysOnTop );
-    KWindowSystem::setType( winId(), NET::PopupMenu );
+    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::StaysOnTop);
+    KWindowSystem::setType(winId(), NET::PopupMenu);
 
-    installEventFilter( this );
+    installEventFilter(this);
 
     m_moving = false;
 
@@ -52,28 +52,28 @@ PreEditBar::PreEditBar()
     lookuptableVisible = false;
 
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateSpotLocation",
-                        this, SLOT(slotUpdateSpotLocation(int,int)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowPreedit",
-                        this, SLOT(slotShowPreedit(bool)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowAux",
-                        this, SLOT(slotShowAux(bool)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowLookupTable",
-                        this, SLOT(slotShowLookupTable(bool)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditCaret",
-                        this, SLOT(slotUpdatePreeditCaret(int)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditText",
-                        this, SLOT(slotUpdatePreeditText(const QString&,
-                                                         const QString&)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateAux",
-                        this, SLOT(slotUpdateAux(const QString&,
-                                                 const QString&)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTable",
-                        this, SLOT(slotUpdateLookupTable(const QStringList&,
-                                                         const QStringList&,
-                                                         const QStringList&,
-                                                         bool,
-                                                         bool)) );
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateSpotLocation",
+                       this, SLOT(slotUpdateSpotLocation(int, int)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowPreedit",
+                       this, SLOT(slotShowPreedit(bool)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowAux",
+                       this, SLOT(slotShowAux(bool)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowLookupTable",
+                       this, SLOT(slotShowLookupTable(bool)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditCaret",
+                       this, SLOT(slotUpdatePreeditCaret(int)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditText",
+                       this, SLOT(slotUpdatePreeditText(const QString&,
+                                                        const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateAux",
+                       this, SLOT(slotUpdateAux(const QString&,
+                                                const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTable",
+                       this, SLOT(slotUpdateLookupTable(const QStringList&,
+                                                        const QStringList&,
+                                                        const QStringList&,
+                                                        bool,
+                                                        bool)));
 
     updateSize();
 }
@@ -82,86 +82,86 @@ PreEditBar::~PreEditBar()
 {
 }
 
-bool PreEditBar::eventFilter( QObject* object, QEvent* event )
+bool PreEditBar::eventFilter(QObject* object, QEvent* event)
 {
-    if ( event->type() == QEvent::MouseButtonPress ) {
+    if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-        if ( mouseEvent->button() == Qt::RightButton ) {
+        if (mouseEvent->button() == Qt::RightButton) {
             m_pointPos = mouseEvent->pos();
             m_moving = true;
             return true;
         }
         m_moving = false;
-        return QObject::eventFilter( object, event );
+        return QObject::eventFilter(object, event);
     }
-    if ( event->type() == QEvent::MouseMove && m_moving ) {
+    if (event->type() == QEvent::MouseMove && m_moving) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-        move( mouseEvent->globalPos() - m_pointPos );
+        move(mouseEvent->globalPos() - m_pointPos);
         return true;
     }
-    return QObject::eventFilter( object, event );
+    return QObject::eventFilter(object, event);
 }
 
-void PreEditBar::resizeEvent( QResizeEvent* event )
+void PreEditBar::resizeEvent(QResizeEvent* event)
 {
-    ThemerAgent::resizePreEditBar( event->size() );
-    if ( KIMToySettings::self()->enableWindowMask() ) {
-        ThemerAgent::maskPreEditBar( this );
+    ThemerAgent::resizePreEditBar(event->size());
+    if (KIMToySettings::self()->enableWindowMask()) {
+        ThemerAgent::maskPreEditBar(this);
     }
-    slotUpdateSpotLocation( x(), y() );
-    if ( KIMToySettings::self()->enableBackgroundBlur() ) {
-        ThemerAgent::blurPreEditBar( this );
+    slotUpdateSpotLocation(x(), y());
+    if (KIMToySettings::self()->enableBackgroundBlur()) {
+        ThemerAgent::blurPreEditBar(this);
     }
 }
 
-void PreEditBar::paintEvent( QPaintEvent* event )
+void PreEditBar::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-    ThemerAgent::drawPreEditBar( this );
+    ThemerAgent::drawPreEditBar(this);
 }
 
-void PreEditBar::slotUpdateSpotLocation( int x, int y )
+void PreEditBar::slotUpdateSpotLocation(int x, int y)
 {
     QRect screenRect = QApplication::desktop()->screenGeometry(QPoint(x, y));
     x = qMin(x, screenRect.x() + screenRect.width() - width());
-    if(y > screenRect.y() + screenRect.height()) {
+    if (y > screenRect.y() + screenRect.height()) {
         y = screenRect.height();
     }
 
-    if(y + height() > screenRect.y() + screenRect.height()) {
+    if (y + height() > screenRect.y() + screenRect.height()) {
         /// minus 20 to make preedit bar never overlap the input context
         y -= height() + 20;
     }
-    if(QPoint(x, y) != pos())
+    if (QPoint(x, y) != pos())
         move(x, y);
 }
 
-void PreEditBar::slotShowPreedit( bool show )
+void PreEditBar::slotShowPreedit(bool show)
 {
     preeditVisible = show;
     updateVisible();
 }
 
-void PreEditBar::slotShowAux( bool show )
+void PreEditBar::slotShowAux(bool show)
 {
     auxVisible = show;
     updateVisible();
 }
 
-void PreEditBar::slotShowLookupTable( bool show )
+void PreEditBar::slotShowLookupTable(bool show)
 {
     lookuptableVisible = show;
     updateVisible();
 }
 
-void PreEditBar::slotUpdatePreeditCaret( int pos )
+void PreEditBar::slotUpdatePreeditCaret(int pos)
 {
     m_cursorPos = pos;
     update();
 }
 
-void PreEditBar::slotUpdatePreeditText( const QString& text,
-                                        const QString& attrs )
+void PreEditBar::slotUpdatePreeditText(const QString& text,
+                                       const QString& attrs)
 {
     Q_UNUSED(attrs);
     m_text = text;
@@ -169,8 +169,8 @@ void PreEditBar::slotUpdatePreeditText( const QString& text,
     update();
 }
 
-void PreEditBar::slotUpdateAux( const QString& text,
-                                const QString& attrs )
+void PreEditBar::slotUpdateAux(const QString& text,
+                               const QString& attrs)
 {
     Q_UNUSED(attrs);
     m_auxText = text;
@@ -178,11 +178,11 @@ void PreEditBar::slotUpdateAux( const QString& text,
     update();
 }
 
-void PreEditBar::slotUpdateLookupTable( const QStringList& labels,
-                                        const QStringList& candidates,
-                                        const QStringList& attrs,
-                                        bool hasPrev,
-                                        bool hasNext )
+void PreEditBar::slotUpdateLookupTable(const QStringList& labels,
+                                       const QStringList& candidates,
+                                       const QStringList& attrs,
+                                       bool hasPrev,
+                                       bool hasNext)
 {
     Q_UNUSED(attrs);
     m_labels = labels;
@@ -196,13 +196,13 @@ void PreEditBar::slotUpdateLookupTable( const QStringList& labels,
 void PreEditBar::updateVisible()
 {
     bool visible = preeditVisible || auxVisible || lookuptableVisible;
-    if ( isVisible() != visible ) {
-        setVisible( visible );
+    if (isVisible() != visible) {
+        setVisible(visible);
         updateSize();
     }
 }
 
 void PreEditBar::updateSize()
 {
-    resize( ThemerAgent::sizeHintPreEditBar( this ) );
+    resize(ThemerAgent::sizeHintPreEditBar(this));
 }

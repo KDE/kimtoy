@@ -58,57 +58,57 @@
 #include "theme.h"
 #include "performance.h"
 
-static void extractProperty( const QString& str,
-                             QString& objectPath,
-                             QString& name,
-                             QString& iconName,
-                             QString& description )
+static void extractProperty(const QString& str,
+                            QString& objectPath,
+                            QString& name,
+                            QString& iconName,
+                            QString& description)
 {
-    const QStringList list = str.split( ':' );
-    objectPath = list.at( 0 );
-    name = list.at( 1 );
-    iconName = list.at( 2 );
-    description = list.at( 3 );
+    const QStringList list = str.split(':');
+    objectPath = list.at(0);
+    name = list.at(1);
+    iconName = list.at(2);
+    description = list.at(3);
 }
 
 StatusBar::StatusBar()
 {
-    setWindowFlags( Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint );
-    KWindowSystem::setState( winId(), NET::SkipTaskbar | NET::SkipPager | NET::StaysOnTop );
-    KWindowSystem::setType( winId(), NET::PopupMenu );
+    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::StaysOnTop);
+    KWindowSystem::setType(winId(), NET::PopupMenu);
 
     ThemerAgent::loadSettings();
 
     m_preeditBar = new PreEditBar;
 
-    m_tray = new KStatusNotifierItem( this );
-    m_tray->setAssociatedWidget( m_tray->contextMenu() );
-    m_tray->setIconByName( "draw-freehand" );
-    m_tray->setTitle( i18n( "KIMToy" ) );
-    m_tray->setToolTipIconByName( "draw-freehand" );
-    m_tray->setToolTipTitle( i18n( "KIMToy" ) );
-    m_tray->setToolTipSubTitle( i18n( "Input method toy" ) );
-    m_tray->setCategory( KStatusNotifierItem::ApplicationStatus );
-    m_tray->setStatus( KStatusNotifierItem::Passive );
+    m_tray = new KStatusNotifierItem(this);
+    m_tray->setAssociatedWidget(m_tray->contextMenu());
+    m_tray->setIconByName("draw-freehand");
+    m_tray->setTitle(i18n("KIMToy"));
+    m_tray->setToolTipIconByName("draw-freehand");
+    m_tray->setToolTipTitle(i18n("KIMToy"));
+    m_tray->setToolTipSubTitle(i18n("Input method toy"));
+    m_tray->setCategory(KStatusNotifierItem::ApplicationStatus);
+    m_tray->setStatus(KStatusNotifierItem::Passive);
 
-    KToggleAction* autostartAction = new KToggleAction( i18n( "A&utostart" ), this );
-    autostartAction->setChecked( KIMToySettings::self()->autostartKIMToy() );
-    connect( autostartAction, SIGNAL(toggled(bool)), this, SLOT(slotAutostartToggled(bool)) );
-    m_tray->contextMenu()->addAction( autostartAction );
+    KToggleAction* autostartAction = new KToggleAction(i18n("A&utostart"), this);
+    autostartAction->setChecked(KIMToySettings::self()->autostartKIMToy());
+    connect(autostartAction, SIGNAL(toggled(bool)), this, SLOT(slotAutostartToggled(bool)));
+    m_tray->contextMenu()->addAction(autostartAction);
 
-    KAction* prefAction = KStandardAction::preferences( this, SLOT(preferences()), 0 );
-    m_tray->contextMenu()->addAction( prefAction );
+    KAction* prefAction = KStandardAction::preferences(this, SLOT(preferences()), 0);
+    m_tray->contextMenu()->addAction(prefAction);
 
-    KAction* aboutAction = new KAction( KIcon( "draw-freehand" ), i18n( "&About KIMToy..." ), this );
-    connect( aboutAction, SIGNAL(triggered()), this, SLOT(slotAboutActionTriggered()) );
-    m_tray->contextMenu()->addAction( aboutAction );
+    KAction* aboutAction = new KAction(KIcon("draw-freehand"), i18n("&About KIMToy..."), this);
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(slotAboutActionTriggered()));
+    m_tray->contextMenu()->addAction(aboutAction);
 
-    m_signalMapper = new QSignalMapper( this );
-    connect( m_signalMapper, SIGNAL(mapped(const QString&)),
-             this, SLOT(slotTriggerProperty(const QString&)) );
+    m_signalMapper = new QSignalMapper(this);
+    connect(m_signalMapper, SIGNAL(mapped(const QString&)),
+            this, SLOT(slotTriggerProperty(const QString&)));
 
     m_layout = new StatusBarLayout;
-    setLayout( m_layout );
+    setLayout(m_layout);
 
 //     m_hideButton = new QPushButton;
 //     m_hideButton->installEventFilter( this );
@@ -118,32 +118,32 @@ StatusBar::StatusBar()
 //     connect( m_hideButton, SIGNAL(clicked()),
 //              this, SLOT(hide()) );
     bool enableTransparency = KIMToySettings::self()->backgroundTransparency();
-    setAttribute( Qt::WA_TranslucentBackground, enableTransparency );
-    m_preeditBar->setAttribute( Qt::WA_TranslucentBackground, enableTransparency );
+    setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
+    m_preeditBar->setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
 
-    setAttribute( Qt::WA_AlwaysShowToolTips, true );
+    setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
-    installEventFilter( this );
+    installEventFilter(this);
 
     m_moving = false;
 
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
-                        this, SLOT(slotEnable(bool)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
-                        this, SLOT(slotRegisterProperties(const QStringList&)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
-                        this, SLOT(slotUpdateProperty(const QString&)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "RemoveProperty",
-                        this, SLOT(slotRemoveProperty(const QString&)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
-                        this, SLOT(slotExecDialog(const QString&)) );
-    connection.connect( "", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
-                        this, SLOT(slotExecMenu(const QStringList&)) );
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
+                       this, SLOT(slotEnable(bool)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
+                       this, SLOT(slotRegisterProperties(const QStringList&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
+                       this, SLOT(slotUpdateProperty(const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RemoveProperty",
+                       this, SLOT(slotRemoveProperty(const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
+                       this, SLOT(slotExecDialog(const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
+                       this, SLOT(slotExecMenu(const QStringList&)));
 
-    KConfigGroup group( KGlobal::config(), "General" );
-    QPoint pos = group.readEntry( "XYPosition", QPoint( 100, 0 ) );
-    move( pos );
+    KConfigGroup group(KGlobal::config(), "General");
+    QPoint pos = group.readEntry("XYPosition", QPoint(100, 0));
+    move(pos);
 
     loadSettings();
 
@@ -155,170 +155,170 @@ StatusBar::StatusBar()
 
 StatusBar::~StatusBar()
 {
-    KConfigGroup group( KGlobal::config(), "General" );
-    group.writeEntry( "XYPosition", pos() );
+    KConfigGroup group(KGlobal::config(), "General");
+    group.writeEntry("XYPosition", pos());
     delete m_preeditBar;
     IMPanelAgent::Exit();
 }
 
-bool StatusBar::eventFilter( QObject* object, QEvent* event )
+bool StatusBar::eventFilter(QObject* object, QEvent* event)
 {
-    if ( event->type() == QEvent::MouseButtonPress ) {
+    if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-        if ( mouseEvent->button() == Qt::RightButton ) {
+        if (mouseEvent->button() == Qt::RightButton) {
             QWidget* w = static_cast<QWidget*>(object);
-            if ( w == this )
+            if (w == this)
                 m_pointPos = mouseEvent->pos();
             else
-                m_pointPos = w->mapToParent( mouseEvent->pos() );
+                m_pointPos = w->mapToParent(mouseEvent->pos());
             m_moving = true;
             return true;
         }
         m_moving = false;
-        return QObject::eventFilter( object, event );
+        return QObject::eventFilter(object, event);
     }
-    if ( event->type() == QEvent::MouseMove && m_moving ) {
+    if (event->type() == QEvent::MouseMove && m_moving) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-        move( mouseEvent->globalPos() - m_pointPos );
+        move(mouseEvent->globalPos() - m_pointPos);
         return true;
     }
-    return QObject::eventFilter( object, event );
+    return QObject::eventFilter(object, event);
 }
 
-void StatusBar::resizeEvent( QResizeEvent* event )
+void StatusBar::resizeEvent(QResizeEvent* event)
 {
-    ThemerAgent::resizeStatusBar( event->size() );
-    if ( KIMToySettings::self()->enableWindowMask() ) {
-        ThemerAgent::maskStatusBar( this );
+    ThemerAgent::resizeStatusBar(event->size());
+    if (KIMToySettings::self()->enableWindowMask()) {
+        ThemerAgent::maskStatusBar(this);
     }
-    if ( KIMToySettings::self()->enableBackgroundBlur() ) {
-        ThemerAgent::blurStatusBar( this );
+    if (KIMToySettings::self()->enableBackgroundBlur()) {
+        ThemerAgent::blurStatusBar(this);
     }
 }
 
-void StatusBar::paintEvent( QPaintEvent* event )
+void StatusBar::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-    ThemerAgent::drawStatusBar( this );
+    ThemerAgent::drawStatusBar(this);
 }
 
-void StatusBar::slotEnable( bool enable )
+void StatusBar::slotEnable(bool enable)
 {
-    setVisible( enable );
+    setVisible(enable);
 }
 
-void StatusBar::slotTriggerProperty( const QString& objectPath )
+void StatusBar::slotTriggerProperty(const QString& objectPath)
 {
 //     kWarning() << "trigger property" << objectPath;
-    IMPanelAgent::TriggerProperty( objectPath );
+    IMPanelAgent::TriggerProperty(objectPath);
 }
 
-void StatusBar::slotRegisterProperties( const QStringList& props )
+void StatusBar::slotRegisterProperties(const QStringList& props)
 {
     QString objectPath, name, iconName, description;
-    foreach ( const QString& p, props ) {
-        extractProperty( p, objectPath, name, iconName, description );
+    foreach(const QString& p, props) {
+        extractProperty(p, objectPath, name, iconName, description);
         kWarning() << objectPath << name << iconName << description;
-        int index = m_objectPaths.indexOf( objectPath );
-        if ( index == -1 ) {
+        int index = m_objectPaths.indexOf(objectPath);
+        if (index == -1) {
             /// no such objectPath, register it
             m_objectPaths << objectPath;
             PropertyWidget* pw = new PropertyWidget;
-            pw->installEventFilter( this );
-            connect( pw, SIGNAL(clicked()), m_signalMapper, SLOT(map()) );
-            m_signalMapper->setMapping( pw, objectPath );
-            m_layout->addWidget( pw );
+            pw->installEventFilter(this);
+            connect(pw, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
+            m_signalMapper->setMapping(pw, objectPath);
+            m_layout->addWidget(pw);
             index = m_objectPaths.count() - 1;
         }
 
         /// update property
-        PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt( index )->widget());
-        w->setProperty( name, iconName, description );
+        PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt(index)->widget());
+        w->setProperty(name, iconName, description);
 
-        if ( index == m_objectPaths.count() - 1 ) {
+        if (index == m_objectPaths.count() - 1) {
             /// update if new property just registered
             updateSize();
         }
     }
 }
 
-void StatusBar::slotUpdateProperty( const QString& prop )
+void StatusBar::slotUpdateProperty(const QString& prop)
 {
     QString objectPath, name, iconName, description;
-    extractProperty( prop, objectPath, name, iconName, description );
+    extractProperty(prop, objectPath, name, iconName, description);
     kWarning() << objectPath << name << iconName << description;
-    int index = m_objectPaths.indexOf( objectPath );
-    if ( index == -1 ) {
+    int index = m_objectPaths.indexOf(objectPath);
+    if (index == -1) {
         /// no such objectPath
         kWarning() << "update property without register it! " << objectPath;
         return;
     }
 
     /// update property
-    PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt( index )->widget());
-    w->setProperty( name, iconName, description );
+    PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt(index)->widget());
+    w->setProperty(name, iconName, description);
 }
 
-void StatusBar::slotRemoveProperty( const QString& prop )
+void StatusBar::slotRemoveProperty(const QString& prop)
 {
     QString objectPath, name, iconName, description;
-    extractProperty( prop, objectPath, name, iconName, description );
-    int index = m_objectPaths.indexOf( objectPath );
-    if ( index == -1 ) {
+    extractProperty(prop, objectPath, name, iconName, description);
+    int index = m_objectPaths.indexOf(objectPath);
+    if (index == -1) {
         /// no such objectPath
         kWarning() << "remove property without register it! " << objectPath;
         return;
     }
 
     /// remove property
-    m_objectPaths.removeAt( index );
-    delete m_layout->takeAt( index );
+    m_objectPaths.removeAt(index);
+    delete m_layout->takeAt(index);
 }
 
-void StatusBar::slotExecDialog( const QString& prop )
+void StatusBar::slotExecDialog(const QString& prop)
 {
     QString objectPath, name, iconName, description;
-    extractProperty( prop, objectPath, name, iconName, description );
-    KMessageBox::information( 0, description, name );
+    extractProperty(prop, objectPath, name, iconName, description);
+    KMessageBox::information(0, description, name);
 }
 
-void StatusBar::slotExecMenu( const QStringList& actions )
+void StatusBar::slotExecMenu(const QStringList& actions)
 {
     QMenu menu;
     QString objectPath, name, iconName, description;
-    foreach ( const QString& a, actions ) {
-        extractProperty( a, objectPath, name, iconName, description );
-        QAction* action = new QAction( KIcon( iconName ), name, &menu );
-        connect( action, SIGNAL(triggered()), m_signalMapper, SLOT(map()) );
-        m_signalMapper->setMapping( action, objectPath );
-        menu.addAction( action );
+    foreach(const QString& a, actions) {
+        extractProperty(a, objectPath, name, iconName, description);
+        QAction* action = new QAction(KIcon(iconName), name, &menu);
+        connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+        m_signalMapper->setMapping(action, objectPath);
+        menu.addAction(action);
     }
-    menu.exec( QCursor::pos() );
+    menu.exec(QCursor::pos());
 }
 
-void StatusBar::slotAutostartToggled( bool enable )
+void StatusBar::slotAutostartToggled(bool enable)
 {
-    KIMToySettings::self()->setAutostartKIMToy( enable );
+    KIMToySettings::self()->setAutostartKIMToy(enable);
 }
 
 void StatusBar::preferences()
 {
-    if ( KConfigDialog::showDialog( "settings" ) )
+    if (KConfigDialog::showDialog("settings"))
         return;
-    KConfigDialog* dialog = new KConfigDialog( this, "settings", KIMToySettings::self() );
-    dialog->setFaceType( KPageDialog::List );
-    dialog->addPage( new InputMethodWidget, i18n( "Input method" ), "draw-freehand" );
-    dialog->addPage( new AppearanceWidget, i18n( "Appearance" ), "preferences-desktop-color" );
-    dialog->addPage( new ThemeWidget, i18n( "Theme" ), "tools-wizard" );
-    dialog->addPage( new PerformanceWidget, i18n( "Performance" ), "preferences-system-performance" );
-    connect( dialog, SIGNAL(settingsChanged(const QString&)),
-             this, SLOT(loadSettings()) );
+    KConfigDialog* dialog = new KConfigDialog(this, "settings", KIMToySettings::self());
+    dialog->setFaceType(KPageDialog::List);
+    dialog->addPage(new InputMethodWidget, i18n("Input method"), "draw-freehand");
+    dialog->addPage(new AppearanceWidget, i18n("Appearance"), "preferences-desktop-color");
+    dialog->addPage(new ThemeWidget, i18n("Theme"), "tools-wizard");
+    dialog->addPage(new PerformanceWidget, i18n("Performance"), "preferences-system-performance");
+    connect(dialog, SIGNAL(settingsChanged(const QString&)),
+            this, SLOT(loadSettings()));
     dialog->show();
 }
 
 void StatusBar::slotAboutActionTriggered()
 {
-    KAboutApplicationDialog dlg( KGlobal::mainComponent().aboutData() );
+    KAboutApplicationDialog dlg(KGlobal::mainComponent().aboutData());
     dlg.exec();
 }
 
@@ -328,24 +328,24 @@ void StatusBar::loadSettings()
     ThemerAgent::loadTheme();
 
     bool enableTransparency = KIMToySettings::self()->backgroundTransparency();
-    setAttribute( Qt::WA_TranslucentBackground, enableTransparency );
-    m_preeditBar->setAttribute( Qt::WA_TranslucentBackground, enableTransparency );
+    setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
+    m_preeditBar->setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
 
-    if ( KIMToySettings::self()->enableWindowMask() ) {
-        ThemerAgent::maskStatusBar( this );
-        ThemerAgent::maskPreEditBar( m_preeditBar );
+    if (KIMToySettings::self()->enableWindowMask()) {
+        ThemerAgent::maskStatusBar(this);
+        ThemerAgent::maskPreEditBar(m_preeditBar);
     }
     else {
         clearMask();
         m_preeditBar->clearMask();
     }
 
-    ThemerAgent::layoutStatusBar( m_layout );
+    ThemerAgent::layoutStatusBar(m_layout);
     updateSize();
-    m_preeditBar->resize( ThemerAgent::sizeHintPreEditBar( m_preeditBar ) );
+    m_preeditBar->resize(ThemerAgent::sizeHintPreEditBar(m_preeditBar));
 }
 
 void StatusBar::updateSize()
 {
-    resize( ThemerAgent::sizeHintStatusBar( this ) );
+    resize(ThemerAgent::sizeHintStatusBar(this));
 }

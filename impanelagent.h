@@ -26,15 +26,15 @@
 
 namespace IMPanelAgent
 {
-    void MovePreeditCaret( int pos );
-    void SelectCandidate( int index );
-    void LookupTablePageUp();
-    void LookupTablePageDown();
-    void TriggerProperty( const QString& objectPath );
-    void PanelCreated();
-    void Exit();
-    void ReloadConfig();
-    void Configure();
+void MovePreeditCaret(int pos);
+void SelectCandidate(int index);
+void LookupTablePageUp();
+void LookupTablePageDown();
+void TriggerProperty(const QString& objectPath);
+void PanelCreated();
+void Exit();
+void ReloadConfig();
+void Configure();
 }
 
 #endif // IMPANELAGENT_H

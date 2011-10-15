@@ -38,38 +38,38 @@ Themer::~Themer()
 
 void Themer::loadSettings()
 {
-    if ( KIMToySettings::self()->useCustomFont() ) {
+    if (KIMToySettings::self()->useCustomFont()) {
         m_preEditFont = KIMToySettings::self()->preeditFont();
         m_labelFont = KIMToySettings::self()->labelFont();
         m_candidateFont = KIMToySettings::self()->candidateFont();
 
-        m_preEditFontHeight = QFontMetrics( m_preEditFont ).height();
-        m_labelFontHeight = QFontMetrics( m_labelFont ).height();
-        m_candidateFontHeight = QFontMetrics( m_candidateFont ).height();
+        m_preEditFontHeight = QFontMetrics(m_preEditFont).height();
+        m_labelFontHeight = QFontMetrics(m_labelFont).height();
+        m_candidateFontHeight = QFontMetrics(m_candidateFont).height();
     }
-    if ( KIMToySettings::self()->useCustomColor() ) {
+    if (KIMToySettings::self()->useCustomColor()) {
         m_preEditColor = KIMToySettings::self()->preeditColor();
         m_labelColor = KIMToySettings::self()->labelColor();
         m_candidateColor = KIMToySettings::self()->candidateColor();
     }
 }
 
-void Themer::resizePreEditBar( const QSize& size )
+void Themer::resizePreEditBar(const QSize& size)
 {
     Q_UNUSED(size);
 }
 
-void Themer::resizeStatusBar( const QSize& size )
+void Themer::resizeStatusBar(const QSize& size)
 {
     Q_UNUSED(size);
 }
 
-void Themer::blurPreEditBar( PreEditBar* widget )
+void Themer::blurPreEditBar(PreEditBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind( widget->winId(), true, widget->mask() );
+    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, widget->mask());
 }
 
-void Themer::blurStatusBar( StatusBar* widget )
+void Themer::blurStatusBar(StatusBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind( widget->winId(), true, widget->mask() );
+    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, widget->mask());
 }

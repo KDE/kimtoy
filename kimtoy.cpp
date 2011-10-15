@@ -42,12 +42,12 @@ KIMToy::KIMToy() : KUniqueApplication()
 //     disableSessionManagement();
 
 //     QApplication::setAttribute( Qt::AA_DontCreateNativeWidgetSiblings );
-    QApplication::setQuitOnLastWindowClosed( false );
+    QApplication::setQuitOnLastWindowClosed(false);
 
     m_statusBar = new StatusBar;
     m_statusBar->show();
 
-    QTimer::singleShot( 0, this, SLOT(init()) );
+    QTimer::singleShot(0, this, SLOT(init()));
 }
 
 KIMToy::~KIMToy()
@@ -55,15 +55,15 @@ KIMToy::~KIMToy()
     delete m_statusBar;
 
 //     EnvSettings::load();
-    if ( KIMToySettings::self()->runFcitx() ) {
+    if (KIMToySettings::self()->runFcitx()) {
         FcitxInputMethod::self()->kill();
         FcitxInputMethod::self()->saveEnvSettings();
     }
-    else if ( KIMToySettings::self()->runIBus() ) {
+    else if (KIMToySettings::self()->runIBus()) {
         IBusInputMethod::self()->kill();
         IBusInputMethod::self()->saveEnvSettings();
     }
-    else if ( KIMToySettings::self()->runSCIM() ) {
+    else if (KIMToySettings::self()->runSCIM()) {
         SCIMInputMethod::self()->kill();
         SCIMInputMethod::self()->saveEnvSettings();
     }
@@ -77,13 +77,13 @@ KIMToy::~KIMToy()
 
 void KIMToy::init()
 {
-    if ( KIMToySettings::self()->runFcitx() ) {
+    if (KIMToySettings::self()->runFcitx()) {
         FcitxInputMethod::self()->run();
     }
-    else if ( KIMToySettings::self()->runIBus() ) {
+    else if (KIMToySettings::self()->runIBus()) {
         IBusInputMethod::self()->run();
     }
-    else if ( KIMToySettings::self()->runSCIM() ) {
+    else if (KIMToySettings::self()->runSCIM()) {
         SCIMInputMethod::self()->run();
     }
 }

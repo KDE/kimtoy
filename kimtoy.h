@@ -29,13 +29,13 @@ class StatusBar;
 class KIMToy : public KUniqueApplication
 {
     Q_OBJECT
-    public:
-        explicit KIMToy();
-        virtual ~KIMToy();
-    private Q_SLOTS:
-        void init();
-    private:
-        StatusBar* m_statusBar;
+public:
+    explicit KIMToy();
+    virtual ~KIMToy();
+private Q_SLOTS:
+    void init();
+private:
+    StatusBar* m_statusBar;
 };
 
 #endif // KIMTOY_H

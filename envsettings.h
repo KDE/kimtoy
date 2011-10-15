@@ -26,19 +26,19 @@
 
 namespace EnvSettings
 {
-    void load();
-    void save();
-    void unset();
-    void setXIM( const QString& env );
-    QString XIM();
-    void setXIM_PROGRAM( const QString& env );
-    QString XIM_PROGRAM();
-    void setXMODIFIERS( const QString& env );
-    QString XMODIFIERS();
-    void setGTK_IM_MODULE( const QString& env );
-    QString GTK_IM_MODULE();
-    void setQT_IM_MODULE( const QString& env );
-    QString QT_IM_MODULE();
+void load();
+void save();
+void unset();
+void setXIM(const QString& env);
+QString XIM();
+void setXIM_PROGRAM(const QString& env);
+QString XIM_PROGRAM();
+void setXMODIFIERS(const QString& env);
+QString XMODIFIERS();
+void setGTK_IM_MODULE(const QString& env);
+QString GTK_IM_MODULE();
+void setQT_IM_MODULE(const QString& env);
+QString QT_IM_MODULE();
 }
 
 #endif // ENVSETTINGS_H

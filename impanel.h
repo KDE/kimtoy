@@ -27,19 +27,19 @@
 class IMPanel : public QObject
 {
     Q_OBJECT
-    public:
-        explicit IMPanel( QObject* parent = 0 );
-        virtual ~IMPanel();
-    Q_SIGNALS:
-        void MovePreeditCaret( int pos );
-        void SelectCandidate( int index );
-        void LookupTablePageUp();
-        void LookupTablePageDown();
-        void TriggerProperty( const QString& objectPath );
-        void PanelCreated();
-        void Exit();
-        void ReloadConfig();
-        void Configure();
+public:
+    explicit IMPanel(QObject* parent = 0);
+    virtual ~IMPanel();
+Q_SIGNALS:
+    void MovePreeditCaret(int pos);
+    void SelectCandidate(int index);
+    void LookupTablePageUp();
+    void LookupTablePageDown();
+    void TriggerProperty(const QString& objectPath);
+    void PanelCreated();
+    void Exit();
+    void ReloadConfig();
+    void Configure();
 };
 
 #endif // IMPANEL_H

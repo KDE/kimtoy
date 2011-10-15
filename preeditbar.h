@@ -33,51 +33,51 @@ class ThemerSogou;
 class PreEditBar : public QWidget
 {
     Q_OBJECT
-    public:
-        explicit PreEditBar();
-        virtual ~PreEditBar();
-    protected:
-        virtual bool eventFilter( QObject* object, QEvent* event );
-        virtual void resizeEvent( QResizeEvent* event );
-        virtual void paintEvent( QPaintEvent* event );
-    private Q_SLOTS:
-        void slotUpdateSpotLocation( int x, int y );
-        void slotShowPreedit( bool show );
-        void slotShowAux( bool show );
-        void slotShowLookupTable( bool show );
-        void slotUpdatePreeditCaret( int pos );
-        void slotUpdatePreeditText( const QString& text,
-                                    const QString& attrs );
-        void slotUpdateAux( const QString& text,
-                            const QString& attrs );
-        void slotUpdateLookupTable( const QStringList& labels,
-                                    const QStringList& candidates,
-                                    const QStringList& attrs,
-                                    bool hasPrev,
-                                    bool hasNext );
-    private:
-        void updateVisible();
-        void updateSize();
-    private:
-        QPoint m_pointPos;
-        bool m_moving;
+public:
+    explicit PreEditBar();
+    virtual ~PreEditBar();
+protected:
+    virtual bool eventFilter(QObject* object, QEvent* event);
+    virtual void resizeEvent(QResizeEvent* event);
+    virtual void paintEvent(QPaintEvent* event);
+private Q_SLOTS:
+    void slotUpdateSpotLocation(int x, int y);
+    void slotShowPreedit(bool show);
+    void slotShowAux(bool show);
+    void slotShowLookupTable(bool show);
+    void slotUpdatePreeditCaret(int pos);
+    void slotUpdatePreeditText(const QString& text,
+                               const QString& attrs);
+    void slotUpdateAux(const QString& text,
+                       const QString& attrs);
+    void slotUpdateLookupTable(const QStringList& labels,
+                               const QStringList& candidates,
+                               const QStringList& attrs,
+                               bool hasPrev,
+                               bool hasNext);
+private:
+    void updateVisible();
+    void updateSize();
+private:
+    QPoint m_pointPos;
+    bool m_moving;
 
-        bool preeditVisible;
-        bool auxVisible;
-        bool lookuptableVisible;
+    bool preeditVisible;
+    bool auxVisible;
+    bool lookuptableVisible;
 
 //         friend class Themer;
-        friend class ThemerFcitx;
-        friend class ThemerNone;
-        friend class ThemerPlasma;
-        friend class ThemerSogou;
-        QString m_text;
-        int m_cursorPos;
-        QString m_auxText;
-        QStringList m_labels;
-        QStringList m_candidates;
-        bool m_hasPrev;
-        bool m_hasNext;
+    friend class ThemerFcitx;
+    friend class ThemerNone;
+    friend class ThemerPlasma;
+    friend class ThemerSogou;
+    QString m_text;
+    int m_cursorPos;
+    QString m_auxText;
+    QStringList m_labels;
+    QStringList m_candidates;
+    bool m_hasPrev;
+    bool m_hasNext;
 };
 
 #endif // PREEDITBAR_H

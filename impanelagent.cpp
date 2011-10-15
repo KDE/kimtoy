@@ -23,14 +23,14 @@
 
 #include "impanelagent_p.h"
 
-void IMPanelAgent::MovePreeditCaret( int pos )
+void IMPanelAgent::MovePreeditCaret(int pos)
 {
-    IMPanelAgentPrivate::self()->pMovePreeditCaret( pos );
+    IMPanelAgentPrivate::self()->pMovePreeditCaret(pos);
 }
 
-void IMPanelAgent::SelectCandidate( int index )
+void IMPanelAgent::SelectCandidate(int index)
 {
-    IMPanelAgentPrivate::self()->pSelectCandidate( index );
+    IMPanelAgentPrivate::self()->pSelectCandidate(index);
 }
 
 void IMPanelAgent::LookupTablePageUp()
@@ -43,9 +43,9 @@ void IMPanelAgent::LookupTablePageDown()
     IMPanelAgentPrivate::self()->pLookupTablePageDown();
 }
 
-void IMPanelAgent::TriggerProperty( const QString& objectPath )
+void IMPanelAgent::TriggerProperty(const QString& objectPath)
 {
-    IMPanelAgentPrivate::self()->pTriggerProperty( objectPath );
+    IMPanelAgentPrivate::self()->pTriggerProperty(objectPath);
 }
 
 void IMPanelAgent::PanelCreated()

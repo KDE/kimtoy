@@ -26,8 +26,10 @@
 
 class AppearanceWidget : public QWidget, public Ui::Appearance
 {
-    public:
-        explicit AppearanceWidget() { setupUi( this ); }
+public:
+    explicit AppearanceWidget() {
+        setupUi(this);
+    }
 };
 
 #endif // APPEARANCE_H

@@ -26,10 +26,10 @@
 
 class SsfCreator : public ThumbCreator
 {
-    public:
-        explicit SsfCreator();
-        virtual ~SsfCreator();
-        virtual bool create( const QString& path, int width, int height, QImage& img );
+public:
+    explicit SsfCreator();
+    virtual ~SsfCreator();
+    virtual bool create(const QString& path, int width, int height, QImage& img);
 };
 
 #endif // SSFCREATOR_H

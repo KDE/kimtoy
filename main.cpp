@@ -26,17 +26,17 @@
 
 #include "kimtoy.h"
 
-int main( int argc, char** argv )
+int main(int argc, char** argv)
 {
-    KAboutData aboutData( "kimtoy", 0, ki18n( "KIMToy" ),
-                          "1.2", ki18n( "The KDE input method toy" ),
-                          KAboutData::License_GPL, ki18n( "(c) 2011, Ni Hui" ) );
-    aboutData.addAuthor( ki18n( "Ni Hui" ), ki18n( "Author" ), "shuizhuyuanluo@126.com" );
-    aboutData.setProgramIconName( "draw-freehand" );
+    KAboutData aboutData("kimtoy", 0, ki18n("KIMToy"),
+                         "1.2", ki18n("The KDE input method toy"),
+                         KAboutData::License_GPL, ki18n("(c) 2011, Ni Hui"));
+    aboutData.addAuthor(ki18n("Ni Hui"), ki18n("Author"), "shuizhuyuanluo@126.com");
+    aboutData.setProgramIconName("draw-freehand");
 
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-    if ( !KIMToy::start() ) {
+    if (!KIMToy::start()) {
         kWarning() << "kimtoy is already running!";
         return 1;
     }

@@ -26,10 +26,10 @@
 
 class FskinCreator : public ThumbCreator
 {
-    public:
-        explicit FskinCreator();
-        virtual ~FskinCreator();
-        virtual bool create( const QString& path, int width, int height, QImage& img );
+public:
+    explicit FskinCreator();
+    virtual ~FskinCreator();
+    virtual bool create(const QString& path, int width, int height, QImage& img);
 };
 
 #endif // FSKINCREATOR_H

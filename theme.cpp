@@ -33,30 +33,30 @@ void ThemeWidget::installTheme()
 {
     QString filePath = KFileDialog::getOpenFileName();
 
-    if ( filePath.isEmpty() )
+    if (filePath.isEmpty())
         return;
 
-    if ( !filePath.endsWith( ".ssf" ) && !filePath.endsWith( ".fskin" ) ) {
-        KMessageBox::error( this, i18n( "Unsupported theme type." ) );
+    if (!filePath.endsWith(".ssf") && !filePath.endsWith(".fskin")) {
+        KMessageBox::error(this, i18n("Unsupported theme type."));
         return;
     }
 
     KUrl destUrl = KIMToySettings::self()->themeFolder();
 
-    if ( filePath.startsWith( destUrl.path() ) ) {
-        KMessageBox::error( this, i18n( "This theme has already been installed." ) );
+    if (filePath.startsWith(destUrl.path())) {
+        KMessageBox::error(this, i18n("This theme has already been installed."));
         return;
     }
 
-    KJob* job = KIO::copy( KUrl( filePath ), destUrl, KIO::HideProgressInfo );
-    connect( job, SIGNAL(finished(KJob*)), kcfg_ThemeUri, SLOT(reload()) );
+    KJob* job = KIO::copy(KUrl(filePath), destUrl, KIO::HideProgressInfo);
+    connect(job, SIGNAL(finished(KJob*)), kcfg_ThemeUri, SLOT(reload()));
 }
 
 void ThemeWidget::downloadTheme()
 {
     KNS3::DownloadDialog dialog;
     dialog.exec();
-    if ( !dialog.changedEntries().isEmpty() ) {
+    if (!dialog.changedEntries().isEmpty()) {
         kcfg_ThemeUri->reload();
     }
 }

@@ -26,13 +26,13 @@
 
 class PerformanceWidget : public QWidget, public Ui::Performance
 {
-    public:
-        explicit PerformanceWidget() {
-            setupUi( this );
-            WindowMaskLabel->hide();
-            PreeditResizingLabel->hide();
-            BackgroundBlurLabel->hide();
-        }
+public:
+    explicit PerformanceWidget() {
+        setupUi(this);
+        WindowMaskLabel->hide();
+        PreeditResizingLabel->hide();
+        BackgroundBlurLabel->hide();
+    }
 };
 
 #endif // PERFORMANCE_H

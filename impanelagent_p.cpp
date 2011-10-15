@@ -25,19 +25,19 @@ IMPanelAgentPrivate* IMPanelAgentPrivate::m_self = 0;
 
 IMPanelAgentPrivate* IMPanelAgentPrivate::self()
 {
-    if ( !m_self )
+    if (!m_self)
         m_self = new IMPanelAgentPrivate;
     return m_self;
 }
 
-void IMPanelAgentPrivate::pMovePreeditCaret( int pos )
+void IMPanelAgentPrivate::pMovePreeditCaret(int pos)
 {
-    emit MovePreeditCaret( pos );
+    emit MovePreeditCaret(pos);
 }
 
-void IMPanelAgentPrivate::pSelectCandidate( int index )
+void IMPanelAgentPrivate::pSelectCandidate(int index)
 {
-    emit SelectCandidate( index );
+    emit SelectCandidate(index);
 }
 
 void IMPanelAgentPrivate::pLookupTablePageUp()
@@ -50,9 +50,9 @@ void IMPanelAgentPrivate::pLookupTablePageDown()
     emit LookupTablePageDown();
 }
 
-void IMPanelAgentPrivate::pTriggerProperty( const QString& objectPath )
+void IMPanelAgentPrivate::pTriggerProperty(const QString& objectPath)
 {
-    emit TriggerProperty( objectPath );
+    emit TriggerProperty(objectPath);
 }
 
 void IMPanelAgentPrivate::pPanelCreated()
@@ -76,6 +76,6 @@ void IMPanelAgentPrivate::pConfigure()
 }
 
 IMPanelAgentPrivate::IMPanelAgentPrivate()
-: IMPanel()
+        : IMPanel()
 {
 }

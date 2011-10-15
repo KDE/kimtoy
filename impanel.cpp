@@ -23,13 +23,13 @@
 
 #include "impaneladaptor.h"
 
-IMPanel::IMPanel( QObject* parent )
-: QObject(parent)
+IMPanel::IMPanel(QObject* parent)
+        : QObject(parent)
 {
-    new IMPanelAdaptor( this );
+    new IMPanelAdaptor(this);
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerService( "org.kde.impanel" );
-    connection.registerObject( "/org/kde/impanel", this );
+    connection.registerService("org.kde.impanel");
+    connection.registerObject("/org/kde/impanel", this);
 }
 
 IMPanel::~IMPanel()

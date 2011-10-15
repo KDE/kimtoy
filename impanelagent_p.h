@@ -27,20 +27,20 @@
 class IMPanelAgentPrivate : public IMPanel
 {
     Q_OBJECT
-    public:
-        static IMPanelAgentPrivate* self();
-        void pMovePreeditCaret( int pos );
-        void pSelectCandidate( int index );
-        void pLookupTablePageUp();
-        void pLookupTablePageDown();
-        void pTriggerProperty( const QString& objectPath );
-        void pPanelCreated();
-        void pExit();
-        void pReloadConfig();
-        void pConfigure();
-    private:
-        explicit IMPanelAgentPrivate();
-        static IMPanelAgentPrivate* m_self;
+public:
+    static IMPanelAgentPrivate* self();
+    void pMovePreeditCaret(int pos);
+    void pSelectCandidate(int index);
+    void pLookupTablePageUp();
+    void pLookupTablePageDown();
+    void pTriggerProperty(const QString& objectPath);
+    void pPanelCreated();
+    void pExit();
+    void pReloadConfig();
+    void pConfigure();
+private:
+    explicit IMPanelAgentPrivate();
+    static IMPanelAgentPrivate* m_self;
 };
 
 #endif // IMPANELAGENT_P_H

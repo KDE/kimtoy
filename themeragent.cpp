@@ -35,16 +35,16 @@ static Themer* m_themer = 0;
 void ThemerAgent::loadSettings()
 {
     QString themeUri = KIMToySettings::self()->themeUri();
-    if ( themeUri == "__none__" ) {
+    if (themeUri == "__none__") {
         m_themer = ThemerNone::self();
     }
-    else if ( themeUri.startsWith( "__plasma__" ) ) {
+    else if (themeUri.startsWith("__plasma__")) {
         m_themer = ThemerPlasma::self();
     }
-    else if ( themeUri.endsWith( ".fskin" ) ) {
+    else if (themeUri.endsWith(".fskin")) {
         m_themer = ThemerFcitx::self();
     }
-    else if ( themeUri.endsWith( ".ssf" ) ) {
+    else if (themeUri.endsWith(".ssf")) {
         m_themer = ThemerSogou::self();
     }
     else {
@@ -55,7 +55,7 @@ void ThemerAgent::loadSettings()
 void ThemerAgent::loadTheme()
 {
     bool success = m_themer->loadTheme();
-    if ( !success ) {
+    if (!success) {
         m_themer = ThemerNone::self();
         m_themer->loadTheme();
     }
@@ -63,70 +63,70 @@ void ThemerAgent::loadTheme()
     m_themer->loadSettings();
 }
 
-QSize ThemerAgent::sizeHintPreEditBar( const PreEditBar* widget )
+QSize ThemerAgent::sizeHintPreEditBar(const PreEditBar* widget)
 {
-    return m_themer->sizeHintPreEditBar( widget );
+    return m_themer->sizeHintPreEditBar(widget);
 }
 
-QSize ThemerAgent::sizeHintStatusBar( const StatusBar* widget )
+QSize ThemerAgent::sizeHintStatusBar(const StatusBar* widget)
 {
-    if ( KIMToySettings::self()->noStatusBarTheme() )
-        return ThemerNone::self()->sizeHintStatusBar( widget );
-    return m_themer->sizeHintStatusBar( widget );
+    if (KIMToySettings::self()->noStatusBarTheme())
+        return ThemerNone::self()->sizeHintStatusBar(widget);
+    return m_themer->sizeHintStatusBar(widget);
 }
 
-void ThemerAgent::layoutStatusBar( StatusBarLayout* layout )
+void ThemerAgent::layoutStatusBar(StatusBarLayout* layout)
 {
-    if ( KIMToySettings::self()->noStatusBarTheme() )
-        return ThemerNone::self()->layoutStatusBar( layout );
-    m_themer->layoutStatusBar( layout );
+    if (KIMToySettings::self()->noStatusBarTheme())
+        return ThemerNone::self()->layoutStatusBar(layout);
+    m_themer->layoutStatusBar(layout);
 }
 
-void ThemerAgent::resizePreEditBar( const QSize& size )
+void ThemerAgent::resizePreEditBar(const QSize& size)
 {
-    m_themer->resizePreEditBar( size );
+    m_themer->resizePreEditBar(size);
 }
 
-void ThemerAgent::resizeStatusBar( const QSize& size )
+void ThemerAgent::resizeStatusBar(const QSize& size)
 {
-    m_themer->resizeStatusBar( size );
+    m_themer->resizeStatusBar(size);
 }
 
-void ThemerAgent::maskPreEditBar( PreEditBar* widget )
+void ThemerAgent::maskPreEditBar(PreEditBar* widget)
 {
-    m_themer->maskPreEditBar( widget );
+    m_themer->maskPreEditBar(widget);
 }
 
-void ThemerAgent::maskStatusBar( StatusBar* widget )
+void ThemerAgent::maskStatusBar(StatusBar* widget)
 {
-    if ( KIMToySettings::self()->noStatusBarTheme() )
-        return ThemerNone::self()->maskStatusBar( widget );
-    m_themer->maskStatusBar( widget );
+    if (KIMToySettings::self()->noStatusBarTheme())
+        return ThemerNone::self()->maskStatusBar(widget);
+    m_themer->maskStatusBar(widget);
 }
 
-void ThemerAgent::blurPreEditBar( PreEditBar* widget )
+void ThemerAgent::blurPreEditBar(PreEditBar* widget)
 {
-    m_themer->blurPreEditBar( widget );
+    m_themer->blurPreEditBar(widget);
 }
 
-void ThemerAgent::blurStatusBar( StatusBar* widget )
+void ThemerAgent::blurStatusBar(StatusBar* widget)
 {
-    m_themer->blurStatusBar( widget );
+    m_themer->blurStatusBar(widget);
 }
 
-void ThemerAgent::drawPreEditBar( PreEditBar* widget )
+void ThemerAgent::drawPreEditBar(PreEditBar* widget)
 {
-    m_themer->drawPreEditBar( widget );
+    m_themer->drawPreEditBar(widget);
 }
 
-void ThemerAgent::drawStatusBar( StatusBar* widget )
+void ThemerAgent::drawStatusBar(StatusBar* widget)
 {
-    if ( KIMToySettings::self()->noStatusBarTheme() )
-        return ThemerNone::self()->drawStatusBar( widget );
-    m_themer->drawStatusBar( widget );
+    if (KIMToySettings::self()->noStatusBarTheme())
+        return ThemerNone::self()->drawStatusBar(widget);
+    m_themer->drawStatusBar(widget);
 }
 
-void ThemerAgent::drawPropertyWidget( PropertyWidget* widget )
+void ThemerAgent::drawPropertyWidget(PropertyWidget* widget)
 {
-    m_themer->drawPropertyWidget( widget );
+    m_themer->drawPropertyWidget(widget);
 }
