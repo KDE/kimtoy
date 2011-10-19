@@ -31,21 +31,21 @@ class StatusBarLayout;
 
 namespace ThemerAgent
 {
-    void loadSettings();
+void loadSettings();
 
-    void loadTheme();
-    QSize sizeHintPreEditBar( const PreEditBar* widget );
-    QSize sizeHintStatusBar( const StatusBar* widget );
-    void layoutStatusBar( StatusBarLayout* layout );
-    void resizePreEditBar( const QSize& size );
-    void resizeStatusBar( const QSize& size );
-    void maskPreEditBar( PreEditBar* widget );
-    void maskStatusBar( StatusBar* widget );
-    void blurPreEditBar( PreEditBar* widget );
-    void blurStatusBar( StatusBar* widget );
-    void drawPreEditBar( PreEditBar* widget );
-    void drawStatusBar( StatusBar* widget );
-    void drawPropertyWidget( PropertyWidget* widget );
+void loadTheme();
+QSize sizeHintPreEditBar(const PreEditBar* widget);
+QSize sizeHintStatusBar(const StatusBar* widget);
+void layoutStatusBar(StatusBarLayout* layout);
+void resizePreEditBar(const QSize& size);
+void resizeStatusBar(const QSize& size);
+void maskPreEditBar(PreEditBar* widget);
+void maskStatusBar(StatusBar* widget);
+void blurPreEditBar(PreEditBar* widget);
+void blurStatusBar(StatusBar* widget);
+void drawPreEditBar(PreEditBar* widget);
+void drawStatusBar(StatusBar* widget);
+void drawPropertyWidget(PropertyWidget* widget);
 }
 
 #endif // THEMERAGENT_H

@@ -34,24 +34,24 @@ class ThemerSogou;
 class StatusBarLayout : public QLayout
 {
     Q_OBJECT
-    public:
-        explicit StatusBarLayout( QWidget* parent = 0 );
-        virtual ~StatusBarLayout();
-        virtual int count() const;
-        virtual void addItem( QLayoutItem* item );
-        virtual QLayoutItem* itemAt( int index ) const;
-        virtual QSize minimumSize() const;
-        virtual QSize sizeHint() const;
-        virtual QLayoutItem* takeAt( int index );
-    protected:
-        virtual void setGeometry( const QRect& rect );
-    private:
+public:
+    explicit StatusBarLayout(QWidget* parent = 0);
+    virtual ~StatusBarLayout();
+    virtual int count() const;
+    virtual void addItem(QLayoutItem* item);
+    virtual QLayoutItem* itemAt(int index) const;
+    virtual QSize minimumSize() const;
+    virtual QSize sizeHint() const;
+    virtual QLayoutItem* takeAt(int index);
+protected:
+    virtual void setGeometry(const QRect& rect);
+private:
 //         friend class Themer;
-        friend class ThemerFcitx;
-        friend class ThemerNone;
-        friend class ThemerPlasma;
-        friend class ThemerSogou;
-        QList<QLayoutItem*> m_items;
+    friend class ThemerFcitx;
+    friend class ThemerNone;
+    friend class ThemerPlasma;
+    friend class ThemerSogou;
+    QList<QLayoutItem*> m_items;
 };
 
 #endif // STATUSBARLAYOUT_H

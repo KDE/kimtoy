@@ -30,45 +30,48 @@
 
 class KFileItem;
 
-namespace KIO { class PreviewJob; }
+namespace KIO
+{
+class PreviewJob;
+}
 
 class ThemeListModel : public QAbstractListModel
 {
     Q_OBJECT
-    public:
-        explicit ThemeListModel( QObject* parent = 0 );
-        virtual ~ThemeListModel();
-        virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-        virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
-        virtual int rowCount( const QModelIndex& parent ) const;
-        int previewWidth() const;
-        void setPreviewWidth( int width );
-    public Q_SLOTS:
-        void reloadThemes();
-    Q_SIGNALS:
-        void relayoutNeeded();
-    private:
-        void loadNoneTheme();
-        void loadPlasmaThemes();
-        void loadFileThemes();
-        void generatePreviews();
-    private Q_SLOTS:
-        void addPreview( const KFileItem& item, const QPixmap& preview );
-        void failed( const KFileItem& item );
-    private:
-        int m_previewWidth;
-        QStringList m_themes;
-        QHash<QString, QPixmap> m_previews;
-        KIO::PreviewJob* m_previewJob;
+public:
+    explicit ThemeListModel(QObject* parent = 0);
+    virtual ~ThemeListModel();
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+    virtual int rowCount(const QModelIndex& parent) const;
+    int previewWidth() const;
+    void setPreviewWidth(int width);
+public Q_SLOTS:
+    void reloadThemes();
+Q_SIGNALS:
+    void relayoutNeeded();
+private:
+    void loadNoneTheme();
+    void loadPlasmaThemes();
+    void loadFileThemes();
+    void generatePreviews();
+private Q_SLOTS:
+    void addPreview(const KFileItem& item, const QPixmap& preview);
+    void failed(const KFileItem& item);
+private:
+    int m_previewWidth;
+    QStringList m_themes;
+    QHash<QString, QPixmap> m_previews;
+    KIO::PreviewJob* m_previewJob;
 };
 
 class ThemeListDelegate : public QAbstractItemDelegate
 {
-    public:
-        explicit ThemeListDelegate( QObject* parent = 0 );
-        virtual ~ThemeListDelegate();
-        virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-        virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+public:
+    explicit ThemeListDelegate(QObject* parent = 0);
+    virtual ~ThemeListDelegate();
+    virtual void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    virtual QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
 #endif // THEMELISTMODEL_H

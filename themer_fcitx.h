@@ -27,42 +27,42 @@
 
 class ThemerFcitx : public Themer
 {
-    public:
-        static ThemerFcitx* self();
-        virtual ~ThemerFcitx();
-        virtual bool loadTheme();
-        virtual QSize sizeHintPreEditBar( const PreEditBar* widget ) const;
-        virtual QSize sizeHintStatusBar( const StatusBar* widget ) const;
-        virtual void layoutStatusBar( StatusBarLayout* layout ) const;
-        virtual void resizePreEditBar( const QSize& size );
-        virtual void resizeStatusBar( const QSize& size );
-        virtual void maskPreEditBar( PreEditBar* widget );
-        virtual void maskStatusBar( StatusBar* widget );
-        virtual void blurPreEditBar( PreEditBar* widget );
-        virtual void blurStatusBar( StatusBar* widget );
-        virtual void drawPreEditBar( PreEditBar* widget );
-        virtual void drawStatusBar( StatusBar* widget );
-        virtual void drawPropertyWidget( PropertyWidget* widget );
-    private:
-        SkinPixmap preEditBarSkin;
-        SkinPixmap statusBarSkin;
-        /// preedit bar margins
-        int ml, mr, mt, mb;
-        /// status bar margins
-        int sml, smr, smt, smb;
-        /// cursor color
-        QColor color_cursor;
-        /// text y position
-        int yen, ych;
-        /// back arrow
-        QPixmap barrow;
-        int xba, yba;
-        /// forward arrow
-        QPixmap farrow;
-        int xfa, yfa;
+public:
+    static ThemerFcitx* self();
+    virtual ~ThemerFcitx();
+    virtual bool loadTheme();
+    virtual QSize sizeHintPreEditBar(const PreEditBar* widget) const;
+    virtual QSize sizeHintStatusBar(const StatusBar* widget) const;
+    virtual void layoutStatusBar(StatusBarLayout* layout) const;
+    virtual void resizePreEditBar(const QSize& size);
+    virtual void resizeStatusBar(const QSize& size);
+    virtual void maskPreEditBar(PreEditBar* widget);
+    virtual void maskStatusBar(StatusBar* widget);
+    virtual void blurPreEditBar(PreEditBar* widget);
+    virtual void blurStatusBar(StatusBar* widget);
+    virtual void drawPreEditBar(PreEditBar* widget);
+    virtual void drawStatusBar(StatusBar* widget);
+    virtual void drawPropertyWidget(PropertyWidget* widget);
+private:
+    SkinPixmap preEditBarSkin;
+    SkinPixmap statusBarSkin;
+    /// preedit bar margins
+    int ml, mr, mt, mb;
+    /// status bar margins
+    int sml, smr, smt, smb;
+    /// cursor color
+    QColor color_cursor;
+    /// text y position
+    int yen, ych;
+    /// back arrow
+    QPixmap barrow;
+    int xba, yba;
+    /// forward arrow
+    QPixmap farrow;
+    int xfa, yfa;
 
-        explicit ThemerFcitx();
-        static ThemerFcitx* m_self;
+    explicit ThemerFcitx();
+    static ThemerFcitx* m_self;
 };
 
 #endif // THEMER_FCITX_H

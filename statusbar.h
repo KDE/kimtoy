@@ -40,42 +40,42 @@ class ThemerSogou;
 class StatusBar : public QWidget
 {
     Q_OBJECT
-    public:
-        explicit StatusBar();
-        virtual ~StatusBar();
-    protected:
-        virtual bool eventFilter( QObject* object, QEvent* event );
-        virtual void resizeEvent( QResizeEvent* event );
-        virtual void paintEvent( QPaintEvent* event );
-    private Q_SLOTS:
-        void slotEnable( bool enable );
-        void slotTriggerProperty( const QString& objectPath );
-        void slotRegisterProperties( const QStringList& props );
-        void slotUpdateProperty( const QString& prop );
-        void slotRemoveProperty( const QString& prop );
-        void slotExecDialog( const QString& prop );
-        void slotExecMenu( const QStringList& actions );
-    private Q_SLOTS:
-        void slotAutostartToggled( bool enable );
-        void preferences();
-        void slotAboutActionTriggered();
-        void loadSettings();
-    private:
-        void updateSize();
-    private:
+public:
+    explicit StatusBar();
+    virtual ~StatusBar();
+protected:
+    virtual bool eventFilter(QObject* object, QEvent* event);
+    virtual void resizeEvent(QResizeEvent* event);
+    virtual void paintEvent(QPaintEvent* event);
+private Q_SLOTS:
+    void slotEnable(bool enable);
+    void slotTriggerProperty(const QString& objectPath);
+    void slotRegisterProperties(const QStringList& props);
+    void slotUpdateProperty(const QString& prop);
+    void slotRemoveProperty(const QString& prop);
+    void slotExecDialog(const QString& prop);
+    void slotExecMenu(const QStringList& actions);
+private Q_SLOTS:
+    void slotAutostartToggled(bool enable);
+    void preferences();
+    void slotAboutActionTriggered();
+    void loadSettings();
+private:
+    void updateSize();
+private:
 //         friend class Themer;
-        friend class ThemerFcitx;
-        friend class ThemerNone;
-        friend class ThemerPlasma;
-        friend class ThemerSogou;
-        PreEditBar* m_preeditBar;
-        KStatusNotifierItem* m_tray;
+    friend class ThemerFcitx;
+    friend class ThemerNone;
+    friend class ThemerPlasma;
+    friend class ThemerSogou;
+    PreEditBar* m_preeditBar;
+    KStatusNotifierItem* m_tray;
 //         QPushButton* m_hideButton;
-        QPoint m_pointPos;
-        bool m_moving;
-        QList<QString> m_objectPaths;
-        QSignalMapper* m_signalMapper;
-        StatusBarLayout* m_layout;
+    QPoint m_pointPos;
+    bool m_moving;
+    QList<QString> m_objectPaths;
+    QSignalMapper* m_signalMapper;
+    StatusBarLayout* m_layout;
 };
 
 #endif // STATUSBAR_H

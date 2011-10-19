@@ -30,29 +30,29 @@
 
 #include "kimtoysettings.h"
 
-ThemeListView::ThemeListView( QWidget* parent )
-: QListView(parent)
+ThemeListView::ThemeListView(QWidget* parent)
+        : QListView(parent)
 {
-    setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-    setEditTriggers( QAbstractItemView::NoEditTriggers );
-    setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-    setSelectionMode( QAbstractItemView::SingleSelection );
-    setAutoScroll( false );
-    setAlternatingRowColors( true );
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setAutoScroll(false);
+    setAlternatingRowColors(true);
 
-    ThemeListModel* tm = new ThemeListModel( this );
+    ThemeListModel* tm = new ThemeListModel(this);
     ThemeListDelegate* td = new ThemeListDelegate;
-    setModel( tm );
-    setItemDelegate( td );
-    connect( tm, SIGNAL(relayoutNeeded()), this, SLOT(relayout()) );
+    setModel(tm);
+    setItemDelegate(td);
+    connect(tm, SIGNAL(relayoutNeeded()), this, SLOT(relayout()));
 
-    connect( selectionModel(), SIGNAL(currentChanged(const QModelIndex&,const QModelIndex&)),
-             this, SLOT(slotCurrentChanged(const QModelIndex&,const QModelIndex&)) );
+    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)),
+            this, SLOT(slotCurrentChanged(const QModelIndex&, const QModelIndex&)));
 
     m_themeUri = KIMToySettings::self()->themeUri();
 
-    KConfigDialogManager::changedMap()->insert( "ThemeListView", SIGNAL(themeUriChanged(const QString&)) );
+    KConfigDialogManager::changedMap()->insert("ThemeListView", SIGNAL(themeUriChanged(const QString&)));
 }
 
 ThemeListView::~ThemeListView()
@@ -64,14 +64,14 @@ QString ThemeListView::themeUri() const
     return m_themeUri;
 }
 
-void ThemeListView::setThemeUri( const QString& themeUri )
+void ThemeListView::setThemeUri(const QString& themeUri)
 {
     m_themeUri = themeUri;
 
     ThemeListModel* tm = static_cast<ThemeListModel*>(model());
-    QModelIndexList selects = tm->match( tm->index( 0 ), Qt::DisplayRole, themeUri );
-    if ( selects.count() > 0 ) {
-        selectionModel()->select( selects.first(), QItemSelectionModel::ClearAndSelect );
+    QModelIndexList selects = tm->match(tm->index(0), Qt::DisplayRole, themeUri);
+    if (selects.count() > 0) {
+        selectionModel()->select(selects.first(), QItemSelectionModel::ClearAndSelect);
     }
 }
 
@@ -80,21 +80,21 @@ void ThemeListView::reload()
     ThemeListModel* tm = static_cast<ThemeListModel*>(model());
     tm->reloadThemes();
 
-    setThemeUri( KIMToySettings::self()->themeUri() );
+    setThemeUri(KIMToySettings::self()->themeUri());
 }
 
-void ThemeListView::resizeEvent( QResizeEvent* event )
+void ThemeListView::resizeEvent(QResizeEvent* event)
 {
-    QListView::resizeEvent( event );
+    QListView::resizeEvent(event);
     adaptSize();
 }
 
-void ThemeListView::slotCurrentChanged( const QModelIndex& current, const QModelIndex& previous )
+void ThemeListView::slotCurrentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous)
 
-    m_themeUri = current.data( Qt::DisplayRole ).toString();
-    emit themeUriChanged( m_themeUri );
+    m_themeUri = current.data(Qt::DisplayRole).toString();
+    emit themeUriChanged(m_themeUri);
 }
 
 void ThemeListView::relayout()
@@ -107,8 +107,8 @@ void ThemeListView::adaptSize()
     ThemeListDelegate* td = static_cast<ThemeListDelegate*>(itemDelegate());
     ThemeListModel* tm = static_cast<ThemeListModel*>(model());
 
-    if ( !td || !tm )
+    if (!td || !tm)
         return;
 
-    tm->setPreviewWidth( width() - 2 * 4 - verticalScrollBar()->width() );// margin
+    tm->setPreviewWidth(width() - 2 * 4 - verticalScrollBar()->width());  // margin
 }

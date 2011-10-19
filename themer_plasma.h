@@ -28,28 +28,28 @@
 
 class ThemerPlasma : public Themer
 {
-    public:
-        static ThemerPlasma* self();
-        virtual ~ThemerPlasma();
-        virtual bool loadTheme();
-        virtual QSize sizeHintPreEditBar( const PreEditBar* widget ) const;
-        virtual QSize sizeHintStatusBar( const StatusBar* widget ) const;
-        virtual void layoutStatusBar( StatusBarLayout* layout ) const;
-        virtual void resizePreEditBar( const QSize& size );
-        virtual void resizeStatusBar( const QSize& size );
-        virtual void maskPreEditBar( PreEditBar* widget );
-        virtual void maskStatusBar( StatusBar* widget );
-        virtual void blurPreEditBar( PreEditBar* widget );
-        virtual void blurStatusBar( StatusBar* widget );
-        virtual void drawPreEditBar( PreEditBar* widget );
-        virtual void drawStatusBar( StatusBar* widget );
-        virtual void drawPropertyWidget( PropertyWidget* widget );
-    private:
-        Plasma::FrameSvg m_statusBarSvg;
-        Plasma::FrameSvg m_preeditBarSvg;
+public:
+    static ThemerPlasma* self();
+    virtual ~ThemerPlasma();
+    virtual bool loadTheme();
+    virtual QSize sizeHintPreEditBar(const PreEditBar* widget) const;
+    virtual QSize sizeHintStatusBar(const StatusBar* widget) const;
+    virtual void layoutStatusBar(StatusBarLayout* layout) const;
+    virtual void resizePreEditBar(const QSize& size);
+    virtual void resizeStatusBar(const QSize& size);
+    virtual void maskPreEditBar(PreEditBar* widget);
+    virtual void maskStatusBar(StatusBar* widget);
+    virtual void blurPreEditBar(PreEditBar* widget);
+    virtual void blurStatusBar(StatusBar* widget);
+    virtual void drawPreEditBar(PreEditBar* widget);
+    virtual void drawStatusBar(StatusBar* widget);
+    virtual void drawPropertyWidget(PropertyWidget* widget);
+private:
+    Plasma::FrameSvg m_statusBarSvg;
+    Plasma::FrameSvg m_preeditBarSvg;
 
-        explicit ThemerPlasma();
-        static ThemerPlasma* m_self;
+    explicit ThemerPlasma();
+    static ThemerPlasma* m_self;
 };
 
 #endif // THEMER_PLASMA_H

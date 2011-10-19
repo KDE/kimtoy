@@ -23,8 +23,8 @@
 
 #include "themeragent.h"
 
-StatusBarLayout::StatusBarLayout( QWidget* parent )
-: QLayout(parent)
+StatusBarLayout::StatusBarLayout(QWidget* parent)
+        : QLayout(parent)
 {
 }
 
@@ -38,47 +38,47 @@ int StatusBarLayout::count() const
     return m_items.size();
 }
 
-void StatusBarLayout::addItem( QLayoutItem* item )
+void StatusBarLayout::addItem(QLayoutItem* item)
 {
     m_items << item;
 }
 
-QLayoutItem* StatusBarLayout::itemAt( int index ) const
+QLayoutItem* StatusBarLayout::itemAt(int index) const
 {
-    return m_items.value( index );
+    return m_items.value(index);
 }
 
 QSize StatusBarLayout::minimumSize() const
 {
-    QSize s( 0, 0 );
-    for ( int i = 0; i < m_items.size(); ++i ) {
-        QLayoutItem* item = m_items.at( i );
-        s = s.expandedTo( item->minimumSize() );
+    QSize s(0, 0);
+    for (int i = 0; i < m_items.size(); ++i) {
+        QLayoutItem* item = m_items.at(i);
+        s = s.expandedTo(item->minimumSize());
     }
     return s;
 }
 
 QSize StatusBarLayout::sizeHint() const
 {
-    QSize s( 0, 0 );
-    for ( int i = 0; i < m_items.size(); ++i ) {
-        QLayoutItem* item = m_items.at( i );
-        s = s.expandedTo( item->sizeHint() );
+    QSize s(0, 0);
+    for (int i = 0; i < m_items.size(); ++i) {
+        QLayoutItem* item = m_items.at(i);
+        s = s.expandedTo(item->sizeHint());
     }
     return s;
 }
 
-QLayoutItem* StatusBarLayout::takeAt( int index )
+QLayoutItem* StatusBarLayout::takeAt(int index)
 {
-    if ( index >= 0 && index < m_items.size() )
-        return m_items.takeAt( index );
+    if (index >= 0 && index < m_items.size())
+        return m_items.takeAt(index);
     else
         return 0;
 }
 
-void StatusBarLayout::setGeometry( const QRect& rect )
+void StatusBarLayout::setGeometry(const QRect& rect)
 {
-    QLayout::setGeometry( rect );
+    QLayout::setGeometry(rect);
 
-    ThemerAgent::layoutStatusBar( this );
+    ThemerAgent::layoutStatusBar(this);
 }

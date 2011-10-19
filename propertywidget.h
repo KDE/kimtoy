@@ -33,27 +33,27 @@ class ThemerSogou;
 class PropertyWidget : public QWidget
 {
     Q_OBJECT
-    public:
-        explicit PropertyWidget();
-        virtual ~PropertyWidget();
-        void setProperty( const QString& name,
-                          const QString& iconName,
-                          const QString& description );
-        bool operator==( const PropertyWidget& rhs );
-    Q_SIGNALS:
-        void clicked();
-    protected:
-        virtual void mouseReleaseEvent( QMouseEvent* event );
-        virtual void paintEvent( QPaintEvent* event );
-    private:
+public:
+    explicit PropertyWidget();
+    virtual ~PropertyWidget();
+    void setProperty(const QString& name,
+                     const QString& iconName,
+                     const QString& description);
+    bool operator==(const PropertyWidget& rhs);
+Q_SIGNALS:
+    void clicked();
+protected:
+    virtual void mouseReleaseEvent(QMouseEvent* event);
+    virtual void paintEvent(QPaintEvent* event);
+private:
 //         friend class Themer;
-        friend class ThemerFcitx;
-        friend class ThemerNone;
-        friend class ThemerPlasma;
-        friend class ThemerSogou;
-        QString m_name;
-        QString m_iconName;
-        QString m_description;
+    friend class ThemerFcitx;
+    friend class ThemerNone;
+    friend class ThemerPlasma;
+    friend class ThemerSogou;
+    QString m_name;
+    QString m_iconName;
+    QString m_description;
 };
 
 #endif // PROPERTYWIDGET_H

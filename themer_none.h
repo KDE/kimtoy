@@ -26,22 +26,22 @@
 
 class ThemerNone : public Themer
 {
-    public:
-        static ThemerNone* self();
-        virtual ~ThemerNone();
-        virtual bool loadTheme();
-        virtual QSize sizeHintPreEditBar( const PreEditBar* widget ) const;
-        virtual QSize sizeHintStatusBar( const StatusBar* widget ) const;
-        virtual void layoutStatusBar( StatusBarLayout* layout ) const;
-        virtual void maskPreEditBar( PreEditBar* widget );
-        virtual void maskStatusBar( StatusBar* widget );
-        virtual void drawPreEditBar( PreEditBar* widget );
-        virtual void drawStatusBar( StatusBar* widget );
-        virtual void drawPropertyWidget( PropertyWidget* widget );
-    private:
-        QPixmap m_statusBarSkin;
-        explicit ThemerNone();
-        static ThemerNone* m_self;
+public:
+    static ThemerNone* self();
+    virtual ~ThemerNone();
+    virtual bool loadTheme();
+    virtual QSize sizeHintPreEditBar(const PreEditBar* widget) const;
+    virtual QSize sizeHintStatusBar(const StatusBar* widget) const;
+    virtual void layoutStatusBar(StatusBarLayout* layout) const;
+    virtual void maskPreEditBar(PreEditBar* widget);
+    virtual void maskStatusBar(StatusBar* widget);
+    virtual void drawPreEditBar(PreEditBar* widget);
+    virtual void drawStatusBar(StatusBar* widget);
+    virtual void drawPropertyWidget(PropertyWidget* widget);
+private:
+    QPixmap m_statusBarSkin;
+    explicit ThemerNone();
+    static ThemerNone* m_self;
 };
 
 #endif // THEMER_NONE_H

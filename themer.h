@@ -34,41 +34,41 @@ class StatusBarLayout;
 
 class Themer
 {
-    public:
-        explicit Themer();
-        virtual ~Themer();
+public:
+    explicit Themer();
+    virtual ~Themer();
 
-        virtual bool loadTheme() = 0;
-        void loadSettings();
+    virtual bool loadTheme() = 0;
+    void loadSettings();
 
-        virtual QSize sizeHintPreEditBar( const PreEditBar* widget ) const = 0;
-        virtual QSize sizeHintStatusBar( const StatusBar* widget ) const = 0;
+    virtual QSize sizeHintPreEditBar(const PreEditBar* widget) const = 0;
+    virtual QSize sizeHintStatusBar(const StatusBar* widget) const = 0;
 
-        virtual void layoutStatusBar( StatusBarLayout* layout ) const = 0;
+    virtual void layoutStatusBar(StatusBarLayout* layout) const = 0;
 
-        virtual void resizePreEditBar( const QSize& size );
-        virtual void resizeStatusBar( const QSize& size );
+    virtual void resizePreEditBar(const QSize& size);
+    virtual void resizeStatusBar(const QSize& size);
 
-        virtual void maskPreEditBar( PreEditBar* widget ) = 0;
-        virtual void maskStatusBar( StatusBar* widget ) = 0;
+    virtual void maskPreEditBar(PreEditBar* widget) = 0;
+    virtual void maskStatusBar(StatusBar* widget) = 0;
 
-        virtual void blurPreEditBar( PreEditBar* widget );
-        virtual void blurStatusBar( StatusBar* widget );
+    virtual void blurPreEditBar(PreEditBar* widget);
+    virtual void blurStatusBar(StatusBar* widget);
 
-        virtual void drawPreEditBar( PreEditBar* widget ) = 0;
-        virtual void drawStatusBar( StatusBar* widget ) = 0;
-        virtual void drawPropertyWidget( PropertyWidget* widget ) = 0;
+    virtual void drawPreEditBar(PreEditBar* widget) = 0;
+    virtual void drawStatusBar(StatusBar* widget) = 0;
+    virtual void drawPropertyWidget(PropertyWidget* widget) = 0;
 
-    protected:
-        QFont m_preEditFont;
-        QFont m_labelFont;
-        QFont m_candidateFont;
-        int m_preEditFontHeight;
-        int m_labelFontHeight;
-        int m_candidateFontHeight;
-        QColor m_preEditColor;
-        QColor m_labelColor;
-        QColor m_candidateColor;
+protected:
+    QFont m_preEditFont;
+    QFont m_labelFont;
+    QFont m_candidateFont;
+    int m_preEditFontHeight;
+    int m_labelFontHeight;
+    int m_candidateFontHeight;
+    QColor m_preEditColor;
+    QColor m_labelColor;
+    QColor m_candidateColor;
 };
 
 #endif // THEMER_H

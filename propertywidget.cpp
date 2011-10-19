@@ -28,40 +28,40 @@
 
 PropertyWidget::PropertyWidget()
 {
-    setFixedSize( QSize( 22, 22 ) );
+    setFixedSize(QSize(22, 22));
 }
 
 PropertyWidget::~PropertyWidget()
 {
 }
 
-void PropertyWidget::setProperty( const QString& name,
-                                  const QString& iconName,
-                                  const QString& description )
+void PropertyWidget::setProperty(const QString& name,
+                                 const QString& iconName,
+                                 const QString& description)
 {
     m_name = name;
     m_iconName = iconName;
     m_description = description;
-    setToolTip( description );
+    setToolTip(description);
     update();
 }
 
-bool PropertyWidget::operator==( const PropertyWidget& rhs )
+bool PropertyWidget::operator==(const PropertyWidget& rhs)
 {
     return m_name == rhs.m_name
-    && m_iconName == rhs.m_iconName
-    && m_description == rhs.m_description;
+           && m_iconName == rhs.m_iconName
+           && m_description == rhs.m_description;
 }
 
-void PropertyWidget::mouseReleaseEvent( QMouseEvent* event )
+void PropertyWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-    QWidget::mouseReleaseEvent( event );
-    if ( event->button() == Qt::LeftButton )
+    QWidget::mouseReleaseEvent(event);
+    if (event->button() == Qt::LeftButton)
         emit clicked();
 }
 
-void PropertyWidget::paintEvent( QPaintEvent* event )
+void PropertyWidget::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-    ThemerAgent::drawPropertyWidget( this );
+    ThemerAgent::drawPropertyWidget(this);
 }

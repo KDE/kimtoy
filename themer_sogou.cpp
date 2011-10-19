@@ -43,7 +43,7 @@
 
 #include "kimtoysettings.h"
 
-static void calculateOverlaySurrounding( const QHash<QString, OverlayPixmap>& overlays, int& opt, int& opb, int& opl, int& opr )
+static void calculateOverlaySurrounding(const QHash<QString, OverlayPixmap>& overlays, int& opt, int& opb, int& opl, int& opr)
 {
     opl = 0;
     opr = 0;
@@ -51,39 +51,39 @@ static void calculateOverlaySurrounding( const QHash<QString, OverlayPixmap>& ov
     opb = 0;
     QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
     QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
-    while ( it != end ) {
+    while (it != end) {
         const OverlayPixmap& op = it.value();
-        switch ( op.alignArea ) {
+        switch (op.alignArea) {
             case 1:
-                opl = qMax( opl, op.pixmap.width() );
-                opt = qMax( opt, op.pixmap.height() );
+                opl = qMax(opl, op.pixmap.width());
+                opt = qMax(opt, op.pixmap.height());
                 break;
             case 2:
-                opt = qMax( opt, op.pixmap.height() );
+                opt = qMax(opt, op.pixmap.height());
                 break;
             case 3:
-                opr = qMax( opr, op.pixmap.width() );
-                opt = qMax( opt, op.pixmap.height() );
+                opr = qMax(opr, op.pixmap.width());
+                opt = qMax(opt, op.pixmap.height());
                 break;
             case 4:
-                opl = qMax( opl, op.pixmap.width() );
+                opl = qMax(opl, op.pixmap.width());
                 break;
             case 5:
                 /// center pixmap, no addition
                 break;
             case 6:
-                opr = qMax( opr, op.pixmap.width() );
+                opr = qMax(opr, op.pixmap.width());
                 break;
             case 7:
-                opl = qMax( opl, op.pixmap.width() );
-                opb = qMax( opb, op.pixmap.height() );
+                opl = qMax(opl, op.pixmap.width());
+                opb = qMax(opb, op.pixmap.height());
                 break;
             case 8:
-                opb = qMax( opb, op.pixmap.height() );
+                opb = qMax(opb, op.pixmap.height());
                 break;
             case 9:
-                opr = qMax( opr, op.pixmap.width() );
-                opb = qMax( opb, op.pixmap.height() );
+                opr = qMax(opr, op.pixmap.width());
+                opb = qMax(opb, op.pixmap.height());
                 break;
             default:
                 /// never arrive here
@@ -97,13 +97,13 @@ ThemerSogou* ThemerSogou::m_self = 0;
 
 ThemerSogou* ThemerSogou::self()
 {
-    if ( !m_self )
+    if (!m_self)
         m_self = new ThemerSogou;
     return m_self;
 }
 
 ThemerSogou::ThemerSogou()
-: Themer()
+        : Themer()
 {
 }
 
@@ -114,18 +114,18 @@ ThemerSogou::~ThemerSogou()
 bool ThemerSogou::loadTheme()
 {
     QString file = KIMToySettings::self()->themeUri();
-    if ( !QFile::exists( file ) )
+    if (!QFile::exists(file))
         return false;
 
-    KZip zip( file );
-    if ( !zip.open( QIODevice::ReadOnly ) ) {
+    KZip zip(file);
+    if (!zip.open(QIODevice::ReadOnly)) {
         return false;
     }
 
-    const KArchiveEntry* entry = zip.directory()->entry( "skin.ini" );
+    const KArchiveEntry* entry = zip.directory()->entry("skin.ini");
     const KZipFileEntry* skinini = static_cast<const KZipFileEntry*>(entry);
 
-    if ( !skinini ) {
+    if (!skinini) {
         return false;
     }
 
@@ -152,451 +152,452 @@ bool ThemerSogou::loadTheme()
     h_sepl = 0, h_sepr = 0;
     v_sepl = 0, v_sepr = 0;
 
-    QTextStream ss( data );
+    QTextStream ss(data);
     QString line;
     QString key, value;
     do {
         line = ss.readLine();
-        if ( line.isEmpty() )
+        if (line.isEmpty())
             continue;
 
-        if ( line.at( 0 ) == '[' ) {
-            general = ( line == "[General]" );
-            display = ( line == "[Display]" );
-            scheme_h1 = ( line == "[Scheme_H1]" );
-            scheme_v1 = ( line == "[Scheme_V1]" );
-            statusbar = ( line == "[StatusBar]" );
+        if (line.at(0) == '[') {
+            general = (line == "[General]");
+            display = (line == "[Display]");
+            scheme_h1 = (line == "[Scheme_H1]");
+            scheme_v1 = (line == "[Scheme_V1]");
+            statusbar = (line == "[StatusBar]");
             continue;
         }
 
-        key = line.split( '=' ).at( 0 );
-        value = line.split( '=' ).at( 1 );
+        key = line.split('=').at(0);
+        value = line.split('=').at(1);
 
-        if ( value.isEmpty() )
+        if (value.isEmpty())
             continue;
 
-        if ( general ) {
+        if (general) {
             /// extract meta info
         }
-        else if ( display ) {
-            if ( key == "font_size" )
+        else if (display) {
+            if (key == "font_size")
                 fontPixelSize = value.trimmed().toInt();
-            else if ( key == "font_ch" )
+            else if (key == "font_ch")
                 font_ch = value;
-            else if ( key == "font_en" )
+            else if (key == "font_en")
                 font_en = value;
-            else if ( key == "pinyin_color" )
+            else if (key == "pinyin_color")
                 pinyin_color = value;
-            else if ( key == "zhongwen_color" )
+            else if (key == "zhongwen_color")
                 zhongwen_color = value;
         }
-        else if ( scheme_h1 ) {
-            if ( key == "pic" ) {
-                const KArchiveEntry* e = zip.directory()->entry( value );
+        else if (scheme_h1) {
+            if (key == "pic") {
+                const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if ( pix )
-                    h1skin.loadFromData( pix->data() );
+                if (pix)
+                    h1skin.loadFromData(pix->data());
             }
-            else if ( key == "layout_horizontal" ) {
-                QStringList list = value.split( ',' );
-                h_hstm = list.at( 0 ).trimmed().toInt();
-                h_hsl = list.at( 1 ).trimmed().toInt();
-                h_hsr = list.at( 2 ).trimmed().toInt();
+            else if (key == "layout_horizontal") {
+                QStringList list = value.split(',');
+                h_hstm = list.at(0).trimmed().toInt();
+                h_hsl = list.at(1).trimmed().toInt();
+                h_hsr = list.at(2).trimmed().toInt();
             }
-            else if ( key == "layout_vertical" ) {
-                QStringList list = value.split( ',' );
-                h_vstm = list.at( 0 ).trimmed().toInt();
-                h_vst = list.at( 1 ).trimmed().toInt();
-                h_vsb = list.at( 2 ).trimmed().toInt();
+            else if (key == "layout_vertical") {
+                QStringList list = value.split(',');
+                h_vstm = list.at(0).trimmed().toInt();
+                h_vst = list.at(1).trimmed().toInt();
+                h_vsb = list.at(2).trimmed().toInt();
                 //WARNING: it seems that v_vst/v_vsb is always unused in sogou theme
                 h_vstm = 0;//WARNING: assume scale mode --- nihui
                 h_vst = 1;
                 h_vsb = 1;
             }
-            else if ( key == "separator" ) {
-                QStringList list = value.split( ',' );
-                QString sep_color = list.at( 0 ).trimmed();
-                h_separatorColor = sep_color.leftJustified( 8, '0' ).replace( "0x", "#" );
-                h_sepl = list.at( 1 ).trimmed().toInt();
-                h_sepr = list.at( 2 ).trimmed().toInt();
+            else if (key == "separator") {
+                QStringList list = value.split(',');
+                QString sep_color = list.at(0).trimmed();
+                h_separatorColor = sep_color.leftJustified(8, '0').replace("0x", "#");
+                h_sepl = list.at(1).trimmed().toInt();
+                h_sepr = list.at(2).trimmed().toInt();
             }
-            else if ( key == "pinyin_marge" ) {
-                QStringList list = value.split( ',' );
-                h_pt = list.at( 0 ).trimmed().toInt();
-                h_pb = list.at( 1 ).trimmed().toInt();
-                h_pl = list.at( 2 ).trimmed().toInt();
-                h_pr = list.at( 3 ).trimmed().toInt();
+            else if (key == "pinyin_marge") {
+                QStringList list = value.split(',');
+                h_pt = list.at(0).trimmed().toInt();
+                h_pb = list.at(1).trimmed().toInt();
+                h_pl = list.at(2).trimmed().toInt();
+                h_pr = list.at(3).trimmed().toInt();
             }
-            else if ( key == "zhongwen_marge" ) {
-                QStringList list = value.split( ',' );
-                h_zt = list.at( 0 ).trimmed().toInt();
-                h_zb = list.at( 1 ).trimmed().toInt();
-                h_zl = list.at( 2 ).trimmed().toInt();
-                h_zr = list.at( 3 ).trimmed().toInt();
+            else if (key == "zhongwen_marge") {
+                QStringList list = value.split(',');
+                h_zt = list.at(0).trimmed().toInt();
+                h_zb = list.at(1).trimmed().toInt();
+                h_zl = list.at(2).trimmed().toInt();
+                h_zr = list.at(3).trimmed().toInt();
             }
-            else if ( key.endsWith( "_display" ) ) {
-                QString name = key.left( key.length() - 8 );
-                h_overlays.insert( name, OverlayPixmap() );
+            else if (key.endsWith("_display")) {
+                QString name = key.left(key.length() - 8);
+                h_overlays.insert(name, OverlayPixmap());
             }
-            else if ( key.endsWith( "_align" ) ) {
-                QString name = key.left( key.length() - 6 );
-                QStringList numbers = value.split( ',' );
+            else if (key.endsWith("_align")) {
+                QString name = key.left(key.length() - 6);
+                QStringList numbers = value.split(',');
                 OverlayPixmap& op = h_overlays[ name ];
-                op.mt = numbers.at( 0 ).toInt();
-                op.mb = numbers.at( 1 ).toInt();
-                op.ml = numbers.at( 2 ).toInt();
-                op.mr = numbers.at( 3 ).toInt();
-                op.alignVMode = numbers.at( 4 ).toInt() + numbers.at( 5 ).toInt();/// FIXME: right or wrong?
-                op.alignHMode = numbers.at( 6 ).toInt() + numbers.at( 7 ).toInt();/// FIXME: right or wrong?
-                op.alignArea = numbers.at( 8 ).toInt();
-                op.alignTarget = numbers.at( 9 ).toInt();
+                op.mt = numbers.at(0).toInt();
+                op.mb = numbers.at(1).toInt();
+                op.ml = numbers.at(2).toInt();
+                op.mr = numbers.at(3).toInt();
+                op.alignVMode = numbers.at(4).toInt() + numbers.at(5).toInt();    /// FIXME: right or wrong?
+                op.alignHMode = numbers.at(6).toInt() + numbers.at(7).toInt();    /// FIXME: right or wrong?
+                op.alignArea = numbers.at(8).toInt();
+                op.alignTarget = numbers.at(9).toInt();
             }
-            else if ( h_overlays.contains( key ) ) {
-                const KArchiveEntry* e = zip.directory()->entry( value );
+            else if (h_overlays.contains(key)) {
+                const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if ( pix )
-                    h_overlays[ key ].pixmap.loadFromData( pix->data() );
+                if (pix)
+                    h_overlays[ key ].pixmap.loadFromData(pix->data());
             }
         }
-        else if ( scheme_v1 ) {
-            if ( key == "pic" ) {
-                const KArchiveEntry* e = zip.directory()->entry( value );
+        else if (scheme_v1) {
+            if (key == "pic") {
+                const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if ( pix )
-                    v1skin.loadFromData( pix->data() );
+                if (pix)
+                    v1skin.loadFromData(pix->data());
             }
-            else if ( key == "layout_horizontal" ) {
-                QStringList list = value.split( ',' );
-                v_hstm = list.at( 0 ).trimmed().toInt();
-                v_hsl = list.at( 1 ).trimmed().toInt();
-                v_hsr = list.at( 2 ).trimmed().toInt();
+            else if (key == "layout_horizontal") {
+                QStringList list = value.split(',');
+                v_hstm = list.at(0).trimmed().toInt();
+                v_hsl = list.at(1).trimmed().toInt();
+                v_hsr = list.at(2).trimmed().toInt();
             }
-            else if ( key == "layout_vertical" ) {
-                QStringList list = value.split( ',' );
-                v_vstm = list.at( 0 ).trimmed().toInt();
-                v_vst = list.at( 1 ).trimmed().toInt();
-                v_vsb = list.at( 2 ).trimmed().toInt();
+            else if (key == "layout_vertical") {
+                QStringList list = value.split(',');
+                v_vstm = list.at(0).trimmed().toInt();
+                v_vst = list.at(1).trimmed().toInt();
+                v_vsb = list.at(2).trimmed().toInt();
             }
-            else if ( key == "separator" ) {
-                QStringList list = value.split( ',' );
-                QString sep_color = list.at( 0 ).trimmed();
-                v_separatorColor = sep_color.leftJustified( 8, '0' ).replace( "0x", "#" );
-                v_sepl = list.at( 1 ).trimmed().toInt();
-                v_sepr = list.at( 2 ).trimmed().toInt();
+            else if (key == "separator") {
+                QStringList list = value.split(',');
+                QString sep_color = list.at(0).trimmed();
+                v_separatorColor = sep_color.leftJustified(8, '0').replace("0x", "#");
+                v_sepl = list.at(1).trimmed().toInt();
+                v_sepr = list.at(2).trimmed().toInt();
             }
-            else if ( key == "pinyin_marge" ) {
-                QStringList list = value.split( ',' );
-                v_pt = list.at( 0 ).trimmed().toInt();
-                v_pb = list.at( 1 ).trimmed().toInt();
-                v_pl = list.at( 2 ).trimmed().toInt();
-                v_pr = list.at( 3 ).trimmed().toInt();
+            else if (key == "pinyin_marge") {
+                QStringList list = value.split(',');
+                v_pt = list.at(0).trimmed().toInt();
+                v_pb = list.at(1).trimmed().toInt();
+                v_pl = list.at(2).trimmed().toInt();
+                v_pr = list.at(3).trimmed().toInt();
             }
-            else if ( key == "zhongwen_marge" ) {
-                QStringList list = value.split( ',' );
-                v_zt = list.at( 0 ).trimmed().toInt();
-                v_zb = list.at( 1 ).trimmed().toInt();
-                v_zl = list.at( 2 ).trimmed().toInt();
-                v_zr = list.at( 3 ).trimmed().toInt();
+            else if (key == "zhongwen_marge") {
+                QStringList list = value.split(',');
+                v_zt = list.at(0).trimmed().toInt();
+                v_zb = list.at(1).trimmed().toInt();
+                v_zl = list.at(2).trimmed().toInt();
+                v_zr = list.at(3).trimmed().toInt();
             }
-            else if ( key.endsWith( "_display" ) ) {
-                QString name = key.left( key.length() - 8 );
-                v_overlays.insert( name, OverlayPixmap() );
+            else if (key.endsWith("_display")) {
+                QString name = key.left(key.length() - 8);
+                v_overlays.insert(name, OverlayPixmap());
             }
-            else if ( key.endsWith( "_align" ) ) {
-                QString name = key.left( key.length() - 6 );
-                QStringList numbers = value.split( ',' );
+            else if (key.endsWith("_align")) {
+                QString name = key.left(key.length() - 6);
+                QStringList numbers = value.split(',');
                 OverlayPixmap& op = v_overlays[ name ];
-                op.mt = numbers.at( 0 ).toInt();
-                op.mb = numbers.at( 1 ).toInt();
-                op.ml = numbers.at( 2 ).toInt();
-                op.mr = numbers.at( 3 ).toInt();
-                op.alignVMode = numbers.at( 4 ).toInt() + numbers.at( 5 ).toInt();/// FIXME: right or wrong?
-                op.alignHMode = numbers.at( 6 ).toInt() + numbers.at( 7 ).toInt();/// FIXME: right or wrong?
-                op.alignArea = numbers.at( 8 ).toInt();
-                op.alignTarget = numbers.at( 9 ).toInt();
+                op.mt = numbers.at(0).toInt();
+                op.mb = numbers.at(1).toInt();
+                op.ml = numbers.at(2).toInt();
+                op.mr = numbers.at(3).toInt();
+                op.alignVMode = numbers.at(4).toInt() + numbers.at(5).toInt();    /// FIXME: right or wrong?
+                op.alignHMode = numbers.at(6).toInt() + numbers.at(7).toInt();    /// FIXME: right or wrong?
+                op.alignArea = numbers.at(8).toInt();
+                op.alignTarget = numbers.at(9).toInt();
             }
-            else if ( v_overlays.contains( key ) ) {
-                const KArchiveEntry* e = zip.directory()->entry( value );
+            else if (v_overlays.contains(key)) {
+                const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if ( pix )
-                    v_overlays[ key ].pixmap.loadFromData( pix->data() );
+                if (pix)
+                    v_overlays[ key ].pixmap.loadFromData(pix->data());
             }
         }
-        else if ( statusbar ) {
-            if ( key == "pic" ) {
-                const KArchiveEntry* e = zip.directory()->entry( value );
+        else if (statusbar) {
+            if (key == "pic") {
+                const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if ( pix )
-                    m_statusBarSkin.loadFromData( pix->data() );
+                if (pix)
+                    m_statusBarSkin.loadFromData(pix->data());
             }
-            else if ( key.endsWith( "_pos" ) ) {
-                QStringList list = value.split( ',' );
-                int x = list.at( 0 ).trimmed().toInt();
-                int y = list.at( 1 ).trimmed().toInt();
-                if ( x != 0 && y != 0 && i < 6 ) {
-                    m_pwpos[ i ] = QPoint( x, y );
+            else if (key.endsWith("_pos")) {
+                QStringList list = value.split(',');
+                int x = list.at(0).trimmed().toInt();
+                int y = list.at(1).trimmed().toInt();
+                if (x != 0 && y != 0 && i < 6) {
+                    m_pwpos[ i ] = QPoint(x, y);
                     ++i;
                 }
             }
         }
-    } while ( !line.isNull() );
+    }
+    while (!line.isNull());
 
     h_hsr = h1skin.width() - h_hsr;
     h_vsb = h1skin.height() - h_vsb;
     v_hsr = v1skin.width() - v_hsr;
     v_vsb = v1skin.height() - v_vsb;
-    if ( h_hsl > h_hsr ) qSwap( h_hsl, h_hsr );
-    if ( h_vst > h_vsb ) qSwap( h_vst, h_vsb );
-    if ( v_hsl > v_hsr ) qSwap( v_hsl, v_hsr );
-    if ( v_vst > v_vsb ) qSwap( v_vst, v_vsb );
+    if (h_hsl > h_hsr) qSwap(h_hsl, h_hsr);
+    if (h_vst > h_vsb) qSwap(h_vst, h_vsb);
+    if (v_hsl > v_hsr) qSwap(v_hsl, v_hsr);
+    if (v_vst > v_vsb) qSwap(v_vst, v_vsb);
 
-    h_preEditBarSkin = SkinPixmap( h1skin, h_hsl, h_hsr, h_vst, h_vsb, h_hstm, h_vstm );
-    v_preEditBarSkin = SkinPixmap( v1skin, v_hsl, v_hsr, v_vst, v_vsb, v_hstm, v_vstm );
+    h_preEditBarSkin = SkinPixmap(h1skin, h_hsl, h_hsr, h_vst, h_vsb, h_hstm, h_vstm);
+    v_preEditBarSkin = SkinPixmap(v1skin, v_hsl, v_hsr, v_vst, v_vsb, v_hstm, v_vstm);
 
     /// calculate overlay pixmap surrounding size
-    calculateOverlaySurrounding( h_overlays, h_opt, h_opb, h_opl, h_opr );
-    calculateOverlaySurrounding( v_overlays, v_opt, v_opb, v_opl, v_opr );
+    calculateOverlaySurrounding(h_overlays, h_opt, h_opb, h_opl, h_opr);
+    calculateOverlaySurrounding(v_overlays, v_opt, v_opb, v_opl, v_opr);
 
-    m_preEditFont.setFamily( font_en );
-    m_preEditFont.setPixelSize( fontPixelSize );
-    m_preEditFont.setBold( true );
-    m_candidateFont.setFamily( font_ch );
-    m_candidateFont.setPixelSize( fontPixelSize );
-    m_candidateFont.setBold( true );
+    m_preEditFont.setFamily(font_en);
+    m_preEditFont.setPixelSize(fontPixelSize);
+    m_preEditFont.setBold(true);
+    m_candidateFont.setFamily(font_ch);
+    m_candidateFont.setPixelSize(fontPixelSize);
+    m_candidateFont.setBold(true);
     m_labelFont = m_candidateFont;
 
-    m_preEditFontHeight = QFontMetrics( m_preEditFont ).height();
-    m_labelFontHeight = QFontMetrics( m_labelFont ).height();
-    m_candidateFontHeight = QFontMetrics( m_candidateFont ).height();
+    m_preEditFontHeight = QFontMetrics(m_preEditFont).height();
+    m_labelFontHeight = QFontMetrics(m_labelFont).height();
+    m_candidateFontHeight = QFontMetrics(m_candidateFont).height();
 
-    pinyin_color = pinyin_color.leftJustified( 8, '0' ).replace( "0x", "#" );
-    zhongwen_color = zhongwen_color.leftJustified( 8, '0' ).replace( "0x", "#" );
-    m_preEditColor = QColor( pinyin_color );
-    m_candidateColor = QColor( zhongwen_color );
+    pinyin_color = pinyin_color.leftJustified(8, '0').replace("0x", "#");
+    zhongwen_color = zhongwen_color.leftJustified(8, '0').replace("0x", "#");
+    m_preEditColor = QColor(pinyin_color);
+    m_candidateColor = QColor(zhongwen_color);
     m_labelColor = m_candidateColor;
 
     return true;
 }
 
-QSize ThemerSogou::sizeHintPreEditBar( const PreEditBar* widget ) const
+QSize ThemerSogou::sizeHintPreEditBar(const PreEditBar* widget) const
 {
     const SkinPixmap& skin = KIMToySettings::self()->verticalPreeditBar()
-                            ? v_preEditBarSkin : h_preEditBarSkin;
+                             ? v_preEditBarSkin : h_preEditBarSkin;
     int w = skin.skinw();
     int h = skin.skinh();
 
-    if ( KIMToySettings::self()->verticalPreeditBar() ) {
+    if (KIMToySettings::self()->verticalPreeditBar()) {
         int widgetsh = v_pt + v_pb + v_zt + v_zb;
 
         /// preedit and aux
-        int pinyinauxw = QFontMetrics( m_preEditFont ).width( widget->m_text + widget->m_auxText );
-        w = qMax( pinyinauxw + v_pl + v_pr + v_opl + v_opr, w );
+        int pinyinauxw = QFontMetrics(m_preEditFont).width(widget->m_text + widget->m_auxText);
+        w = qMax(pinyinauxw + v_pl + v_pr + v_opl + v_opr, w);
         widgetsh += m_preEditFontHeight;
 
         /// lookuptable
         int lookuptablew = 0;
-        int count = qMin( widget->m_labels.count(), widget->m_candidates.count() );
-        for ( int i = 0; i < count; ++i ) {
-            QString tmp = widget->m_labels.at( i ).trimmed() + widget->m_candidates.at( i ).trimmed();
-            lookuptablew = qMax( QFontMetrics( m_candidateFont ).width( tmp ), lookuptablew );
+        int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
+        for (int i = 0; i < count; ++i) {
+            QString tmp = widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed();
+            lookuptablew = qMax(QFontMetrics(m_candidateFont).width(tmp), lookuptablew);
             widgetsh += m_candidateFontHeight;
         }
-        w = qMax( lookuptablew + v_zl + v_zr + v_opl + v_opr, w );
+        w = qMax(lookuptablew + v_zl + v_zr + v_opl + v_opr, w);
 
-        h = qMax( widgetsh + v_opt + v_opb, h );
+        h = qMax(widgetsh + v_opt + v_opb, h);
     }
     else {
         int widgetsh = h_pt + h_pb + h_zt + h_zb;
 
         /// preedit and aux
-        int pinyinauxw = QFontMetrics( m_preEditFont ).width( widget->m_text + widget->m_auxText );
-        w = qMax( pinyinauxw + h_pl + h_pr + h_opl + h_opr, w );
+        int pinyinauxw = QFontMetrics(m_preEditFont).width(widget->m_text + widget->m_auxText);
+        w = qMax(pinyinauxw + h_pl + h_pr + h_opl + h_opr, w);
         widgetsh += m_preEditFontHeight;
 
         /// lookuptable
-        QString tmp = widget->m_labels.join( QString() );
-        int count = qMin( widget->m_labels.count(), widget->m_candidates.count() );
-        for ( int i = 0; i < count; ++i ) {
-            tmp += widget->m_labels.at( i ).trimmed() + widget->m_candidates.at( i ).trimmed();
+        QString tmp = widget->m_labels.join(QString());
+        int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
+        for (int i = 0; i < count; ++i) {
+            tmp += widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed();
         }
-        int lookuptablew = QFontMetrics( m_candidateFont ).width( tmp );
-        w = qMax( lookuptablew + h_zl + h_zr + h_opl + h_opr, w );
+        int lookuptablew = QFontMetrics(m_candidateFont).width(tmp);
+        w = qMax(lookuptablew + h_zl + h_zr + h_opl + h_opr, w);
         widgetsh += m_candidateFontHeight;
 
-        h = qMax( widgetsh + h_opt + h_opb, h );
+        h = qMax(widgetsh + h_opt + h_opb, h);
     }
 
-    if ( !KIMToySettings::self()->enablePreeditResizing() ) {
+    if (!KIMToySettings::self()->enablePreeditResizing()) {
         /// align with skin width + 70 * x
         const int align = 70;
-        if ( w > skin.skinw() ) {
-            w = skin.skinw() + ( ( w - skin.skinw() - 1 ) / align + 1 ) * align;
+        if (w > skin.skinw()) {
+            w = skin.skinw() + ((w - skin.skinw() - 1) / align + 1) * align;
         }
     }
 
-    return QSize( w, h );
+    return QSize(w, h);
 }
 
-QSize ThemerSogou::sizeHintStatusBar( const StatusBar* widget ) const
+QSize ThemerSogou::sizeHintStatusBar(const StatusBar* widget) const
 {
     Q_UNUSED(widget);
     return m_statusBarSkin.size();
 }
 
-void ThemerSogou::layoutStatusBar( StatusBarLayout* layout ) const
+void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
 {
-    int availableCount = qMin( layout->count(), 6 );
-    for ( int i = 0; i < availableCount; ++i ) {
-        QLayoutItem* item = layout->m_items.at( i );
-        item->setGeometry( QRect( m_pwpos[ i ], item->maximumSize() ) );
+    int availableCount = qMin(layout->count(), 6);
+    for (int i = 0; i < availableCount; ++i) {
+        QLayoutItem* item = layout->m_items.at(i);
+        item->setGeometry(QRect(m_pwpos[ i ], item->maximumSize()));
     }
 }
 
-void ThemerSogou::resizePreEditBar( const QSize& size )
+void ThemerSogou::resizePreEditBar(const QSize& size)
 {
-    if ( KIMToySettings::self()->verticalPreeditBar() ) {
-        v_preEditBarSkin.resizePixmap( size );
+    if (KIMToySettings::self()->verticalPreeditBar()) {
+        v_preEditBarSkin.resizePixmap(size);
     }
     else {
-        h_preEditBarSkin.resizePixmap( size );
+        h_preEditBarSkin.resizePixmap(size);
     }
 
     /// calculate mask if necessary
-    if ( KIMToySettings::self()->enableWindowMask()
-        || KIMToySettings::self()->enableBackgroundBlur()
-        || KIMToySettings::self()->backgroundColorizing() ) {
-        updatePreEditBarMask( size );
+    if (KIMToySettings::self()->enableWindowMask()
+            || KIMToySettings::self()->enableBackgroundBlur()
+            || KIMToySettings::self()->backgroundColorizing()) {
+        updatePreEditBarMask(size);
     }
 }
 
-void ThemerSogou::resizeStatusBar( const QSize& size )
+void ThemerSogou::resizeStatusBar(const QSize& size)
 {
     /// calculate mask if necessary
-    if ( KIMToySettings::self()->enableWindowMask()
-        || KIMToySettings::self()->enableBackgroundBlur()
-        || KIMToySettings::self()->backgroundColorizing() ) {
-        updateStatusBarMask( size );
+    if (KIMToySettings::self()->enableWindowMask()
+            || KIMToySettings::self()->enableBackgroundBlur()
+            || KIMToySettings::self()->backgroundColorizing()) {
+        updateStatusBarMask(size);
     }
 }
 
-void ThemerSogou::updatePreEditBarMask( const QSize& size )
+void ThemerSogou::updatePreEditBarMask(const QSize& size)
 {
     int opt, opb, opl, opr;
 
-    if ( KIMToySettings::self()->verticalPreeditBar() ) {
-        v_preEditBarSkin.resizeRegion( size );
+    if (KIMToySettings::self()->verticalPreeditBar()) {
+        v_preEditBarSkin.resizeRegion(size);
         m_preEditBarMask = v_preEditBarSkin.currentRegion();
         opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
     }
     else {
-        h_preEditBarSkin.resizeRegion( size );
+        h_preEditBarSkin.resizeRegion(size);
         m_preEditBarMask = h_preEditBarSkin.currentRegion();
         opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
     }
 
     /// overlay pixmap regions
     const QHash<QString, OverlayPixmap>& overlays = KIMToySettings::self()->verticalPreeditBar()
-                                                    ? v_overlays : h_overlays;
+            ? v_overlays : h_overlays;
     QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
     QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
-    while ( it != end ) {
+    while (it != end) {
         const OverlayPixmap& op = it.value();
         QRegion opRegion = op.pixmap.mask();
-        switch ( op.alignArea ) {
+        switch (op.alignArea) {
             case 1:
-                opRegion.translate( -op.mr, -op.mb );
+                opRegion.translate(-op.mr, -op.mb);
                 break;
             case 2:
-                if ( op.alignHMode == 0 ) {
-                    opRegion.translate( ( size.width() + opl - opr + op.pixmap.width() ) / 2, 0 );
-                    opRegion.translate( 0, -op.mb );
+                if (op.alignHMode == 0) {
+                    opRegion.translate((size.width() + opl - opr + op.pixmap.width()) / 2, 0);
+                    opRegion.translate(0, -op.mb);
                 }
-                else if ( op.alignHMode == 1 ) {
-                    opRegion.translate( opl, 0 );
-                    opRegion.translate( op.ml, -op.mb );
+                else if (op.alignHMode == 1) {
+                    opRegion.translate(opl, 0);
+                    opRegion.translate(op.ml, -op.mb);
                 }
-                else if ( op.alignHMode == 2 ) {
-                    opRegion.translate( size.width() - opr - op.pixmap.width(), 0 );
-                    opRegion.translate( -op.mr, -op.mb );
+                else if (op.alignHMode == 2) {
+                    opRegion.translate(size.width() - opr - op.pixmap.width(), 0);
+                    opRegion.translate(-op.mr, -op.mb);
                 }
                 break;
             case 3:
-                opRegion.translate( size.width() - opr, 0 );
-                opRegion.translate( op.ml, -op.mb );
+                opRegion.translate(size.width() - opr, 0);
+                opRegion.translate(op.ml, -op.mb);
                 break;
             case 4:
-                if ( op.alignVMode == 0 ) {
-                    opRegion.translate( 0, ( size.height() - opb + opt + op.pixmap.height() ) / 2 );
-                    opRegion.translate( -op.mr, 0 );
+                if (op.alignVMode == 0) {
+                    opRegion.translate(0, (size.height() - opb + opt + op.pixmap.height()) / 2);
+                    opRegion.translate(-op.mr, 0);
                 }
-                else if ( op.alignVMode == 1 ) {
-                    opRegion.translate( 0, opt );
-                    opRegion.translate( -op.mr, op.mt );
+                else if (op.alignVMode == 1) {
+                    opRegion.translate(0, opt);
+                    opRegion.translate(-op.mr, op.mt);
                 }
-                else if ( op.alignVMode == 2 ) {
-                    opRegion.translate( 0, size.height() - opb - op.pixmap.height() );
-                    opRegion.translate( -op.mr, -op.mb );
+                else if (op.alignVMode == 2) {
+                    opRegion.translate(0, size.height() - opb - op.pixmap.height());
+                    opRegion.translate(-op.mr, -op.mb);
                 }
                 break;
             case 5:
-                if ( op.alignHMode == 0 ) {
-                    opRegion.translate( ( size.width() + opl - opr + op.pixmap.width() ) / 2, 0 );
+                if (op.alignHMode == 0) {
+                    opRegion.translate((size.width() + opl - opr + op.pixmap.width()) / 2, 0);
                 }
-                else if ( op.alignHMode == 1 ) {
-                    opRegion.translate( opl, 0 );
-                    opRegion.translate( op.ml, 0 );
+                else if (op.alignHMode == 1) {
+                    opRegion.translate(opl, 0);
+                    opRegion.translate(op.ml, 0);
                 }
-                else if ( op.alignHMode == 2 ) {
-                    opRegion.translate( size.width() - opr - op.pixmap.width(), 0 );
-                    opRegion.translate( -op.mr, 0 );
+                else if (op.alignHMode == 2) {
+                    opRegion.translate(size.width() - opr - op.pixmap.width(), 0);
+                    opRegion.translate(-op.mr, 0);
                 }
-                if ( op.alignVMode == 0 ) {
-                    opRegion.translate( 0, ( size.height() - opb + opt + op.pixmap.height() ) / 2 );
+                if (op.alignVMode == 0) {
+                    opRegion.translate(0, (size.height() - opb + opt + op.pixmap.height()) / 2);
                 }
-                else if ( op.alignVMode == 1 ) {
-                    opRegion.translate( 0, opt );
-                    opRegion.translate( 0, op.mt );
+                else if (op.alignVMode == 1) {
+                    opRegion.translate(0, opt);
+                    opRegion.translate(0, op.mt);
                 }
-                else if ( op.alignVMode == 2 ) {
-                    opRegion.translate( 0, size.height() - opb - op.pixmap.height() );
-                    opRegion.translate( 0, -op.mb );
+                else if (op.alignVMode == 2) {
+                    opRegion.translate(0, size.height() - opb - op.pixmap.height());
+                    opRegion.translate(0, -op.mb);
                 }
                 break;
             case 6:
-                if ( op.alignVMode == 0 ) {
-                    opRegion.translate( size.width() - opr, ( size.height() - opb + opt + op.pixmap.height() ) / 2 );
-                    opRegion.translate( op.ml, 0 );
+                if (op.alignVMode == 0) {
+                    opRegion.translate(size.width() - opr, (size.height() - opb + opt + op.pixmap.height()) / 2);
+                    opRegion.translate(op.ml, 0);
                 }
-                else if ( op.alignVMode == 1 ) {
-                    opRegion.translate( size.width() - opr, opt );
-                    opRegion.translate( op.ml, op.mt );
+                else if (op.alignVMode == 1) {
+                    opRegion.translate(size.width() - opr, opt);
+                    opRegion.translate(op.ml, op.mt);
                 }
-                else if ( op.alignVMode == 2 ) {
-                    opRegion.translate( size.width() - opr, size.height() - opb - op.pixmap.height() );
-                    opRegion.translate( op.ml, -op.mb );
+                else if (op.alignVMode == 2) {
+                    opRegion.translate(size.width() - opr, size.height() - opb - op.pixmap.height());
+                    opRegion.translate(op.ml, -op.mb);
                 }
                 break;
             case 7:
-                opRegion.translate( 0, size.height() - opb );
-                opRegion.translate( -op.mr, op.mt );
+                opRegion.translate(0, size.height() - opb);
+                opRegion.translate(-op.mr, op.mt);
                 break;
             case 8:
-                if ( op.alignHMode == 0 ) {
-                    opRegion.translate( ( size.width() + opl - opr + op.pixmap.width() ) / 2, size.height() - opb );
-                    opRegion.translate( 0, op.mt );
+                if (op.alignHMode == 0) {
+                    opRegion.translate((size.width() + opl - opr + op.pixmap.width()) / 2, size.height() - opb);
+                    opRegion.translate(0, op.mt);
                 }
-                else if ( op.alignHMode == 1 ) {
-                    opRegion.translate( opl, size.height() - opb );
-                    opRegion.translate( op.ml, op.mt );
+                else if (op.alignHMode == 1) {
+                    opRegion.translate(opl, size.height() - opb);
+                    opRegion.translate(op.ml, op.mt);
                 }
-                else if ( op.alignHMode == 2 ) {
-                    opRegion.translate( size.width() - opr - op.pixmap.width(), size.height() - opb );
-                    opRegion.translate( -op.mr, op.mt );
+                else if (op.alignHMode == 2) {
+                    opRegion.translate(size.width() - opr - op.pixmap.width(), size.height() - opb);
+                    opRegion.translate(-op.mr, op.mt);
                 }
                 break;
             case 9:
-                opRegion.translate( size.width() - opr, size.height() - opb );
-                opRegion.translate( op.ml, op.mt );
+                opRegion.translate(size.width() - opr, size.height() - opb);
+                opRegion.translate(op.ml, op.mt);
                 break;
             default:
                 /// never arrive here
@@ -607,37 +608,37 @@ void ThemerSogou::updatePreEditBarMask( const QSize& size )
     }
 }
 
-void ThemerSogou::updateStatusBarMask( const QSize& size )
+void ThemerSogou::updateStatusBarMask(const QSize& size)
 {
-    m_statusBarSkin = m_statusBarSkin.scaled( size );
+    m_statusBarSkin = m_statusBarSkin.scaled(size);
     m_statusBarMask = m_statusBarSkin.mask();
 }
 
-void ThemerSogou::maskPreEditBar( PreEditBar* widget )
+void ThemerSogou::maskPreEditBar(PreEditBar* widget)
 {
-    widget->setMask( m_preEditBarMask );
+    widget->setMask(m_preEditBarMask);
 }
 
-void ThemerSogou::maskStatusBar( StatusBar* widget )
+void ThemerSogou::maskStatusBar(StatusBar* widget)
 {
     QRegion mask = m_statusBarMask;
-    foreach ( const QLayoutItem* item, widget->m_layout->m_items ) {
+    foreach(const QLayoutItem* item, widget->m_layout->m_items) {
         mask |= item->geometry();
     }
-    widget->setMask( mask );
+    widget->setMask(mask);
 }
 
-void ThemerSogou::blurPreEditBar( PreEditBar* widget )
+void ThemerSogou::blurPreEditBar(PreEditBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind( widget->winId(), true, m_preEditBarMask );
+    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_preEditBarMask);
 }
 
-void ThemerSogou::blurStatusBar( StatusBar* widget )
+void ThemerSogou::blurStatusBar(StatusBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind( widget->winId(), true, m_statusBarMask );
+    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_statusBarMask);
 }
 
-void ThemerSogou::drawPreEditBar( PreEditBar* widget )
+void ThemerSogou::drawPreEditBar(PreEditBar* widget)
 {
     int pt = 0, pb = 0, pl = 0, pr = 0;
     int zt = 0, zb = 0, zl = 0, zr = 0;
@@ -645,16 +646,16 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
     QColor separatorColor = Qt::transparent;
     int sepl = 0, sepr = 0;
 
-    QPainter p( widget );
+    QPainter p(widget);
 
-    if ( KIMToySettings::self()->backgroundColorizing() ) {
+    if (KIMToySettings::self()->backgroundColorizing()) {
         QPainterPath path;
-        path.addRegion( m_preEditBarMask );
-        p.fillPath( path, KIMToySettings::self()->preeditBarColorize() );
+        path.addRegion(m_preEditBarMask);
+        p.fillPath(path, KIMToySettings::self()->preeditBarColorize());
     }
 
-    if ( KIMToySettings::self()->verticalPreeditBar() ) {
-        v_preEditBarSkin.drawPixmap( &p, widget->width(), widget->height() );
+    if (KIMToySettings::self()->verticalPreeditBar()) {
+        v_preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
         pt = v_pt, pb = v_pb, pl = v_pl, pr = v_pr;
         zt = v_zt, zb = v_zb, zl = v_zl, zr = v_zr;
         opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
@@ -662,7 +663,7 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
         sepl = v_sepl, sepr = v_sepr;
     }
     else {
-        h_preEditBarSkin.drawPixmap( &p, widget->width(), widget->height() );
+        h_preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
         pt = h_pt, pb = h_pb, pl = h_pl, pr = h_pr;
         zt = h_zt, zb = h_zb, zl = h_zl, zr = h_zr;
         opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
@@ -672,137 +673,137 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
 
     /// draw overlay pixmap
     const QHash<QString, OverlayPixmap>& overlays = KIMToySettings::self()->verticalPreeditBar()
-                                                    ? v_overlays : h_overlays;
+            ? v_overlays : h_overlays;
     QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
     QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
-    while ( it != end ) {
+    while (it != end) {
         const OverlayPixmap& op = it.value();
         p.save();
-        switch ( op.alignArea ) {
+        switch (op.alignArea) {
             case 1:
-                p.translate( -op.mr, -op.mb );
+                p.translate(-op.mr, -op.mb);
                 break;
             case 2:
-                if ( op.alignHMode == 0 ) {
-                    p.translate( ( widget->width() + opl - opr + op.pixmap.width() ) / 2, 0 );
-                    p.translate( 0, -op.mb );
+                if (op.alignHMode == 0) {
+                    p.translate((widget->width() + opl - opr + op.pixmap.width()) / 2, 0);
+                    p.translate(0, -op.mb);
                 }
-                else if ( op.alignHMode == 1 ) {
-                    p.translate( opl, 0 );
-                    p.translate( op.ml, -op.mb );
+                else if (op.alignHMode == 1) {
+                    p.translate(opl, 0);
+                    p.translate(op.ml, -op.mb);
                 }
-                else if ( op.alignHMode == 2 ) {
-                    p.translate( widget->width() - opr - op.pixmap.width(), 0 );
-                    p.translate( -op.mr, -op.mb );
+                else if (op.alignHMode == 2) {
+                    p.translate(widget->width() - opr - op.pixmap.width(), 0);
+                    p.translate(-op.mr, -op.mb);
                 }
                 break;
             case 3:
-                p.translate( widget->width() - opr, 0 );
-                p.translate( op.ml, -op.mb );
+                p.translate(widget->width() - opr, 0);
+                p.translate(op.ml, -op.mb);
                 break;
             case 4:
-                if ( op.alignVMode == 0 ) {
-                    p.translate( 0, ( widget->height() - opb + opt + op.pixmap.height() ) / 2 );
-                    p.translate( -op.mr, 0 );
+                if (op.alignVMode == 0) {
+                    p.translate(0, (widget->height() - opb + opt + op.pixmap.height()) / 2);
+                    p.translate(-op.mr, 0);
                 }
-                else if ( op.alignVMode == 1 ) {
-                    p.translate( 0, opt );
-                    p.translate( -op.mr, op.mt );
+                else if (op.alignVMode == 1) {
+                    p.translate(0, opt);
+                    p.translate(-op.mr, op.mt);
                 }
-                else if ( op.alignVMode == 2 ) {
-                    p.translate( 0, widget->height() - opb - op.pixmap.height() );
-                    p.translate( -op.mr, -op.mb );
+                else if (op.alignVMode == 2) {
+                    p.translate(0, widget->height() - opb - op.pixmap.height());
+                    p.translate(-op.mr, -op.mb);
                 }
                 break;
             case 5:
-                if ( op.alignHMode == 0 ) {
-                    p.translate( ( widget->width() + opl - opr + op.pixmap.width() ) / 2, 0 );
+                if (op.alignHMode == 0) {
+                    p.translate((widget->width() + opl - opr + op.pixmap.width()) / 2, 0);
                 }
-                else if ( op.alignHMode == 1 ) {
-                    p.translate( opl, 0 );
-                    p.translate( op.ml, 0 );
+                else if (op.alignHMode == 1) {
+                    p.translate(opl, 0);
+                    p.translate(op.ml, 0);
                 }
-                else if ( op.alignHMode == 2 ) {
-                    p.translate( widget->width() - opr - op.pixmap.width(), 0 );
-                    p.translate( -op.mr, 0 );
+                else if (op.alignHMode == 2) {
+                    p.translate(widget->width() - opr - op.pixmap.width(), 0);
+                    p.translate(-op.mr, 0);
                 }
-                if ( op.alignVMode == 0 ) {
-                    p.translate( 0, ( widget->height() - opb + opt + op.pixmap.height() ) / 2 );
+                if (op.alignVMode == 0) {
+                    p.translate(0, (widget->height() - opb + opt + op.pixmap.height()) / 2);
                 }
-                else if ( op.alignVMode == 1 ) {
-                    p.translate( 0, opt );
-                    p.translate( 0, op.mt );
+                else if (op.alignVMode == 1) {
+                    p.translate(0, opt);
+                    p.translate(0, op.mt);
                 }
-                else if ( op.alignVMode == 2 ) {
-                    p.translate( 0, widget->height() - opb - op.pixmap.height() );
-                    p.translate( 0, -op.mb );
+                else if (op.alignVMode == 2) {
+                    p.translate(0, widget->height() - opb - op.pixmap.height());
+                    p.translate(0, -op.mb);
                 }
                 break;
             case 6:
-                if ( op.alignVMode == 0 ) {
-                    p.translate( widget->width() - opr, ( widget->height() - opb + opt + op.pixmap.height() ) / 2 );
-                    p.translate( op.ml, 0 );
+                if (op.alignVMode == 0) {
+                    p.translate(widget->width() - opr, (widget->height() - opb + opt + op.pixmap.height()) / 2);
+                    p.translate(op.ml, 0);
                 }
-                else if ( op.alignVMode == 1 ) {
-                    p.translate( widget->width() - opr, opt );
-                    p.translate( op.ml, op.mt );
+                else if (op.alignVMode == 1) {
+                    p.translate(widget->width() - opr, opt);
+                    p.translate(op.ml, op.mt);
                 }
-                else if ( op.alignVMode == 2 ) {
-                    p.translate( widget->width() - opr, widget->height() - opb - op.pixmap.height() );
-                    p.translate( op.ml, -op.mb );
+                else if (op.alignVMode == 2) {
+                    p.translate(widget->width() - opr, widget->height() - opb - op.pixmap.height());
+                    p.translate(op.ml, -op.mb);
                 }
                 break;
             case 7:
-                p.translate( 0, widget->height() - opb );
-                p.translate( -op.mr, op.mt );
+                p.translate(0, widget->height() - opb);
+                p.translate(-op.mr, op.mt);
                 break;
             case 8:
-                if ( op.alignHMode == 0 ) {
-                    p.translate( ( widget->width() + opl - opr + op.pixmap.width() ) / 2, widget->height() - opb );
-                    p.translate( 0, op.mt );
+                if (op.alignHMode == 0) {
+                    p.translate((widget->width() + opl - opr + op.pixmap.width()) / 2, widget->height() - opb);
+                    p.translate(0, op.mt);
                 }
-                else if ( op.alignHMode == 1 ) {
-                    p.translate( opl, widget->height() - opb );
-                    p.translate( op.ml, op.mt );
+                else if (op.alignHMode == 1) {
+                    p.translate(opl, widget->height() - opb);
+                    p.translate(op.ml, op.mt);
                 }
-                else if ( op.alignHMode == 2 ) {
-                    p.translate( widget->width() - opr - op.pixmap.width(), widget->height() - opb );
-                    p.translate( -op.mr, op.mt );
+                else if (op.alignHMode == 2) {
+                    p.translate(widget->width() - opr - op.pixmap.width(), widget->height() - opb);
+                    p.translate(-op.mr, op.mt);
                 }
                 break;
             case 9:
-                p.translate( widget->width() - opr, widget->height() - opb );
-                p.translate( op.ml, op.mt );
+                p.translate(widget->width() - opr, widget->height() - opb);
+                p.translate(op.ml, op.mt);
                 break;
             default:
                 /// never arrive here
                 break;
         }
-        p.drawPixmap( 0, 0, op.pixmap );
+        p.drawPixmap(0, 0, op.pixmap);
         p.restore();
         ++it;
     }
 
-    if ( separatorColor != Qt::transparent ) {
+    if (separatorColor != Qt::transparent) {
         /// draw separator
         int sepy = opt + pt + m_preEditFontHeight + pb;
-        p.drawLine( opl + sepl, sepy, widget->width() - opr - sepr, sepy );
+        p.drawLine(opl + sepl, sepy, widget->width() - opr - sepr, sepy);
     }
 
-    p.translate( opl, opt );
+    p.translate(opl, opt);
     int y = 0;
 
     y += pt;
-    if ( widget->preeditVisible || widget->auxVisible ) {
+    if (widget->preeditVisible || widget->auxVisible) {
         /// draw preedit / aux text
         p.save();
-        p.setFont( m_preEditFont );
-        p.setPen( m_preEditColor );
+        p.setFont(m_preEditFont);
+        p.setPen(m_preEditColor);
 
-        p.drawText( pl, pt, widget->width() - pl - pr, m_preEditFontHeight, Qt::AlignLeft, widget->m_text + widget->m_auxText );
-        if ( widget->preeditVisible ) {
-            int pixelsWide = QFontMetrics( m_preEditFont ).width( widget->m_text.left( widget->m_cursorPos ) );
-            p.drawLine( pl + pixelsWide, pt, pl + pixelsWide, pt + m_preEditFontHeight );
+        p.drawText(pl, pt, widget->width() - pl - pr, m_preEditFontHeight, Qt::AlignLeft, widget->m_text + widget->m_auxText);
+        if (widget->preeditVisible) {
+            int pixelsWide = QFontMetrics(m_preEditFont).width(widget->m_text.left(widget->m_cursorPos));
+            p.drawLine(pl + pixelsWide, pt, pl + pixelsWide, pt + m_preEditFontHeight);
         }
         p.restore();
     }
@@ -810,70 +811,70 @@ void ThemerSogou::drawPreEditBar( PreEditBar* widget )
     y += m_preEditFontHeight + pb;
 
 
-    if ( widget->lookuptableVisible ) {
+    if (widget->lookuptableVisible) {
         /// draw lookup table
         int x = zl;
         y += zt;
         int w = 0;
-        int h = qMax( m_labelFontHeight, m_candidateFontHeight );
+        int h = qMax(m_labelFontHeight, m_candidateFontHeight);
 
         /// draw labels and candidates
-        int count = qMin( widget->m_labels.count(), widget->m_candidates.count() );
+        int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
 
-        if ( KIMToySettings::self()->verticalPreeditBar() ) {
-            for ( int i = 0; i < count; ++i ) {
+        if (KIMToySettings::self()->verticalPreeditBar()) {
+            for (int i = 0; i < count; ++i) {
                 /// draw label
-                p.setFont( m_labelFont );
-                p.setPen( m_labelColor );
+                p.setFont(m_labelFont);
+                p.setPen(m_labelColor);
                 x = zl;
-                w = p.fontMetrics().width( widget->m_labels.at( i ) );
-                p.drawText( x, y, w, h, Qt::AlignCenter, widget->m_labels.at( i ) );
+                w = p.fontMetrics().width(widget->m_labels.at(i));
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i));
                 x += w;
                 /// draw candidate
-                p.setFont( m_candidateFont );
-                p.setPen( m_candidateColor );
-                w = p.fontMetrics().width( widget->m_candidates.at( i ).trimmed() );
-                p.drawText( x, y, w, h, Qt::AlignCenter, widget->m_candidates.at( i ).trimmed() );
+                p.setFont(m_candidateFont);
+                p.setPen(m_candidateColor);
+                w = p.fontMetrics().width(widget->m_candidates.at(i).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(i).trimmed());
                 y += h;
             }
         }
         else {
-            for ( int i = 0; i < count; ++i ) {
+            for (int i = 0; i < count; ++i) {
                 /// draw label
-                p.setFont( m_labelFont );
-                p.setPen( m_labelColor );
-                w = p.fontMetrics().width( widget->m_labels.at( i ) );
-                p.drawText( x, y, w, h, Qt::AlignCenter, widget->m_labels.at( i ) );
+                p.setFont(m_labelFont);
+                p.setPen(m_labelColor);
+                w = p.fontMetrics().width(widget->m_labels.at(i));
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i));
                 x += w;
                 /// draw candidate
-                p.setFont( m_candidateFont );
-                p.setPen( m_candidateColor );
-                w = p.fontMetrics().width( widget->m_candidates.at( i ).trimmed() + ' ' );
-                p.drawText( x, y, w, h, Qt::AlignCenter, widget->m_candidates.at( i ).trimmed() + ' ' );
+                p.setFont(m_candidateFont);
+                p.setPen(m_candidateColor);
+                w = p.fontMetrics().width(widget->m_candidates.at(i).trimmed() + ' ');
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(i).trimmed() + ' ');
                 x += w;
             }
         }
     }
 }
 
-void ThemerSogou::drawStatusBar( StatusBar* widget )
+void ThemerSogou::drawStatusBar(StatusBar* widget)
 {
-    QPainter p( widget );
+    QPainter p(widget);
 
-    if ( KIMToySettings::self()->backgroundColorizing() ) {
+    if (KIMToySettings::self()->backgroundColorizing()) {
         QPainterPath path;
-        path.addRegion( m_statusBarMask );
-        p.fillPath( path, KIMToySettings::self()->statusBarColorize() );
+        path.addRegion(m_statusBarMask);
+        p.fillPath(path, KIMToySettings::self()->statusBarColorize());
     }
 
-    p.drawPixmap( 0, 0, m_statusBarSkin );
+    p.drawPixmap(0, 0, m_statusBarSkin);
 }
 
-void ThemerSogou::drawPropertyWidget( PropertyWidget* widget )
+void ThemerSogou::drawPropertyWidget(PropertyWidget* widget)
 {
-    QPainter p( widget );
-    if ( !widget->m_iconName.isEmpty() )
-        p.drawPixmap( widget->rect(), MainBarIcon( widget->m_iconName ) );
+    QPainter p(widget);
+    if (!widget->m_iconName.isEmpty())
+        p.drawPixmap(widget->rect(), MainBarIcon(widget->m_iconName));
     else
-        p.drawText( widget->rect(), Qt::AlignCenter, widget->m_name );
+        p.drawText(widget->rect(), Qt::AlignCenter, widget->m_name);
 }

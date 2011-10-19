@@ -28,24 +28,24 @@ class ThemeListView : public QListView
 {
     Q_OBJECT
     Q_PROPERTY(QString themeUri READ themeUri WRITE setThemeUri USER true)
-    public:
-        explicit ThemeListView( QWidget* parent = 0 );
-        virtual ~ThemeListView();
-        QString themeUri() const;
-        void setThemeUri( const QString& themeUri );
-    public Q_SLOTS:
-        void reload();
-    Q_SIGNALS:
-        void themeUriChanged( const QString& newThemeUri );
-    protected:
-        virtual void resizeEvent( QResizeEvent* event );
-    private Q_SLOTS:
-        void slotCurrentChanged( const QModelIndex& current, const QModelIndex& previous );
-        void relayout();
-    private:
-        void adaptSize();
-    private:
-        QString m_themeUri;
+public:
+    explicit ThemeListView(QWidget* parent = 0);
+    virtual ~ThemeListView();
+    QString themeUri() const;
+    void setThemeUri(const QString& themeUri);
+public Q_SLOTS:
+    void reload();
+Q_SIGNALS:
+    void themeUriChanged(const QString& newThemeUri);
+protected:
+    virtual void resizeEvent(QResizeEvent* event);
+private Q_SLOTS:
+    void slotCurrentChanged(const QModelIndex& current, const QModelIndex& previous);
+    void relayout();
+private:
+    void adaptSize();
+private:
+    QString m_themeUri;
 };
 
 #endif // THEMELISTVIEW_H
