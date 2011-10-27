@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <dbus/dbus.h>
-#include <gio/gio.h>
 #include <ibus.h>
 #include <QtCore/QString>
 #include <QtCore/QVariant>
