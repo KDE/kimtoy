@@ -42,7 +42,7 @@
         </entry>
         <entry name="IBusArgs" type="String">
             <default code="true">
-                QString( "--panel=" ) + KStandardDirs::locate( "appdata", "kimtoy-ibus-panel" )
+                QString( "--panel=" ) + KStandardDirs::locate( "exe", "kimtoy-ibus-panel" )
             </default>
         </entry>
         <entry name="IBusXIM" type="String">
