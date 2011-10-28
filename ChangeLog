@@ -1,3 +1,10 @@
+2011-10-28 v1.2
+fix multi screen geometry
+theme preview list
+knewstuff support for fcitx theme
+adjust file install and path
+fix a minor issue in ssf thumbnailer
+
 2011-09-29 v1.1
 add option to custom background colorizing
 adjust input method configuration page
