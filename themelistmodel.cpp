@@ -285,9 +285,10 @@ void ThemeListModel::generatePreviews()
 
     QStringList enabledPlugins;
     enabledPlugins << "fskinthumbnail" << "ssfthumbnail";
-    m_previewJob = KIO::filePreview(items, QSize(m_previewWidth, 400), &enabledPlugins);
+//     m_previewJob = KIO::filePreview(items, QSize(m_previewWidth, 400), &enabledPlugins);
+    m_previewJob = KIO::filePreview(items, m_previewWidth, 400, 0, 70, false, false, &enabledPlugins);
     m_previewJob->setAutoDelete(false);
-    m_previewJob->setScaleType(KIO::PreviewJob::Unscaled);
+//     m_previewJob->setScaleType(KIO::PreviewJob::Unscaled);
 
     connect(m_previewJob, SIGNAL(finished(KJob*)), this, SIGNAL(relayoutNeeded()));
     connect(m_previewJob, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)),
