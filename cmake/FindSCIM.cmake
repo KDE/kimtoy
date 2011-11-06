@@ -24,7 +24,7 @@ else (SCIM_LIBRARIES AND SCIM_INCLUDE_DIR)
       # use pkg-config to get the directories and then use these values
       # in the FIND_PATH() and FIND_LIBRARY() calls
       find_package(PkgConfig)
-      pkg_check_modules(PC_SCIM scim)
+      pkg_check_modules(PC_SCIM QUIET scim)
 
       set(SCIM_DEFINITIONS ${PC_SCIM_CFLAGS_OTHER})
    endif (NOT WIN32)
