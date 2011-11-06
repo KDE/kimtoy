@@ -214,7 +214,7 @@ void SCIMInputMethod::run()
         QStringList args;
         args << "-c" << "global";
         args << "-s";
-        args << QString("/DefaultPanelProgram=") + KStandardDirs::locate("appdata", "kimtoy-scim-panel");
+        args << QString("/DefaultPanelProgram=") + KStandardDirs::locate("exe", "kimtoy-scim-panel");
         KProcess::execute("scim-config-agent", args);
     }
     QStringList args;

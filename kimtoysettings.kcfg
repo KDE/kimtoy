@@ -42,7 +42,7 @@
         </entry>
         <entry name="IBusArgs" type="String">
             <default code="true">
-                QString( "--panel=" ) + KStandardDirs::locate( "exe", "kimtoy-ibus-panel" )
+                QString("--panel=") + KStandardDirs::locate("exe", "kimtoy-ibus-panel")
             </default>
         </entry>
         <entry name="IBusXIM" type="String">
@@ -67,7 +67,7 @@
             <default>scim</default>
         </entry>
         <entry name="SCIMArgs" type="String">
-            <default></default>
+            <default>-c kconfig4</default>
         </entry>
         <entry name="SCIMXIM" type="String">
             <default></default>
@@ -132,12 +132,12 @@
     <group name="theme">
         <entry name="ThemeFolder" type="Url">
             <default code="true">
-                KStandardDirs::locateLocal( "appdata", "themes/" )
+                KStandardDirs::locateLocal("appdata", "themes/")
             </default>
         </entry>
         <entry name="ThemeUri" type="String">
             <default code="true">
-                QString( "__plasma__" ) + Plasma::Theme::defaultTheme()->themeName()
+                QString("__plasma__") + Plasma::Theme::defaultTheme()->themeName()
             </default>
         </entry>
     </group>

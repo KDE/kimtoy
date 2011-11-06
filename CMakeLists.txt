@@ -79,4 +79,5 @@ add_subdirectory(strigi-analyzer)
 add_subdirectory(ibus-kconfig)
 add_subdirectory(ibus-panel)
 ########################## scim glue ##########################
+add_subdirectory(scim-kconfig)
 add_subdirectory(scim-panel)
