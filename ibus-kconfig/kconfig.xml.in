@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- filename: impanel.xml -->
+<!-- filename: kconfig.xml -->
 <component>
-	<name>org.freedesktop.IBus.Panel</name>
-	<description>IMPanel Panel Component</description>
-	<exec>${libexecdir}/ibus-impanel</exec>
-	<version>@VERSION@</version>
+	<name>org.freedesktop.IBus.Config</name>
+	<description>KConfig Config Component</description>
+	<exec>@IBUS_LIBEXEC_DIR@/ibus-kconfig</exec>
+	<version>1.0</version>
 	<author>Ni Hui &lt;shuizhuyuanluo@126.com&gt;</author>
 	<license>GPL</license>
 	<homepage>http://code.google.com/p/ibus</homepage>

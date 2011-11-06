@@ -41,9 +41,7 @@
             <default>ibus-daemon</default>
         </entry>
         <entry name="IBusArgs" type="String">
-            <default code="true">
-                QString("--panel=") + KStandardDirs::locate("exe", "kimtoy-ibus-panel")
-            </default>
+            <default>-p /usr/libexec/ibus-ui-impanel -c /usr/libexec/ibus-kconfig</default>
         </entry>
         <entry name="IBusXIM" type="String">
             <default>ibus</default>
