@@ -19,21 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PERFORMANCE_H
-#define PERFORMANCE_H
+#ifndef QAPNGHANDLER_H
+#define QAPNGHANDLER_H
 
-#include "ui_performance.h"
+#include <qimageiohandler.h>
 
-class PerformanceWidget : public QWidget, public Ui::Performance
+class QAPngHandlerPrivate;
+class QAPngHandler : public QImageIOHandler
 {
 public:
-    explicit PerformanceWidget() {
-        setupUi(this);
-        WindowMaskLabel->hide();
-        PreeditResizingLabel->hide();
-        BackgroundBlurLabel->hide();
-        ThemeAnimationLabel->hide();
-    }
+    QAPngHandler();
+    virtual ~QAPngHandler();
+    virtual bool canRead() const;
+    virtual QByteArray name() const;
+    virtual bool read(QImage* image);
+    virtual int currentImageNumber() const;
+    virtual int imageCount() const;
+    virtual int loopCount() const;
+    virtual int nextImageDelay() const;
+    static bool canRead(QIODevice* device);
+    virtual QVariant option(ImageOption option) const;
+    virtual void setOption(ImageOption option, const QVariant& value);
+    virtual bool supportsOption(ImageOption option) const;
+private:
+    QAPngHandlerPrivate* const d;
 };
 
-#endif // PERFORMANCE_H
+#endif // QAPNGHANDLER_H

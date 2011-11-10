@@ -1,7 +1,4 @@
-find_package(IBus)
-find_package(GLIB2)
-find_package(GIO)
-find_package(GObject)
+
 if(IBUS_FOUND AND GLIB2_FOUND AND GIO_FOUND AND GOBJECT_FOUND)
     include_directories(${IBUS_INCLUDE_DIR})
     include_directories(${GLIB2_INCLUDE_DIR})

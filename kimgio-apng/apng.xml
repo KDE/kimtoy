@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="image/x-apng">
+    <comment>Animated portable network graphics</comment>
+    <comment xml:lang="zh_CN">动画 PNG</comment>
+    <glob pattern="*.apng"/>
+  </mime-type>
+</mime-info>

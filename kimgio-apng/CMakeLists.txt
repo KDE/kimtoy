@@ -1,0 +1,10 @@
+if(PNG_FOUND)
+    set(kimg_apng_LIB_SRCS apng.cpp)
+    kde4_add_plugin(kimg_apng ${kimg_apng_LIB_SRCS})
+    target_link_libraries(kimg_apng ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${PNG_LIBRARY})
+    install(TARGETS kimg_apng DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/)
+    install(FILES apng.desktop DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins/)
+    install(FILES apng.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+
+    update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+endif(PNG_FOUND)

@@ -36,6 +36,8 @@
 #include <KZipFileEntry>
 #include <Plasma/WindowEffects>
 
+#include "animator.h"
+
 #include "preeditbar.h"
 #include "statusbar.h"
 #include "statusbarlayout.h"
@@ -43,47 +45,48 @@
 
 #include "kimtoysettings.h"
 
-static void calculateOverlaySurrounding(const QHash<QString, OverlayPixmap>& overlays, int& opt, int& opb, int& opl, int& opr)
+static void calculateOverlaySurrounding(const QHash<QString, OverlayPixmap*>& overlays, int& opt, int& opb, int& opl, int& opr)
 {
     opl = 0;
     opr = 0;
     opt = 0;
     opb = 0;
-    QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
-    QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
+    QHash<QString, OverlayPixmap*>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap*>::ConstIterator end = overlays.constEnd();
     while (it != end) {
-        const OverlayPixmap& op = it.value();
-        switch (op.alignArea) {
+        const OverlayPixmap* op = it.value();
+        const QPixmap& pixmap = op->currentPixmap();
+        switch (op->alignArea) {
             case 1:
-                opl = qMax(opl, op.pixmap.width());
-                opt = qMax(opt, op.pixmap.height());
+                opl = qMax(opl, pixmap.width());
+                opt = qMax(opt, pixmap.height());
                 break;
             case 2:
-                opt = qMax(opt, op.pixmap.height());
+                opt = qMax(opt, pixmap.height());
                 break;
             case 3:
-                opr = qMax(opr, op.pixmap.width());
-                opt = qMax(opt, op.pixmap.height());
+                opr = qMax(opr, pixmap.width());
+                opt = qMax(opt, pixmap.height());
                 break;
             case 4:
-                opl = qMax(opl, op.pixmap.width());
+                opl = qMax(opl, pixmap.width());
                 break;
             case 5:
                 /// center pixmap, no addition
                 break;
             case 6:
-                opr = qMax(opr, op.pixmap.width());
+                opr = qMax(opr, pixmap.width());
                 break;
             case 7:
-                opl = qMax(opl, op.pixmap.width());
-                opb = qMax(opb, op.pixmap.height());
+                opl = qMax(opl, pixmap.width());
+                opb = qMax(opb, pixmap.height());
                 break;
             case 8:
-                opb = qMax(opb, op.pixmap.height());
+                opb = qMax(opb, pixmap.height());
                 break;
             case 9:
-                opr = qMax(opr, op.pixmap.width());
-                opb = qMax(opb, op.pixmap.height());
+                opr = qMax(opr, pixmap.width());
+                opb = qMax(opb, pixmap.height());
                 break;
             default:
                 /// never arrive here
@@ -145,6 +148,9 @@ bool ThemerSogou::loadTheme()
     int h_hsl = 0, h_hsr = 0, h_vst = 0, h_vsb = 0, h_hstm = 0, h_vstm = 0;
     int v_hsl = 0, v_hsr = 0, v_vst = 0, v_vsb = 0, v_hstm = 0, v_vstm = 0;
     int i = 0;
+
+    foreach(OverlayPixmap* op, h_overlays) delete op;
+    foreach(OverlayPixmap* op, v_overlays) delete op;
     h_overlays.clear();
     v_overlays.clear();
     h_separatorColor = Qt::transparent;
@@ -236,26 +242,41 @@ bool ThemerSogou::loadTheme()
             }
             else if (key.endsWith("_display")) {
                 QString name = key.left(key.length() - 8);
-                h_overlays.insert(name, OverlayPixmap());
+                if (!h_overlays.contains(name)) {
+                    h_overlays.insert(name, new OverlayPixmap);
+                }
             }
             else if (key.endsWith("_align")) {
                 QString name = key.left(key.length() - 6);
                 QStringList numbers = value.split(',');
-                OverlayPixmap& op = h_overlays[ name ];
-                op.mt = numbers.at(0).toInt();
-                op.mb = numbers.at(1).toInt();
-                op.ml = numbers.at(2).toInt();
-                op.mr = numbers.at(3).toInt();
-                op.alignVMode = numbers.at(4).toInt() + numbers.at(5).toInt();    /// FIXME: right or wrong?
-                op.alignHMode = numbers.at(6).toInt() + numbers.at(7).toInt();    /// FIXME: right or wrong?
-                op.alignArea = numbers.at(8).toInt();
-                op.alignTarget = numbers.at(9).toInt();
+                if (!h_overlays.contains(name)) {
+                    h_overlays.insert(name, new OverlayPixmap);
+                }
+                OverlayPixmap* op = h_overlays[ name ];
+                op->mt = numbers.at(0).toInt();
+                op->mb = numbers.at(1).toInt();
+                op->ml = numbers.at(2).toInt();
+                op->mr = numbers.at(3).toInt();
+                op->alignVMode = numbers.at(4).toInt() + numbers.at(5).toInt();    /// FIXME: right or wrong?
+                op->alignHMode = numbers.at(6).toInt() + numbers.at(7).toInt();    /// FIXME: right or wrong?
+                op->alignArea = numbers.at(8).toInt();
+                op->alignTarget = numbers.at(9).toInt();
             }
             else if (h_overlays.contains(key)) {
                 const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if (pix)
-                    h_overlays[ key ].pixmap.loadFromData(pix->data());
+                if (pix) {
+//                     h_overlays[ key ]->pixmap.loadFromData(pix->data());
+                    OverlayPixmap* op = h_overlays[ key ];
+                    QBuffer* d = new QBuffer;
+                    d->setData(pix->data());
+                    op->setDevice(d);
+                    op->setFormat(value.endsWith(".gif") ? "gif" : "apng");
+                    d->setParent(op);
+                    QObject::connect(op, SIGNAL(frameChanged(int)),
+                                     Animator::self(), SIGNAL(animatePreEditBar()));
+                    op->start();
+                }
             }
         }
         else if (scheme_v1) {
@@ -300,26 +321,41 @@ bool ThemerSogou::loadTheme()
             }
             else if (key.endsWith("_display")) {
                 QString name = key.left(key.length() - 8);
-                v_overlays.insert(name, OverlayPixmap());
+                if (!v_overlays.contains(name)) {
+                    v_overlays.insert(name, new OverlayPixmap);
+                }
             }
             else if (key.endsWith("_align")) {
                 QString name = key.left(key.length() - 6);
                 QStringList numbers = value.split(',');
-                OverlayPixmap& op = v_overlays[ name ];
-                op.mt = numbers.at(0).toInt();
-                op.mb = numbers.at(1).toInt();
-                op.ml = numbers.at(2).toInt();
-                op.mr = numbers.at(3).toInt();
-                op.alignVMode = numbers.at(4).toInt() + numbers.at(5).toInt();    /// FIXME: right or wrong?
-                op.alignHMode = numbers.at(6).toInt() + numbers.at(7).toInt();    /// FIXME: right or wrong?
-                op.alignArea = numbers.at(8).toInt();
-                op.alignTarget = numbers.at(9).toInt();
+                if (!v_overlays.contains(name)) {
+                    v_overlays.insert(name, new OverlayPixmap);
+                }
+                OverlayPixmap* op = v_overlays[ name ];
+                op->mt = numbers.at(0).toInt();
+                op->mb = numbers.at(1).toInt();
+                op->ml = numbers.at(2).toInt();
+                op->mr = numbers.at(3).toInt();
+                op->alignVMode = numbers.at(4).toInt() + numbers.at(5).toInt();    /// FIXME: right or wrong?
+                op->alignHMode = numbers.at(6).toInt() + numbers.at(7).toInt();    /// FIXME: right or wrong?
+                op->alignArea = numbers.at(8).toInt();
+                op->alignTarget = numbers.at(9).toInt();
             }
             else if (v_overlays.contains(key)) {
                 const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if (pix)
-                    v_overlays[ key ].pixmap.loadFromData(pix->data());
+                if (pix) {
+//                     v_overlays[ key ]->pixmap.loadFromData(pix->data());
+                    OverlayPixmap* op = v_overlays[ key ];
+                    QBuffer* d = new QBuffer;
+                    d->setData(pix->data());
+                    op->setDevice(d);
+                    op->setFormat(value.endsWith(".gif") ? "gif" : "apng");
+                    d->setParent(op);
+                    QObject::connect(op, SIGNAL(frameChanged(int)),
+                                     Animator::self(), SIGNAL(animatePreEditBar()));
+                    op->start();
+                }
             }
         }
         else if (statusbar) {
@@ -496,108 +532,109 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
     }
 
     /// overlay pixmap regions
-    const QHash<QString, OverlayPixmap>& overlays = KIMToySettings::self()->verticalPreeditBar()
+    const QHash<QString, OverlayPixmap*>& overlays = KIMToySettings::self()->verticalPreeditBar()
             ? v_overlays : h_overlays;
-    QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
-    QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
+    QHash<QString, OverlayPixmap*>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap*>::ConstIterator end = overlays.constEnd();
     while (it != end) {
-        const OverlayPixmap& op = it.value();
-        QRegion opRegion = op.pixmap.mask();
-        switch (op.alignArea) {
+        const OverlayPixmap* op = it.value();
+        const QPixmap& pixmap = op->currentPixmap();
+        QRegion opRegion = pixmap.mask();
+        switch (op->alignArea) {
             case 1:
-                opRegion.translate(-op.mr, -op.mb);
+                opRegion.translate(-op->mr, -op->mb);
                 break;
             case 2:
-                if (op.alignHMode == 0) {
-                    opRegion.translate((size.width() + opl - opr + op.pixmap.width()) / 2, 0);
-                    opRegion.translate(0, -op.mb);
+                if (op->alignHMode == 0) {
+                    opRegion.translate((size.width() + opl - opr + pixmap.width()) / 2, 0);
+                    opRegion.translate(0, -op->mb);
                 }
-                else if (op.alignHMode == 1) {
+                else if (op->alignHMode == 1) {
                     opRegion.translate(opl, 0);
-                    opRegion.translate(op.ml, -op.mb);
+                    opRegion.translate(op->ml, -op->mb);
                 }
-                else if (op.alignHMode == 2) {
-                    opRegion.translate(size.width() - opr - op.pixmap.width(), 0);
-                    opRegion.translate(-op.mr, -op.mb);
+                else if (op->alignHMode == 2) {
+                    opRegion.translate(size.width() - opr - pixmap.width(), 0);
+                    opRegion.translate(-op->mr, -op->mb);
                 }
                 break;
             case 3:
                 opRegion.translate(size.width() - opr, 0);
-                opRegion.translate(op.ml, -op.mb);
+                opRegion.translate(op->ml, -op->mb);
                 break;
             case 4:
-                if (op.alignVMode == 0) {
-                    opRegion.translate(0, (size.height() - opb + opt + op.pixmap.height()) / 2);
-                    opRegion.translate(-op.mr, 0);
+                if (op->alignVMode == 0) {
+                    opRegion.translate(0, (size.height() - opb + opt + pixmap.height()) / 2);
+                    opRegion.translate(-op->mr, 0);
                 }
-                else if (op.alignVMode == 1) {
+                else if (op->alignVMode == 1) {
                     opRegion.translate(0, opt);
-                    opRegion.translate(-op.mr, op.mt);
+                    opRegion.translate(-op->mr, op->mt);
                 }
-                else if (op.alignVMode == 2) {
-                    opRegion.translate(0, size.height() - opb - op.pixmap.height());
-                    opRegion.translate(-op.mr, -op.mb);
+                else if (op->alignVMode == 2) {
+                    opRegion.translate(0, size.height() - opb - pixmap.height());
+                    opRegion.translate(-op->mr, -op->mb);
                 }
                 break;
             case 5:
-                if (op.alignHMode == 0) {
-                    opRegion.translate((size.width() + opl - opr + op.pixmap.width()) / 2, 0);
+                if (op->alignHMode == 0) {
+                    opRegion.translate((size.width() + opl - opr + pixmap.width()) / 2, 0);
                 }
-                else if (op.alignHMode == 1) {
+                else if (op->alignHMode == 1) {
                     opRegion.translate(opl, 0);
-                    opRegion.translate(op.ml, 0);
+                    opRegion.translate(op->ml, 0);
                 }
-                else if (op.alignHMode == 2) {
-                    opRegion.translate(size.width() - opr - op.pixmap.width(), 0);
-                    opRegion.translate(-op.mr, 0);
+                else if (op->alignHMode == 2) {
+                    opRegion.translate(size.width() - opr - pixmap.width(), 0);
+                    opRegion.translate(-op->mr, 0);
                 }
-                if (op.alignVMode == 0) {
-                    opRegion.translate(0, (size.height() - opb + opt + op.pixmap.height()) / 2);
+                if (op->alignVMode == 0) {
+                    opRegion.translate(0, (size.height() - opb + opt + pixmap.height()) / 2);
                 }
-                else if (op.alignVMode == 1) {
+                else if (op->alignVMode == 1) {
                     opRegion.translate(0, opt);
-                    opRegion.translate(0, op.mt);
+                    opRegion.translate(0, op->mt);
                 }
-                else if (op.alignVMode == 2) {
-                    opRegion.translate(0, size.height() - opb - op.pixmap.height());
-                    opRegion.translate(0, -op.mb);
+                else if (op->alignVMode == 2) {
+                    opRegion.translate(0, size.height() - opb - pixmap.height());
+                    opRegion.translate(0, -op->mb);
                 }
                 break;
             case 6:
-                if (op.alignVMode == 0) {
-                    opRegion.translate(size.width() - opr, (size.height() - opb + opt + op.pixmap.height()) / 2);
-                    opRegion.translate(op.ml, 0);
+                if (op->alignVMode == 0) {
+                    opRegion.translate(size.width() - opr, (size.height() - opb + opt + pixmap.height()) / 2);
+                    opRegion.translate(op->ml, 0);
                 }
-                else if (op.alignVMode == 1) {
+                else if (op->alignVMode == 1) {
                     opRegion.translate(size.width() - opr, opt);
-                    opRegion.translate(op.ml, op.mt);
+                    opRegion.translate(op->ml, op->mt);
                 }
-                else if (op.alignVMode == 2) {
-                    opRegion.translate(size.width() - opr, size.height() - opb - op.pixmap.height());
-                    opRegion.translate(op.ml, -op.mb);
+                else if (op->alignVMode == 2) {
+                    opRegion.translate(size.width() - opr, size.height() - opb - pixmap.height());
+                    opRegion.translate(op->ml, -op->mb);
                 }
                 break;
             case 7:
                 opRegion.translate(0, size.height() - opb);
-                opRegion.translate(-op.mr, op.mt);
+                opRegion.translate(-op->mr, op->mt);
                 break;
             case 8:
-                if (op.alignHMode == 0) {
-                    opRegion.translate((size.width() + opl - opr + op.pixmap.width()) / 2, size.height() - opb);
-                    opRegion.translate(0, op.mt);
+                if (op->alignHMode == 0) {
+                    opRegion.translate((size.width() + opl - opr + pixmap.width()) / 2, size.height() - opb);
+                    opRegion.translate(0, op->mt);
                 }
-                else if (op.alignHMode == 1) {
+                else if (op->alignHMode == 1) {
                     opRegion.translate(opl, size.height() - opb);
-                    opRegion.translate(op.ml, op.mt);
+                    opRegion.translate(op->ml, op->mt);
                 }
-                else if (op.alignHMode == 2) {
-                    opRegion.translate(size.width() - opr - op.pixmap.width(), size.height() - opb);
-                    opRegion.translate(-op.mr, op.mt);
+                else if (op->alignHMode == 2) {
+                    opRegion.translate(size.width() - opr - pixmap.width(), size.height() - opb);
+                    opRegion.translate(-op->mr, op->mt);
                 }
                 break;
             case 9:
                 opRegion.translate(size.width() - opr, size.height() - opb);
-                opRegion.translate(op.ml, op.mt);
+                opRegion.translate(op->ml, op->mt);
                 break;
             default:
                 /// never arrive here
@@ -672,114 +709,116 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
     }
 
     /// draw overlay pixmap
-    const QHash<QString, OverlayPixmap>& overlays = KIMToySettings::self()->verticalPreeditBar()
+    const QHash<QString, OverlayPixmap*>& overlays = KIMToySettings::self()->verticalPreeditBar()
             ? v_overlays : h_overlays;
-    QHash<QString, OverlayPixmap>::ConstIterator it = overlays.constBegin();
-    QHash<QString, OverlayPixmap>::ConstIterator end = overlays.constEnd();
+    QHash<QString, OverlayPixmap*>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap*>::ConstIterator end = overlays.constEnd();
     while (it != end) {
-        const OverlayPixmap& op = it.value();
+        const OverlayPixmap* op = it.value();
+        const QPixmap& pixmap = op->currentPixmap();
         p.save();
-        switch (op.alignArea) {
+        switch (op->alignArea) {
             case 1:
-                p.translate(-op.mr, -op.mb);
+                p.translate(-op->mr, -op->mb);
                 break;
             case 2:
-                if (op.alignHMode == 0) {
-                    p.translate((widget->width() + opl - opr + op.pixmap.width()) / 2, 0);
-                    p.translate(0, -op.mb);
+                if (op->alignHMode == 0) {
+                    p.translate((widget->width() + opl - opr + pixmap.width()) / 2, 0);
+                    p.translate(0, -op->mb);
                 }
-                else if (op.alignHMode == 1) {
+                else if (op->alignHMode == 1) {
                     p.translate(opl, 0);
-                    p.translate(op.ml, -op.mb);
+                    p.translate(op->ml, -op->mb);
                 }
-                else if (op.alignHMode == 2) {
-                    p.translate(widget->width() - opr - op.pixmap.width(), 0);
-                    p.translate(-op.mr, -op.mb);
+                else if (op->alignHMode == 2) {
+                    p.translate(widget->width() - opr - pixmap.width(), 0);
+                    p.translate(-op->mr, -op->mb);
                 }
                 break;
             case 3:
                 p.translate(widget->width() - opr, 0);
-                p.translate(op.ml, -op.mb);
+                p.translate(op->ml, -op->mb);
                 break;
             case 4:
-                if (op.alignVMode == 0) {
-                    p.translate(0, (widget->height() - opb + opt + op.pixmap.height()) / 2);
-                    p.translate(-op.mr, 0);
+                if (op->alignVMode == 0) {
+                    p.translate(0, (widget->height() - opb + opt + pixmap.height()) / 2);
+                    p.translate(-op->mr, 0);
                 }
-                else if (op.alignVMode == 1) {
+                else if (op->alignVMode == 1) {
                     p.translate(0, opt);
-                    p.translate(-op.mr, op.mt);
+                    p.translate(-op->mr, op->mt);
                 }
-                else if (op.alignVMode == 2) {
-                    p.translate(0, widget->height() - opb - op.pixmap.height());
-                    p.translate(-op.mr, -op.mb);
+                else if (op->alignVMode == 2) {
+                    p.translate(0, widget->height() - opb - pixmap.height());
+                    p.translate(-op->mr, -op->mb);
                 }
                 break;
             case 5:
-                if (op.alignHMode == 0) {
-                    p.translate((widget->width() + opl - opr + op.pixmap.width()) / 2, 0);
+                if (op->alignHMode == 0) {
+                    p.translate((widget->width() + opl - opr + pixmap.width()) / 2, 0);
                 }
-                else if (op.alignHMode == 1) {
+                else if (op->alignHMode == 1) {
                     p.translate(opl, 0);
-                    p.translate(op.ml, 0);
+                    p.translate(op->ml, 0);
                 }
-                else if (op.alignHMode == 2) {
-                    p.translate(widget->width() - opr - op.pixmap.width(), 0);
-                    p.translate(-op.mr, 0);
+                else if (op->alignHMode == 2) {
+                    p.translate(widget->width() - opr - pixmap.width(), 0);
+                    p.translate(-op->mr, 0);
                 }
-                if (op.alignVMode == 0) {
-                    p.translate(0, (widget->height() - opb + opt + op.pixmap.height()) / 2);
+                if (op->alignVMode == 0) {
+                    p.translate(0, (widget->height() - opb + opt + pixmap.height()) / 2);
                 }
-                else if (op.alignVMode == 1) {
+                else if (op->alignVMode == 1) {
                     p.translate(0, opt);
-                    p.translate(0, op.mt);
+                    p.translate(0, op->mt);
                 }
-                else if (op.alignVMode == 2) {
-                    p.translate(0, widget->height() - opb - op.pixmap.height());
-                    p.translate(0, -op.mb);
+                else if (op->alignVMode == 2) {
+                    p.translate(0, widget->height() - opb - pixmap.height());
+                    p.translate(0, -op->mb);
                 }
                 break;
             case 6:
-                if (op.alignVMode == 0) {
-                    p.translate(widget->width() - opr, (widget->height() - opb + opt + op.pixmap.height()) / 2);
-                    p.translate(op.ml, 0);
+                if (op->alignVMode == 0) {
+                    p.translate(widget->width() - opr, (widget->height() - opb + opt + pixmap.height()) / 2);
+                    p.translate(op->ml, 0);
                 }
-                else if (op.alignVMode == 1) {
+                else if (op->alignVMode == 1) {
                     p.translate(widget->width() - opr, opt);
-                    p.translate(op.ml, op.mt);
+                    p.translate(op->ml, op->mt);
                 }
-                else if (op.alignVMode == 2) {
-                    p.translate(widget->width() - opr, widget->height() - opb - op.pixmap.height());
-                    p.translate(op.ml, -op.mb);
+                else if (op->alignVMode == 2) {
+                    p.translate(widget->width() - opr, widget->height() - opb - pixmap.height());
+                    p.translate(op->ml, -op->mb);
                 }
                 break;
             case 7:
                 p.translate(0, widget->height() - opb);
-                p.translate(-op.mr, op.mt);
+                p.translate(-op->mr, op->mt);
                 break;
             case 8:
-                if (op.alignHMode == 0) {
-                    p.translate((widget->width() + opl - opr + op.pixmap.width()) / 2, widget->height() - opb);
-                    p.translate(0, op.mt);
+                if (op->alignHMode == 0) {
+                    p.translate((widget->width() + opl - opr + pixmap.width()) / 2, widget->height() - opb);
+                    p.translate(0, op->mt);
                 }
-                else if (op.alignHMode == 1) {
+                else if (op->alignHMode == 1) {
                     p.translate(opl, widget->height() - opb);
-                    p.translate(op.ml, op.mt);
+                    p.translate(op->ml, op->mt);
                 }
-                else if (op.alignHMode == 2) {
-                    p.translate(widget->width() - opr - op.pixmap.width(), widget->height() - opb);
-                    p.translate(-op.mr, op.mt);
+                else if (op->alignHMode == 2) {
+                    p.translate(widget->width() - opr - pixmap.width(), widget->height() - opb);
+                    p.translate(-op->mr, op->mt);
                 }
                 break;
             case 9:
                 p.translate(widget->width() - opr, widget->height() - opb);
-                p.translate(op.ml, op.mt);
+                p.translate(op->ml, op->mt);
                 break;
             default:
                 /// never arrive here
                 break;
         }
-        p.drawPixmap(0, 0, op.pixmap);
+//         p.drawPixmap(0, 0, op->pixmap);
+        p.drawPixmap(0, 0, pixmap);
         p.restore();
         ++it;
     }

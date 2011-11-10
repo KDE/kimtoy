@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>507</height>
+    <width>402</width>
+    <height>613</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -53,7 +53,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
+   <item row="8" column="0" colspan="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -126,6 +126,33 @@
      </property>
     </widget>
    </item>
+   <item row="6" column="0">
+    <widget class="QCheckBox" name="kcfg_EnableThemeAnimation">
+     <property name="text">
+      <string>Enable theme animation</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QPushButton" name="pushButton_4">
+     <property name="text">
+      <string>Help</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="2">
+    <widget class="QLabel" name="ThemeAnimationLabel">
+     <property name="text">
+      <string>If checked, the status bar and preedit bar will gain animation whenever the theme supports. Animations usually consume large resource while featuring cute eye candy.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
@@ -175,6 +202,22 @@
     <hint type="destinationlabel">
      <x>199</x>
      <y>406</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>ThemeAnimationLabel</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>355</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>200</x>
+     <y>527</y>
     </hint>
    </hints>
   </connection>

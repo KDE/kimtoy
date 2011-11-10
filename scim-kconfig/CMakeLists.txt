@@ -1,4 +1,4 @@
-find_package(SCIM)
+
 if(SCIM_FOUND)
     include_directories(${SCIM_INCLUDE_DIR})
     set(SCIM_MODULE_DIR "${PC_SCIM_PREFIX}/lib/scim-1.0/1.4.0")

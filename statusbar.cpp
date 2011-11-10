@@ -46,6 +46,7 @@
 #include <KWindowSystem>
 #include <Plasma/Theme>
 
+#include "animator.h"
 #include "impanelagent.h"
 #include "propertywidget.h"
 #include "preeditbar.h"
@@ -338,6 +339,13 @@ void StatusBar::loadSettings()
     else {
         clearMask();
         m_preeditBar->clearMask();
+    }
+
+    if (KIMToySettings::self()->enableThemeAnimation()) {
+        connect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
+    }
+    else {
+        disconnect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
     }
 
     ThemerAgent::layoutStatusBar(m_layout);

@@ -1,5 +1,3 @@
-set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
-find_package(SharedMimeInfo REQUIRED)
 
 ########## ssf thumbnailer ##########
 set(ssfthumbnail_SRCS ssfcreator.cpp)
@@ -24,6 +22,5 @@ target_link_libraries(fskinthumbnail
 install(TARGETS fskinthumbnail DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES fskinthumbnail.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(FILES fskin.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
-
 
 update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})

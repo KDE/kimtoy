@@ -27,7 +27,10 @@
 
 #include <QHash>
 
-class OverlayPixmap
+#include <QMovie>
+#include <QBuffer>
+
+class OverlayPixmap : public QMovie
 {
 public:
     /**
@@ -42,7 +45,6 @@ public:
      *  lb|                b              |rb
      *
      */
-    QPixmap pixmap;
     /// TODO: only entire window is supported atm --- nihui
     int alignTarget;// 0->entire window, 1->preedit window, 2->candidate window
     int alignArea;// 1->lt, 2->t, 3->rt, 4->l, 5->center, 6->r, 7->lb, 8->b, 9->rb
@@ -94,8 +96,8 @@ private:
     int v_zt, v_zb, v_zl, v_zr;
 
     /// optional
-    QHash<QString, OverlayPixmap> h_overlays;// horizontal overlay pixmap
-    QHash<QString, OverlayPixmap> v_overlays;// vertical overlay pixmap
+    QHash<QString, OverlayPixmap*> h_overlays;// horizontal overlay pixmap
+    QHash<QString, OverlayPixmap*> v_overlays;// vertical overlay pixmap
     int h_opt, h_opb, h_opl, h_opr;
     int v_opt, v_opb, v_opl, v_opr;
 

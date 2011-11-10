@@ -5,6 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(KDE4 REQUIRED 4.5)
 include(KDE4Defaults)
 include(MacroLibrary)
+include(MacroLogFeature)
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories(${QT_INCLUDES} ${KDE4_INCLUDES})
@@ -12,9 +13,34 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions(-Wall -Wextra)
 
+set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
+find_package(SharedMimeInfo REQUIRED)
+
+macro_optional_find_package(GLIB2)
+macro_log_feature(GLIB2_FOUND "glib2" "ibus support" "http://www.gtk.org")
+
+macro_optional_find_package(GIO)
+macro_log_feature(GIO_FOUND "gio" "ibus support" "http://www.gtk.org")
+
+macro_optional_find_package(GObject)
+macro_log_feature(GOBJECT_FOUND "gobject" "ibus support" "http://www.gtk.org")
+
+macro_optional_find_package(IBus)
+macro_log_feature(IBUS_FOUND "ibus" "ibus support" "http://code.google.com/p/ibus")
+
+macro_optional_find_package(SCIM)
+macro_log_feature(SCIM_FOUND "scim" "scim support" "http://www.scim-im.org")
+
+macro_optional_find_package(Strigi)
+macro_log_feature(STRIGI_FOUND "strigi" "strigi analyzer" "http://www.vandenoever.info/software/strigi")
+
+macro_optional_find_package(PNG)
+macro_log_feature(PNG_FOUND "libpng" "animated png" "http://littlesvr.ca/apng")
+
 ########################## kimtoy ##########################
 
 set(kimtoy_SRCS
+    animator.cpp
     envsettings.cpp
     impanel.cpp
     impanelagent.cpp
@@ -75,9 +101,13 @@ add_subdirectory(thumbnailer)
 add_subdirectory(strigi-analyzer)
 # add_subdirectory(po)
 
+######################### apng plugin #########################
+add_subdirectory(kimgio-apng)
 ########################## ibus glue ##########################
 add_subdirectory(ibus-kconfig)
 add_subdirectory(ibus-panel)
 ########################## scim glue ##########################
 add_subdirectory(scim-kconfig)
 add_subdirectory(scim-panel)
+
+macro_display_feature_log()

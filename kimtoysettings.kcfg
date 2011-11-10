@@ -141,12 +141,15 @@
     </group>
     <group name="performance">
         <entry name="EnableWindowMask" type="Bool">
-            <default>true</default>
+            <default>false</default>
         </entry>
         <entry name="EnablePreeditResizing" type="Bool">
-            <default>true</default>
+            <default>false</default>
         </entry>
         <entry name="EnableBackgroundBlur" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="EnableThemeAnimation" type="Bool">
             <default>true</default>
         </entry>
     </group>

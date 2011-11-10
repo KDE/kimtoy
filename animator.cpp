@@ -19,21 +19,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PERFORMANCE_H
-#define PERFORMANCE_H
+#include "animator.h"
 
-#include "ui_performance.h"
+Animator* Animator::m_self = 0;
 
-class PerformanceWidget : public QWidget, public Ui::Performance
+Animator* Animator::self()
 {
-public:
-    explicit PerformanceWidget() {
-        setupUi(this);
-        WindowMaskLabel->hide();
-        PreeditResizingLabel->hide();
-        BackgroundBlurLabel->hide();
-        ThemeAnimationLabel->hide();
-    }
-};
+    if (!m_self)
+        m_self = new Animator;
+    return m_self;
+}
 
-#endif // PERFORMANCE_H
+Animator::Animator()
+{
+}
+
+Animator::~Animator()
+{
+}
