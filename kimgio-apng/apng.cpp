@@ -232,7 +232,9 @@ static void setup_qt(QImage& image, png_structp png_ptr, png_infop info_ptr, flo
 }
 
 QAPngHandlerPrivate::QAPngHandlerPrivate(QAPngHandler* qq)
-: q(qq), readDone(false), gamma(0.0), isAPNG(false), frameIndex(0), frameCount(0), playCount(0), nextDelay(0)
+: q(qq), readDone(false), gamma(0.0),
+png_ptr(0), info_ptr(0), end_info(0), row_pointers(0),
+isAPNG(false), frameIndex(0), frameCount(0), playCount(0), nextDelay(0)
 {
 }
 
