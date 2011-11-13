@@ -34,8 +34,36 @@ macro_log_feature(SCIM_FOUND "scim" "scim support" "http://www.scim-im.org")
 macro_optional_find_package(Strigi)
 macro_log_feature(STRIGI_FOUND "strigi" "strigi analyzer" "http://www.vandenoever.info/software/strigi")
 
+############# check if libpng has apng support #############
+
 macro_optional_find_package(PNG)
-macro_log_feature(PNG_FOUND "libpng" "animated png" "http://littlesvr.ca/apng")
+
+if(PNG_FOUND)
+    include(CheckCSourceCompiles)
+    set(CMAKE_REQUIRED_INCLUDES ${PNG_INCLUDE_DIR})
+    set(CMAKE_REQUIRED_LIBRARIES ${PNG_LIBRARY})
+    check_c_source_compiles(
+"
+#include <png.h>
+int main()
+{
+    (void)png_get_num_frames((png_structp)0, (png_infop)0);
+    return 0;
+}
+"
+        PNG_HAS_APNG_SUPPORT
+    )
+else(PNG_FOUND)
+    set(PNG_HAS_APNG_SUPPORT 0)
+endif(PNG_FOUND)
+
+if(${PNG_HAS_APNG_SUPPORT})
+    message("-- Using system PNG")
+else(${PNG_HAS_APNG_SUPPORT})
+    message("-- Using internal PNG")
+endif(${PNG_HAS_APNG_SUPPORT})
+
+macro_log_feature(PNG_HAS_APNG_SUPPORT "libpng-apng" "animated png support from system libpng" "http://libpng-apng.sf.net")
 
 ########################## kimtoy ##########################
 
