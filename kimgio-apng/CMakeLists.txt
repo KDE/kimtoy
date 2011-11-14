@@ -30,6 +30,8 @@ if(NOT PNG_HAS_APNG_SUPPORT)
                 ${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h)
     include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+    add_definitions(-DUSE_INTERNAL_PNG=1)
+
     set(kimg_apng_LIB_SRCS ${kimg_apng_LIB_SRCS} ${libpng_sources})
 endif(NOT PNG_HAS_APNG_SUPPORT)
 
