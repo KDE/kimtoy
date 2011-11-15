@@ -119,7 +119,9 @@ private:
      * |                        |
      * |<------skin width------>|
      */
-    QPixmap m_statusBarSkin;
+//     QPixmap m_statusBarSkin;
+    QMovie* m_statusBarSkin;
+    QHash<QString, OverlayPixmap*> s_overlays;
 
     QPoint m_pwpos[6];/// NOTE hardcode to 6
     QRegion m_preEditBarMask;

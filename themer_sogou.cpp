@@ -108,6 +108,7 @@ ThemerSogou* ThemerSogou::self()
 ThemerSogou::ThemerSogou()
         : Themer()
 {
+    m_statusBarSkin = 0;
 }
 
 ThemerSogou::~ThemerSogou()
@@ -153,6 +154,10 @@ bool ThemerSogou::loadTheme()
     foreach(OverlayPixmap* op, v_overlays) delete op;
     h_overlays.clear();
     v_overlays.clear();
+    delete m_statusBarSkin;
+    m_statusBarSkin = 0;
+    foreach(OverlayPixmap* op, s_overlays) delete op;
+    s_overlays.clear();
     h_separatorColor = Qt::transparent;
     v_separatorColor = Qt::transparent;
     h_sepl = 0, h_sepr = 0;
@@ -240,13 +245,13 @@ bool ThemerSogou::loadTheme()
                 h_zl = list.at(2).trimmed().toInt();
                 h_zr = list.at(3).trimmed().toInt();
             }
-            else if (key.endsWith("_display")) {
+            else if (key.startsWith("custom") && key.endsWith("_display")) {
                 QString name = key.left(key.length() - 8);
                 if (!h_overlays.contains(name)) {
                     h_overlays.insert(name, new OverlayPixmap);
                 }
             }
-            else if (key.endsWith("_align")) {
+            else if (key.startsWith("custom") && key.endsWith("_align")) {
                 QString name = key.left(key.length() - 6);
                 QStringList numbers = value.split(',');
                 if (!h_overlays.contains(name)) {
@@ -319,13 +324,13 @@ bool ThemerSogou::loadTheme()
                 v_zl = list.at(2).trimmed().toInt();
                 v_zr = list.at(3).trimmed().toInt();
             }
-            else if (key.endsWith("_display")) {
+            else if (key.startsWith("custom") && key.endsWith("_display")) {
                 QString name = key.left(key.length() - 8);
                 if (!v_overlays.contains(name)) {
                     v_overlays.insert(name, new OverlayPixmap);
                 }
             }
-            else if (key.endsWith("_align")) {
+            else if (key.startsWith("custom") && key.endsWith("_align")) {
                 QString name = key.left(key.length() - 6);
                 QStringList numbers = value.split(',');
                 if (!v_overlays.contains(name)) {
@@ -362,8 +367,50 @@ bool ThemerSogou::loadTheme()
             if (key == "pic") {
                 const KArchiveEntry* e = zip.directory()->entry(value);
                 const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
-                if (pix)
-                    m_statusBarSkin.loadFromData(pix->data());
+                if (pix) {
+                    m_statusBarSkin = new QMovie;
+//                     m_statusBarSkin.loadFromData(pix->data());
+                    QBuffer* d = new QBuffer;
+                    d->setData(pix->data());
+                    m_statusBarSkin->setDevice(d);
+                    m_statusBarSkin->setFormat(value.endsWith(".gif") ? "gif" : "apng");
+                    d->setParent(m_statusBarSkin);
+                    QObject::connect(m_statusBarSkin, SIGNAL(frameChanged(int)),
+                                     Animator::self(), SIGNAL(animateStatusBar()));
+                    m_statusBarSkin->start();
+                }
+            }
+            else if (key.startsWith("custom") && key.endsWith("_display")) {
+                QString name = key.left(key.length() - 8);
+                if (!s_overlays.contains(name)) {
+                    s_overlays.insert(name, new OverlayPixmap);
+                }
+            }
+            else if (key.startsWith("custom") && key.endsWith("_pos")) {
+                QString name = key.left(key.length() - 4);
+                QStringList numbers = value.split(',');
+                if (!s_overlays.contains(name)) {
+                    s_overlays.insert(name, new OverlayPixmap);
+                }
+                OverlayPixmap* op = s_overlays[ name ];
+                op->mt = numbers.at(1).toInt();
+                op->ml = numbers.at(0).toInt();
+            }
+            else if (s_overlays.contains(key)) {
+                const KArchiveEntry* e = zip.directory()->entry(value);
+                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                if (pix) {
+//                     s_overlays[ key ]->pixmap.loadFromData(pix->data());
+                    OverlayPixmap* op = s_overlays[ key ];
+                    QBuffer* d = new QBuffer;
+                    d->setData(pix->data());
+                    op->setDevice(d);
+                    op->setFormat(value.endsWith(".gif") ? "gif" : "apng");
+                    d->setParent(op);
+                    QObject::connect(op, SIGNAL(frameChanged(int)),
+                                     Animator::self(), SIGNAL(animateStatusBar()));
+                    op->start();
+                }
             }
             else if (key.endsWith("_pos")) {
                 QStringList list = value.split(',');
@@ -477,7 +524,9 @@ QSize ThemerSogou::sizeHintPreEditBar(const PreEditBar* widget) const
 QSize ThemerSogou::sizeHintStatusBar(const StatusBar* widget) const
 {
     Q_UNUSED(widget);
-    return m_statusBarSkin.size();
+    if (m_statusBarSkin)
+        return m_statusBarSkin->currentPixmap().size();
+    return QSize(0, 0);
 }
 
 void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
@@ -647,8 +696,9 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
 
 void ThemerSogou::updateStatusBarMask(const QSize& size)
 {
-    m_statusBarSkin = m_statusBarSkin.scaled(size);
-    m_statusBarMask = m_statusBarSkin.mask();
+//     m_statusBarSkin = m_statusBarSkin.scaled(size);
+if (m_statusBarSkin)
+    m_statusBarMask = m_statusBarSkin->currentPixmap().mask();
 }
 
 void ThemerSogou::maskPreEditBar(PreEditBar* widget)
@@ -906,7 +956,17 @@ void ThemerSogou::drawStatusBar(StatusBar* widget)
         p.fillPath(path, KIMToySettings::self()->statusBarColorize());
     }
 
-    p.drawPixmap(0, 0, m_statusBarSkin);
+    if (m_statusBarSkin)
+    p.drawPixmap(0, 0, m_statusBarSkin->currentPixmap());
+
+    /// draw overlay pixmap
+    QHash<QString, OverlayPixmap*>::ConstIterator it = s_overlays.constBegin();
+    QHash<QString, OverlayPixmap*>::ConstIterator end = s_overlays.constEnd();
+    while (it != end) {
+        const OverlayPixmap* op = it.value();
+        p.drawPixmap(op->ml, op->mt, op->currentPixmap());
+        ++it;
+    }
 }
 
 void ThemerSogou::drawPropertyWidget(PropertyWidget* widget)

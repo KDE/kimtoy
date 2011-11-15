@@ -343,9 +343,11 @@ void StatusBar::loadSettings()
 
     if (KIMToySettings::self()->enableThemeAnimation()) {
         connect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
+        connect(Animator::self(), SIGNAL(animateStatusBar()), this, SLOT(update()));
     }
     else {
         disconnect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
+        disconnect(Animator::self(), SIGNAL(animateStatusBar()), this, SLOT(update()));
     }
 
     ThemerAgent::layoutStatusBar(m_layout);
