@@ -21,7 +21,7 @@
  * ancillary chunk uses signed (two's complement) numbers.
  */
 void PNGAPI
-png_save_uint_32(png_bytep buf, png_uint_32 i)
+__kimtoy__png_save_uint_32(png_bytep buf, png_uint_32 i)
 {
    buf[0] = (png_byte)((i >> 24) & 0xff);
    buf[1] = (png_byte)((i >> 16) & 0xff);
@@ -30,14 +30,14 @@ png_save_uint_32(png_bytep buf, png_uint_32 i)
 }
 
 #ifdef PNG_SAVE_INT_32_SUPPORTED
-/* The png_save_int_32 function assumes integers are stored in two's
+/* The __kimtoy__png_save_int_32 function assumes integers are stored in two's
  * complement format.  If this isn't the case, then this routine needs to
  * be modified to write data in two's complement format.  Note that,
  * the following works correctly even if png_int_32 has more than 32 bits
  * (compare the more complex code required on read for sign extention.)
  */
 void PNGAPI
-png_save_int_32(png_bytep buf, png_int_32 i)
+__kimtoy__png_save_int_32(png_bytep buf, png_int_32 i)
 {
    buf[0] = (png_byte)((i >> 24) & 0xff);
    buf[1] = (png_byte)((i >> 16) & 0xff);
@@ -51,7 +51,7 @@ png_save_int_32(png_bytep buf, png_int_32 i)
  * just to avoid potential problems on pre-ANSI C compilers.
  */
 void PNGAPI
-png_save_uint_16(png_bytep buf, unsigned int i)
+__kimtoy__png_save_uint_16(png_bytep buf, unsigned int i)
 {
    buf[0] = (png_byte)((i >> 8) & 0xff);
    buf[1] = (png_byte)(i & 0xff);
@@ -61,11 +61,11 @@ png_save_uint_16(png_bytep buf, unsigned int i)
 /* Simple function to write the signature.  If we have already written
  * the magic bytes of the signature, or more likely, the PNG stream is
  * being embedded into another stream and doesn't need its own signature,
- * we should call png_set_sig_bytes() to tell libpng how many of the
+ * we should call __kimtoy__png_set_sig_bytes() to tell libpng how many of the
  * bytes have already been written.
  */
 void PNGAPI
-png_write_sig(png_structp png_ptr)
+__kimtoy__png_write_sig(png_structp png_ptr)
 {
    png_byte png_signature[8] = {137, 80, 78, 71, 13, 10, 26, 10};
 
@@ -75,7 +75,7 @@ png_write_sig(png_structp png_ptr)
 #endif
 
    /* Write the rest of the 8 byte signature */
-   png_write_data(png_ptr, &png_signature[png_ptr->sig_bytes],
+   __kimtoy__png_write_data(png_ptr, &png_signature[png_ptr->sig_bytes],
       (png_size_t)(8 - png_ptr->sig_bytes));
 
    if (png_ptr->sig_bytes < 3)
@@ -84,10 +84,10 @@ png_write_sig(png_structp png_ptr)
 
 /* Write the start of a PNG chunk.  The type is the chunk type.
  * The total_length is the sum of the lengths of all the data you will be
- * passing in png_write_chunk_data().
+ * passing in __kimtoy__png_write_chunk_data().
  */
 static void
-png_write_chunk_header(png_structp png_ptr, png_uint_32 chunk_name,
+__kimtoy__png_write_chunk_header(png_structp png_ptr, png_uint_32 chunk_name,
     png_uint_32 length)
 {
    png_byte buf[8];
@@ -108,17 +108,17 @@ png_write_chunk_header(png_structp png_ptr, png_uint_32 chunk_name,
 #endif
 
    /* Write the length and the chunk name */
-   png_save_uint_32(buf, length);
-   png_save_uint_32(buf + 4, chunk_name);
-   png_write_data(png_ptr, buf, 8);
+   __kimtoy__png_save_uint_32(buf, length);
+   __kimtoy__png_save_uint_32(buf + 4, chunk_name);
+   __kimtoy__png_write_data(png_ptr, buf, 8);
 
    /* Put the chunk name into png_ptr->chunk_name */
    png_ptr->chunk_name = chunk_name;
 
    /* Reset the crc and run it over the chunk name */
-   png_reset_crc(png_ptr);
+   __kimtoy__png_reset_crc(png_ptr);
 
-   png_calculate_crc(png_ptr, buf + 4, 4);
+   __kimtoy__png_calculate_crc(png_ptr, buf + 4, 4);
 
 #ifdef PNG_IO_STATE_SUPPORTED
    /* Inform the I/O callback that chunk data will (possibly) be written.
@@ -129,19 +129,19 @@ png_write_chunk_header(png_structp png_ptr, png_uint_32 chunk_name,
 }
 
 void PNGAPI
-png_write_chunk_start(png_structp png_ptr, png_const_bytep chunk_string,
+__kimtoy__png_write_chunk_start(png_structp png_ptr, png_const_bytep chunk_string,
     png_uint_32 length)
 {
-   png_write_chunk_header(png_ptr, PNG_CHUNK_FROM_STRING(chunk_string), length);
+   __kimtoy__png_write_chunk_header(png_ptr, PNG_CHUNK_FROM_STRING(chunk_string), length);
 }
 
-/* Write the data of a PNG chunk started with png_write_chunk_header().
+/* Write the data of a PNG chunk started with __kimtoy__png_write_chunk_header().
  * Note that multiple calls to this function are allowed, and that the
  * sum of the lengths from these calls *must* add up to the total_length
- * given to png_write_chunk_header().
+ * given to __kimtoy__png_write_chunk_header().
  */
 void PNGAPI
-png_write_chunk_data(png_structp png_ptr, png_const_bytep data,
+__kimtoy__png_write_chunk_data(png_structp png_ptr, png_const_bytep data,
     png_size_t length)
 {
    /* Write the data, and run the CRC over it */
@@ -150,18 +150,18 @@ png_write_chunk_data(png_structp png_ptr, png_const_bytep data,
 
    if (data != NULL && length > 0)
    {
-      png_write_data(png_ptr, data, length);
+      __kimtoy__png_write_data(png_ptr, data, length);
 
       /* Update the CRC after writing the data,
        * in case that the user I/O routine alters it.
        */
-      png_calculate_crc(png_ptr, data, length);
+      __kimtoy__png_calculate_crc(png_ptr, data, length);
    }
 }
 
-/* Finish a chunk started with png_write_chunk_header(). */
+/* Finish a chunk started with __kimtoy__png_write_chunk_header(). */
 void PNGAPI
-png_write_chunk_end(png_structp png_ptr)
+__kimtoy__png_write_chunk_end(png_structp png_ptr)
 {
    png_byte buf[4];
 
@@ -175,9 +175,9 @@ png_write_chunk_end(png_structp png_ptr)
 #endif
 
    /* Write the crc in a single operation */
-   png_save_uint_32(buf, png_ptr->crc);
+   __kimtoy__png_save_uint_32(buf, png_ptr->crc);
 
-   png_write_data(png_ptr, buf, (png_size_t)4);
+   __kimtoy__png_write_data(png_ptr, buf, (png_size_t)4);
 }
 
 /* Write a PNG chunk all at once.  The type is an array of ASCII characters
@@ -186,11 +186,11 @@ png_write_chunk_end(png_structp png_ptr)
  * pre-defined chunk names here, and if you need a new one, define it
  * where the others are defined.  The length is the length of the data.
  * All the data must be present.  If that is not possible, use the
- * png_write_chunk_start(), png_write_chunk_data(), and png_write_chunk_end()
+ * __kimtoy__png_write_chunk_start(), __kimtoy__png_write_chunk_data(), and __kimtoy__png_write_chunk_end()
  * functions instead.
  */
 static void
-png_write_complete_chunk(png_structp png_ptr, png_uint_32 chunk_name,
+__kimtoy__png_write_complete_chunk(png_structp png_ptr, png_uint_32 chunk_name,
    png_const_bytep data, png_size_t length)
 {
    if (png_ptr == NULL)
@@ -198,25 +198,25 @@ png_write_complete_chunk(png_structp png_ptr, png_uint_32 chunk_name,
 
    /* On 64 bit architectures 'length' may not fit in a png_uint_32. */
    if (length > PNG_UINT_32_MAX)
-      png_error(png_ptr, "length exceeds PNG maxima");
+      __kimtoy__png_error(png_ptr, "length exceeds PNG maxima");
 
-   png_write_chunk_header(png_ptr, chunk_name, (png_uint_32)length);
-   png_write_chunk_data(png_ptr, data, length);
-   png_write_chunk_end(png_ptr);
+   __kimtoy__png_write_chunk_header(png_ptr, chunk_name, (png_uint_32)length);
+   __kimtoy__png_write_chunk_data(png_ptr, data, length);
+   __kimtoy__png_write_chunk_end(png_ptr);
 }
 
 /* This is the API that calls the internal function above. */
 void PNGAPI
-png_write_chunk(png_structp png_ptr, png_const_bytep chunk_string,
+__kimtoy__png_write_chunk(png_structp png_ptr, png_const_bytep chunk_string,
    png_const_bytep data, png_size_t length)
 {
-   png_write_complete_chunk(png_ptr, PNG_CHUNK_FROM_STRING(chunk_string), data,
+   __kimtoy__png_write_complete_chunk(png_ptr, PNG_CHUNK_FROM_STRING(chunk_string), data,
       length);
 }
 
 /* Initialize the compressor for the appropriate type of compression. */
 static void
-png_zlib_claim(png_structp png_ptr, png_uint_32 state)
+__kimtoy__png_zlib_claim(png_structp png_ptr, png_uint_32 state)
 {
    if (!(png_ptr->zlib_state & PNG_ZLIB_IN_USE))
    {
@@ -255,7 +255,7 @@ png_zlib_claim(png_structp png_ptr, png_uint_32 state)
                break;
 
             default:
-               png_error(png_ptr, "invalid zlib state");
+               __kimtoy__png_error(png_ptr, "invalid zlib state");
          }
 
          if (ret == Z_OK)
@@ -266,30 +266,30 @@ png_zlib_claim(png_structp png_ptr, png_uint_32 state)
             size_t pos = 0;
             char msg[64];
 
-            pos = png_safecat(msg, sizeof msg, pos,
+            pos = __kimtoy__png_safecat(msg, sizeof msg, pos,
                "zlib failed to initialize compressor (");
-            pos = png_safecat(msg, sizeof msg, pos, who);
+            pos = __kimtoy__png_safecat(msg, sizeof msg, pos, who);
 
             switch (ret)
             {
                case Z_VERSION_ERROR:
-                  pos = png_safecat(msg, sizeof msg, pos, ") version error");
+                  pos = __kimtoy__png_safecat(msg, sizeof msg, pos, ") version error");
                   break;
 
                case Z_STREAM_ERROR:
-                  pos = png_safecat(msg, sizeof msg, pos, ") stream error");
+                  pos = __kimtoy__png_safecat(msg, sizeof msg, pos, ") stream error");
                   break;
 
                case Z_MEM_ERROR:
-                  pos = png_safecat(msg, sizeof msg, pos, ") memory error");
+                  pos = __kimtoy__png_safecat(msg, sizeof msg, pos, ") memory error");
                   break;
 
                default:
-                  pos = png_safecat(msg, sizeof msg, pos, ") unknown error");
+                  pos = __kimtoy__png_safecat(msg, sizeof msg, pos, ") unknown error");
                   break;
             }
 
-            png_error(png_ptr, msg);
+            __kimtoy__png_error(png_ptr, msg);
          }
       }
 
@@ -298,7 +298,7 @@ png_zlib_claim(png_structp png_ptr, png_uint_32 state)
    }
 
    else
-      png_error(png_ptr, "zstream already in use (internal error)");
+      __kimtoy__png_error(png_ptr, "zstream already in use (internal error)");
 }
 
 /* The opposite: release the stream.  It is also reset, this API will warn on
@@ -337,23 +337,23 @@ png_zlib_release(png_structp png_ptr)
                break;
          }
 
-         png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_d, ret);
-         png_warning_parameter(p, 2, err);
+         __kimtoy__png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_d, ret);
+         __kimtoy__png_warning_parameter(p, 2, err);
 
          if (png_ptr->zstream.msg)
             err = png_ptr->zstream.msg;
          else
             err = "[no zlib message]";
 
-         png_warning_parameter(p, 3, err);
+         __kimtoy__png_warning_parameter(p, 3, err);
 
-         png_formatted_warning(png_ptr, p,
+         __kimtoy__png_formatted_warning(png_ptr, p,
             "zlib failed to reset compressor: @1(@2): @3");
       }
    }
 
    else
-      png_warning(png_ptr, "zstream not in use (internal error)");
+      __kimtoy__png_warning(png_ptr, "zstream not in use (internal error)");
 }
 
 #ifdef PNG_WRITE_COMPRESSED_TEXT_SUPPORTED
@@ -374,7 +374,7 @@ typedef struct
 
 /* Compress given text into storage in the png_ptr structure */
 static int /* PRIVATE */
-png_text_compress(png_structp png_ptr,
+__kimtoy__png_text_compress(png_structp png_ptr,
     png_const_charp text, png_size_t text_len, int compression,
     compression_state *comp)
 {
@@ -397,9 +397,9 @@ png_text_compress(png_structp png_ptr,
    {
       PNG_WARNING_PARAMETERS(p)
 
-      png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_d,
+      __kimtoy__png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_d,
          compression);
-      png_formatted_warning(png_ptr, p, "Unknown compression type @1");
+      __kimtoy__png_formatted_warning(png_ptr, p, "Unknown compression type @1");
    }
 
    /* We can't write the chunk until we find out how much data we have,
@@ -416,7 +416,7 @@ png_text_compress(png_structp png_ptr,
     * data, or if the input string is incredibly large (although this
     * wouldn't cause a failure, just a slowdown due to swapping).
     */
-   png_zlib_claim(png_ptr, PNG_ZLIB_FOR_TEXT);
+   __kimtoy__png_zlib_claim(png_ptr, PNG_ZLIB_FOR_TEXT);
 
    /* Set up the compression buffers */
    /* TODO: the following cast hides a potential overflow problem. */
@@ -427,7 +427,7 @@ png_text_compress(png_structp png_ptr,
    png_ptr->zstream.avail_out = png_ptr->zbuf_size;
    png_ptr->zstream.next_out = png_ptr->zbuf;
 
-   /* This is the same compression loop as in png_write_row() */
+   /* This is the same compression loop as in __kimtoy__png_write_row() */
    do
    {
       /* Compress the data */
@@ -437,10 +437,10 @@ png_text_compress(png_structp png_ptr,
       {
          /* Error */
          if (png_ptr->zstream.msg != NULL)
-            png_error(png_ptr, png_ptr->zstream.msg);
+            __kimtoy__png_error(png_ptr, png_ptr->zstream.msg);
 
          else
-            png_error(png_ptr, "zlib error");
+            __kimtoy__png_error(png_ptr, "zlib error");
       }
 
       /* Check to see if we need more room */
@@ -459,24 +459,24 @@ png_text_compress(png_structp png_ptr,
 
                old_ptr = comp->output_ptr;
 
-               comp->output_ptr = (png_bytepp)png_malloc(png_ptr,
+               comp->output_ptr = (png_bytepp)__kimtoy__png_malloc(png_ptr,
                    (png_alloc_size_t)
                    (comp->max_output_ptr * png_sizeof(png_charpp)));
 
                png_memcpy(comp->output_ptr, old_ptr, old_max
                    * png_sizeof(png_charp));
 
-               png_free(png_ptr, old_ptr);
+               __kimtoy__png_free(png_ptr, old_ptr);
             }
             else
-               comp->output_ptr = (png_bytepp)png_malloc(png_ptr,
+               comp->output_ptr = (png_bytepp)__kimtoy__png_malloc(png_ptr,
                    (png_alloc_size_t)
                    (comp->max_output_ptr * png_sizeof(png_charp)));
          }
 
          /* Save the data */
          comp->output_ptr[comp->num_output_ptr] =
-             (png_bytep)png_malloc(png_ptr,
+             (png_bytep)__kimtoy__png_malloc(png_ptr,
              (png_alloc_size_t)png_ptr->zbuf_size);
 
          png_memcpy(comp->output_ptr[comp->num_output_ptr], png_ptr->zbuf,
@@ -516,25 +516,25 @@ png_text_compress(png_structp png_ptr,
                   old_ptr = comp->output_ptr;
 
                   /* This could be optimized to realloc() */
-                  comp->output_ptr = (png_bytepp)png_malloc(png_ptr,
+                  comp->output_ptr = (png_bytepp)__kimtoy__png_malloc(png_ptr,
                       (png_alloc_size_t)(comp->max_output_ptr *
                       png_sizeof(png_charp)));
 
                   png_memcpy(comp->output_ptr, old_ptr,
                       old_max * png_sizeof(png_charp));
 
-                  png_free(png_ptr, old_ptr);
+                  __kimtoy__png_free(png_ptr, old_ptr);
                }
 
                else
-                  comp->output_ptr = (png_bytepp)png_malloc(png_ptr,
+                  comp->output_ptr = (png_bytepp)__kimtoy__png_malloc(png_ptr,
                       (png_alloc_size_t)(comp->max_output_ptr *
                       png_sizeof(png_charp)));
             }
 
             /* Save the data */
             comp->output_ptr[comp->num_output_ptr] =
-                (png_bytep)png_malloc(png_ptr,
+                (png_bytep)__kimtoy__png_malloc(png_ptr,
                 (png_alloc_size_t)png_ptr->zbuf_size);
 
             png_memcpy(comp->output_ptr[comp->num_output_ptr], png_ptr->zbuf,
@@ -551,10 +551,10 @@ png_text_compress(png_structp png_ptr,
       {
          /* We got an error */
          if (png_ptr->zstream.msg != NULL)
-            png_error(png_ptr, png_ptr->zstream.msg);
+            __kimtoy__png_error(png_ptr, png_ptr->zstream.msg);
 
          else
-            png_error(png_ptr, "zlib error");
+            __kimtoy__png_error(png_ptr, "zlib error");
       }
    } while (ret != Z_STREAM_END);
 
@@ -569,14 +569,14 @@ png_text_compress(png_structp png_ptr,
 
 /* Ship the compressed text out via chunk writes */
 static void /* PRIVATE */
-png_write_compressed_data_out(png_structp png_ptr, compression_state *comp)
+__kimtoy__png_write_compressed_data_out(png_structp png_ptr, compression_state *comp)
 {
    int i;
 
    /* Handle the no-compression case */
    if (comp->input)
    {
-      png_write_chunk_data(png_ptr, comp->input, comp->input_len);
+      __kimtoy__png_write_chunk_data(png_ptr, comp->input, comp->input_len);
 
       return;
    }
@@ -641,7 +641,7 @@ png_write_compressed_data_out(png_structp png_ptr, compression_state *comp)
       }
 
       else
-         png_error(png_ptr,
+         __kimtoy__png_error(png_ptr,
              "Invalid zlib compression method or flags in non-IDAT chunk");
    }
 #endif /* PNG_WRITE_OPTIMIZE_CMF_SUPPORTED */
@@ -649,18 +649,18 @@ png_write_compressed_data_out(png_structp png_ptr, compression_state *comp)
    /* Write saved output buffers, if any */
    for (i = 0; i < comp->num_output_ptr; i++)
    {
-      png_write_chunk_data(png_ptr, comp->output_ptr[i],
+      __kimtoy__png_write_chunk_data(png_ptr, comp->output_ptr[i],
           (png_size_t)png_ptr->zbuf_size);
 
-      png_free(png_ptr, comp->output_ptr[i]);
+      __kimtoy__png_free(png_ptr, comp->output_ptr[i]);
    }
 
    if (comp->max_output_ptr != 0)
-      png_free(png_ptr, comp->output_ptr);
+      __kimtoy__png_free(png_ptr, comp->output_ptr);
 
    /* Write anything left in zbuf */
    if (png_ptr->zstream.avail_out < (png_uint_32)png_ptr->zbuf_size)
-      png_write_chunk_data(png_ptr, png_ptr->zbuf,
+      __kimtoy__png_write_chunk_data(png_ptr, png_ptr->zbuf,
           (png_size_t)(png_ptr->zbuf_size - png_ptr->zstream.avail_out));
 
    /* Reset zlib for another zTXt/iTXt or image data */
@@ -673,13 +673,13 @@ png_write_compressed_data_out(png_structp png_ptr, compression_state *comp)
  * information being correct.
  */
 void /* PRIVATE */
-png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
+__kimtoy__png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
     int bit_depth, int color_type, int compression_type, int filter_type,
     int interlace_type)
 {
    png_byte buf[13]; /* Buffer to store the IHDR info */
 
-   png_debug(1, "in png_write_IHDR");
+   png_debug(1, "in __kimtoy__png_write_IHDR");
 
    /* Check that we have valid input data from the application info */
    switch (color_type)
@@ -697,7 +697,7 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
                png_ptr->channels = 1; break;
 
             default:
-               png_error(png_ptr,
+               __kimtoy__png_error(png_ptr,
                    "Invalid bit depth for grayscale image");
          }
          break;
@@ -708,7 +708,7 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
 #else
          if (bit_depth != 8)
 #endif
-            png_error(png_ptr, "Invalid bit depth for RGB image");
+            __kimtoy__png_error(png_ptr, "Invalid bit depth for RGB image");
 
          png_ptr->channels = 3;
          break;
@@ -724,13 +724,13 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
                break;
 
             default:
-               png_error(png_ptr, "Invalid bit depth for paletted image");
+               __kimtoy__png_error(png_ptr, "Invalid bit depth for paletted image");
          }
          break;
 
       case PNG_COLOR_TYPE_GRAY_ALPHA:
          if (bit_depth != 8 && bit_depth != 16)
-            png_error(png_ptr, "Invalid bit depth for grayscale+alpha image");
+            __kimtoy__png_error(png_ptr, "Invalid bit depth for grayscale+alpha image");
 
          png_ptr->channels = 2;
          break;
@@ -741,18 +741,18 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
 #else
          if (bit_depth != 8)
 #endif
-            png_error(png_ptr, "Invalid bit depth for RGBA image");
+            __kimtoy__png_error(png_ptr, "Invalid bit depth for RGBA image");
 
          png_ptr->channels = 4;
          break;
 
       default:
-         png_error(png_ptr, "Invalid image color type specified");
+         __kimtoy__png_error(png_ptr, "Invalid image color type specified");
    }
 
    if (compression_type != PNG_COMPRESSION_TYPE_BASE)
    {
-      png_warning(png_ptr, "Invalid compression type specified");
+      __kimtoy__png_warning(png_ptr, "Invalid compression type specified");
       compression_type = PNG_COMPRESSION_TYPE_BASE;
    }
 
@@ -760,7 +760,7 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
     * 1. Libpng was compiled with PNG_MNG_FEATURES_SUPPORTED and
     * 2. Libpng did not write a PNG signature (this filter_method is only
     *    used in PNG datastreams that are embedded in MNG datastreams) and
-    * 3. The application called png_permit_mng_features with a mask that
+    * 3. The application called __kimtoy__png_permit_mng_features with a mask that
     *    included PNG_FLAG_MNG_FILTER_64 and
     * 4. The filter_method is 64 and
     * 5. The color_type is RGB or RGBA
@@ -775,7 +775,7 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
 #endif
        filter_type != PNG_FILTER_TYPE_BASE)
    {
-      png_warning(png_ptr, "Invalid filter type specified");
+      __kimtoy__png_warning(png_ptr, "Invalid filter type specified");
       filter_type = PNG_FILTER_TYPE_BASE;
    }
 
@@ -783,7 +783,7 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
    if (interlace_type != PNG_INTERLACE_NONE &&
        interlace_type != PNG_INTERLACE_ADAM7)
    {
-      png_warning(png_ptr, "Invalid interlace type specified");
+      __kimtoy__png_warning(png_ptr, "Invalid interlace type specified");
       interlace_type = PNG_INTERLACE_ADAM7;
    }
 #else
@@ -809,8 +809,8 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
    png_ptr->usr_channels = png_ptr->channels;
 
    /* Pack the header information into the buffer */
-   png_save_uint_32(buf, width);
-   png_save_uint_32(buf + 4, height);
+   __kimtoy__png_save_uint_32(buf, width);
+   __kimtoy__png_save_uint_32(buf + 4, height);
    buf[8] = (png_byte)bit_depth;
    buf[9] = (png_byte)color_type;
    buf[10] = (png_byte)compression_type;
@@ -818,7 +818,7 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
    buf[12] = (png_byte)interlace_type;
 
    /* Write the chunk */
-   png_write_complete_chunk(png_ptr, png_IHDR, buf, (png_size_t)13);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_IHDR, buf, (png_size_t)13);
 
 #ifdef PNG_WRITE_APNG_SUPPORTED
    png_ptr->first_frame_width = width;
@@ -826,8 +826,8 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
 #endif
 
    /* Initialize zlib with PNG info */
-   png_ptr->zstream.zalloc = png_zalloc;
-   png_ptr->zstream.zfree = png_zfree;
+   png_ptr->zstream.zalloc = __kimtoy__png_zalloc;
+   png_ptr->zstream.zfree = __kimtoy__png_zfree;
    png_ptr->zstream.opaque = (voidpf)png_ptr;
 
    if (!(png_ptr->do_filter))
@@ -897,14 +897,14 @@ png_write_IHDR(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
  * structure.
  */
 void /* PRIVATE */
-png_write_PLTE(png_structp png_ptr, png_const_colorp palette,
+__kimtoy__png_write_PLTE(png_structp png_ptr, png_const_colorp palette,
     png_uint_32 num_pal)
 {
    png_uint_32 i;
    png_const_colorp pal_ptr;
    png_byte buf[3];
 
-   png_debug(1, "in png_write_PLTE");
+   png_debug(1, "in __kimtoy__png_write_PLTE");
 
    if ((
 #ifdef PNG_MNG_FEATURES_SUPPORTED
@@ -914,19 +914,19 @@ png_write_PLTE(png_structp png_ptr, png_const_colorp palette,
    {
       if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
       {
-         png_error(png_ptr, "Invalid number of colors in palette");
+         __kimtoy__png_error(png_ptr, "Invalid number of colors in palette");
       }
 
       else
       {
-         png_warning(png_ptr, "Invalid number of colors in palette");
+         __kimtoy__png_warning(png_ptr, "Invalid number of colors in palette");
          return;
       }
    }
 
    if (!(png_ptr->color_type&PNG_COLOR_MASK_COLOR))
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Ignoring request to write a PLTE chunk in grayscale PNG");
 
       return;
@@ -935,7 +935,7 @@ png_write_PLTE(png_structp png_ptr, png_const_colorp palette,
    png_ptr->num_palette = (png_uint_16)num_pal;
    png_debug1(3, "num_palette = %d", png_ptr->num_palette);
 
-   png_write_chunk_header(png_ptr, png_PLTE, (png_uint_32)(num_pal * 3));
+   __kimtoy__png_write_chunk_header(png_ptr, png_PLTE, (png_uint_32)(num_pal * 3));
 #ifdef PNG_POINTER_INDEXING_SUPPORTED
 
    for (i = 0, pal_ptr = palette; i < num_pal; i++, pal_ptr++)
@@ -943,7 +943,7 @@ png_write_PLTE(png_structp png_ptr, png_const_colorp palette,
       buf[0] = pal_ptr->red;
       buf[1] = pal_ptr->green;
       buf[2] = pal_ptr->blue;
-      png_write_chunk_data(png_ptr, buf, (png_size_t)3);
+      __kimtoy__png_write_chunk_data(png_ptr, buf, (png_size_t)3);
    }
 
 #else
@@ -957,19 +957,19 @@ png_write_PLTE(png_structp png_ptr, png_const_colorp palette,
       buf[0] = pal_ptr[i].red;
       buf[1] = pal_ptr[i].green;
       buf[2] = pal_ptr[i].blue;
-      png_write_chunk_data(png_ptr, buf, (png_size_t)3);
+      __kimtoy__png_write_chunk_data(png_ptr, buf, (png_size_t)3);
    }
 
 #endif
-   png_write_chunk_end(png_ptr);
+   __kimtoy__png_write_chunk_end(png_ptr);
    png_ptr->mode |= PNG_HAVE_PLTE;
 }
 
 /* Write an IDAT chunk */
 void /* PRIVATE */
-png_write_IDAT(png_structp png_ptr, png_bytep data, png_size_t length)
+__kimtoy__png_write_IDAT(png_structp png_ptr, png_bytep data, png_size_t length)
 {
-   png_debug(1, "in png_write_IDAT");
+   png_debug(1, "in __kimtoy__png_write_IDAT");
 
 #ifdef PNG_WRITE_OPTIMIZE_CMF_SUPPORTED
    if (!(png_ptr->mode & PNG_HAVE_IDAT) &&
@@ -1034,7 +1034,7 @@ png_write_IDAT(png_structp png_ptr, png_bytep data, png_size_t length)
       }
 
       else
-         png_error(png_ptr,
+         __kimtoy__png_error(png_ptr,
              "Invalid zlib compression method or flags in IDAT");
    }
 #endif /* PNG_WRITE_OPTIMIZE_CMF_SUPPORTED */
@@ -1042,20 +1042,20 @@ png_write_IDAT(png_structp png_ptr, png_bytep data, png_size_t length)
 #ifdef PNG_WRITE_APNG_SUPPORTED
    if(png_ptr->num_frames_written == 0)
 #endif
-   png_write_complete_chunk(png_ptr, png_IDAT, data, length);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_IDAT, data, length);
 #ifdef PNG_WRITE_APNG_SUPPORTED
    else
    {
       png_byte buf[4];
       
-      png_write_chunk_header(png_ptr, png_fdAT, 4 + length);
+      __kimtoy__png_write_chunk_header(png_ptr, png_fdAT, 4 + length);
       
-      png_save_uint_32(buf, png_ptr->next_seq_num);
-      png_write_chunk_data(png_ptr, buf, 4);
+      __kimtoy__png_save_uint_32(buf, png_ptr->next_seq_num);
+      __kimtoy__png_write_chunk_data(png_ptr, buf, 4);
       
-      png_write_chunk_data(png_ptr, data, length);
+      __kimtoy__png_write_chunk_data(png_ptr, data, length);
       
-      png_write_chunk_end(png_ptr);
+      __kimtoy__png_write_chunk_end(png_ptr);
       
       png_ptr->next_seq_num++;
    }
@@ -1073,51 +1073,51 @@ png_write_IDAT(png_structp png_ptr, png_bytep data, png_size_t length)
 
 /* Write an IEND chunk */
 void /* PRIVATE */
-png_write_IEND(png_structp png_ptr)
+__kimtoy__png_write_IEND(png_structp png_ptr)
 {
-   png_debug(1, "in png_write_IEND");
+   png_debug(1, "in __kimtoy__png_write_IEND");
 
-   png_write_complete_chunk(png_ptr, png_IEND, NULL, (png_size_t)0);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_IEND, NULL, (png_size_t)0);
    png_ptr->mode |= PNG_HAVE_IEND;
 }
 
 #ifdef PNG_WRITE_gAMA_SUPPORTED
 /* Write a gAMA chunk */
 void /* PRIVATE */
-png_write_gAMA_fixed(png_structp png_ptr, png_fixed_point file_gamma)
+__kimtoy__png_write_gAMA_fixed(png_structp png_ptr, png_fixed_point file_gamma)
 {
    png_byte buf[4];
 
    png_debug(1, "in png_write_gAMA");
 
    /* file_gamma is saved in 1/100,000ths */
-   png_save_uint_32(buf, (png_uint_32)file_gamma);
-   png_write_complete_chunk(png_ptr, png_gAMA, buf, (png_size_t)4);
+   __kimtoy__png_save_uint_32(buf, (png_uint_32)file_gamma);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_gAMA, buf, (png_size_t)4);
 }
 #endif
 
 #ifdef PNG_WRITE_sRGB_SUPPORTED
 /* Write a sRGB chunk */
 void /* PRIVATE */
-png_write_sRGB(png_structp png_ptr, int srgb_intent)
+__kimtoy__png_write_sRGB(png_structp png_ptr, int srgb_intent)
 {
    png_byte buf[1];
 
-   png_debug(1, "in png_write_sRGB");
+   png_debug(1, "in __kimtoy__png_write_sRGB");
 
    if (srgb_intent >= PNG_sRGB_INTENT_LAST)
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Invalid sRGB rendering intent specified");
 
    buf[0]=(png_byte)srgb_intent;
-   png_write_complete_chunk(png_ptr, png_sRGB, buf, (png_size_t)1);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_sRGB, buf, (png_size_t)1);
 }
 #endif
 
 #ifdef PNG_WRITE_iCCP_SUPPORTED
 /* Write an iCCP chunk */
 void /* PRIVATE */
-png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
+__kimtoy__png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
     png_const_charp profile, int profile_len)
 {
    png_size_t name_len;
@@ -1125,7 +1125,7 @@ png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
    compression_state comp;
    int embedded_profile_len = 0;
 
-   png_debug(1, "in png_write_iCCP");
+   png_debug(1, "in __kimtoy__png_write_iCCP");
 
    comp.num_output_ptr = 0;
    comp.max_output_ptr = 0;
@@ -1133,11 +1133,11 @@ png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
    comp.input = NULL;
    comp.input_len = 0;
 
-   if ((name_len = png_check_keyword(png_ptr, name, &new_name)) == 0)
+   if ((name_len = __kimtoy__png_check_keyword(png_ptr, name, &new_name)) == 0)
       return;
 
    if (compression_type != PNG_COMPRESSION_TYPE_BASE)
-      png_warning(png_ptr, "Unknown compression type in iCCP chunk");
+      __kimtoy__png_warning(png_ptr, "Unknown compression type in iCCP chunk");
 
    if (profile == NULL)
       profile_len = 0;
@@ -1151,58 +1151,58 @@ png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
 
    if (embedded_profile_len < 0)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Embedded profile length in iCCP chunk is negative");
 
-      png_free(png_ptr, new_name);
+      __kimtoy__png_free(png_ptr, new_name);
       return;
    }
 
    if (profile_len < embedded_profile_len)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Embedded profile length too large in iCCP chunk");
 
-      png_free(png_ptr, new_name);
+      __kimtoy__png_free(png_ptr, new_name);
       return;
    }
 
    if (profile_len > embedded_profile_len)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Truncating profile to actual length in iCCP chunk");
 
       profile_len = embedded_profile_len;
    }
 
    if (profile_len)
-      profile_len = png_text_compress(png_ptr, profile,
+      profile_len = __kimtoy__png_text_compress(png_ptr, profile,
           (png_size_t)profile_len, PNG_COMPRESSION_TYPE_BASE, &comp);
 
    /* Make sure we include the NULL after the name and the compression type */
-   png_write_chunk_header(png_ptr, png_iCCP,
+   __kimtoy__png_write_chunk_header(png_ptr, png_iCCP,
        (png_uint_32)(name_len + profile_len + 2));
 
    new_name[name_len + 1] = 0x00;
 
-   png_write_chunk_data(png_ptr, (png_bytep)new_name,
+   __kimtoy__png_write_chunk_data(png_ptr, (png_bytep)new_name,
        (png_size_t)(name_len + 2));
 
    if (profile_len)
    {
       comp.input_len = profile_len;
-      png_write_compressed_data_out(png_ptr, &comp);
+      __kimtoy__png_write_compressed_data_out(png_ptr, &comp);
    }
 
-   png_write_chunk_end(png_ptr);
-   png_free(png_ptr, new_name);
+   __kimtoy__png_write_chunk_end(png_ptr);
+   __kimtoy__png_free(png_ptr, new_name);
 }
 #endif
 
 #ifdef PNG_WRITE_sPLT_SUPPORTED
 /* Write a sPLT chunk */
 void /* PRIVATE */
-png_write_sPLT(png_structp png_ptr, png_const_sPLT_tp spalette)
+__kimtoy__png_write_sPLT(png_structp png_ptr, png_const_sPLT_tp spalette)
 {
    png_size_t name_len;
    png_charp new_name;
@@ -1214,19 +1214,19 @@ png_write_sPLT(png_structp png_ptr, png_const_sPLT_tp spalette)
    int i;
 #endif
 
-   png_debug(1, "in png_write_sPLT");
+   png_debug(1, "in __kimtoy__png_write_sPLT");
 
-   if ((name_len = png_check_keyword(png_ptr,spalette->name, &new_name))==0)
+   if ((name_len = __kimtoy__png_check_keyword(png_ptr,spalette->name, &new_name))==0)
       return;
 
    /* Make sure we include the NULL after the name */
-   png_write_chunk_header(png_ptr, png_sPLT,
+   __kimtoy__png_write_chunk_header(png_ptr, png_sPLT,
        (png_uint_32)(name_len + 2 + palette_size));
 
-   png_write_chunk_data(png_ptr, (png_bytep)new_name,
+   __kimtoy__png_write_chunk_data(png_ptr, (png_bytep)new_name,
        (png_size_t)(name_len + 1));
 
-   png_write_chunk_data(png_ptr, &spalette->depth, (png_size_t)1);
+   __kimtoy__png_write_chunk_data(png_ptr, &spalette->depth, (png_size_t)1);
 
    /* Loop through each palette entry, writing appropriately */
 #ifdef PNG_POINTER_INDEXING_SUPPORTED
@@ -1238,19 +1238,19 @@ png_write_sPLT(png_structp png_ptr, png_const_sPLT_tp spalette)
          entrybuf[1] = (png_byte)ep->green;
          entrybuf[2] = (png_byte)ep->blue;
          entrybuf[3] = (png_byte)ep->alpha;
-         png_save_uint_16(entrybuf + 4, ep->frequency);
+         __kimtoy__png_save_uint_16(entrybuf + 4, ep->frequency);
       }
 
       else
       {
-         png_save_uint_16(entrybuf + 0, ep->red);
-         png_save_uint_16(entrybuf + 2, ep->green);
-         png_save_uint_16(entrybuf + 4, ep->blue);
-         png_save_uint_16(entrybuf + 6, ep->alpha);
-         png_save_uint_16(entrybuf + 8, ep->frequency);
+         __kimtoy__png_save_uint_16(entrybuf + 0, ep->red);
+         __kimtoy__png_save_uint_16(entrybuf + 2, ep->green);
+         __kimtoy__png_save_uint_16(entrybuf + 4, ep->blue);
+         __kimtoy__png_save_uint_16(entrybuf + 6, ep->alpha);
+         __kimtoy__png_save_uint_16(entrybuf + 8, ep->frequency);
       }
 
-      png_write_chunk_data(png_ptr, entrybuf, (png_size_t)entry_size);
+      __kimtoy__png_write_chunk_data(png_ptr, entrybuf, (png_size_t)entry_size);
    }
 #else
    ep=spalette->entries;
@@ -1262,36 +1262,36 @@ png_write_sPLT(png_structp png_ptr, png_const_sPLT_tp spalette)
          entrybuf[1] = (png_byte)ep[i].green;
          entrybuf[2] = (png_byte)ep[i].blue;
          entrybuf[3] = (png_byte)ep[i].alpha;
-         png_save_uint_16(entrybuf + 4, ep[i].frequency);
+         __kimtoy__png_save_uint_16(entrybuf + 4, ep[i].frequency);
       }
 
       else
       {
-         png_save_uint_16(entrybuf + 0, ep[i].red);
-         png_save_uint_16(entrybuf + 2, ep[i].green);
-         png_save_uint_16(entrybuf + 4, ep[i].blue);
-         png_save_uint_16(entrybuf + 6, ep[i].alpha);
-         png_save_uint_16(entrybuf + 8, ep[i].frequency);
+         __kimtoy__png_save_uint_16(entrybuf + 0, ep[i].red);
+         __kimtoy__png_save_uint_16(entrybuf + 2, ep[i].green);
+         __kimtoy__png_save_uint_16(entrybuf + 4, ep[i].blue);
+         __kimtoy__png_save_uint_16(entrybuf + 6, ep[i].alpha);
+         __kimtoy__png_save_uint_16(entrybuf + 8, ep[i].frequency);
       }
 
-      png_write_chunk_data(png_ptr, entrybuf, (png_size_t)entry_size);
+      __kimtoy__png_write_chunk_data(png_ptr, entrybuf, (png_size_t)entry_size);
    }
 #endif
 
-   png_write_chunk_end(png_ptr);
-   png_free(png_ptr, new_name);
+   __kimtoy__png_write_chunk_end(png_ptr);
+   __kimtoy__png_free(png_ptr, new_name);
 }
 #endif
 
 #ifdef PNG_WRITE_sBIT_SUPPORTED
 /* Write the sBIT chunk */
 void /* PRIVATE */
-png_write_sBIT(png_structp png_ptr, png_const_color_8p sbit, int color_type)
+__kimtoy__png_write_sBIT(png_structp png_ptr, png_const_color_8p sbit, int color_type)
 {
    png_byte buf[4];
    png_size_t size;
 
-   png_debug(1, "in png_write_sBIT");
+   png_debug(1, "in __kimtoy__png_write_sBIT");
 
    /* Make sure we don't depend upon the order of PNG_COLOR_8 */
    if (color_type & PNG_COLOR_MASK_COLOR)
@@ -1305,7 +1305,7 @@ png_write_sBIT(png_structp png_ptr, png_const_color_8p sbit, int color_type)
           sbit->green == 0 || sbit->green > maxbits ||
           sbit->blue == 0 || sbit->blue > maxbits)
       {
-         png_warning(png_ptr, "Invalid sBIT depth specified");
+         __kimtoy__png_warning(png_ptr, "Invalid sBIT depth specified");
          return;
       }
 
@@ -1319,7 +1319,7 @@ png_write_sBIT(png_structp png_ptr, png_const_color_8p sbit, int color_type)
    {
       if (sbit->gray == 0 || sbit->gray > png_ptr->usr_bit_depth)
       {
-         png_warning(png_ptr, "Invalid sBIT depth specified");
+         __kimtoy__png_warning(png_ptr, "Invalid sBIT depth specified");
          return;
       }
 
@@ -1331,21 +1331,21 @@ png_write_sBIT(png_structp png_ptr, png_const_color_8p sbit, int color_type)
    {
       if (sbit->alpha == 0 || sbit->alpha > png_ptr->usr_bit_depth)
       {
-         png_warning(png_ptr, "Invalid sBIT depth specified");
+         __kimtoy__png_warning(png_ptr, "Invalid sBIT depth specified");
          return;
       }
 
       buf[size++] = sbit->alpha;
    }
 
-   png_write_complete_chunk(png_ptr, png_sBIT, buf, size);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_sBIT, buf, size);
 }
 #endif
 
 #ifdef PNG_WRITE_cHRM_SUPPORTED
 /* Write the cHRM chunk */
 void /* PRIVATE */
-png_write_cHRM_fixed(png_structp png_ptr, png_fixed_point white_x,
+__kimtoy__png_write_cHRM_fixed(png_structp png_ptr, png_fixed_point white_x,
     png_fixed_point white_y, png_fixed_point red_x, png_fixed_point red_y,
     png_fixed_point green_x, png_fixed_point green_y, png_fixed_point blue_x,
     png_fixed_point blue_y)
@@ -1356,23 +1356,23 @@ png_write_cHRM_fixed(png_structp png_ptr, png_fixed_point white_x,
 
    /* Each value is saved in 1/100,000ths */
 #ifdef PNG_CHECK_cHRM_SUPPORTED
-   if (png_check_cHRM_fixed(png_ptr, white_x, white_y, red_x, red_y,
+   if (__kimtoy__png_check_cHRM_fixed(png_ptr, white_x, white_y, red_x, red_y,
        green_x, green_y, blue_x, blue_y))
 #endif
    {
-      png_save_uint_32(buf, (png_uint_32)white_x);
-      png_save_uint_32(buf + 4, (png_uint_32)white_y);
+      __kimtoy__png_save_uint_32(buf, (png_uint_32)white_x);
+      __kimtoy__png_save_uint_32(buf + 4, (png_uint_32)white_y);
 
-      png_save_uint_32(buf + 8, (png_uint_32)red_x);
-      png_save_uint_32(buf + 12, (png_uint_32)red_y);
+      __kimtoy__png_save_uint_32(buf + 8, (png_uint_32)red_x);
+      __kimtoy__png_save_uint_32(buf + 12, (png_uint_32)red_y);
 
-      png_save_uint_32(buf + 16, (png_uint_32)green_x);
-      png_save_uint_32(buf + 20, (png_uint_32)green_y);
+      __kimtoy__png_save_uint_32(buf + 16, (png_uint_32)green_x);
+      __kimtoy__png_save_uint_32(buf + 20, (png_uint_32)green_y);
 
-      png_save_uint_32(buf + 24, (png_uint_32)blue_x);
-      png_save_uint_32(buf + 28, (png_uint_32)blue_y);
+      __kimtoy__png_save_uint_32(buf + 24, (png_uint_32)blue_x);
+      __kimtoy__png_save_uint_32(buf + 28, (png_uint_32)blue_y);
 
-      png_write_complete_chunk(png_ptr, png_cHRM, buf, (png_size_t)32);
+      __kimtoy__png_write_complete_chunk(png_ptr, png_cHRM, buf, (png_size_t)32);
    }
 }
 #endif
@@ -1380,23 +1380,23 @@ png_write_cHRM_fixed(png_structp png_ptr, png_fixed_point white_x,
 #ifdef PNG_WRITE_tRNS_SUPPORTED
 /* Write the tRNS chunk */
 void /* PRIVATE */
-png_write_tRNS(png_structp png_ptr, png_const_bytep trans_alpha,
+__kimtoy__png_write_tRNS(png_structp png_ptr, png_const_bytep trans_alpha,
     png_const_color_16p tran, int num_trans, int color_type)
 {
    png_byte buf[6];
 
-   png_debug(1, "in png_write_tRNS");
+   png_debug(1, "in __kimtoy__png_write_tRNS");
 
    if (color_type == PNG_COLOR_TYPE_PALETTE)
    {
       if (num_trans <= 0 || num_trans > (int)png_ptr->num_palette)
       {
-         png_warning(png_ptr, "Invalid number of transparent colors specified");
+         __kimtoy__png_warning(png_ptr, "Invalid number of transparent colors specified");
          return;
       }
 
       /* Write the chunk out as it is */
-      png_write_complete_chunk(png_ptr, png_tRNS, trans_alpha, (png_size_t)num_trans);
+      __kimtoy__png_write_complete_chunk(png_ptr, png_tRNS, trans_alpha, (png_size_t)num_trans);
    }
 
    else if (color_type == PNG_COLOR_TYPE_GRAY)
@@ -1404,39 +1404,39 @@ png_write_tRNS(png_structp png_ptr, png_const_bytep trans_alpha,
       /* One 16 bit value */
       if (tran->gray >= (1 << png_ptr->bit_depth))
       {
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
              "Ignoring attempt to write tRNS chunk out-of-range for bit_depth");
 
          return;
       }
 
-      png_save_uint_16(buf, tran->gray);
-      png_write_complete_chunk(png_ptr, png_tRNS, buf, (png_size_t)2);
+      __kimtoy__png_save_uint_16(buf, tran->gray);
+      __kimtoy__png_write_complete_chunk(png_ptr, png_tRNS, buf, (png_size_t)2);
    }
 
    else if (color_type == PNG_COLOR_TYPE_RGB)
    {
       /* Three 16 bit values */
-      png_save_uint_16(buf, tran->red);
-      png_save_uint_16(buf + 2, tran->green);
-      png_save_uint_16(buf + 4, tran->blue);
+      __kimtoy__png_save_uint_16(buf, tran->red);
+      __kimtoy__png_save_uint_16(buf + 2, tran->green);
+      __kimtoy__png_save_uint_16(buf + 4, tran->blue);
 #ifdef PNG_WRITE_16BIT_SUPPORTED
       if (png_ptr->bit_depth == 8 && (buf[0] | buf[2] | buf[4]))
 #else
       if (buf[0] | buf[2] | buf[4])
 #endif
       {
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
            "Ignoring attempt to write 16-bit tRNS chunk when bit_depth is 8");
          return;
       }
 
-      png_write_complete_chunk(png_ptr, png_tRNS, buf, (png_size_t)6);
+      __kimtoy__png_write_complete_chunk(png_ptr, png_tRNS, buf, (png_size_t)6);
    }
 
    else
    {
-      png_warning(png_ptr, "Can't write tRNS with an alpha channel");
+      __kimtoy__png_warning(png_ptr, "Can't write tRNS with an alpha channel");
    }
 }
 #endif
@@ -1444,11 +1444,11 @@ png_write_tRNS(png_structp png_ptr, png_const_bytep trans_alpha,
 #ifdef PNG_WRITE_bKGD_SUPPORTED
 /* Write the background chunk */
 void /* PRIVATE */
-png_write_bKGD(png_structp png_ptr, png_const_color_16p back, int color_type)
+__kimtoy__png_write_bKGD(png_structp png_ptr, png_const_color_16p back, int color_type)
 {
    png_byte buf[6];
 
-   png_debug(1, "in png_write_bKGD");
+   png_debug(1, "in __kimtoy__png_write_bKGD");
 
    if (color_type == PNG_COLOR_TYPE_PALETTE)
    {
@@ -1459,46 +1459,46 @@ png_write_bKGD(png_structp png_ptr, png_const_color_16p back, int color_type)
 #endif
          back->index >= png_ptr->num_palette)
       {
-         png_warning(png_ptr, "Invalid background palette index");
+         __kimtoy__png_warning(png_ptr, "Invalid background palette index");
          return;
       }
 
       buf[0] = back->index;
-      png_write_complete_chunk(png_ptr, png_bKGD, buf, (png_size_t)1);
+      __kimtoy__png_write_complete_chunk(png_ptr, png_bKGD, buf, (png_size_t)1);
    }
 
    else if (color_type & PNG_COLOR_MASK_COLOR)
    {
-      png_save_uint_16(buf, back->red);
-      png_save_uint_16(buf + 2, back->green);
-      png_save_uint_16(buf + 4, back->blue);
+      __kimtoy__png_save_uint_16(buf, back->red);
+      __kimtoy__png_save_uint_16(buf + 2, back->green);
+      __kimtoy__png_save_uint_16(buf + 4, back->blue);
 #ifdef PNG_WRITE_16BIT_SUPPORTED
       if (png_ptr->bit_depth == 8 && (buf[0] | buf[2] | buf[4]))
 #else
       if (buf[0] | buf[2] | buf[4])
 #endif
       {
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
              "Ignoring attempt to write 16-bit bKGD chunk when bit_depth is 8");
 
          return;
       }
 
-      png_write_complete_chunk(png_ptr, png_bKGD, buf, (png_size_t)6);
+      __kimtoy__png_write_complete_chunk(png_ptr, png_bKGD, buf, (png_size_t)6);
    }
 
    else
    {
       if (back->gray >= (1 << png_ptr->bit_depth))
       {
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
              "Ignoring attempt to write bKGD chunk out-of-range for bit_depth");
 
          return;
       }
 
-      png_save_uint_16(buf, back->gray);
-      png_write_complete_chunk(png_ptr, png_bKGD, buf, (png_size_t)2);
+      __kimtoy__png_save_uint_16(buf, back->gray);
+      __kimtoy__png_write_complete_chunk(png_ptr, png_bKGD, buf, (png_size_t)2);
    }
 }
 #endif
@@ -1506,31 +1506,31 @@ png_write_bKGD(png_structp png_ptr, png_const_color_16p back, int color_type)
 #ifdef PNG_WRITE_hIST_SUPPORTED
 /* Write the histogram */
 void /* PRIVATE */
-png_write_hIST(png_structp png_ptr, png_const_uint_16p hist, int num_hist)
+__kimtoy__png_write_hIST(png_structp png_ptr, png_const_uint_16p hist, int num_hist)
 {
    int i;
    png_byte buf[3];
 
-   png_debug(1, "in png_write_hIST");
+   png_debug(1, "in __kimtoy__png_write_hIST");
 
    if (num_hist > (int)png_ptr->num_palette)
    {
       png_debug2(3, "num_hist = %d, num_palette = %d", num_hist,
           png_ptr->num_palette);
 
-      png_warning(png_ptr, "Invalid number of histogram entries specified");
+      __kimtoy__png_warning(png_ptr, "Invalid number of histogram entries specified");
       return;
    }
 
-   png_write_chunk_header(png_ptr, png_hIST, (png_uint_32)(num_hist * 2));
+   __kimtoy__png_write_chunk_header(png_ptr, png_hIST, (png_uint_32)(num_hist * 2));
 
    for (i = 0; i < num_hist; i++)
    {
-      png_save_uint_16(buf, hist[i]);
-      png_write_chunk_data(png_ptr, buf, (png_size_t)2);
+      __kimtoy__png_save_uint_16(buf, hist[i]);
+      __kimtoy__png_write_chunk_data(png_ptr, buf, (png_size_t)2);
    }
 
-   png_write_chunk_end(png_ptr);
+   __kimtoy__png_write_chunk_end(png_ptr);
 }
 #endif
 
@@ -1547,7 +1547,7 @@ png_write_hIST(png_structp png_ptr, png_const_uint_16p hist, int num_hist)
  * static keywords without having to have duplicate copies of the strings.
  */
 png_size_t /* PRIVATE */
-png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
+__kimtoy__png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
 {
    png_size_t key_len;
    png_const_charp ikp;
@@ -1555,23 +1555,23 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
    int kflag;
    int kwarn=0;
 
-   png_debug(1, "in png_check_keyword");
+   png_debug(1, "in __kimtoy__png_check_keyword");
 
    *new_key = NULL;
 
    if (key == NULL || (key_len = png_strlen(key)) == 0)
    {
-      png_warning(png_ptr, "zero length keyword");
+      __kimtoy__png_warning(png_ptr, "zero length keyword");
       return ((png_size_t)0);
    }
 
    png_debug1(2, "Keyword to be checked is '%s'", key);
 
-   *new_key = (png_charp)png_malloc_warn(png_ptr, (png_uint_32)(key_len + 2));
+   *new_key = (png_charp)__kimtoy__png_malloc_warn(png_ptr, (png_uint_32)(key_len + 2));
 
    if (*new_key == NULL)
    {
-      png_warning(png_ptr, "Out of memory while procesing keyword");
+      __kimtoy__png_warning(png_ptr, "Out of memory while procesing keyword");
       return ((png_size_t)0);
    }
 
@@ -1583,9 +1583,9 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
       {
          PNG_WARNING_PARAMETERS(p)
 
-         png_warning_parameter_unsigned(p, 1, PNG_NUMBER_FORMAT_02x,
+         __kimtoy__png_warning_parameter_unsigned(p, 1, PNG_NUMBER_FORMAT_02x,
             (png_byte)*ikp);
-         png_formatted_warning(png_ptr, p, "invalid keyword character 0x@1");
+         __kimtoy__png_formatted_warning(png_ptr, p, "invalid keyword character 0x@1");
          *dp = ' ';
       }
 
@@ -1600,7 +1600,7 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
    kp = *new_key + key_len - 1;
    if (*kp == ' ')
    {
-      png_warning(png_ptr, "trailing spaces removed from keyword");
+      __kimtoy__png_warning(png_ptr, "trailing spaces removed from keyword");
 
       while (*kp == ' ')
       {
@@ -1613,7 +1613,7 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
    kp = *new_key;
    if (*kp == ' ')
    {
-      png_warning(png_ptr, "leading spaces removed from keyword");
+      __kimtoy__png_warning(png_ptr, "leading spaces removed from keyword");
 
       while (*kp == ' ')
       {
@@ -1647,17 +1647,17 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
    }
    *dp = '\0';
    if (kwarn)
-      png_warning(png_ptr, "extra interior spaces removed from keyword");
+      __kimtoy__png_warning(png_ptr, "extra interior spaces removed from keyword");
 
    if (key_len == 0)
    {
-      png_free(png_ptr, *new_key);
-      png_warning(png_ptr, "Zero length keyword");
+      __kimtoy__png_free(png_ptr, *new_key);
+      __kimtoy__png_warning(png_ptr, "Zero length keyword");
    }
 
    if (key_len > 79)
    {
-      png_warning(png_ptr, "keyword length must be 1 - 79 characters");
+      __kimtoy__png_warning(png_ptr, "keyword length must be 1 - 79 characters");
       (*new_key)[79] = '\0';
       key_len = 79;
    }
@@ -1669,15 +1669,15 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
 #ifdef PNG_WRITE_tEXt_SUPPORTED
 /* Write a tEXt chunk */
 void /* PRIVATE */
-png_write_tEXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
+__kimtoy__png_write_tEXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
     png_size_t text_len)
 {
    png_size_t key_len;
    png_charp new_key;
 
-   png_debug(1, "in png_write_tEXt");
+   png_debug(1, "in __kimtoy__png_write_tEXt");
 
-   if ((key_len = png_check_keyword(png_ptr, key, &new_key))==0)
+   if ((key_len = __kimtoy__png_check_keyword(png_ptr, key, &new_key))==0)
       return;
 
    if (text == NULL || *text == '\0')
@@ -1687,7 +1687,7 @@ png_write_tEXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
       text_len = png_strlen(text);
 
    /* Make sure we include the 0 after the key */
-   png_write_chunk_header(png_ptr, png_tEXt,
+   __kimtoy__png_write_chunk_header(png_ptr, png_tEXt,
        (png_uint_32)(key_len + text_len + 1));
    /*
     * We leave it to the application to meet PNG-1.0 requirements on the
@@ -1695,22 +1695,22 @@ png_write_tEXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
     * any non-Latin-1 characters except for NEWLINE.  ISO PNG will forbid them.
     * The NUL character is forbidden by PNG-1.0 through PNG-1.2 and ISO PNG.
     */
-   png_write_chunk_data(png_ptr, (png_bytep)new_key,
+   __kimtoy__png_write_chunk_data(png_ptr, (png_bytep)new_key,
        (png_size_t)(key_len + 1));
 
    if (text_len)
-      png_write_chunk_data(png_ptr, (png_const_bytep)text,
+      __kimtoy__png_write_chunk_data(png_ptr, (png_const_bytep)text,
           (png_size_t)text_len);
 
-   png_write_chunk_end(png_ptr);
-   png_free(png_ptr, new_key);
+   __kimtoy__png_write_chunk_end(png_ptr);
+   __kimtoy__png_free(png_ptr, new_key);
 }
 #endif
 
 #ifdef PNG_WRITE_zTXt_SUPPORTED
 /* Write a compressed text chunk */
 void /* PRIVATE */
-png_write_zTXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
+__kimtoy__png_write_zTXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
     png_size_t text_len, int compression)
 {
    png_size_t key_len;
@@ -1718,7 +1718,7 @@ png_write_zTXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
    png_charp new_key;
    compression_state comp;
 
-   png_debug(1, "in png_write_zTXt");
+   png_debug(1, "in __kimtoy__png_write_zTXt");
 
    comp.num_output_ptr = 0;
    comp.max_output_ptr = 0;
@@ -1726,53 +1726,53 @@ png_write_zTXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
    comp.input = NULL;
    comp.input_len = 0;
 
-   if ((key_len = png_check_keyword(png_ptr, key, &new_key)) == 0)
+   if ((key_len = __kimtoy__png_check_keyword(png_ptr, key, &new_key)) == 0)
    {
-      png_free(png_ptr, new_key);
+      __kimtoy__png_free(png_ptr, new_key);
       return;
    }
 
    if (text == NULL || *text == '\0' || compression==PNG_TEXT_COMPRESSION_NONE)
    {
-      png_write_tEXt(png_ptr, new_key, text, (png_size_t)0);
-      png_free(png_ptr, new_key);
+      __kimtoy__png_write_tEXt(png_ptr, new_key, text, (png_size_t)0);
+      __kimtoy__png_free(png_ptr, new_key);
       return;
    }
 
    text_len = png_strlen(text);
 
    /* Compute the compressed data; do it now for the length */
-   text_len = png_text_compress(png_ptr, text, text_len, compression,
+   text_len = __kimtoy__png_text_compress(png_ptr, text, text_len, compression,
        &comp);
 
    /* Write start of chunk */
-   png_write_chunk_header(png_ptr, png_zTXt,
+   __kimtoy__png_write_chunk_header(png_ptr, png_zTXt,
        (png_uint_32)(key_len+text_len + 2));
 
    /* Write key */
-   png_write_chunk_data(png_ptr, (png_bytep)new_key,
+   __kimtoy__png_write_chunk_data(png_ptr, (png_bytep)new_key,
        (png_size_t)(key_len + 1));
 
-   png_free(png_ptr, new_key);
+   __kimtoy__png_free(png_ptr, new_key);
 
    buf = (png_byte)compression;
 
    /* Write compression */
-   png_write_chunk_data(png_ptr, &buf, (png_size_t)1);
+   __kimtoy__png_write_chunk_data(png_ptr, &buf, (png_size_t)1);
 
    /* Write the compressed data */
    comp.input_len = text_len;
-   png_write_compressed_data_out(png_ptr, &comp);
+   __kimtoy__png_write_compressed_data_out(png_ptr, &comp);
 
    /* Close the chunk */
-   png_write_chunk_end(png_ptr);
+   __kimtoy__png_write_chunk_end(png_ptr);
 }
 #endif
 
 #ifdef PNG_WRITE_iTXt_SUPPORTED
 /* Write an iTXt chunk */
 void /* PRIVATE */
-png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
+__kimtoy__png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
     png_const_charp lang, png_const_charp lang_key, png_const_charp text)
 {
    png_size_t lang_len, key_len, lang_key_len, text_len;
@@ -1781,19 +1781,19 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
    png_byte cbuf[2];
    compression_state comp;
 
-   png_debug(1, "in png_write_iTXt");
+   png_debug(1, "in __kimtoy__png_write_iTXt");
 
    comp.num_output_ptr = 0;
    comp.max_output_ptr = 0;
    comp.output_ptr = NULL;
    comp.input = NULL;
 
-   if ((key_len = png_check_keyword(png_ptr, key, &new_key)) == 0)
+   if ((key_len = __kimtoy__png_check_keyword(png_ptr, key, &new_key)) == 0)
       return;
 
-   if ((lang_len = png_check_keyword(png_ptr, lang, &new_lang)) == 0)
+   if ((lang_len = __kimtoy__png_check_keyword(png_ptr, lang, &new_lang)) == 0)
    {
-      png_warning(png_ptr, "Empty language field in iTXt chunk");
+      __kimtoy__png_warning(png_ptr, "Empty language field in iTXt chunk");
       new_lang = NULL;
       lang_len = 0;
    }
@@ -1811,7 +1811,7 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
       text_len = png_strlen(text);
 
    /* Compute the compressed data; do it now for the length */
-   text_len = png_text_compress(png_ptr, text, text_len, compression - 2,
+   text_len = __kimtoy__png_text_compress(png_ptr, text, text_len, compression - 2,
        &comp);
 
 
@@ -1819,7 +1819,7 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
     * and the NULs after the key, lang, and lang_key parts
     */
 
-   png_write_chunk_header(png_ptr, png_iTXt, (png_uint_32)(
+   __kimtoy__png_write_chunk_header(png_ptr, png_iTXt, (png_uint_32)(
         5 /* comp byte, comp flag, terminators for key, lang and lang_key */
         + key_len
         + lang_len
@@ -1831,7 +1831,7 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
     * any non-Latin-1 characters except for NEWLINE.  ISO PNG will forbid them.
     * The NUL character is forbidden by PNG-1.0 through PNG-1.2 and ISO PNG.
     */
-   png_write_chunk_data(png_ptr, (png_bytep)new_key, (png_size_t)(key_len + 1));
+   __kimtoy__png_write_chunk_data(png_ptr, (png_bytep)new_key, (png_size_t)(key_len + 1));
 
    /* Set the compression flag */
    if (compression == PNG_ITXT_COMPRESSION_NONE ||
@@ -1844,48 +1844,48 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
    /* Set the compression method */
    cbuf[1] = 0;
 
-   png_write_chunk_data(png_ptr, cbuf, (png_size_t)2);
+   __kimtoy__png_write_chunk_data(png_ptr, cbuf, (png_size_t)2);
 
    cbuf[0] = 0;
-   png_write_chunk_data(png_ptr, (new_lang ? (png_const_bytep)new_lang : cbuf),
+   __kimtoy__png_write_chunk_data(png_ptr, (new_lang ? (png_const_bytep)new_lang : cbuf),
        (png_size_t)(lang_len + 1));
 
-   png_write_chunk_data(png_ptr, (lang_key ? (png_const_bytep)lang_key : cbuf),
+   __kimtoy__png_write_chunk_data(png_ptr, (lang_key ? (png_const_bytep)lang_key : cbuf),
        (png_size_t)(lang_key_len + 1));
 
-   png_write_compressed_data_out(png_ptr, &comp);
+   __kimtoy__png_write_compressed_data_out(png_ptr, &comp);
 
-   png_write_chunk_end(png_ptr);
+   __kimtoy__png_write_chunk_end(png_ptr);
 
-   png_free(png_ptr, new_key);
-   png_free(png_ptr, new_lang);
+   __kimtoy__png_free(png_ptr, new_key);
+   __kimtoy__png_free(png_ptr, new_lang);
 }
 #endif
 
 #ifdef PNG_WRITE_oFFs_SUPPORTED
 /* Write the oFFs chunk */
 void /* PRIVATE */
-png_write_oFFs(png_structp png_ptr, png_int_32 x_offset, png_int_32 y_offset,
+__kimtoy__png_write_oFFs(png_structp png_ptr, png_int_32 x_offset, png_int_32 y_offset,
     int unit_type)
 {
    png_byte buf[9];
 
-   png_debug(1, "in png_write_oFFs");
+   png_debug(1, "in __kimtoy__png_write_oFFs");
 
    if (unit_type >= PNG_OFFSET_LAST)
-      png_warning(png_ptr, "Unrecognized unit type for oFFs chunk");
+      __kimtoy__png_warning(png_ptr, "Unrecognized unit type for oFFs chunk");
 
-   png_save_int_32(buf, x_offset);
-   png_save_int_32(buf + 4, y_offset);
+   __kimtoy__png_save_int_32(buf, x_offset);
+   __kimtoy__png_save_int_32(buf + 4, y_offset);
    buf[8] = (png_byte)unit_type;
 
-   png_write_complete_chunk(png_ptr, png_oFFs, buf, (png_size_t)9);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_oFFs, buf, (png_size_t)9);
 }
 #endif
 #ifdef PNG_WRITE_pCAL_SUPPORTED
 /* Write the pCAL chunk (described in the PNG extensions document) */
 void /* PRIVATE */
-png_write_pCAL(png_structp png_ptr, png_charp purpose, png_int_32 X0,
+__kimtoy__png_write_pCAL(png_structp png_ptr, png_charp purpose, png_int_32 X0,
     png_int_32 X1, int type, int nparams, png_const_charp units,
     png_charpp params)
 {
@@ -1895,18 +1895,18 @@ png_write_pCAL(png_structp png_ptr, png_charp purpose, png_int_32 X0,
    png_charp new_purpose;
    int i;
 
-   png_debug1(1, "in png_write_pCAL (%d parameters)", nparams);
+   png_debug1(1, "in __kimtoy__png_write_pCAL (%d parameters)", nparams);
 
    if (type >= PNG_EQUATION_LAST)
-      png_warning(png_ptr, "Unrecognized equation type for pCAL chunk");
+      __kimtoy__png_warning(png_ptr, "Unrecognized equation type for pCAL chunk");
 
-   purpose_len = png_check_keyword(png_ptr, purpose, &new_purpose) + 1;
+   purpose_len = __kimtoy__png_check_keyword(png_ptr, purpose, &new_purpose) + 1;
    png_debug1(3, "pCAL purpose length = %d", (int)purpose_len);
    units_len = png_strlen(units) + (nparams == 0 ? 0 : 1);
    png_debug1(3, "pCAL units length = %d", (int)units_len);
    total_len = purpose_len + units_len + 10;
 
-   params_len = (png_size_tp)png_malloc(png_ptr,
+   params_len = (png_size_tp)__kimtoy__png_malloc(png_ptr,
        (png_alloc_size_t)(nparams * png_sizeof(png_size_t)));
 
    /* Find the length of each parameter, making sure we don't count the
@@ -1921,37 +1921,37 @@ png_write_pCAL(png_structp png_ptr, png_charp purpose, png_int_32 X0,
    }
 
    png_debug1(3, "pCAL total length = %d", (int)total_len);
-   png_write_chunk_header(png_ptr, png_pCAL, (png_uint_32)total_len);
-   png_write_chunk_data(png_ptr, (png_const_bytep)new_purpose, purpose_len);
-   png_save_int_32(buf, X0);
-   png_save_int_32(buf + 4, X1);
+   __kimtoy__png_write_chunk_header(png_ptr, png_pCAL, (png_uint_32)total_len);
+   __kimtoy__png_write_chunk_data(png_ptr, (png_const_bytep)new_purpose, purpose_len);
+   __kimtoy__png_save_int_32(buf, X0);
+   __kimtoy__png_save_int_32(buf + 4, X1);
    buf[8] = (png_byte)type;
    buf[9] = (png_byte)nparams;
-   png_write_chunk_data(png_ptr, buf, (png_size_t)10);
-   png_write_chunk_data(png_ptr, (png_const_bytep)units, (png_size_t)units_len);
+   __kimtoy__png_write_chunk_data(png_ptr, buf, (png_size_t)10);
+   __kimtoy__png_write_chunk_data(png_ptr, (png_const_bytep)units, (png_size_t)units_len);
 
-   png_free(png_ptr, new_purpose);
+   __kimtoy__png_free(png_ptr, new_purpose);
 
    for (i = 0; i < nparams; i++)
    {
-      png_write_chunk_data(png_ptr, (png_const_bytep)params[i], params_len[i]);
+      __kimtoy__png_write_chunk_data(png_ptr, (png_const_bytep)params[i], params_len[i]);
    }
 
-   png_free(png_ptr, params_len);
-   png_write_chunk_end(png_ptr);
+   __kimtoy__png_free(png_ptr, params_len);
+   __kimtoy__png_write_chunk_end(png_ptr);
 }
 #endif
 
 #ifdef PNG_WRITE_sCAL_SUPPORTED
 /* Write the sCAL chunk */
 void /* PRIVATE */
-png_write_sCAL_s(png_structp png_ptr, int unit, png_const_charp width,
+__kimtoy__png_write_sCAL_s(png_structp png_ptr, int unit, png_const_charp width,
     png_const_charp height)
 {
    png_byte buf[64];
    png_size_t wlen, hlen, total_len;
 
-   png_debug(1, "in png_write_sCAL_s");
+   png_debug(1, "in __kimtoy__png_write_sCAL_s");
 
    wlen = png_strlen(width);
    hlen = png_strlen(height);
@@ -1959,7 +1959,7 @@ png_write_sCAL_s(png_structp png_ptr, int unit, png_const_charp width,
 
    if (total_len > 64)
    {
-      png_warning(png_ptr, "Can't write sCAL (buffer too small)");
+      __kimtoy__png_warning(png_ptr, "Can't write sCAL (buffer too small)");
       return;
    }
 
@@ -1968,115 +1968,115 @@ png_write_sCAL_s(png_structp png_ptr, int unit, png_const_charp width,
    png_memcpy(buf + wlen + 2, height, hlen);  /* Do NOT append the '\0' here */
 
    png_debug1(3, "sCAL total length = %u", (unsigned int)total_len);
-   png_write_complete_chunk(png_ptr, png_sCAL, buf, total_len);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_sCAL, buf, total_len);
 }
 #endif
 
 #ifdef PNG_WRITE_pHYs_SUPPORTED
 /* Write the pHYs chunk */
 void /* PRIVATE */
-png_write_pHYs(png_structp png_ptr, png_uint_32 x_pixels_per_unit,
+__kimtoy__png_write_pHYs(png_structp png_ptr, png_uint_32 x_pixels_per_unit,
     png_uint_32 y_pixels_per_unit,
     int unit_type)
 {
    png_byte buf[9];
 
-   png_debug(1, "in png_write_pHYs");
+   png_debug(1, "in __kimtoy__png_write_pHYs");
 
    if (unit_type >= PNG_RESOLUTION_LAST)
-      png_warning(png_ptr, "Unrecognized unit type for pHYs chunk");
+      __kimtoy__png_warning(png_ptr, "Unrecognized unit type for pHYs chunk");
 
-   png_save_uint_32(buf, x_pixels_per_unit);
-   png_save_uint_32(buf + 4, y_pixels_per_unit);
+   __kimtoy__png_save_uint_32(buf, x_pixels_per_unit);
+   __kimtoy__png_save_uint_32(buf + 4, y_pixels_per_unit);
    buf[8] = (png_byte)unit_type;
 
-   png_write_complete_chunk(png_ptr, png_pHYs, buf, (png_size_t)9);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_pHYs, buf, (png_size_t)9);
 }
 #endif
 
 #ifdef PNG_WRITE_tIME_SUPPORTED
-/* Write the tIME chunk.  Use either png_convert_from_struct_tm()
- * or png_convert_from_time_t(), or fill in the structure yourself.
+/* Write the tIME chunk.  Use either __kimtoy__png_convert_from_struct_tm()
+ * or __kimtoy__png_convert_from_time_t(), or fill in the structure yourself.
  */
 void /* PRIVATE */
-png_write_tIME(png_structp png_ptr, png_const_timep mod_time)
+__kimtoy__png_write_tIME(png_structp png_ptr, png_const_timep mod_time)
 {
    png_byte buf[7];
 
-   png_debug(1, "in png_write_tIME");
+   png_debug(1, "in __kimtoy__png_write_tIME");
 
    if (mod_time->month  > 12 || mod_time->month  < 1 ||
        mod_time->day    > 31 || mod_time->day    < 1 ||
        mod_time->hour   > 23 || mod_time->second > 60)
    {
-      png_warning(png_ptr, "Invalid time specified for tIME chunk");
+      __kimtoy__png_warning(png_ptr, "Invalid time specified for tIME chunk");
       return;
    }
 
-   png_save_uint_16(buf, mod_time->year);
+   __kimtoy__png_save_uint_16(buf, mod_time->year);
    buf[2] = mod_time->month;
    buf[3] = mod_time->day;
    buf[4] = mod_time->hour;
    buf[5] = mod_time->minute;
    buf[6] = mod_time->second;
 
-   png_write_complete_chunk(png_ptr, png_tIME, buf, (png_size_t)7);
+   __kimtoy__png_write_complete_chunk(png_ptr, png_tIME, buf, (png_size_t)7);
 }
 #endif
 
 #ifdef PNG_WRITE_APNG_SUPPORTED
 void /* PRIVATE */
-png_write_acTL(png_structp png_ptr,
+__kimtoy__png_write_acTL(png_structp png_ptr,
    png_uint_32 num_frames, png_uint_32 num_plays)
 {
     png_byte data[16];
     
-    png_debug(1, "in png_write_acTL");
+    png_debug(1, "in __kimtoy__png_write_acTL");
     
     png_ptr->num_frames_to_write = num_frames;
     
     if (png_ptr->apng_flags & PNG_FIRST_FRAME_HIDDEN)
         num_frames--;
     
-    png_save_uint_32(data, num_frames);
-    png_save_uint_32(data + 4, num_plays);
+    __kimtoy__png_save_uint_32(data, num_frames);
+    __kimtoy__png_save_uint_32(data + 4, num_plays);
     
-    png_write_complete_chunk(png_ptr, png_acTL, data, (png_size_t)8);
+    __kimtoy__png_write_complete_chunk(png_ptr, png_acTL, data, (png_size_t)8);
 }
 
 void /* PRIVATE */
-png_write_fcTL(png_structp png_ptr, png_uint_32 width, png_uint_32 height, 
+__kimtoy__png_write_fcTL(png_structp png_ptr, png_uint_32 width, png_uint_32 height, 
     png_uint_32 x_offset, png_uint_32 y_offset,
     png_uint_16 delay_num, png_uint_16 delay_den, png_byte dispose_op, 
     png_byte blend_op)
 {
     png_byte data[26];
     
-    png_debug(1, "in png_write_fcTL");
+    png_debug(1, "in __kimtoy__png_write_fcTL");
     
     if (png_ptr->num_frames_written == 0 && (x_offset != 0 || y_offset != 0))
-        png_error(png_ptr, "x and/or y offset for the first frame aren't 0");
+        __kimtoy__png_error(png_ptr, "x and/or y offset for the first frame aren't 0");
     if (png_ptr->num_frames_written == 0 && 
         (width != png_ptr->first_frame_width || 
          height != png_ptr->first_frame_height))
-        png_error(png_ptr, "width and/or height in the first frame's fcTL "
+        __kimtoy__png_error(png_ptr, "width and/or height in the first frame's fcTL "
                            "don't match the ones in IHDR");
     
     /* more error checking */
-    png_ensure_fcTL_is_valid(png_ptr, width, height, x_offset, y_offset, 
+    __kimtoy__png_ensure_fcTL_is_valid(png_ptr, width, height, x_offset, y_offset, 
                              delay_num, delay_den, dispose_op, blend_op);
     
-    png_save_uint_32(data, png_ptr->next_seq_num);
-    png_save_uint_32(data + 4, width);
-    png_save_uint_32(data + 8, height);
-    png_save_uint_32(data + 12, x_offset);
-    png_save_uint_32(data + 16, y_offset);
-    png_save_uint_16(data + 20, delay_num);
-    png_save_uint_16(data + 22, delay_den);
+    __kimtoy__png_save_uint_32(data, png_ptr->next_seq_num);
+    __kimtoy__png_save_uint_32(data + 4, width);
+    __kimtoy__png_save_uint_32(data + 8, height);
+    __kimtoy__png_save_uint_32(data + 12, x_offset);
+    __kimtoy__png_save_uint_32(data + 16, y_offset);
+    __kimtoy__png_save_uint_16(data + 20, delay_num);
+    __kimtoy__png_save_uint_16(data + 22, delay_den);
     data[24] = dispose_op;
     data[25] = blend_op;
     
-    png_write_complete_chunk(png_ptr, png_fcTL, data, (png_size_t)26);
+    __kimtoy__png_write_complete_chunk(png_ptr, png_fcTL, data, (png_size_t)26);
     
     png_ptr->next_seq_num++;
 }
@@ -2084,7 +2084,7 @@ png_write_fcTL(png_structp png_ptr, png_uint_32 width, png_uint_32 height,
 
 /* Initializes the row writing capability of libpng */
 void /* PRIVATE */
-png_write_start_row(png_structp png_ptr)
+__kimtoy__png_write_start_row(png_structp png_ptr)
 {
 #ifdef PNG_WRITE_INTERLACING_SUPPORTED
    /* Arrays to facilitate easy interlacing - use pass (0 - 6) as index */
@@ -2105,7 +2105,7 @@ png_write_start_row(png_structp png_ptr)
    png_alloc_size_t buf_size;
    int usr_pixel_depth;
 
-   png_debug(1, "in png_write_start_row");
+   png_debug(1, "in __kimtoy__png_write_start_row");
 
    usr_pixel_depth = png_ptr->usr_channels * png_ptr->usr_bit_depth;
    buf_size = PNG_ROWBYTES(usr_pixel_depth, png_ptr->width) + 1;
@@ -2115,7 +2115,7 @@ png_write_start_row(png_structp png_ptr)
    png_ptr->maximum_pixel_depth = (png_byte)usr_pixel_depth;
 
    /* Set up row buffer */
-   png_ptr->row_buf = (png_bytep)png_malloc(png_ptr, buf_size);
+   png_ptr->row_buf = (png_bytep)__kimtoy__png_malloc(png_ptr, buf_size);
 
    png_ptr->row_buf[0] = PNG_FILTER_VALUE_NONE;
 
@@ -2123,7 +2123,7 @@ png_write_start_row(png_structp png_ptr)
    /* Set up filtering buffer, if using this filter */
    if (png_ptr->do_filter & PNG_FILTER_SUB)
    {
-      png_ptr->sub_row = (png_bytep)png_malloc(png_ptr, png_ptr->rowbytes + 1);
+      png_ptr->sub_row = (png_bytep)__kimtoy__png_malloc(png_ptr, png_ptr->rowbytes + 1);
 
       png_ptr->sub_row[0] = PNG_FILTER_VALUE_SUB;
    }
@@ -2132,11 +2132,11 @@ png_write_start_row(png_structp png_ptr)
    if (png_ptr->do_filter & (PNG_FILTER_AVG | PNG_FILTER_UP | PNG_FILTER_PAETH))
    {
       /* Set up previous row buffer */
-      png_ptr->prev_row = (png_bytep)png_calloc(png_ptr, buf_size);
+      png_ptr->prev_row = (png_bytep)__kimtoy__png_calloc(png_ptr, buf_size);
 
       if (png_ptr->do_filter & PNG_FILTER_UP)
       {
-         png_ptr->up_row = (png_bytep)png_malloc(png_ptr,
+         png_ptr->up_row = (png_bytep)__kimtoy__png_malloc(png_ptr,
             png_ptr->rowbytes + 1);
 
          png_ptr->up_row[0] = PNG_FILTER_VALUE_UP;
@@ -2144,7 +2144,7 @@ png_write_start_row(png_structp png_ptr)
 
       if (png_ptr->do_filter & PNG_FILTER_AVG)
       {
-         png_ptr->avg_row = (png_bytep)png_malloc(png_ptr,
+         png_ptr->avg_row = (png_bytep)__kimtoy__png_malloc(png_ptr,
              png_ptr->rowbytes + 1);
 
          png_ptr->avg_row[0] = PNG_FILTER_VALUE_AVG;
@@ -2152,7 +2152,7 @@ png_write_start_row(png_structp png_ptr)
 
       if (png_ptr->do_filter & PNG_FILTER_PAETH)
       {
-         png_ptr->paeth_row = (png_bytep)png_malloc(png_ptr,
+         png_ptr->paeth_row = (png_bytep)__kimtoy__png_malloc(png_ptr,
              png_ptr->rowbytes + 1);
 
          png_ptr->paeth_row[0] = PNG_FILTER_VALUE_PAETH;
@@ -2187,14 +2187,14 @@ png_write_start_row(png_structp png_ptr)
       png_ptr->usr_width = png_ptr->width;
    }
 
-   png_zlib_claim(png_ptr, PNG_ZLIB_FOR_IDAT);
+   __kimtoy__png_zlib_claim(png_ptr, PNG_ZLIB_FOR_IDAT);
    png_ptr->zstream.avail_out = (uInt)png_ptr->zbuf_size;
    png_ptr->zstream.next_out = png_ptr->zbuf;
 }
 
 /* Internal use only.  Called when finished processing a row of data. */
 void /* PRIVATE */
-png_write_finish_row(png_structp png_ptr)
+__kimtoy__png_write_finish_row(png_structp png_ptr)
 {
 #ifdef PNG_WRITE_INTERLACING_SUPPORTED
    /* Arrays to facilitate easy interlacing - use pass (0 - 6) as index */
@@ -2214,7 +2214,7 @@ png_write_finish_row(png_structp png_ptr)
 
    int ret;
 
-   png_debug(1, "in png_write_finish_row");
+   png_debug(1, "in __kimtoy__png_write_finish_row");
 
    /* Next row */
    png_ptr->row_number++;
@@ -2286,7 +2286,7 @@ png_write_finish_row(png_structp png_ptr)
          /* Check to see if we need more room */
          if (!(png_ptr->zstream.avail_out))
          {
-            png_write_IDAT(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
+            __kimtoy__png_write_IDAT(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
             png_ptr->zstream.next_out = png_ptr->zbuf;
             png_ptr->zstream.avail_out = (uInt)png_ptr->zbuf_size;
          }
@@ -2295,17 +2295,17 @@ png_write_finish_row(png_structp png_ptr)
       else if (ret != Z_STREAM_END)
       {
          if (png_ptr->zstream.msg != NULL)
-            png_error(png_ptr, png_ptr->zstream.msg);
+            __kimtoy__png_error(png_ptr, png_ptr->zstream.msg);
 
          else
-            png_error(png_ptr, "zlib error");
+            __kimtoy__png_error(png_ptr, "zlib error");
       }
    } while (ret != Z_STREAM_END);
 
    /* Write any extra space */
    if (png_ptr->zstream.avail_out < png_ptr->zbuf_size)
    {
-      png_write_IDAT(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size -
+      __kimtoy__png_write_IDAT(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size -
           png_ptr->zstream.avail_out);
    }
 
@@ -2322,7 +2322,7 @@ png_write_finish_row(png_structp png_ptr)
  * See the default: case for the easiest code to understand.
  */
 void /* PRIVATE */
-png_do_write_interlace(png_row_infop row_info, png_bytep row, int pass)
+__kimtoy__png_do_write_interlace(png_row_infop row_info, png_bytep row, int pass)
 {
    /* Arrays to facilitate easy interlacing - use pass (0 - 6) as index */
 
@@ -2332,7 +2332,7 @@ png_do_write_interlace(png_row_infop row_info, png_bytep row, int pass)
    /* Offset to next interlace block */
    static PNG_CONST png_byte  png_pass_inc[7] = {8, 8, 4, 4, 2, 2, 1};
 
-   png_debug(1, "in png_do_write_interlace");
+   png_debug(1, "in __kimtoy__png_do_write_interlace");
 
    /* We don't have to do anything on the last pass (6) */
    if (pass < 6)
@@ -2506,7 +2506,7 @@ static void png_write_filtered_row(png_structp png_ptr, png_bytep filtered_row,
 #define PNG_LOMASK ((png_uint_32)0xffffL)
 #define PNG_HIMASK ((png_uint_32)(~PNG_LOMASK >> PNG_HISHIFT))
 void /* PRIVATE */
-png_write_find_filter(png_structp png_ptr, png_row_infop row_info)
+__kimtoy__png_write_find_filter(png_structp png_ptr, png_row_infop row_info)
 {
    png_bytep best_row;
 #ifdef PNG_WRITE_FILTER_SUPPORTED
@@ -2518,7 +2518,7 @@ png_write_find_filter(png_structp png_ptr, png_row_infop row_info)
    int num_p_filters = png_ptr->num_prev_filters;
 #endif
 
-   png_debug(1, "in png_write_find_filter");
+   png_debug(1, "in __kimtoy__png_write_find_filter");
 
 #ifndef PNG_WRITE_WEIGHTED_FILTER_SUPPORTED
   if (png_ptr->row_number == 0 && filter_to_do == PNG_ALL_FILTERS)
@@ -3223,17 +3223,17 @@ png_write_filtered_row(png_structp png_ptr, png_bytep filtered_row,
       if (ret != Z_OK)
       {
          if (png_ptr->zstream.msg != NULL)
-            png_error(png_ptr, png_ptr->zstream.msg);
+            __kimtoy__png_error(png_ptr, png_ptr->zstream.msg);
 
          else
-            png_error(png_ptr, "zlib error");
+            __kimtoy__png_error(png_ptr, "zlib error");
       }
 
       /* See if it is time to write another IDAT */
       if (!(png_ptr->zstream.avail_out))
       {
          /* Write the IDAT and reset the zlib output buffer */
-         png_write_IDAT(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
+         __kimtoy__png_write_IDAT(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
       }
    /* Repeat until all data has been compressed */
    } while (avail > 0 || png_ptr->zstream.avail_in > 0);
@@ -3249,7 +3249,7 @@ png_write_filtered_row(png_structp png_ptr, png_bytep filtered_row,
    }
 
    /* Finish row - updates counters and flushes zlib if last row */
-   png_write_finish_row(png_ptr);
+   __kimtoy__png_write_finish_row(png_ptr);
 
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
    png_ptr->flush_rows++;
@@ -3257,14 +3257,14 @@ png_write_filtered_row(png_structp png_ptr, png_bytep filtered_row,
    if (png_ptr->flush_dist > 0 &&
        png_ptr->flush_rows >= png_ptr->flush_dist)
    {
-      png_write_flush(png_ptr);
+      __kimtoy__png_write_flush(png_ptr);
    }
 #endif
 }
 
 #ifdef PNG_WRITE_APNG_SUPPORTED
 void /* PRIVATE */
-png_write_reset(png_structp png_ptr)
+__kimtoy__png_write_reset(png_structp png_ptr)
 {
     png_ptr->row_number = 0;
     png_ptr->pass = 0;
@@ -3272,20 +3272,20 @@ png_write_reset(png_structp png_ptr)
 }
 
 void /* PRIVATE */
-png_write_reinit(png_structp png_ptr, png_infop info_ptr, 
+__kimtoy__png_write_reinit(png_structp png_ptr, png_infop info_ptr, 
                  png_uint_32 width, png_uint_32 height)
 {
     if (png_ptr->num_frames_written == 0 && 
         (width != png_ptr->first_frame_width || 
          height != png_ptr->first_frame_height))
-        png_error(png_ptr, "width and/or height in the first frame's fcTL "
+        __kimtoy__png_error(png_ptr, "width and/or height in the first frame's fcTL "
                            "don't match the ones in IHDR");
     if (width > png_ptr->first_frame_width || 
         height > png_ptr->first_frame_height)
-        png_error(png_ptr, "width and/or height for a frame greater than"
+        __kimtoy__png_error(png_ptr, "width and/or height for a frame greater than"
                            "the ones in IHDR");
     
-    png_set_IHDR(png_ptr, info_ptr, width, height, 
+    __kimtoy__png_set_IHDR(png_ptr, info_ptr, width, height, 
                  info_ptr->bit_depth, info_ptr->color_type, 
                  info_ptr->interlace_type, info_ptr->compression_type,
                  info_ptr->filter_type);

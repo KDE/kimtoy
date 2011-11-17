@@ -17,7 +17,7 @@
  * If you are reading the file, this structure will tell you what is
  * in the PNG file.  If you are writing the file, fill in the information
  * you want to put into the PNG file, using png_set_*() functions, then
- * call png_write_info().
+ * call __kimtoy__png_write_info().
  *
  * The names chosen should be very close to the PNG specification, so
  * consult that document for information about the meaning of each field.
@@ -38,16 +38,16 @@
  * splt_palettes, scal_unit, row_pointers, and unknowns.   By default, these
  * are automatically freed when the info structure is deallocated, if they were
  * allocated internally by libpng.  This behavior can be changed by means
- * of the png_data_freer() function.
+ * of the __kimtoy__png_data_freer() function.
  *
  * More allocation details: all the chunk-reading functions that
  * change these members go through the corresponding png_set_*
  * functions.  A function to clear these members is available: see
- * png_free_data().  The png_set_* functions do not depend on being
+ * __kimtoy__png_free_data().  The png_set_* functions do not depend on being
  * able to point info structure members to any of the storage they are
- * passed (they make their own copies), EXCEPT that the png_set_text
+ * passed (they make their own copies), EXCEPT that the __kimtoy__png_set_text
  * functions use the same storage passed to them in the text_ptr or
- * itxt_ptr structure argument, and the png_set_rows and png_set_unknowns
+ * itxt_ptr structure argument, and the __kimtoy__png_set_rows and png_set_unknowns
  * functions do not make their own copies.
  */
 #ifndef PNGINFO_H

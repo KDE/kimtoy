@@ -12,8 +12,8 @@
  *
  * This file provides a location for all memory allocation.  Users who
  * need special memory handling are expected to supply replacement
- * functions for png_malloc() and png_free(), and to use
- * png_create_read_struct_2() and png_create_write_struct_2() to
+ * functions for __kimtoy__png_malloc() and __kimtoy__png_free(), and to use
+ * __kimtoy__png_create_read_struct_2() and __kimtoy__png_create_write_struct_2() to
  * identify the replacement functions.
  */
 
@@ -28,15 +28,15 @@
 /* Allocate memory for a png_struct.  The malloc and memset can be replaced
    by a single call to calloc() if this is thought to improve performance. */
 PNG_FUNCTION(png_voidp /* PRIVATE */,
-png_create_struct,(int type),PNG_ALLOCATED)
+__kimtoy__png_create_struct,(int type),PNG_ALLOCATED)
 {
 #  ifdef PNG_USER_MEM_SUPPORTED
-   return (png_create_struct_2(type, NULL, NULL));
+   return (__kimtoy__png_create_struct_2(type, NULL, NULL));
 }
 
-/* Alternate version of png_create_struct, for use with user-defined malloc. */
+/* Alternate version of __kimtoy__png_create_struct, for use with user-defined malloc. */
 PNG_FUNCTION(png_voidp /* PRIVATE */,
-png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
+__kimtoy__png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
    PNG_ALLOCATED)
 {
 #  endif /* PNG_USER_MEM_SUPPORTED */
@@ -50,7 +50,7 @@ png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
       size = png_sizeof(png_struct);
 
    else
-      return (png_get_copyright(NULL));
+      return (__kimtoy__png_get_copyright(NULL));
 
 #  ifdef PNG_USER_MEM_SUPPORTED
    if (malloc_fn != NULL)
@@ -70,17 +70,17 @@ png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
    return (struct_ptr);
 }
 
-/* Free memory allocated by a png_create_struct() call */
+/* Free memory allocated by a __kimtoy__png_create_struct() call */
 void /* PRIVATE */
-png_destroy_struct(png_voidp struct_ptr)
+__kimtoy__png_destroy_struct(png_voidp struct_ptr)
 {
 #  ifdef PNG_USER_MEM_SUPPORTED
-   png_destroy_struct_2(struct_ptr, NULL, NULL);
+   __kimtoy__png_destroy_struct_2(struct_ptr, NULL, NULL);
 }
 
-/* Free memory allocated by a png_create_struct() call */
+/* Free memory allocated by a __kimtoy__png_create_struct() call */
 void /* PRIVATE */
-png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
+__kimtoy__png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
     png_voidp mem_ptr)
 {
 #  endif
@@ -121,11 +121,11 @@ png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
  * (which should cause a fatal error) and introducing major problems.
  */
 PNG_FUNCTION(png_voidp,PNGAPI
-png_calloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
+__kimtoy__png_calloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ret;
 
-   ret = (png_malloc(png_ptr, size));
+   ret = (__kimtoy__png_malloc(png_ptr, size));
 
    if (ret != NULL)
       png_memset(ret,0,(png_size_t)size);
@@ -134,7 +134,7 @@ png_calloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 }
 
 PNG_FUNCTION(png_voidp,PNGAPI
-png_malloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
+__kimtoy__png_malloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ret;
 
@@ -146,16 +146,16 @@ png_malloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
       ret = ((png_voidp)(*(png_ptr->malloc_fn))(png_ptr, (png_size_t)size));
 
    else
-      ret = (png_malloc_default(png_ptr, size));
+      ret = (__kimtoy__png_malloc_default(png_ptr, size));
 
    if (ret == NULL && (png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-       png_error(png_ptr, "Out of memory");
+       __kimtoy__png_error(png_ptr, "Out of memory");
 
    return (ret);
 }
 
 PNG_FUNCTION(png_voidp,PNGAPI
-png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
+__kimtoy__png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ret;
 #  endif /* PNG_USER_MEM_SUPPORTED */
@@ -166,7 +166,7 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 #  ifdef PNG_MAX_MALLOC_64K
    if (size > (png_uint_32)65536L)
    {
-      png_warning(png_ptr, "Cannot Allocate > 64K");
+      __kimtoy__png_warning(png_ptr, "Cannot Allocate > 64K");
       ret = NULL;
    }
 
@@ -225,10 +225,10 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
             {
 #  ifndef PNG_USER_MEM_SUPPORTED
                if ((png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-                  png_error(png_ptr, "Out Of Memory"); /* Note "O", "M" */
+                  __kimtoy__png_error(png_ptr, "Out Of Memory"); /* Note "O", "M" */
 
                else
-                  png_warning(png_ptr, "Out Of Memory");
+                  __kimtoy__png_warning(png_ptr, "Out Of Memory");
 #  endif
                return (NULL);
             }
@@ -237,11 +237,11 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
             {
 #  ifndef PNG_USER_MEM_SUPPORTED
                if ((png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-                  png_error(png_ptr,
+                  __kimtoy__png_error(png_ptr,
                     "Farmalloc didn't return normalized pointer");
 
                else
-                  png_warning(png_ptr,
+                  __kimtoy__png_warning(png_ptr,
                     "Farmalloc didn't return normalized pointer");
 #  endif
                return (NULL);
@@ -255,10 +255,10 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
             {
 #  ifndef PNG_USER_MEM_SUPPORTED
                if ((png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-                  png_error(png_ptr, "Out Of memory"); /* Note "O", "m" */
+                  __kimtoy__png_error(png_ptr, "Out Of memory"); /* Note "O", "m" */
 
                else
-                  png_warning(png_ptr, "Out Of memory");
+                  __kimtoy__png_warning(png_ptr, "Out Of memory");
 #  endif
                return (NULL);
             }
@@ -286,10 +286,10 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
       {
 #  ifndef PNG_USER_MEM_SUPPORTED
          if ((png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-            png_error(png_ptr, "Out of Memory"); /* Note "O" and "M" */
+            __kimtoy__png_error(png_ptr, "Out of Memory"); /* Note "O" and "M" */
 
          else
-            png_warning(png_ptr, "Out of Memory");
+            __kimtoy__png_warning(png_ptr, "Out of Memory");
 #  endif
          return (NULL);
       }
@@ -304,22 +304,22 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
    if (ret == NULL)
    {
       if ((png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-         png_error(png_ptr, "Out of memory"); /* Note "o" and "m" */
+         __kimtoy__png_error(png_ptr, "Out of memory"); /* Note "o" and "m" */
 
       else
-         png_warning(png_ptr, "Out of memory"); /* Note "o" and "m" */
+         __kimtoy__png_warning(png_ptr, "Out of memory"); /* Note "o" and "m" */
    }
 #  endif
 
    return (ret);
 }
 
-/* Free a pointer allocated by png_malloc().  In the default
+/* Free a pointer allocated by __kimtoy__png_malloc().  In the default
  * configuration, png_ptr is not used, but is passed in case it
  * is needed.  If ptr is NULL, return without taking any action.
  */
 void PNGAPI
-png_free(png_structp png_ptr, png_voidp ptr)
+__kimtoy__png_free(png_structp png_ptr, png_voidp ptr)
 {
    if (png_ptr == NULL || ptr == NULL)
       return;
@@ -332,11 +332,11 @@ png_free(png_structp png_ptr, png_voidp ptr)
    }
 
    else
-      png_free_default(png_ptr, ptr);
+      __kimtoy__png_free_default(png_ptr, ptr);
 }
 
 void PNGAPI
-png_free_default(png_structp png_ptr, png_voidp ptr)
+__kimtoy__png_free_default(png_structp png_ptr, png_voidp ptr)
 {
 #  endif /* PNG_USER_MEM_SUPPORTED */
 
@@ -375,17 +375,17 @@ png_free_default(png_structp png_ptr, png_voidp ptr)
    memset can be replaced by a single call to calloc() if this is thought
    to improve performance noticably. */
 PNG_FUNCTION(png_voidp /* PRIVATE */,
-png_create_struct,(int type),PNG_ALLOCATED)
+__kimtoy__png_create_struct,(int type),PNG_ALLOCATED)
 {
 #  ifdef PNG_USER_MEM_SUPPORTED
-   return (png_create_struct_2(type, NULL, NULL));
+   return (__kimtoy__png_create_struct_2(type, NULL, NULL));
 }
 
 /* Allocate memory for a png_struct or a png_info.  The malloc and
    memset can be replaced by a single call to calloc() if this is thought
    to improve performance noticably. */
 PNG_FUNCTION(png_voidp /* PRIVATE */,
-png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
+__kimtoy__png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
    PNG_ALLOCATED)
 {
 #  endif /* PNG_USER_MEM_SUPPORTED */
@@ -433,17 +433,17 @@ png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
 }
 
 
-/* Free memory allocated by a png_create_struct() call */
+/* Free memory allocated by a __kimtoy__png_create_struct() call */
 void /* PRIVATE */
-png_destroy_struct(png_voidp struct_ptr)
+__kimtoy__png_destroy_struct(png_voidp struct_ptr)
 {
 #  ifdef PNG_USER_MEM_SUPPORTED
-   png_destroy_struct_2(struct_ptr, NULL, NULL);
+   __kimtoy__png_destroy_struct_2(struct_ptr, NULL, NULL);
 }
 
-/* Free memory allocated by a png_create_struct() call */
+/* Free memory allocated by a __kimtoy__png_create_struct() call */
 void /* PRIVATE */
-png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
+__kimtoy__png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
     png_voidp mem_ptr)
 {
 #  endif /* PNG_USER_MEM_SUPPORTED */
@@ -482,11 +482,11 @@ png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
  */
 
 PNG_FUNCTION(png_voidp,PNGAPI
-png_calloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
+__kimtoy__png_calloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ret;
 
-   ret = (png_malloc(png_ptr, size));
+   ret = (__kimtoy__png_malloc(png_ptr, size));
 
    if (ret != NULL)
       png_memset(ret,0,(png_size_t)size);
@@ -495,7 +495,7 @@ png_calloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 }
 
 PNG_FUNCTION(png_voidp,PNGAPI
-png_malloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
+__kimtoy__png_malloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ret;
 
@@ -507,16 +507,16 @@ png_malloc,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
       ret = ((png_voidp)(*(png_ptr->malloc_fn))(png_ptr, (png_size_t)size));
 
    else
-      ret = (png_malloc_default(png_ptr, size));
+      ret = (__kimtoy__png_malloc_default(png_ptr, size));
 
    if (ret == NULL && (png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-       png_error(png_ptr, "Out of Memory");
+       __kimtoy__png_error(png_ptr, "Out of Memory");
 
    return (ret);
 }
 
 PNG_FUNCTION(png_voidp,PNGAPI
-png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
+__kimtoy__png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ret;
 #  endif /* PNG_USER_MEM_SUPPORTED */
@@ -529,7 +529,7 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
    {
 #    ifndef PNG_USER_MEM_SUPPORTED
       if ((png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-         png_error(png_ptr, "Cannot Allocate > 64K");
+         __kimtoy__png_error(png_ptr, "Cannot Allocate > 64K");
 
       else
 #    endif
@@ -565,17 +565,17 @@ png_malloc_default,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 
 #  ifndef PNG_USER_MEM_SUPPORTED
    if (ret == NULL && (png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
-      png_error(png_ptr, "Out of Memory");
+      __kimtoy__png_error(png_ptr, "Out of Memory");
 #  endif
 
    return (ret);
 }
 
-/* Free a pointer allocated by png_malloc().  If ptr is NULL, return
+/* Free a pointer allocated by __kimtoy__png_malloc().  If ptr is NULL, return
  * without taking any action.
  */
 void PNGAPI
-png_free(png_structp png_ptr, png_voidp ptr)
+__kimtoy__png_free(png_structp png_ptr, png_voidp ptr)
 {
    if (png_ptr == NULL || ptr == NULL)
       return;
@@ -588,11 +588,11 @@ png_free(png_structp png_ptr, png_voidp ptr)
    }
 
    else
-      png_free_default(png_ptr, ptr);
+      __kimtoy__png_free_default(png_ptr, ptr);
 }
 
 void PNGAPI
-png_free_default(png_structp png_ptr, png_voidp ptr)
+__kimtoy__png_free_default(png_structp png_ptr, png_voidp ptr)
 {
    if (png_ptr == NULL || ptr == NULL)
       return;
@@ -614,13 +614,13 @@ png_free_default(png_structp png_ptr, png_voidp ptr)
 }
 #endif /* Not Borland DOS special memory handler */
 
-/* This function was added at libpng version 1.2.3.  The png_malloc_warn()
- * function will set up png_malloc() to issue a png_warning and return NULL
- * instead of issuing a png_error, if it fails to allocate the requested
+/* This function was added at libpng version 1.2.3.  The __kimtoy__png_malloc_warn()
+ * function will set up __kimtoy__png_malloc() to issue a __kimtoy__png_warning and return NULL
+ * instead of issuing a __kimtoy__png_error, if it fails to allocate the requested
  * memory.
  */
 PNG_FUNCTION(png_voidp,PNGAPI
-png_malloc_warn,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
+__kimtoy__png_malloc_warn,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ptr;
    png_uint_32 save_flags;
@@ -629,7 +629,7 @@ png_malloc_warn,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 
    save_flags = png_ptr->flags;
    png_ptr->flags|=PNG_FLAG_MALLOC_NULL_MEM_OK;
-   ptr = (png_voidp)png_malloc((png_structp)png_ptr, size);
+   ptr = (png_voidp)__kimtoy__png_malloc((png_structp)png_ptr, size);
    png_ptr->flags=save_flags;
    return(ptr);
 }
@@ -640,7 +640,7 @@ png_malloc_warn,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
  * of allocating and freeing memory.
  */
 void PNGAPI
-png_set_mem_fn(png_structp png_ptr, png_voidp mem_ptr, png_malloc_ptr
+__kimtoy__png_set_mem_fn(png_structp png_ptr, png_voidp mem_ptr, png_malloc_ptr
   malloc_fn, png_free_ptr free_fn)
 {
    if (png_ptr != NULL)
@@ -653,10 +653,10 @@ png_set_mem_fn(png_structp png_ptr, png_voidp mem_ptr, png_malloc_ptr
 
 /* This function returns a pointer to the mem_ptr associated with the user
  * functions.  The application should free any memory associated with this
- * pointer before png_write_destroy and png_read_destroy are called.
+ * pointer before __kimtoy__png_write_destroy and __kimtoy__png_read_destroy are called.
  */
 png_voidp PNGAPI
-png_get_mem_ptr(png_const_structp png_ptr)
+__kimtoy__png_get_mem_ptr(png_const_structp png_ptr)
 {
    if (png_ptr == NULL)
       return (NULL);

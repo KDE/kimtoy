@@ -27,22 +27,22 @@
 #define PNG_ERROR_MODE      8
 
 void PNGAPI
-png_process_data(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_process_data(png_structp png_ptr, png_infop info_ptr,
     png_bytep buffer, png_size_t buffer_size)
 {
    if (png_ptr == NULL || info_ptr == NULL)
       return;
 
-   png_push_restore_buffer(png_ptr, buffer, buffer_size);
+   __kimtoy__png_push_restore_buffer(png_ptr, buffer, buffer_size);
 
    while (png_ptr->buffer_size)
    {
-      png_process_some_data(png_ptr, info_ptr);
+      __kimtoy__png_process_some_data(png_ptr, info_ptr);
    }
 }
 
 png_size_t PNGAPI
-png_process_data_pause(png_structp png_ptr, int save)
+__kimtoy__png_process_data_pause(png_structp png_ptr, int save)
 {
    if (png_ptr != NULL)
    {
@@ -50,7 +50,7 @@ png_process_data_pause(png_structp png_ptr, int save)
        * have to supply the same data again:
        */
       if (save)
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
       else
       {
          /* This includes any pending saved bytes: */
@@ -69,27 +69,27 @@ png_process_data_pause(png_structp png_ptr, int save)
 }
 
 png_uint_32 PNGAPI
-png_process_data_skip(png_structp png_ptr)
+__kimtoy__png_process_data_skip(png_structp png_ptr)
 {
    png_uint_32 remaining = 0;
 
    if (png_ptr != NULL && png_ptr->process_mode == PNG_SKIP_MODE &&
       png_ptr->skip_length > 0)
    {
-      /* At the end of png_process_data the buffer size must be 0 (see the loop
+      /* At the end of __kimtoy__png_process_data the buffer size must be 0 (see the loop
        * above) so we can detect a broken call here:
        */
       if (png_ptr->buffer_size != 0)
-         png_error(png_ptr,
-            "png_process_data_skip called inside png_process_data");
+         __kimtoy__png_error(png_ptr,
+            "__kimtoy__png_process_data_skip called inside __kimtoy__png_process_data");
 
       /* If is impossible for there to be a saved buffer at this point -
        * otherwise we could not be in SKIP mode.  This will also happen if
-       * png_process_skip is called inside png_process_data (but only very
+       * png_process_skip is called inside __kimtoy__png_process_data (but only very
        * rarely.)
        */
       if (png_ptr->save_buffer_size != 0)
-         png_error(png_ptr, "png_process_data_skip called with saved data");
+         __kimtoy__png_error(png_ptr, "__kimtoy__png_process_data_skip called with saved data");
 
       remaining = png_ptr->skip_length;
       png_ptr->skip_length = 0;
@@ -103,7 +103,7 @@ png_process_data_skip(png_structp png_ptr)
  * doing before we ran out of data...
  */
 void /* PRIVATE */
-png_process_some_data(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_process_some_data(png_structp png_ptr, png_infop info_ptr)
 {
    if (png_ptr == NULL)
       return;
@@ -112,26 +112,26 @@ png_process_some_data(png_structp png_ptr, png_infop info_ptr)
    {
       case PNG_READ_SIG_MODE:
       {
-         png_push_read_sig(png_ptr, info_ptr);
+         __kimtoy__png_push_read_sig(png_ptr, info_ptr);
          break;
       }
 
       case PNG_READ_CHUNK_MODE:
       {
-         png_push_read_chunk(png_ptr, info_ptr);
+         __kimtoy__png_push_read_chunk(png_ptr, info_ptr);
          break;
       }
 
       case PNG_READ_IDAT_MODE:
       {
-         png_push_read_IDAT(png_ptr);
+         __kimtoy__png_push_read_IDAT(png_ptr);
          break;
       }
 
 #ifdef PNG_READ_tEXt_SUPPORTED
       case PNG_READ_tEXt_MODE:
       {
-         png_push_read_tEXt(png_ptr, info_ptr);
+         __kimtoy__png_push_read_tEXt(png_ptr, info_ptr);
          break;
       }
 
@@ -139,7 +139,7 @@ png_process_some_data(png_structp png_ptr, png_infop info_ptr)
 #ifdef PNG_READ_zTXt_SUPPORTED
       case PNG_READ_zTXt_MODE:
       {
-         png_push_read_zTXt(png_ptr, info_ptr);
+         __kimtoy__png_push_read_zTXt(png_ptr, info_ptr);
          break;
       }
 
@@ -147,14 +147,14 @@ png_process_some_data(png_structp png_ptr, png_infop info_ptr)
 #ifdef PNG_READ_iTXt_SUPPORTED
       case PNG_READ_iTXt_MODE:
       {
-         png_push_read_iTXt(png_ptr, info_ptr);
+         __kimtoy__png_push_read_iTXt(png_ptr, info_ptr);
          break;
       }
 
 #endif
       case PNG_SKIP_MODE:
       {
-         png_push_crc_finish(png_ptr);
+         __kimtoy__png_push_crc_finish(png_ptr);
          break;
       }
 
@@ -173,7 +173,7 @@ png_process_some_data(png_structp png_ptr, png_infop info_ptr)
  * routine.
  */
 void /* PRIVATE */
-png_push_read_sig(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_push_read_sig(png_structp png_ptr, png_infop info_ptr)
 {
    png_size_t num_checked = png_ptr->sig_bytes,
              num_to_check = 8 - num_checked;
@@ -183,18 +183,18 @@ png_push_read_sig(png_structp png_ptr, png_infop info_ptr)
       num_to_check = png_ptr->buffer_size;
    }
 
-   png_push_fill_buffer(png_ptr, &(info_ptr->signature[num_checked]),
+   __kimtoy__png_push_fill_buffer(png_ptr, &(info_ptr->signature[num_checked]),
        num_to_check);
    png_ptr->sig_bytes = (png_byte)(png_ptr->sig_bytes + num_to_check);
 
-   if (png_sig_cmp(info_ptr->signature, num_checked, num_to_check))
+   if (__kimtoy__png_sig_cmp(info_ptr->signature, num_checked, num_to_check))
    {
       if (num_checked < 4 &&
-          png_sig_cmp(info_ptr->signature, num_checked, num_to_check - 4))
-         png_error(png_ptr, "Not a PNG file");
+          __kimtoy__png_sig_cmp(info_ptr->signature, num_checked, num_to_check - 4))
+         __kimtoy__png_error(png_ptr, "Not a PNG file");
 
       else
-         png_error(png_ptr, "PNG file corrupted by ASCII conversion");
+         __kimtoy__png_error(png_ptr, "PNG file corrupted by ASCII conversion");
    }
    else
    {
@@ -206,7 +206,7 @@ png_push_read_sig(png_structp png_ptr, png_infop info_ptr)
 }
 
 void /* PRIVATE */
-png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
 {
    png_uint_32 chunk_name;
 
@@ -223,16 +223,16 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
 
       if (png_ptr->buffer_size < 8)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_fill_buffer(png_ptr, chunk_length, 4);
-      png_ptr->push_length = png_get_uint_31(png_ptr, chunk_length);
-      png_reset_crc(png_ptr);
-      png_crc_read(png_ptr, chunk_tag, 4);
+      __kimtoy__png_push_fill_buffer(png_ptr, chunk_length, 4);
+      png_ptr->push_length = __kimtoy__png_get_uint_31(png_ptr, chunk_length);
+      __kimtoy__png_reset_crc(png_ptr);
+      __kimtoy__png_crc_read(png_ptr, chunk_tag, 4);
       png_ptr->chunk_name = PNG_CHUNK_FROM_STRING(chunk_tag);
-      png_check_chunk_name(png_ptr, png_ptr->chunk_name);
+      __kimtoy__png_check_chunk_name(png_ptr, png_ptr->chunk_name);
       png_ptr->mode |= PNG_HAVE_CHUNK_HEADER;
    }
    
@@ -246,14 +246,14 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
       {
          /* Discard trailing IDATs for the first frame */
          if (png_ptr->mode & PNG_HAVE_fcTL || png_ptr->num_frames_read > 1)
-            png_error(png_ptr, "out of place IDAT");
+            __kimtoy__png_error(png_ptr, "out of place IDAT");
          
          if (png_ptr->push_length + 4 > png_ptr->buffer_size)
          {
-            png_push_save_buffer(png_ptr);
+            __kimtoy__png_push_save_buffer(png_ptr);
             return;
          }
-         png_push_crc_skip(png_ptr, png_ptr->push_length);
+         __kimtoy__png_push_crc_skip(png_ptr, png_ptr->push_length);
          png_ptr->mode &= ~PNG_HAVE_CHUNK_HEADER;
          return;
       }
@@ -261,23 +261,23 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
       {
          if (png_ptr->buffer_size < 4)
          {
-            png_push_save_buffer(png_ptr);
+            __kimtoy__png_push_save_buffer(png_ptr);
             return;
          }
-         png_ensure_sequence_number(png_ptr, 4);
+         __kimtoy__png_ensure_sequence_number(png_ptr, 4);
          
          if (!(png_ptr->mode & PNG_HAVE_fcTL))
          {
             /* Discard trailing fdATs for frames other than the first */
             if (png_ptr->num_frames_read < 2)
-               png_error(png_ptr, "out of place fdAT");
+               __kimtoy__png_error(png_ptr, "out of place fdAT");
             
             if (png_ptr->push_length + 4 > png_ptr->buffer_size)
             {
-               png_push_save_buffer(png_ptr);
+               __kimtoy__png_push_save_buffer(png_ptr);
                return;
             }
-            png_push_crc_skip(png_ptr, png_ptr->push_length);
+            __kimtoy__png_push_crc_skip(png_ptr, png_ptr->push_length);
             png_ptr->mode &= ~PNG_HAVE_CHUNK_HEADER;
             return;
          }
@@ -295,20 +295,20 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
       {
          if (png_ptr->push_length + 4 > png_ptr->buffer_size)
          {
-            png_push_save_buffer(png_ptr);
+            __kimtoy__png_push_save_buffer(png_ptr);
             return;
          }
          
-         png_read_reset(png_ptr);
+         __kimtoy__png_read_reset(png_ptr);
          png_ptr->mode &= ~PNG_HAVE_fcTL;
          
-         png_handle_fcTL(png_ptr, info_ptr, png_ptr->push_length);
+         __kimtoy__png_handle_fcTL(png_ptr, info_ptr, png_ptr->push_length);
          
          if (!(png_ptr->mode & PNG_HAVE_fcTL))
-            png_error(png_ptr, "missing required fcTL chunk");
+            __kimtoy__png_error(png_ptr, "missing required fcTL chunk");
          
-         png_read_reinit(png_ptr, info_ptr);
-         png_progressive_read_reset(png_ptr);
+         __kimtoy__png_read_reinit(png_ptr, info_ptr);
+         __kimtoy__png_progressive_read_reset(png_ptr);
          
          if (png_ptr->frame_info_fn != NULL)
             (*(png_ptr->frame_info_fn))(png_ptr, png_ptr->num_frames_read);
@@ -321,12 +321,12 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
       {
          if (png_ptr->push_length + 4 > png_ptr->buffer_size)
          {
-            png_push_save_buffer(png_ptr);
+            __kimtoy__png_push_save_buffer(png_ptr);
             return;
          }
-         png_warning(png_ptr, "Skipped (ignored) a chunk "
+         __kimtoy__png_warning(png_ptr, "Skipped (ignored) a chunk "
                               "between APNG chunks");
-         png_push_crc_skip(png_ptr, png_ptr->push_length);
+         __kimtoy__png_push_crc_skip(png_ptr, png_ptr->push_length);
          png_ptr->mode &= ~PNG_HAVE_CHUNK_HEADER;
          return;
       }
@@ -350,44 +350,44 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    if (chunk_name == png_IHDR)
    {
       if (png_ptr->push_length != 13)
-         png_error(png_ptr, "Invalid IHDR length");
+         __kimtoy__png_error(png_ptr, "Invalid IHDR length");
 
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_IHDR(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_IHDR(png_ptr, info_ptr, png_ptr->push_length);
    }
 
    else if (chunk_name == png_IEND)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_IEND(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_IEND(png_ptr, info_ptr, png_ptr->push_length);
 
       png_ptr->process_mode = PNG_READ_DONE_MODE;
-      png_push_have_end(png_ptr, info_ptr);
+      __kimtoy__png_push_have_end(png_ptr, info_ptr);
    }
 
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
-   else if (png_chunk_unknown_handling(png_ptr, chunk_name))
+   else if (__kimtoy__png_chunk_unknown_handling(png_ptr, chunk_name))
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
       if (chunk_name == png_IDAT)
          png_ptr->mode |= PNG_HAVE_IDAT;
 
-      png_handle_unknown(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_unknown(png_ptr, info_ptr, png_ptr->push_length);
 
       if (chunk_name == png_PLTE)
          png_ptr->mode |= PNG_HAVE_PLTE;
@@ -395,11 +395,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
       else if (chunk_name == png_IDAT)
       {
          if (!(png_ptr->mode & PNG_HAVE_IHDR))
-            png_error(png_ptr, "Missing IHDR before IDAT");
+            __kimtoy__png_error(png_ptr, "Missing IHDR before IDAT");
 
          else if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE &&
              !(png_ptr->mode & PNG_HAVE_PLTE))
-            png_error(png_ptr, "Missing PLTE before IDAT");
+            __kimtoy__png_error(png_ptr, "Missing PLTE before IDAT");
       }
    }
 
@@ -408,10 +408,10 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
-      png_handle_PLTE(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_PLTE(png_ptr, info_ptr, png_ptr->push_length);
    }
 
    else if (chunk_name == png_IDAT)
@@ -422,11 +422,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
        */
 
       if (!(png_ptr->mode & PNG_HAVE_IHDR))
-         png_error(png_ptr, "Missing IHDR before IDAT");
+         __kimtoy__png_error(png_ptr, "Missing IHDR before IDAT");
 
       else if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE &&
           !(png_ptr->mode & PNG_HAVE_PLTE))
-         png_error(png_ptr, "Missing PLTE before IDAT");
+         __kimtoy__png_error(png_ptr, "Missing PLTE before IDAT");
 
       if (png_ptr->mode & PNG_HAVE_IDAT)
       {
@@ -435,16 +435,16 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
                return;
 
          if (png_ptr->mode & PNG_AFTER_IDAT)
-            png_benign_error(png_ptr, "Too many IDATs found");
+            __kimtoy__png_benign_error(png_ptr, "Too many IDATs found");
       }
 
 #ifdef PNG_READ_APNG_SUPPORTED
-      png_have_info(png_ptr, info_ptr);
+      __kimtoy__png_have_info(png_ptr, info_ptr);
 #endif
       png_ptr->idat_size = png_ptr->push_length;
       png_ptr->mode |= PNG_HAVE_IDAT;
       png_ptr->process_mode = PNG_READ_IDAT_MODE;
-      png_push_have_info(png_ptr, info_ptr);
+      __kimtoy__png_push_have_info(png_ptr, info_ptr);
       png_ptr->zstream.avail_out =
           (uInt) PNG_ROWBYTES(png_ptr->pixel_depth,
           png_ptr->iwidth) + 1;
@@ -457,11 +457,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_gAMA(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_gAMA(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -470,11 +470,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_sBIT(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_sBIT(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -483,11 +483,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_cHRM(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_cHRM(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -496,11 +496,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_sRGB(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_sRGB(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -509,11 +509,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_iCCP(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_iCCP(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -522,11 +522,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_sPLT(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_sPLT(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -535,11 +535,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_tRNS(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_tRNS(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -548,11 +548,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_bKGD(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_bKGD(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -561,11 +561,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_hIST(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_hIST(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -574,11 +574,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_pHYs(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_pHYs(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -587,11 +587,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_oFFs(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_oFFs(png_ptr, info_ptr, png_ptr->push_length);
    }
 #endif
 
@@ -600,11 +600,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_pCAL(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_pCAL(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -613,11 +613,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_sCAL(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_sCAL(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -626,11 +626,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_tIME(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_tIME(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -639,11 +639,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_handle_tEXt(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_push_handle_tEXt(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -652,11 +652,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_handle_zTXt(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_push_handle_zTXt(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -665,11 +665,11 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_handle_iTXt(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_push_handle_iTXt(png_ptr, info_ptr, png_ptr->push_length);
    }
 
 #endif
@@ -678,55 +678,55 @@ png_push_read_chunk(png_structp png_ptr, png_infop info_ptr)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_acTL(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_acTL(png_ptr, info_ptr, png_ptr->push_length);
    }
    else if (chunk_name == png_fcTL)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_fcTL(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_fcTL(png_ptr, info_ptr, png_ptr->push_length);
    }
    else if (chunk_name == png_fdAT)
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_handle_fdAT(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_handle_fdAT(png_ptr, info_ptr, png_ptr->push_length);
    }
 #endif /* PNG_READ_APNG_SUPPORTED */
    else
    {
       if (png_ptr->push_length + 4 > png_ptr->buffer_size)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
-      png_push_handle_unknown(png_ptr, info_ptr, png_ptr->push_length);
+      __kimtoy__png_push_handle_unknown(png_ptr, info_ptr, png_ptr->push_length);
    }
 
    png_ptr->mode &= ~PNG_HAVE_CHUNK_HEADER;
 }
 
 void /* PRIVATE */
-png_push_crc_skip(png_structp png_ptr, png_uint_32 skip)
+__kimtoy__png_push_crc_skip(png_structp png_ptr, png_uint_32 skip)
 {
    png_ptr->process_mode = PNG_SKIP_MODE;
    png_ptr->skip_length = skip;
 }
 
 void /* PRIVATE */
-png_push_crc_finish(png_structp png_ptr)
+__kimtoy__png_push_crc_finish(png_structp png_ptr)
 {
    if (png_ptr->skip_length && png_ptr->save_buffer_size)
    {
@@ -745,7 +745,7 @@ png_push_crc_finish(png_structp png_ptr)
       else
          skip_length = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
+      __kimtoy__png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
 
       png_ptr->skip_length -= skip_length;
       png_ptr->buffer_size -= save_size;
@@ -766,7 +766,7 @@ png_push_crc_finish(png_structp png_ptr)
       else
          skip_length = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
+      __kimtoy__png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
 
       png_ptr->skip_length -= skip_length;
       png_ptr->buffer_size -= save_size;
@@ -777,17 +777,17 @@ png_push_crc_finish(png_structp png_ptr)
    {
       if (png_ptr->buffer_size < 4)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_crc_finish(png_ptr, 0);
+      __kimtoy__png_crc_finish(png_ptr, 0);
       png_ptr->process_mode = PNG_READ_CHUNK_MODE;
    }
 }
 
 void PNGCBAPI
-png_push_fill_buffer(png_structp png_ptr, png_bytep buffer, png_size_t length)
+__kimtoy__png_push_fill_buffer(png_structp png_ptr, png_bytep buffer, png_size_t length)
 {
    png_bytep ptr;
 
@@ -830,7 +830,7 @@ png_push_fill_buffer(png_structp png_ptr, png_bytep buffer, png_size_t length)
 }
 
 void /* PRIVATE */
-png_push_save_buffer(png_structp png_ptr)
+__kimtoy__png_push_save_buffer(png_structp png_ptr)
 {
    if (png_ptr->save_buffer_size)
    {
@@ -857,22 +857,22 @@ png_push_save_buffer(png_structp png_ptr)
       if (png_ptr->save_buffer_size > PNG_SIZE_MAX -
           (png_ptr->current_buffer_size + 256))
       {
-         png_error(png_ptr, "Potential overflow of save_buffer");
+         __kimtoy__png_error(png_ptr, "Potential overflow of save_buffer");
       }
 
       new_max = png_ptr->save_buffer_size + png_ptr->current_buffer_size + 256;
       old_buffer = png_ptr->save_buffer;
-      png_ptr->save_buffer = (png_bytep)png_malloc_warn(png_ptr,
+      png_ptr->save_buffer = (png_bytep)__kimtoy__png_malloc_warn(png_ptr,
           (png_size_t)new_max);
 
       if (png_ptr->save_buffer == NULL)
       {
-         png_free(png_ptr, old_buffer);
-         png_error(png_ptr, "Insufficient memory for save_buffer");
+         __kimtoy__png_free(png_ptr, old_buffer);
+         __kimtoy__png_error(png_ptr, "Insufficient memory for save_buffer");
       }
 
       png_memcpy(png_ptr->save_buffer, old_buffer, png_ptr->save_buffer_size);
-      png_free(png_ptr, old_buffer);
+      __kimtoy__png_free(png_ptr, old_buffer);
       png_ptr->save_buffer_max = new_max;
    }
    if (png_ptr->current_buffer_size)
@@ -887,7 +887,7 @@ png_push_save_buffer(png_structp png_ptr)
 }
 
 void /* PRIVATE */
-png_push_restore_buffer(png_structp png_ptr, png_bytep buffer,
+__kimtoy__png_push_restore_buffer(png_structp png_ptr, png_bytep buffer,
    png_size_t buffer_length)
 {
    png_ptr->current_buffer = buffer;
@@ -897,7 +897,7 @@ png_push_restore_buffer(png_structp png_ptr, png_bytep buffer,
 }
 
 void /* PRIVATE */
-png_push_read_IDAT(png_structp png_ptr)
+__kimtoy__png_push_read_IDAT(png_structp png_ptr)
 {
    if (!(png_ptr->mode & PNG_HAVE_CHUNK_HEADER))
    {
@@ -907,14 +907,14 @@ png_push_read_IDAT(png_structp png_ptr)
       /* TODO: this code can be commoned up with the same code in push_read */
       if (png_ptr->buffer_size < 12)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_fill_buffer(png_ptr, chunk_length, 4);
-      png_ptr->push_length = png_get_uint_31(png_ptr, chunk_length);
-      png_reset_crc(png_ptr);
-      png_crc_read(png_ptr, chunk_tag, 4);
+      __kimtoy__png_push_fill_buffer(png_ptr, chunk_length, 4);
+      png_ptr->push_length = __kimtoy__png_get_uint_31(png_ptr, chunk_length);
+      __kimtoy__png_reset_crc(png_ptr);
+      __kimtoy__png_crc_read(png_ptr, chunk_tag, 4);
       png_ptr->chunk_name = PNG_CHUNK_FROM_STRING(chunk_tag);
       png_ptr->mode |= PNG_HAVE_CHUNK_HEADER;
 
@@ -933,15 +933,15 @@ png_push_read_IDAT(png_structp png_ptr)
           else
           {
               if (png_ptr->chunk_name == png_IEND)
-                  png_error(png_ptr, "Not enough image data");
+                  __kimtoy__png_error(png_ptr, "Not enough image data");
               if (png_ptr->push_length + 4 > png_ptr->buffer_size)
               {
-                 png_push_save_buffer(png_ptr);
+                 __kimtoy__png_push_save_buffer(png_ptr);
                  return;
               }
-              png_warning(png_ptr, "Skipping (ignoring) a chunk between "
+              __kimtoy__png_warning(png_ptr, "Skipping (ignoring) a chunk between "
                                    "APNG chunks");
-              png_crc_finish(png_ptr, png_ptr->push_length);
+              __kimtoy__png_crc_finish(png_ptr, png_ptr->push_length);
               png_ptr->mode &= ~PNG_HAVE_CHUNK_HEADER;
               return;
           }
@@ -957,7 +957,7 @@ png_push_read_IDAT(png_structp png_ptr)
          png_ptr->process_mode = PNG_READ_CHUNK_MODE;
 
          if (!(png_ptr->flags & PNG_FLAG_ZLIB_FINISHED))
-            png_error(png_ptr, "Not enough compressed data");
+            __kimtoy__png_error(png_ptr, "Not enough compressed data");
 
 #ifdef PNG_READ_APNG_SUPPORTED
          if (png_ptr->frame_end_fn != NULL)
@@ -972,7 +972,7 @@ png_push_read_IDAT(png_structp png_ptr)
 #ifdef PNG_READ_APNG_SUPPORTED
       if (png_ptr->num_frames_read > 0)
       {
-         png_ensure_sequence_number(png_ptr, 4);
+         __kimtoy__png_ensure_sequence_number(png_ptr, 4);
          png_ptr->idat_size -= 4;
       }
 #endif
@@ -995,9 +995,9 @@ png_push_read_IDAT(png_structp png_ptr)
       else
          idat_size = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
+      __kimtoy__png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
 
-      png_process_IDAT_data(png_ptr, png_ptr->save_buffer_ptr, save_size);
+      __kimtoy__png_process_IDAT_data(png_ptr, png_ptr->save_buffer_ptr, save_size);
 
       png_ptr->idat_size -= idat_size;
       png_ptr->buffer_size -= save_size;
@@ -1021,9 +1021,9 @@ png_push_read_IDAT(png_structp png_ptr)
       else
          idat_size = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
+      __kimtoy__png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
 
-      png_process_IDAT_data(png_ptr, png_ptr->current_buffer_ptr, save_size);
+      __kimtoy__png_process_IDAT_data(png_ptr, png_ptr->current_buffer_ptr, save_size);
 
       png_ptr->idat_size -= idat_size;
       png_ptr->buffer_size -= save_size;
@@ -1034,23 +1034,23 @@ png_push_read_IDAT(png_structp png_ptr)
    {
       if (png_ptr->buffer_size < 4)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_crc_finish(png_ptr, 0);
+      __kimtoy__png_crc_finish(png_ptr, 0);
       png_ptr->mode &= ~PNG_HAVE_CHUNK_HEADER;
       png_ptr->mode |= PNG_AFTER_IDAT;
    }
 }
 
 void /* PRIVATE */
-png_process_IDAT_data(png_structp png_ptr, png_bytep buffer,
+__kimtoy__png_process_IDAT_data(png_structp png_ptr, png_bytep buffer,
    png_size_t buffer_length)
 {
    /* The caller checks for a non-zero buffer length. */
    if (!(buffer_length > 0) || buffer == NULL)
-      png_error(png_ptr, "No IDAT data (internal error)");
+      __kimtoy__png_error(png_ptr, "No IDAT data (internal error)");
 
    /* This routine must process all the data it has been given
     * before returning, calling the row callback as required to
@@ -1101,10 +1101,10 @@ png_process_IDAT_data(png_structp png_ptr, png_bytep buffer,
           */
          if (png_ptr->row_number >= png_ptr->num_rows ||
              png_ptr->pass > 6)
-            png_warning(png_ptr, "Truncated compressed data in IDAT");
+            __kimtoy__png_warning(png_ptr, "Truncated compressed data in IDAT");
 
          else
-            png_error(png_ptr, "Decompression error in IDAT");
+            __kimtoy__png_error(png_ptr, "Decompression error in IDAT");
 
          /* Skip the check on unprocessed input */
          return;
@@ -1121,7 +1121,7 @@ png_process_IDAT_data(png_structp png_ptr, png_bytep buffer,
              png_ptr->pass > 6)
          {
             /* Extra data. */
-            png_warning(png_ptr, "Extra compressed data in IDAT");
+            __kimtoy__png_warning(png_ptr, "Extra compressed data in IDAT");
             png_ptr->flags |= PNG_FLAG_ZLIB_FINISHED;
 
             /* Do no more processing; skip the unprocessed
@@ -1132,7 +1132,7 @@ png_process_IDAT_data(png_structp png_ptr, png_bytep buffer,
 
          /* Do we have a complete row? */
          if (png_ptr->zstream.avail_out == 0)
-            png_push_process_row(png_ptr);
+            __kimtoy__png_push_process_row(png_ptr);
       }
 
       /* And check for the end of the stream. */
@@ -1145,11 +1145,11 @@ png_process_IDAT_data(png_structp png_ptr, png_bytep buffer,
     * after the zlib end code.
     */
    if (png_ptr->zstream.avail_in > 0)
-      png_warning(png_ptr, "Extra compression data in IDAT");
+      __kimtoy__png_warning(png_ptr, "Extra compression data in IDAT");
 }
 
 void /* PRIVATE */
-png_push_process_row(png_structp png_ptr)
+__kimtoy__png_push_process_row(png_structp png_ptr)
 {
    /* 1.5.6: row_info moved out of png_struct to a local here. */
    png_row_info row_info;
@@ -1164,10 +1164,10 @@ png_push_process_row(png_structp png_ptr)
    if (png_ptr->row_buf[0] > PNG_FILTER_VALUE_NONE)
    {
       if (png_ptr->row_buf[0] < PNG_FILTER_VALUE_LAST)
-         png_read_filter_row(&row_info, png_ptr->row_buf + 1,
+         __kimtoy__png_read_filter_row(&row_info, png_ptr->row_buf + 1,
             png_ptr->prev_row + 1, png_ptr->row_buf[0]);
       else
-         png_error(png_ptr, "bad adaptive filter value");
+         __kimtoy__png_error(png_ptr, "bad adaptive filter value");
    }
 
    /* libpng 1.5.6: the following line was copying png_ptr->rowbytes before
@@ -1179,7 +1179,7 @@ png_push_process_row(png_structp png_ptr)
 
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
    if (png_ptr->transformations)
-      png_do_read_transformations(png_ptr, &row_info);
+      __kimtoy__png_do_read_transformations(png_ptr, &row_info);
 #endif
 
    /* The transformed pixel depth should match the depth now in row_info. */
@@ -1187,11 +1187,11 @@ png_push_process_row(png_structp png_ptr)
    {
       png_ptr->transformed_pixel_depth = row_info.pixel_depth;
       if (row_info.pixel_depth > png_ptr->maximum_pixel_depth)
-         png_error(png_ptr, "progressive row overflow");
+         __kimtoy__png_error(png_ptr, "progressive row overflow");
    }
 
    else if (png_ptr->transformed_pixel_depth != row_info.pixel_depth)
-      png_error(png_ptr, "internal progressive row size calculation error");
+      __kimtoy__png_error(png_ptr, "internal progressive row size calculation error");
 
 
 #ifdef PNG_READ_INTERLACING_SUPPORTED
@@ -1199,7 +1199,7 @@ png_push_process_row(png_structp png_ptr)
    if (png_ptr->interlaced && (png_ptr->transformations & PNG_INTERLACE))
    {
       if (png_ptr->pass < 6)
-         png_do_read_interlace(&row_info, png_ptr->row_buf + 1, png_ptr->pass,
+         __kimtoy__png_do_read_interlace(&row_info, png_ptr->row_buf + 1, png_ptr->pass,
             png_ptr->transformations);
 
     switch (png_ptr->pass)
@@ -1209,16 +1209,16 @@ png_push_process_row(png_structp png_ptr)
             int i;
             for (i = 0; i < 8 && png_ptr->pass == 0; i++)
             {
-               png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-               png_read_push_finish_row(png_ptr); /* Updates png_ptr->pass */
+               __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+               __kimtoy__png_read_push_finish_row(png_ptr); /* Updates png_ptr->pass */
             }
 
             if (png_ptr->pass == 2) /* Pass 1 might be empty */
             {
                for (i = 0; i < 4 && png_ptr->pass == 2; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
-                  png_read_push_finish_row(png_ptr);
+                  __kimtoy__png_push_have_row(png_ptr, NULL);
+                  __kimtoy__png_read_push_finish_row(png_ptr);
                }
             }
 
@@ -1226,15 +1226,15 @@ png_push_process_row(png_structp png_ptr)
             {
                for (i = 0; i < 2 && png_ptr->pass == 4; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
-                  png_read_push_finish_row(png_ptr);
+                  __kimtoy__png_push_have_row(png_ptr, NULL);
+                  __kimtoy__png_read_push_finish_row(png_ptr);
                }
             }
 
             if (png_ptr->pass == 6 && png_ptr->height <= 4)
             {
-                png_push_have_row(png_ptr, NULL);
-                png_read_push_finish_row(png_ptr);
+                __kimtoy__png_push_have_row(png_ptr, NULL);
+                __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             break;
@@ -1245,16 +1245,16 @@ png_push_process_row(png_structp png_ptr)
             int i;
             for (i = 0; i < 8 && png_ptr->pass == 1; i++)
             {
-               png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             if (png_ptr->pass == 2) /* Skip top 4 generated rows */
             {
                for (i = 0; i < 4 && png_ptr->pass == 2; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
-                  png_read_push_finish_row(png_ptr);
+                  __kimtoy__png_push_have_row(png_ptr, NULL);
+                  __kimtoy__png_read_push_finish_row(png_ptr);
                }
             }
 
@@ -1267,22 +1267,22 @@ png_push_process_row(png_structp png_ptr)
 
             for (i = 0; i < 4 && png_ptr->pass == 2; i++)
             {
-               png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             for (i = 0; i < 4 && png_ptr->pass == 2; i++)
             {
-               png_push_have_row(png_ptr, NULL);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, NULL);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             if (png_ptr->pass == 4) /* Pass 3 might be empty */
             {
                for (i = 0; i < 2 && png_ptr->pass == 4; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
-                  png_read_push_finish_row(png_ptr);
+                  __kimtoy__png_push_have_row(png_ptr, NULL);
+                  __kimtoy__png_read_push_finish_row(png_ptr);
                }
             }
 
@@ -1295,16 +1295,16 @@ png_push_process_row(png_structp png_ptr)
 
             for (i = 0; i < 4 && png_ptr->pass == 3; i++)
             {
-               png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             if (png_ptr->pass == 4) /* Skip top two generated rows */
             {
                for (i = 0; i < 2 && png_ptr->pass == 4; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
-                  png_read_push_finish_row(png_ptr);
+                  __kimtoy__png_push_have_row(png_ptr, NULL);
+                  __kimtoy__png_read_push_finish_row(png_ptr);
                }
             }
 
@@ -1317,20 +1317,20 @@ png_push_process_row(png_structp png_ptr)
 
             for (i = 0; i < 2 && png_ptr->pass == 4; i++)
             {
-               png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             for (i = 0; i < 2 && png_ptr->pass == 4; i++)
             {
-               png_push_have_row(png_ptr, NULL);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, NULL);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             if (png_ptr->pass == 6) /* Pass 5 might be empty */
             {
-               png_push_have_row(png_ptr, NULL);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, NULL);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             break;
@@ -1342,14 +1342,14 @@ png_push_process_row(png_structp png_ptr)
 
             for (i = 0; i < 2 && png_ptr->pass == 5; i++)
             {
-               png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             if (png_ptr->pass == 6) /* Skip top generated row */
             {
-               png_push_have_row(png_ptr, NULL);
-               png_read_push_finish_row(png_ptr);
+               __kimtoy__png_push_have_row(png_ptr, NULL);
+               __kimtoy__png_read_push_finish_row(png_ptr);
             }
 
             break;
@@ -1358,27 +1358,27 @@ png_push_process_row(png_structp png_ptr)
          default:
          case 6:
          {
-            png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-            png_read_push_finish_row(png_ptr);
+            __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+            __kimtoy__png_read_push_finish_row(png_ptr);
 
             if (png_ptr->pass != 6)
                break;
 
-            png_push_have_row(png_ptr, NULL);
-            png_read_push_finish_row(png_ptr);
+            __kimtoy__png_push_have_row(png_ptr, NULL);
+            __kimtoy__png_read_push_finish_row(png_ptr);
          }
       }
    }
    else
 #endif
    {
-      png_push_have_row(png_ptr, png_ptr->row_buf + 1);
-      png_read_push_finish_row(png_ptr);
+      __kimtoy__png_push_have_row(png_ptr, png_ptr->row_buf + 1);
+      __kimtoy__png_read_push_finish_row(png_ptr);
    }
 }
 
 void /* PRIVATE */
-png_read_push_finish_row(png_structp png_ptr)
+__kimtoy__png_read_push_finish_row(png_structp png_ptr)
 {
    /* Arrays to facilitate easy interlacing - use pass (0 - 6) as index */
 
@@ -1443,13 +1443,13 @@ png_read_push_finish_row(png_structp png_ptr)
 
 #ifdef PNG_READ_tEXt_SUPPORTED
 void /* PRIVATE */
-png_push_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
+__kimtoy__png_push_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
     length)
 {
    if (!(png_ptr->mode & PNG_HAVE_IHDR) || (png_ptr->mode & PNG_HAVE_IEND))
       {
          PNG_UNUSED(info_ptr) /* To quiet some compiler warnings */
-         png_error(png_ptr, "Out of place tEXt");
+         __kimtoy__png_error(png_ptr, "Out of place tEXt");
          /* NOT REACHED */
       }
 
@@ -1458,13 +1458,13 @@ png_push_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
 
    if (length > (png_uint_32)65535L) /* Can't hold entire string in memory */
    {
-      png_warning(png_ptr, "tEXt chunk too large to fit in memory");
+      __kimtoy__png_warning(png_ptr, "tEXt chunk too large to fit in memory");
       png_ptr->skip_length = length - (png_uint_32)65535L;
       length = (png_uint_32)65535L;
    }
 #endif
 
-   png_ptr->current_text = (png_charp)png_malloc(png_ptr,
+   png_ptr->current_text = (png_charp)__kimtoy__png_malloc(png_ptr,
        (png_size_t)(length + 1));
    png_ptr->current_text[length] = '\0';
    png_ptr->current_text_ptr = png_ptr->current_text;
@@ -1474,7 +1474,7 @@ png_push_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
 }
 
 void /* PRIVATE */
-png_push_read_tEXt(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_push_read_tEXt(png_structp png_ptr, png_infop info_ptr)
 {
    if (png_ptr->buffer_size && png_ptr->current_text_left)
    {
@@ -1486,7 +1486,7 @@ png_push_read_tEXt(png_structp png_ptr, png_infop info_ptr)
       else
          text_size = png_ptr->current_text_left;
 
-      png_crc_read(png_ptr, (png_bytep)png_ptr->current_text_ptr, text_size);
+      __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->current_text_ptr, text_size);
       png_ptr->current_text_left -= text_size;
       png_ptr->current_text_ptr += text_size;
    }
@@ -1499,11 +1499,11 @@ png_push_read_tEXt(png_structp png_ptr, png_infop info_ptr)
 
       if (png_ptr->buffer_size < 4)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_crc_finish(png_ptr);
+      __kimtoy__png_push_crc_finish(png_ptr);
 
 #ifdef PNG_MAX_MALLOC_64K
       if (png_ptr->skip_length)
@@ -1518,7 +1518,7 @@ png_push_read_tEXt(png_structp png_ptr, png_infop info_ptr)
       if (text < key + png_ptr->current_text_size)
          text++;
 
-      text_ptr = (png_textp)png_malloc(png_ptr, png_sizeof(png_text));
+      text_ptr = (png_textp)__kimtoy__png_malloc(png_ptr, png_sizeof(png_text));
       text_ptr->compression = PNG_TEXT_COMPRESSION_NONE;
       text_ptr->key = key;
       text_ptr->itxt_length = 0;
@@ -1526,27 +1526,27 @@ png_push_read_tEXt(png_structp png_ptr, png_infop info_ptr)
       text_ptr->lang_key = NULL;
       text_ptr->text = text;
 
-      ret = png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
+      ret = __kimtoy__png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
 
-      png_free(png_ptr, key);
-      png_free(png_ptr, text_ptr);
+      __kimtoy__png_free(png_ptr, key);
+      __kimtoy__png_free(png_ptr, text_ptr);
       png_ptr->current_text = NULL;
 
       if (ret)
-         png_warning(png_ptr, "Insufficient memory to store text chunk");
+         __kimtoy__png_warning(png_ptr, "Insufficient memory to store text chunk");
    }
 }
 #endif
 
 #ifdef PNG_READ_zTXt_SUPPORTED
 void /* PRIVATE */
-png_push_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
+__kimtoy__png_push_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
    length)
 {
    if (!(png_ptr->mode & PNG_HAVE_IHDR) || (png_ptr->mode & PNG_HAVE_IEND))
    {
       PNG_UNUSED(info_ptr) /* To quiet some compiler warnings */
-      png_error(png_ptr, "Out of place zTXt");
+      __kimtoy__png_error(png_ptr, "Out of place zTXt");
       /* NOT REACHED */
    }
 
@@ -1557,13 +1557,13 @@ png_push_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
     */
    if (length > (png_uint_32)65535L)
    {
-      png_warning(png_ptr, "zTXt chunk too large to fit in memory");
-      png_push_crc_skip(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "zTXt chunk too large to fit in memory");
+      __kimtoy__png_push_crc_skip(png_ptr, length);
       return;
    }
 #endif
 
-   png_ptr->current_text = (png_charp)png_malloc(png_ptr,
+   png_ptr->current_text = (png_charp)__kimtoy__png_malloc(png_ptr,
        (png_size_t)(length + 1));
    png_ptr->current_text[length] = '\0';
    png_ptr->current_text_ptr = png_ptr->current_text;
@@ -1573,7 +1573,7 @@ png_push_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
 }
 
 void /* PRIVATE */
-png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
 {
    if (png_ptr->buffer_size && png_ptr->current_text_left)
    {
@@ -1585,7 +1585,7 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
       else
          text_size = png_ptr->current_text_left;
 
-      png_crc_read(png_ptr, (png_bytep)png_ptr->current_text_ptr, text_size);
+      __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->current_text_ptr, text_size);
       png_ptr->current_text_left -= text_size;
       png_ptr->current_text_ptr += text_size;
    }
@@ -1599,11 +1599,11 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
 
       if (png_ptr->buffer_size < 4)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_crc_finish(png_ptr);
+      __kimtoy__png_push_crc_finish(png_ptr);
 
       key = png_ptr->current_text;
 
@@ -1614,7 +1614,7 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
       if (text >= key + png_ptr->current_text_size)
       {
          png_ptr->current_text = NULL;
-         png_free(png_ptr, key);
+         __kimtoy__png_free(png_ptr, key);
          return;
       }
 
@@ -1623,7 +1623,7 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
       if (*text != PNG_TEXT_COMPRESSION_zTXt) /* Check compression byte */
       {
          png_ptr->current_text = NULL;
-         png_free(png_ptr, key);
+         __kimtoy__png_free(png_ptr, key);
          return;
       }
 
@@ -1648,8 +1648,8 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
             inflateReset(&png_ptr->zstream);
             png_ptr->zstream.avail_in = 0;
             png_ptr->current_text = NULL;
-            png_free(png_ptr, key);
-            png_free(png_ptr, text);
+            __kimtoy__png_free(png_ptr, key);
+            __kimtoy__png_free(png_ptr, text);
             return;
          }
 
@@ -1657,7 +1657,7 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
          {
             if (text == NULL)
             {
-               text = (png_charp)png_malloc(png_ptr,
+               text = (png_charp)__kimtoy__png_malloc(png_ptr,
                    (png_ptr->zbuf_size
                    - png_ptr->zstream.avail_out + key_size + 1));
 
@@ -1677,12 +1677,12 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
                png_charp tmp;
 
                tmp = text;
-               text = (png_charp)png_malloc(png_ptr, text_size +
+               text = (png_charp)__kimtoy__png_malloc(png_ptr, text_size +
                    (png_ptr->zbuf_size
                    - png_ptr->zstream.avail_out + 1));
 
                png_memcpy(text, tmp, text_size);
-               png_free(png_ptr, tmp);
+               __kimtoy__png_free(png_ptr, tmp);
 
                png_memcpy(text + text_size, png_ptr->zbuf,
                    png_ptr->zbuf_size - png_ptr->zstream.avail_out);
@@ -1712,17 +1712,17 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
       if (ret != Z_STREAM_END)
       {
          png_ptr->current_text = NULL;
-         png_free(png_ptr, key);
-         png_free(png_ptr, text);
+         __kimtoy__png_free(png_ptr, key);
+         __kimtoy__png_free(png_ptr, text);
          return;
       }
 
       png_ptr->current_text = NULL;
-      png_free(png_ptr, key);
+      __kimtoy__png_free(png_ptr, key);
       key = text;
       text += key_size;
 
-      text_ptr = (png_textp)png_malloc(png_ptr,
+      text_ptr = (png_textp)__kimtoy__png_malloc(png_ptr,
           png_sizeof(png_text));
       text_ptr->compression = PNG_TEXT_COMPRESSION_zTXt;
       text_ptr->key = key;
@@ -1731,26 +1731,26 @@ png_push_read_zTXt(png_structp png_ptr, png_infop info_ptr)
       text_ptr->lang_key = NULL;
       text_ptr->text = text;
 
-      ret = png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
+      ret = __kimtoy__png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
 
-      png_free(png_ptr, key);
-      png_free(png_ptr, text_ptr);
+      __kimtoy__png_free(png_ptr, key);
+      __kimtoy__png_free(png_ptr, text_ptr);
 
       if (ret)
-         png_warning(png_ptr, "Insufficient memory to store text chunk");
+         __kimtoy__png_warning(png_ptr, "Insufficient memory to store text chunk");
    }
 }
 #endif
 
 #ifdef PNG_READ_iTXt_SUPPORTED
 void /* PRIVATE */
-png_push_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
+__kimtoy__png_push_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
     length)
 {
    if (!(png_ptr->mode & PNG_HAVE_IHDR) || (png_ptr->mode & PNG_HAVE_IEND))
    {
       PNG_UNUSED(info_ptr) /* To quiet some compiler warnings */
-      png_error(png_ptr, "Out of place iTXt");
+      __kimtoy__png_error(png_ptr, "Out of place iTXt");
       /* NOT REACHED */
    }
 
@@ -1759,13 +1759,13 @@ png_push_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
 
    if (length > (png_uint_32)65535L) /* Can't hold entire string in memory */
    {
-      png_warning(png_ptr, "iTXt chunk too large to fit in memory");
+      __kimtoy__png_warning(png_ptr, "iTXt chunk too large to fit in memory");
       png_ptr->skip_length = length - (png_uint_32)65535L;
       length = (png_uint_32)65535L;
    }
 #endif
 
-   png_ptr->current_text = (png_charp)png_malloc(png_ptr,
+   png_ptr->current_text = (png_charp)__kimtoy__png_malloc(png_ptr,
        (png_size_t)(length + 1));
    png_ptr->current_text[length] = '\0';
    png_ptr->current_text_ptr = png_ptr->current_text;
@@ -1775,7 +1775,7 @@ png_push_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32
 }
 
 void /* PRIVATE */
-png_push_read_iTXt(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_push_read_iTXt(png_structp png_ptr, png_infop info_ptr)
 {
 
    if (png_ptr->buffer_size && png_ptr->current_text_left)
@@ -1788,7 +1788,7 @@ png_push_read_iTXt(png_structp png_ptr, png_infop info_ptr)
       else
          text_size = png_ptr->current_text_left;
 
-      png_crc_read(png_ptr, (png_bytep)png_ptr->current_text_ptr, text_size);
+      __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->current_text_ptr, text_size);
       png_ptr->current_text_left -= text_size;
       png_ptr->current_text_ptr += text_size;
    }
@@ -1805,11 +1805,11 @@ png_push_read_iTXt(png_structp png_ptr, png_infop info_ptr)
 
       if (png_ptr->buffer_size < 4)
       {
-         png_push_save_buffer(png_ptr);
+         __kimtoy__png_push_save_buffer(png_ptr);
          return;
       }
 
-      png_push_crc_finish(png_ptr);
+      __kimtoy__png_push_crc_finish(png_ptr);
 
 #ifdef PNG_MAX_MALLOC_64K
       if (png_ptr->skip_length)
@@ -1843,7 +1843,7 @@ png_push_read_iTXt(png_structp png_ptr, png_infop info_ptr)
       if (text < key + png_ptr->current_text_size)
          text++;
 
-      text_ptr = (png_textp)png_malloc(png_ptr,
+      text_ptr = (png_textp)__kimtoy__png_malloc(png_ptr,
           png_sizeof(png_text));
 
       text_ptr->compression = comp_flag + 2;
@@ -1854,13 +1854,13 @@ png_push_read_iTXt(png_structp png_ptr, png_infop info_ptr)
       text_ptr->text_length = 0;
       text_ptr->itxt_length = png_strlen(text);
 
-      ret = png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
+      ret = __kimtoy__png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
 
       png_ptr->current_text = NULL;
 
-      png_free(png_ptr, text_ptr);
+      __kimtoy__png_free(png_ptr, text_ptr);
       if (ret)
-         png_warning(png_ptr, "Insufficient memory to store iTXt chunk");
+         __kimtoy__png_warning(png_ptr, "Insufficient memory to store iTXt chunk");
    }
 }
 #endif
@@ -1870,7 +1870,7 @@ png_push_read_iTXt(png_structp png_ptr, png_infop info_ptr)
  * name or a critical chunk), the chunk is (currently) silently ignored.
  */
 void /* PRIVATE */
-png_push_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32
+__kimtoy__png_push_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32
     length)
 {
    png_uint_32 skip = 0;
@@ -1879,14 +1879,14 @@ png_push_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32
    if (PNG_CHUNK_CRITICAL(chunk_name))
    {
 #ifdef PNG_READ_UNKNOWN_CHUNKS_SUPPORTED
-      if (png_chunk_unknown_handling(png_ptr, chunk_name) !=
+      if (__kimtoy__png_chunk_unknown_handling(png_ptr, chunk_name) !=
           PNG_HANDLE_CHUNK_ALWAYS
 #ifdef PNG_READ_USER_CHUNKS_SUPPORTED
           && png_ptr->read_user_chunk_fn == NULL
 #endif
           )
 #endif
-         png_chunk_error(png_ptr, "unknown critical chunk");
+         __kimtoy__png_chunk_error(png_ptr, "unknown critical chunk");
 
       PNG_UNUSED(info_ptr) /* To quiet some compiler warnings */
    }
@@ -1901,7 +1901,7 @@ png_push_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32
 #ifdef PNG_MAX_MALLOC_64K
       if (length > 65535)
       {
-         png_warning(png_ptr, "unknown chunk too large to fit in memory");
+         __kimtoy__png_warning(png_ptr, "unknown chunk too large to fit in memory");
          skip = length - 65535;
          length = 65535;
       }
@@ -1919,9 +1919,9 @@ png_push_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32
 
       else
       {
-         png_ptr->unknown_chunk.data = (png_bytep)png_malloc(png_ptr,
+         png_ptr->unknown_chunk.data = (png_bytep)__kimtoy__png_malloc(png_ptr,
             png_ptr->unknown_chunk.size);
-         png_crc_read(png_ptr, (png_bytep)png_ptr->unknown_chunk.data,
+         __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->unknown_chunk.data,
             png_ptr->unknown_chunk.size);
       }
 
@@ -1934,48 +1934,48 @@ png_push_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32
              (png_ptr, &png_ptr->unknown_chunk);
 
          if (ret < 0)
-            png_chunk_error(png_ptr, "error in user chunk");
+            __kimtoy__png_chunk_error(png_ptr, "error in user chunk");
 
          if (ret == 0)
          {
             if (PNG_CHUNK_CRITICAL(png_ptr->chunk_name))
-               if (png_chunk_unknown_handling(png_ptr, chunk_name) !=
+               if (__kimtoy__png_chunk_unknown_handling(png_ptr, chunk_name) !=
                    PNG_HANDLE_CHUNK_ALWAYS)
-                  png_chunk_error(png_ptr, "unknown critical chunk");
-            png_set_unknown_chunks(png_ptr, info_ptr,
+                  __kimtoy__png_chunk_error(png_ptr, "unknown critical chunk");
+            __kimtoy__png_set_unknown_chunks(png_ptr, info_ptr,
                 &png_ptr->unknown_chunk, 1);
          }
       }
 
       else
 #endif
-         png_set_unknown_chunks(png_ptr, info_ptr, &png_ptr->unknown_chunk, 1);
-      png_free(png_ptr, png_ptr->unknown_chunk.data);
+         __kimtoy__png_set_unknown_chunks(png_ptr, info_ptr, &png_ptr->unknown_chunk, 1);
+      __kimtoy__png_free(png_ptr, png_ptr->unknown_chunk.data);
       png_ptr->unknown_chunk.data = NULL;
    }
 
    else
 #endif
       skip=length;
-   png_push_crc_skip(png_ptr, skip);
+   __kimtoy__png_push_crc_skip(png_ptr, skip);
 }
 
 void /* PRIVATE */
-png_push_have_info(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_push_have_info(png_structp png_ptr, png_infop info_ptr)
 {
    if (png_ptr->info_fn != NULL)
       (*(png_ptr->info_fn))(png_ptr, info_ptr);
 }
 
 void /* PRIVATE */
-png_push_have_end(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_push_have_end(png_structp png_ptr, png_infop info_ptr)
 {
    if (png_ptr->end_fn != NULL)
       (*(png_ptr->end_fn))(png_ptr, info_ptr);
 }
 
 void /* PRIVATE */
-png_push_have_row(png_structp png_ptr, png_bytep row)
+__kimtoy__png_push_have_row(png_structp png_ptr, png_bytep row)
 {
    if (png_ptr->row_fn != NULL)
       (*(png_ptr->row_fn))(png_ptr, row, png_ptr->row_number,
@@ -1984,7 +1984,7 @@ png_push_have_row(png_structp png_ptr, png_bytep row)
 
 #ifdef PNG_READ_INTERLACING_SUPPORTED
 void PNGAPI
-png_progressive_combine_row (png_structp png_ptr, png_bytep old_row,
+__kimtoy__png_progressive_combine_row (png_structp png_ptr, png_bytep old_row,
     png_const_bytep new_row)
 {
    if (png_ptr == NULL)
@@ -1995,12 +1995,12 @@ png_progressive_combine_row (png_structp png_ptr, png_bytep old_row,
     * it must be png_ptr->row_buf+1
     */
    if (new_row != NULL)
-      png_combine_row(png_ptr, old_row, 1/*display*/);
+      __kimtoy__png_combine_row(png_ptr, old_row, 1/*display*/);
 }
 #endif /* PNG_READ_INTERLACING_SUPPORTED */
 
 void PNGAPI
-png_set_progressive_read_fn(png_structp png_ptr, png_voidp progressive_ptr,
+__kimtoy__png_set_progressive_read_fn(png_structp png_ptr, png_voidp progressive_ptr,
     png_progressive_info_ptr info_fn, png_progressive_row_ptr row_fn,
     png_progressive_end_ptr end_fn)
 {
@@ -2011,12 +2011,12 @@ png_set_progressive_read_fn(png_structp png_ptr, png_voidp progressive_ptr,
    png_ptr->row_fn = row_fn;
    png_ptr->end_fn = end_fn;
 
-   png_set_read_fn(png_ptr, progressive_ptr, png_push_fill_buffer);
+   __kimtoy__png_set_read_fn(png_ptr, progressive_ptr, __kimtoy__png_push_fill_buffer);
 }
 
 #ifdef PNG_READ_APNG_SUPPORTED
 void PNGAPI
-png_set_progressive_frame_fn(png_structp png_ptr,
+__kimtoy__png_set_progressive_frame_fn(png_structp png_ptr,
    png_progressive_frame_ptr frame_info_fn,
    png_progressive_frame_ptr frame_end_fn)
 {
@@ -2026,7 +2026,7 @@ png_set_progressive_frame_fn(png_structp png_ptr,
 #endif
 
 png_voidp PNGAPI
-png_get_progressive_ptr(png_const_structp png_ptr)
+__kimtoy__png_get_progressive_ptr(png_const_structp png_ptr)
 {
    if (png_ptr == NULL)
       return (NULL);

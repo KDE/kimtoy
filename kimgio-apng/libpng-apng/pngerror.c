@@ -12,7 +12,7 @@
  *
  * This file provides a location for all error handling.  Users who
  * need special error handling are expected to write replacement functions
- * and use png_set_error_fn() to use those functions.  See the instructions
+ * and use __kimtoy__png_set_error_fn() to use those functions.  See the instructions
  * at each function.
  */
 
@@ -31,12 +31,12 @@ png_default_warning PNGARG((png_structp png_ptr,
 
 /* This function is called whenever there is a fatal error.  This function
  * should not be changed.  If there is a need to handle errors differently,
- * you should supply a replacement error function and use png_set_error_fn()
+ * you should supply a replacement error function and use __kimtoy__png_set_error_fn()
  * to replace the error function at run-time.
  */
 #ifdef PNG_ERROR_TEXT_SUPPORTED
 PNG_FUNCTION(void,PNGAPI
-png_error,(png_structp png_ptr, png_const_charp error_message),PNG_NORETURN)
+__kimtoy__png_error,(png_structp png_ptr, png_const_charp error_message),PNG_NORETURN)
 {
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
    char msg[16];
@@ -107,7 +107,7 @@ png_err,(png_structp png_ptr),PNG_NORETURN)
  * error checking is not required in the caller.
  */
 size_t
-png_safecat(png_charp buffer, size_t bufsize, size_t pos,
+__kimtoy__png_safecat(png_charp buffer, size_t bufsize, size_t pos,
    png_const_charp string)
 {
    if (buffer != NULL && pos < bufsize)
@@ -128,7 +128,7 @@ png_safecat(png_charp buffer, size_t bufsize, size_t pos,
  * Returns the pointer to the start of the formatted string.
  */
 png_charp
-png_format_number(png_const_charp start, png_charp end, int format,
+__kimtoy__png_format_number(png_const_charp start, png_charp end, int format,
    png_alloc_size_t number)
 {
    int count = 0;    /* number of digits output */
@@ -208,10 +208,10 @@ png_format_number(png_const_charp start, png_charp end, int format,
 /* This function is called whenever there is a non-fatal error.  This function
  * should not be changed.  If there is a need to handle warnings differently,
  * you should supply a replacement warning function and use
- * png_set_error_fn() to replace the warning function at run-time.
+ * __kimtoy__png_set_error_fn() to replace the warning function at run-time.
  */
 void PNGAPI
-png_warning(png_structp png_ptr, png_const_charp warning_message)
+__kimtoy__png_warning(png_structp png_ptr, png_const_charp warning_message)
 {
    int offset = 0;
    if (png_ptr != NULL)
@@ -241,23 +241,23 @@ png_warning(png_structp png_ptr, png_const_charp warning_message)
  * standard established by X/Open for internationalizable error messages.
  */
 void
-png_warning_parameter(png_warning_parameters p, int number,
+__kimtoy__png_warning_parameter(png_warning_parameters p, int number,
    png_const_charp string)
 {
    if (number > 0 && number <= PNG_WARNING_PARAMETER_COUNT)
-      (void)png_safecat(p[number-1], (sizeof p[number-1]), 0, string);
+      (void)__kimtoy__png_safecat(p[number-1], (sizeof p[number-1]), 0, string);
 }
 
 void
-png_warning_parameter_unsigned(png_warning_parameters p, int number, int format,
+__kimtoy__png_warning_parameter_unsigned(png_warning_parameters p, int number, int format,
    png_alloc_size_t value)
 {
    char buffer[PNG_NUMBER_BUFFER_SIZE];
-   png_warning_parameter(p, number, PNG_FORMAT_NUMBER(buffer, format, value));
+   __kimtoy__png_warning_parameter(p, number, PNG_FORMAT_NUMBER(buffer, format, value));
 }
 
 void
-png_warning_parameter_signed(png_warning_parameters p, int number, int format,
+__kimtoy__png_warning_parameter_signed(png_warning_parameters p, int number, int format,
    png_int_32 value)
 {
    png_alloc_size_t u;
@@ -274,11 +274,11 @@ png_warning_parameter_signed(png_warning_parameters p, int number, int format,
    if (value < 0 && str > buffer)
       *--str = '-';
 
-   png_warning_parameter(p, number, str);
+   __kimtoy__png_warning_parameter(p, number, str);
 }
 
 void
-png_formatted_warning(png_structp png_ptr, png_warning_parameters p,
+__kimtoy__png_formatted_warning(png_structp png_ptr, png_warning_parameters p,
    png_const_charp message)
 {
    /* The internal buffer is just 128 bytes - enough for all our messages,
@@ -341,18 +341,18 @@ png_formatted_warning(png_structp png_ptr, png_warning_parameters p,
    msg[i] = '\0';
 
    /* And this is the formatted message: */
-   png_warning(png_ptr, msg);
+   __kimtoy__png_warning(png_ptr, msg);
 }
 #endif /* PNG_WARNINGS_SUPPORTED */
 
 #ifdef PNG_BENIGN_ERRORS_SUPPORTED
 void PNGAPI
-png_benign_error(png_structp png_ptr, png_const_charp error_message)
+__kimtoy__png_benign_error(png_structp png_ptr, png_const_charp error_message)
 {
   if (png_ptr->flags & PNG_FLAG_BENIGN_ERRORS_WARN)
-     png_warning(png_ptr, error_message);
+     __kimtoy__png_warning(png_ptr, error_message);
   else
-     png_error(png_ptr, error_message);
+     __kimtoy__png_error(png_ptr, error_message);
 }
 #endif
 
@@ -417,33 +417,33 @@ png_format_buffer(png_structp png_ptr, png_charp buffer, png_const_charp
 
 #if defined(PNG_READ_SUPPORTED) && defined(PNG_ERROR_TEXT_SUPPORTED)
 PNG_FUNCTION(void,PNGAPI
-png_chunk_error,(png_structp png_ptr, png_const_charp error_message),
+__kimtoy__png_chunk_error,(png_structp png_ptr, png_const_charp error_message),
    PNG_NORETURN)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
    if (png_ptr == NULL)
-      png_error(png_ptr, error_message);
+      __kimtoy__png_error(png_ptr, error_message);
 
    else
    {
       png_format_buffer(png_ptr, msg, error_message);
-      png_error(png_ptr, msg);
+      __kimtoy__png_error(png_ptr, msg);
    }
 }
 #endif /* PNG_READ_SUPPORTED && PNG_ERROR_TEXT_SUPPORTED */
 
 #ifdef PNG_WARNINGS_SUPPORTED
 void PNGAPI
-png_chunk_warning(png_structp png_ptr, png_const_charp warning_message)
+__kimtoy__png_chunk_warning(png_structp png_ptr, png_const_charp warning_message)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
    if (png_ptr == NULL)
-      png_warning(png_ptr, warning_message);
+      __kimtoy__png_warning(png_ptr, warning_message);
 
    else
    {
       png_format_buffer(png_ptr, msg, warning_message);
-      png_warning(png_ptr, msg);
+      __kimtoy__png_warning(png_ptr, msg);
    }
 }
 #endif /* PNG_WARNINGS_SUPPORTED */
@@ -451,13 +451,13 @@ png_chunk_warning(png_structp png_ptr, png_const_charp warning_message)
 #ifdef PNG_READ_SUPPORTED
 #ifdef PNG_BENIGN_ERRORS_SUPPORTED
 void PNGAPI
-png_chunk_benign_error(png_structp png_ptr, png_const_charp error_message)
+__kimtoy__png_chunk_benign_error(png_structp png_ptr, png_const_charp error_message)
 {
    if (png_ptr->flags & PNG_FLAG_BENIGN_ERRORS_WARN)
-      png_chunk_warning(png_ptr, error_message);
+      __kimtoy__png_chunk_warning(png_ptr, error_message);
 
    else
-      png_chunk_error(png_ptr, error_message);
+      __kimtoy__png_chunk_error(png_ptr, error_message);
 }
 #endif
 #endif /* PNG_READ_SUPPORTED */
@@ -465,7 +465,7 @@ png_chunk_benign_error(png_structp png_ptr, png_const_charp error_message)
 #ifdef PNG_ERROR_TEXT_SUPPORTED
 #ifdef PNG_FLOATING_POINT_SUPPORTED
 PNG_FUNCTION(void,
-png_fixed_error,(png_structp png_ptr, png_const_charp name),PNG_NORETURN)
+__kimtoy__png_fixed_error,(png_structp png_ptr, png_const_charp name),PNG_NORETURN)
 {
 #  define fixed_message "fixed point overflow in "
 #  define fixed_message_ln ((sizeof fixed_message)-1)
@@ -479,7 +479,7 @@ png_fixed_error,(png_structp png_ptr, png_const_charp name),PNG_NORETURN)
       ++iin;
    }
    msg[fixed_message_ln + iin] = 0;
-   png_error(png_ptr, msg);
+   __kimtoy__png_error(png_ptr, msg);
 }
 #endif
 #endif
@@ -489,7 +489,7 @@ png_fixed_error,(png_structp png_ptr, png_const_charp name),PNG_NORETURN)
  * otherwise it is necessary for png_default_error to be overridden.
  */
 jmp_buf* PNGAPI
-png_set_longjmp_fn(png_structp png_ptr, png_longjmp_ptr longjmp_fn,
+__kimtoy__png_set_longjmp_fn(png_structp png_ptr, png_longjmp_ptr longjmp_fn,
     size_t jmp_buf_size)
 {
    if (png_ptr == NULL || jmp_buf_size != png_sizeof(jmp_buf))
@@ -503,7 +503,7 @@ png_set_longjmp_fn(png_structp png_ptr, png_longjmp_ptr longjmp_fn,
 /* This is the default error handling function.  Note that replacements for
  * this function MUST NOT RETURN, or the program will likely crash.  This
  * function is used by default, or if the program supplies NULL for the
- * error function pointer in png_set_error_fn().
+ * error function pointer in __kimtoy__png_set_error_fn().
  */
 static PNG_FUNCTION(void /* PRIVATE */,
 png_default_error,(png_structp png_ptr, png_const_charp error_message),
@@ -549,11 +549,11 @@ png_default_error,(png_structp png_ptr, png_const_charp error_message),
 #else
    PNG_UNUSED(error_message) /* Make compiler happy */
 #endif
-   png_longjmp(png_ptr, 1);
+   __kimtoy__png_longjmp(png_ptr, 1);
 }
 
 PNG_FUNCTION(void,PNGAPI
-png_longjmp,(png_structp png_ptr, int val),PNG_NORETURN)
+__kimtoy__png_longjmp,(png_structp png_ptr, int val),PNG_NORETURN)
 {
 #ifdef PNG_SETJMP_SUPPORTED
    if (png_ptr && png_ptr->longjmp_fn)
@@ -631,7 +631,7 @@ png_default_warning(png_structp png_ptr, png_const_charp warning_message)
  * method used in the default routine calls longjmp(png_ptr->longjmp_buffer, 1)
  */
 void PNGAPI
-png_set_error_fn(png_structp png_ptr, png_voidp error_ptr,
+__kimtoy__png_set_error_fn(png_structp png_ptr, png_voidp error_ptr,
     png_error_ptr error_fn, png_error_ptr warning_fn)
 {
    if (png_ptr == NULL)
@@ -649,10 +649,10 @@ png_set_error_fn(png_structp png_ptr, png_voidp error_ptr,
 
 /* This function returns a pointer to the error_ptr associated with the user
  * functions.  The application should free any memory associated with this
- * pointer before png_write_destroy and png_read_destroy are called.
+ * pointer before __kimtoy__png_write_destroy and __kimtoy__png_read_destroy are called.
  */
 png_voidp PNGAPI
-png_get_error_ptr(png_const_structp png_ptr)
+__kimtoy__png_get_error_ptr(png_const_structp png_ptr)
 {
    if (png_ptr == NULL)
       return NULL;

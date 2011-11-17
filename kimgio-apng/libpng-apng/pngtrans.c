@@ -18,9 +18,9 @@
 #if defined(PNG_READ_BGR_SUPPORTED) || defined(PNG_WRITE_BGR_SUPPORTED)
 /* Turn on BGR-to-RGB mapping */
 void PNGAPI
-png_set_bgr(png_structp png_ptr)
+__kimtoy__png_set_bgr(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_bgr");
+   png_debug(1, "in __kimtoy__png_set_bgr");
 
    if (png_ptr == NULL)
       return;
@@ -32,9 +32,9 @@ png_set_bgr(png_structp png_ptr)
 #if defined(PNG_READ_SWAP_SUPPORTED) || defined(PNG_WRITE_SWAP_SUPPORTED)
 /* Turn on 16 bit byte swapping */
 void PNGAPI
-png_set_swap(png_structp png_ptr)
+__kimtoy__png_set_swap(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_swap");
+   png_debug(1, "in __kimtoy__png_set_swap");
 
    if (png_ptr == NULL)
       return;
@@ -47,9 +47,9 @@ png_set_swap(png_structp png_ptr)
 #if defined(PNG_READ_PACK_SUPPORTED) || defined(PNG_WRITE_PACK_SUPPORTED)
 /* Turn on pixel packing */
 void PNGAPI
-png_set_packing(png_structp png_ptr)
+__kimtoy__png_set_packing(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_packing");
+   png_debug(1, "in __kimtoy__png_set_packing");
 
    if (png_ptr == NULL)
       return;
@@ -65,9 +65,9 @@ png_set_packing(png_structp png_ptr)
 #if defined(PNG_READ_PACKSWAP_SUPPORTED)||defined(PNG_WRITE_PACKSWAP_SUPPORTED)
 /* Turn on packed pixel swapping */
 void PNGAPI
-png_set_packswap(png_structp png_ptr)
+__kimtoy__png_set_packswap(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_packswap");
+   png_debug(1, "in __kimtoy__png_set_packswap");
 
    if (png_ptr == NULL)
       return;
@@ -79,9 +79,9 @@ png_set_packswap(png_structp png_ptr)
 
 #if defined(PNG_READ_SHIFT_SUPPORTED) || defined(PNG_WRITE_SHIFT_SUPPORTED)
 void PNGAPI
-png_set_shift(png_structp png_ptr, png_const_color_8p true_bits)
+__kimtoy__png_set_shift(png_structp png_ptr, png_const_color_8p true_bits)
 {
-   png_debug(1, "in png_set_shift");
+   png_debug(1, "in __kimtoy__png_set_shift");
 
    if (png_ptr == NULL)
       return;
@@ -94,7 +94,7 @@ png_set_shift(png_structp png_ptr, png_const_color_8p true_bits)
 #if defined(PNG_READ_INTERLACING_SUPPORTED) || \
     defined(PNG_WRITE_INTERLACING_SUPPORTED)
 int PNGAPI
-png_set_interlace_handling(png_structp png_ptr)
+__kimtoy__png_set_interlace_handling(png_structp png_ptr)
 {
    png_debug(1, "in png_set_interlace handling");
 
@@ -115,9 +115,9 @@ png_set_interlace_handling(png_structp png_ptr)
  * that don't like bytes as parameters.
  */
 void PNGAPI
-png_set_filler(png_structp png_ptr, png_uint_32 filler, int filler_loc)
+__kimtoy__png_set_filler(png_structp png_ptr, png_uint_32 filler, int filler_loc)
 {
-   png_debug(1, "in png_set_filler");
+   png_debug(1, "in __kimtoy__png_set_filler");
 
    if (png_ptr == NULL)
       return;
@@ -152,14 +152,14 @@ png_set_filler(png_structp png_ptr, png_uint_32 filler, int filler_loc)
 
 /* Added to libpng-1.2.7 */
 void PNGAPI
-png_set_add_alpha(png_structp png_ptr, png_uint_32 filler, int filler_loc)
+__kimtoy__png_set_add_alpha(png_structp png_ptr, png_uint_32 filler, int filler_loc)
 {
-   png_debug(1, "in png_set_add_alpha");
+   png_debug(1, "in __kimtoy__png_set_add_alpha");
 
    if (png_ptr == NULL)
       return;
 
-   png_set_filler(png_ptr, filler, filler_loc);
+   __kimtoy__png_set_filler(png_ptr, filler, filler_loc);
    png_ptr->transformations |= PNG_ADD_ALPHA;
 }
 
@@ -168,9 +168,9 @@ png_set_add_alpha(png_structp png_ptr, png_uint_32 filler, int filler_loc)
 #if defined(PNG_READ_SWAP_ALPHA_SUPPORTED) || \
     defined(PNG_WRITE_SWAP_ALPHA_SUPPORTED)
 void PNGAPI
-png_set_swap_alpha(png_structp png_ptr)
+__kimtoy__png_set_swap_alpha(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_swap_alpha");
+   png_debug(1, "in __kimtoy__png_set_swap_alpha");
 
    if (png_ptr == NULL)
       return;
@@ -182,9 +182,9 @@ png_set_swap_alpha(png_structp png_ptr)
 #if defined(PNG_READ_INVERT_ALPHA_SUPPORTED) || \
     defined(PNG_WRITE_INVERT_ALPHA_SUPPORTED)
 void PNGAPI
-png_set_invert_alpha(png_structp png_ptr)
+__kimtoy__png_set_invert_alpha(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_invert_alpha");
+   png_debug(1, "in __kimtoy__png_set_invert_alpha");
 
    if (png_ptr == NULL)
       return;
@@ -195,9 +195,9 @@ png_set_invert_alpha(png_structp png_ptr)
 
 #if defined(PNG_READ_INVERT_SUPPORTED) || defined(PNG_WRITE_INVERT_SUPPORTED)
 void PNGAPI
-png_set_invert_mono(png_structp png_ptr)
+__kimtoy__png_set_invert_mono(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_invert_mono");
+   png_debug(1, "in __kimtoy__png_set_invert_mono");
 
    if (png_ptr == NULL)
       return;
@@ -207,9 +207,9 @@ png_set_invert_mono(png_structp png_ptr)
 
 /* Invert monochrome grayscale data */
 void /* PRIVATE */
-png_do_invert(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_invert(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_invert");
+   png_debug(1, "in __kimtoy__png_do_invert");
 
   /* This test removed from libpng version 1.0.13 and 1.2.0:
    *   if (row_info->bit_depth == 1 &&
@@ -264,9 +264,9 @@ png_do_invert(png_row_infop row_info, png_bytep row)
 #if defined(PNG_READ_SWAP_SUPPORTED) || defined(PNG_WRITE_SWAP_SUPPORTED)
 /* Swaps byte order on 16 bit depth images */
 void /* PRIVATE */
-png_do_swap(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_swap(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_swap");
+   png_debug(1, "in __kimtoy__png_do_swap");
 
    if (row_info->bit_depth == 16)
    {
@@ -393,9 +393,9 @@ static PNG_CONST png_byte fourbppswaptable[256] = {
 
 /* Swaps pixel packing order within bytes */
 void /* PRIVATE */
-png_do_packswap(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_packswap(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_packswap");
+   png_debug(1, "in __kimtoy__png_do_packswap");
 
    if (row_info->bit_depth < 8)
    {
@@ -433,7 +433,7 @@ png_do_packswap(png_row_infop row_info, png_bytep row)
  * end (not in the middle) of each pixel.
  */
 void /* PRIVATE */
-png_do_strip_channel(png_row_infop row_info, png_bytep row, int at_start)
+__kimtoy__png_do_strip_channel(png_row_infop row_info, png_bytep row, int at_start)
 {
    png_bytep sp = row; /* source pointer */
    png_bytep dp = row; /* destination pointer */
@@ -543,9 +543,9 @@ png_do_strip_channel(png_row_infop row_info, png_bytep row, int at_start)
 #if defined(PNG_READ_BGR_SUPPORTED) || defined(PNG_WRITE_BGR_SUPPORTED)
 /* Swaps red and blue bytes within a pixel */
 void /* PRIVATE */
-png_do_bgr(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_bgr(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_bgr");
+   png_debug(1, "in __kimtoy__png_do_bgr");
 
    if ((row_info->color_type & PNG_COLOR_MASK_COLOR))
    {
@@ -623,10 +623,10 @@ png_do_bgr(png_row_infop row_info, png_bytep row)
     defined(PNG_WRITE_USER_TRANSFORM_SUPPORTED)
 #ifdef PNG_USER_TRANSFORM_PTR_SUPPORTED
 void PNGAPI
-png_set_user_transform_info(png_structp png_ptr, png_voidp
+__kimtoy__png_set_user_transform_info(png_structp png_ptr, png_voidp
    user_transform_ptr, int user_transform_depth, int user_transform_channels)
 {
-   png_debug(1, "in png_set_user_transform_info");
+   png_debug(1, "in __kimtoy__png_set_user_transform_info");
 
    if (png_ptr == NULL)
       return;
@@ -638,12 +638,12 @@ png_set_user_transform_info(png_structp png_ptr, png_voidp
 
 /* This function returns a pointer to the user_transform_ptr associated with
  * the user transform functions.  The application should free any memory
- * associated with this pointer before png_write_destroy and png_read_destroy
+ * associated with this pointer before __kimtoy__png_write_destroy and __kimtoy__png_read_destroy
  * are called.
  */
 #ifdef PNG_USER_TRANSFORM_PTR_SUPPORTED
 png_voidp PNGAPI
-png_get_user_transform_ptr(png_const_structp png_ptr)
+__kimtoy__png_get_user_transform_ptr(png_const_structp png_ptr)
 {
    if (png_ptr == NULL)
       return (NULL);
@@ -654,7 +654,7 @@ png_get_user_transform_ptr(png_const_structp png_ptr)
 
 #ifdef PNG_USER_TRANSFORM_INFO_SUPPORTED
 png_uint_32 PNGAPI
-png_get_current_row_number(png_const_structp png_ptr)
+__kimtoy__png_get_current_row_number(png_const_structp png_ptr)
 {
    /* See the comments in png.h - this is the sub-image row when reading and
     * interlaced image.
@@ -666,7 +666,7 @@ png_get_current_row_number(png_const_structp png_ptr)
 }
 
 png_byte PNGAPI
-png_get_current_pass_number(png_const_structp png_ptr)
+__kimtoy__png_get_current_pass_number(png_const_structp png_ptr)
 {
    if (png_ptr != NULL)
       return png_ptr->pass;

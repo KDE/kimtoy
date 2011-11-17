@@ -203,18 +203,18 @@ typedef PNG_CONST png_uint_16p FAR * png_const_uint_16pp;
 #ifdef PNG_WARNINGS_SUPPORTED
 #  define PNG_WARNING_PARAMETERS(p) png_warning_parameters p;
 #else
-#  define png_warning(s1,s2) ((void)(s1))
-#  define png_chunk_warning(s1,s2) ((void)(s1))
-#  define png_warning_parameter(p,number,string) ((void)0)
-#  define png_warning_parameter_unsigned(p,number,format,value) ((void)0)
-#  define png_warning_parameter_signed(p,number,format,value) ((void)0)
-#  define png_formatted_warning(pp,p,message) ((void)(pp))
+#  define __kimtoy__png_warning(s1,s2) ((void)(s1))
+#  define __kimtoy__png_chunk_warning(s1,s2) ((void)(s1))
+#  define __kimtoy__png_warning_parameter(p,number,string) ((void)0)
+#  define __kimtoy__png_warning_parameter_unsigned(p,number,format,value) ((void)0)
+#  define __kimtoy__png_warning_parameter_signed(p,number,format,value) ((void)0)
+#  define __kimtoy__png_formatted_warning(pp,p,message) ((void)(pp))
 #  define PNG_WARNING_PARAMETERS(p)
 #endif
 #ifndef PNG_ERROR_TEXT_SUPPORTED
-#  define png_error(s1,s2) png_err(s1)
-#  define png_chunk_error(s1,s2) png_err(s1)
-#  define png_fixed_error(s1,s2) png_err(s1)
+#  define __kimtoy__png_error(s1,s2) png_err(s1)
+#  define __kimtoy__png_chunk_error(s1,s2) png_err(s1)
+#  define __kimtoy__png_fixed_error(s1,s2) png_err(s1)
 #endif
 
 #ifndef PNG_EXTERN
@@ -434,7 +434,7 @@ typedef PNG_CONST png_uint_16p FAR * png_const_uint_16pp;
                        /*  0x10000000 unused */
                        /*  0x20000000 unused */
                        /*  0x40000000 unused */
-/* Flags for png_create_struct */
+/* Flags for __kimtoy__png_create_struct */
 #define PNG_STRUCT_PNG   0x0001
 #define PNG_STRUCT_INFO  0x0002
 
@@ -538,7 +538,7 @@ typedef PNG_CONST png_uint_16p FAR * png_const_uint_16pp;
  * (2^31-1) * 100000). 's' is a string that describes the value being
  * converted.
  *
- * NOTE: this macro will raise a png_error if the range check fails,
+ * NOTE: this macro will raise a __kimtoy__png_error if the range check fails,
  * therefore it is normally only appropriate to use this on values
  * that come from API calls or other sources where an out of range
  * error indicates a programming error, not a data error!
@@ -547,10 +547,10 @@ typedef PNG_CONST png_uint_16p FAR * png_const_uint_16pp;
  * function call saves a lot of code.
  */
 #ifdef PNG_FIXED_POINT_MACRO_SUPPORTED
-#define png_fixed(png_ptr, fp, s) ((fp) <= 21474 && (fp) >= -21474 ?\
-    ((png_fixed_point)(100000 * (fp))) : (png_fixed_error(png_ptr, s),0))
+#define __kimtoy__png_fixed(png_ptr, fp, s) ((fp) <= 21474 && (fp) >= -21474 ?\
+    ((png_fixed_point)(100000 * (fp))) : (__kimtoy__png_fixed_error(png_ptr, s),0))
 #else
-PNG_EXTERN png_fixed_point png_fixed PNGARG((png_structp png_ptr, double fp,
+PNG_EXTERN png_fixed_point __kimtoy__png_fixed PNGARG((png_structp png_ptr, double fp,
    png_const_charp text));
 #endif
 #endif
@@ -648,98 +648,98 @@ extern "C" {
 /* Check the user version string for compatibility, returns false if the version
  * numbers aren't compatible.
  */
-PNG_EXTERN int png_user_version_check(png_structp png_ptr,
+PNG_EXTERN int __kimtoy__png_user_version_check(png_structp png_ptr,
    png_const_charp user_png_ver);
 
 /* Allocate memory for an internal libpng struct */
-PNG_EXTERN PNG_FUNCTION(png_voidp,png_create_struct,PNGARG((int type)),
+PNG_EXTERN PNG_FUNCTION(png_voidp,__kimtoy__png_create_struct,PNGARG((int type)),
    PNG_ALLOCATED);
 
 /* Free memory from internal libpng struct */
-PNG_EXTERN void png_destroy_struct PNGARG((png_voidp struct_ptr));
+PNG_EXTERN void __kimtoy__png_destroy_struct PNGARG((png_voidp struct_ptr));
 
-PNG_EXTERN PNG_FUNCTION(png_voidp,png_create_struct_2,
+PNG_EXTERN PNG_FUNCTION(png_voidp,__kimtoy__png_create_struct_2,
    PNGARG((int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr)),
    PNG_ALLOCATED);
-PNG_EXTERN void png_destroy_struct_2 PNGARG((png_voidp struct_ptr,
+PNG_EXTERN void __kimtoy__png_destroy_struct_2 PNGARG((png_voidp struct_ptr,
     png_free_ptr free_fn, png_voidp mem_ptr));
 
 /* Free any memory that info_ptr points to and reset struct. */
-PNG_EXTERN void png_info_destroy PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_info_destroy PNGARG((png_structp png_ptr,
     png_infop info_ptr));
 
 /* Function to allocate memory for zlib.  PNGAPI is disallowed. */
-PNG_EXTERN PNG_FUNCTION(voidpf,png_zalloc,PNGARG((voidpf png_ptr, uInt items,
+PNG_EXTERN PNG_FUNCTION(voidpf,__kimtoy__png_zalloc,PNGARG((voidpf png_ptr, uInt items,
    uInt size)),PNG_ALLOCATED);
 
 /* Function to free memory for zlib.  PNGAPI is disallowed. */
-PNG_EXTERN void png_zfree PNGARG((voidpf png_ptr, voidpf ptr));
+PNG_EXTERN void __kimtoy__png_zfree PNGARG((voidpf png_ptr, voidpf ptr));
 
 /* Next four functions are used internally as callbacks.  PNGCBAPI is required
  * but not PNG_EXPORT.  PNGAPI added at libpng version 1.2.3, changed to
  * PNGCBAPI at 1.5.0
  */
 
-PNG_EXTERN void PNGCBAPI png_default_read_data PNGARG((png_structp png_ptr,
+PNG_EXTERN void PNGCBAPI __kimtoy__png_default_read_data PNGARG((png_structp png_ptr,
     png_bytep data, png_size_t length));
 
 #ifdef PNG_PROGRESSIVE_READ_SUPPORTED
-PNG_EXTERN void PNGCBAPI png_push_fill_buffer PNGARG((png_structp png_ptr,
+PNG_EXTERN void PNGCBAPI __kimtoy__png_push_fill_buffer PNGARG((png_structp png_ptr,
     png_bytep buffer, png_size_t length));
 #endif
 
-PNG_EXTERN void PNGCBAPI png_default_write_data PNGARG((png_structp png_ptr,
+PNG_EXTERN void PNGCBAPI __kimtoy__png_default_write_data PNGARG((png_structp png_ptr,
     png_bytep data, png_size_t length));
 
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
 #  ifdef PNG_STDIO_SUPPORTED
-PNG_EXTERN void PNGCBAPI png_default_flush PNGARG((png_structp png_ptr));
+PNG_EXTERN void PNGCBAPI __kimtoy__png_default_flush PNGARG((png_structp png_ptr));
 #  endif
 #endif
 
 /* Reset the CRC variable */
-PNG_EXTERN void png_reset_crc PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_reset_crc PNGARG((png_structp png_ptr));
 
 /* Write the "data" buffer to whatever output you are using */
-PNG_EXTERN void png_write_data PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_data PNGARG((png_structp png_ptr,
     png_const_bytep data, png_size_t length));
 
 /* Read and check the PNG file signature */
-PNG_EXTERN void png_read_sig PNGARG((png_structp png_ptr, png_infop info_ptr));
+PNG_EXTERN void __kimtoy__png_read_sig PNGARG((png_structp png_ptr, png_infop info_ptr));
 
 /* Read the chunk header (length + type name) */
-PNG_EXTERN png_uint_32 png_read_chunk_header PNGARG((png_structp png_ptr));
+PNG_EXTERN png_uint_32 __kimtoy__png_read_chunk_header PNGARG((png_structp png_ptr));
 
 /* Read data from whatever input you are using into the "data" buffer */
-PNG_EXTERN void png_read_data PNGARG((png_structp png_ptr, png_bytep data,
+PNG_EXTERN void __kimtoy__png_read_data PNGARG((png_structp png_ptr, png_bytep data,
     png_size_t length));
 
 /* Read bytes into buf, and update png_ptr->crc */
-PNG_EXTERN void png_crc_read PNGARG((png_structp png_ptr, png_bytep buf,
+PNG_EXTERN void __kimtoy__png_crc_read PNGARG((png_structp png_ptr, png_bytep buf,
     png_size_t length));
 
 /* Decompress data in a chunk that uses compression */
 #if defined(PNG_READ_COMPRESSED_TEXT_SUPPORTED)
-PNG_EXTERN void png_decompress_chunk PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_decompress_chunk PNGARG((png_structp png_ptr,
     int comp_type, png_size_t chunklength, png_size_t prefix_length,
     png_size_t *data_length));
 #endif
 
 /* Read "skip" bytes, read the file crc, and (optionally) verify png_ptr->crc */
-PNG_EXTERN int png_crc_finish PNGARG((png_structp png_ptr, png_uint_32 skip));
+PNG_EXTERN int __kimtoy__png_crc_finish PNGARG((png_structp png_ptr, png_uint_32 skip));
 
 /* Read the CRC from the file and compare it to the libpng calculated CRC */
-PNG_EXTERN int png_crc_error PNGARG((png_structp png_ptr));
+PNG_EXTERN int __kimtoy__png_crc_error PNGARG((png_structp png_ptr));
 
 /* Calculate the CRC over a section of data.  Note that we are only
  * passing a maximum of 64K on systems that have this as a memory limit,
  * since this is the maximum buffer size we can specify.
  */
-PNG_EXTERN void png_calculate_crc PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_calculate_crc PNGARG((png_structp png_ptr,
     png_const_bytep ptr, png_size_t length));
 
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
-PNG_EXTERN void png_flush PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_flush PNGARG((png_structp png_ptr));
 #endif
 
 /* Write various chunks */
@@ -747,31 +747,31 @@ PNG_EXTERN void png_flush PNGARG((png_structp png_ptr));
 /* Write the IHDR chunk, and update the png_struct with the necessary
  * information.
  */
-PNG_EXTERN void png_write_IHDR PNGARG((png_structp png_ptr, png_uint_32 width,
+PNG_EXTERN void __kimtoy__png_write_IHDR PNGARG((png_structp png_ptr, png_uint_32 width,
     png_uint_32 height,
     int bit_depth, int color_type, int compression_method, int filter_method,
     int interlace_method));
 
-PNG_EXTERN void png_write_PLTE PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_PLTE PNGARG((png_structp png_ptr,
     png_const_colorp palette, png_uint_32 num_pal));
 
-PNG_EXTERN void png_write_IDAT PNGARG((png_structp png_ptr, png_bytep data,
+PNG_EXTERN void __kimtoy__png_write_IDAT PNGARG((png_structp png_ptr, png_bytep data,
     png_size_t length));
 
-PNG_EXTERN void png_write_IEND PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_write_IEND PNGARG((png_structp png_ptr));
 
 #ifdef PNG_WRITE_gAMA_SUPPORTED
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 PNG_EXTERN void png_write_gAMA PNGARG((png_structp png_ptr, double file_gamma));
 #  endif
 #  ifdef PNG_FIXED_POINT_SUPPORTED
-PNG_EXTERN void png_write_gAMA_fixed PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_gAMA_fixed PNGARG((png_structp png_ptr,
     png_fixed_point file_gamma));
 #  endif
 #endif
 
 #ifdef PNG_WRITE_sBIT_SUPPORTED
-PNG_EXTERN void png_write_sBIT PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_sBIT PNGARG((png_structp png_ptr,
     png_const_color_8p sbit, int color_type));
 #endif
 
@@ -782,7 +782,7 @@ PNG_EXTERN void png_write_cHRM PNGARG((png_structp png_ptr,
     double red_x, double red_y, double green_x, double green_y,
     double blue_x, double blue_y));
 #  endif
-PNG_EXTERN void png_write_cHRM_fixed PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_cHRM_fixed PNGARG((png_structp png_ptr,
     png_fixed_point int_white_x, png_fixed_point int_white_y,
     png_fixed_point int_red_x, png_fixed_point int_red_y, png_fixed_point
     int_green_x, png_fixed_point int_green_y, png_fixed_point int_blue_x,
@@ -790,98 +790,98 @@ PNG_EXTERN void png_write_cHRM_fixed PNGARG((png_structp png_ptr,
 #endif
 
 #ifdef PNG_WRITE_sRGB_SUPPORTED
-PNG_EXTERN void png_write_sRGB PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_sRGB PNGARG((png_structp png_ptr,
     int intent));
 #endif
 
 #ifdef PNG_WRITE_iCCP_SUPPORTED
-PNG_EXTERN void png_write_iCCP PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_iCCP PNGARG((png_structp png_ptr,
     png_const_charp name, int compression_type,
     png_const_charp profile, int proflen));
    /* Note to maintainer: profile should be png_bytep */
 #endif
 
 #ifdef PNG_WRITE_sPLT_SUPPORTED
-PNG_EXTERN void png_write_sPLT PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_sPLT PNGARG((png_structp png_ptr,
     png_const_sPLT_tp palette));
 #endif
 
 #ifdef PNG_WRITE_tRNS_SUPPORTED
-PNG_EXTERN void png_write_tRNS PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_tRNS PNGARG((png_structp png_ptr,
     png_const_bytep trans, png_const_color_16p values, int number,
     int color_type));
 #endif
 
 #ifdef PNG_WRITE_bKGD_SUPPORTED
-PNG_EXTERN void png_write_bKGD PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_bKGD PNGARG((png_structp png_ptr,
     png_const_color_16p values, int color_type));
 #endif
 
 #ifdef PNG_WRITE_hIST_SUPPORTED
-PNG_EXTERN void png_write_hIST PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_hIST PNGARG((png_structp png_ptr,
     png_const_uint_16p hist, int num_hist));
 #endif
 
 /* Chunks that have keywords */
 #if defined(PNG_WRITE_TEXT_SUPPORTED) || defined(PNG_WRITE_pCAL_SUPPORTED) || \
     defined(PNG_WRITE_iCCP_SUPPORTED) || defined(PNG_WRITE_sPLT_SUPPORTED)
-PNG_EXTERN png_size_t png_check_keyword PNGARG((png_structp png_ptr,
+PNG_EXTERN png_size_t __kimtoy__png_check_keyword PNGARG((png_structp png_ptr,
     png_const_charp key, png_charpp new_key));
 #endif
 
 #ifdef PNG_WRITE_tEXt_SUPPORTED
-PNG_EXTERN void png_write_tEXt PNGARG((png_structp png_ptr, png_const_charp key,
+PNG_EXTERN void __kimtoy__png_write_tEXt PNGARG((png_structp png_ptr, png_const_charp key,
     png_const_charp text, png_size_t text_len));
 #endif
 
 #ifdef PNG_WRITE_zTXt_SUPPORTED
-PNG_EXTERN void png_write_zTXt PNGARG((png_structp png_ptr, png_const_charp key,
+PNG_EXTERN void __kimtoy__png_write_zTXt PNGARG((png_structp png_ptr, png_const_charp key,
     png_const_charp text, png_size_t text_len, int compression));
 #endif
 
 #ifdef PNG_WRITE_iTXt_SUPPORTED
-PNG_EXTERN void png_write_iTXt PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_iTXt PNGARG((png_structp png_ptr,
     int compression, png_const_charp key, png_const_charp lang,
     png_const_charp lang_key, png_const_charp text));
 #endif
 
 #ifdef PNG_TEXT_SUPPORTED  /* Added at version 1.0.14 and 1.2.4 */
-PNG_EXTERN int png_set_text_2 PNGARG((png_structp png_ptr,
+PNG_EXTERN int __kimtoy__png_set_text_2 PNGARG((png_structp png_ptr,
     png_infop info_ptr, png_const_textp text_ptr, int num_text));
 #endif
 
 #ifdef PNG_WRITE_oFFs_SUPPORTED
-PNG_EXTERN void png_write_oFFs PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_oFFs PNGARG((png_structp png_ptr,
     png_int_32 x_offset, png_int_32 y_offset, int unit_type));
 #endif
 
 #ifdef PNG_WRITE_pCAL_SUPPORTED
-PNG_EXTERN void png_write_pCAL PNGARG((png_structp png_ptr, png_charp purpose,
+PNG_EXTERN void __kimtoy__png_write_pCAL PNGARG((png_structp png_ptr, png_charp purpose,
     png_int_32 X0, png_int_32 X1, int type, int nparams,
     png_const_charp units, png_charpp params));
 #endif
 
 #ifdef PNG_WRITE_pHYs_SUPPORTED
-PNG_EXTERN void png_write_pHYs PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_pHYs PNGARG((png_structp png_ptr,
     png_uint_32 x_pixels_per_unit, png_uint_32 y_pixels_per_unit,
     int unit_type));
 #endif
 
 #ifdef PNG_WRITE_tIME_SUPPORTED
-PNG_EXTERN void png_write_tIME PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_tIME PNGARG((png_structp png_ptr,
     png_const_timep mod_time));
 #endif
 
 #ifdef PNG_WRITE_sCAL_SUPPORTED
-PNG_EXTERN void png_write_sCAL_s PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_sCAL_s PNGARG((png_structp png_ptr,
     int unit, png_const_charp width, png_const_charp height));
 #endif
 
 #ifdef PNG_WRITE_APNG_SUPPORTED
-PNG_EXTERN void png_write_acTL PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_acTL PNGARG((png_structp png_ptr,
    png_uint_32 num_frames, png_uint_32 num_plays));
 
-PNG_EXTERN void png_write_fcTL PNGARG((png_structp png_ptr, 
+PNG_EXTERN void __kimtoy__png_write_fcTL PNGARG((png_structp png_ptr, 
    png_uint_32 width, png_uint_32 height, 
    png_uint_32 x_offset, png_uint_32 y_offset, 
    png_uint_16 delay_num, png_uint_16 delay_den,
@@ -889,17 +889,17 @@ PNG_EXTERN void png_write_fcTL PNGARG((png_structp png_ptr,
 #endif
 
 /* Called when finished processing a row of data */
-PNG_EXTERN void png_write_finish_row PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_write_finish_row PNGARG((png_structp png_ptr));
 
 /* Internal use only.   Called before first row of data */
-PNG_EXTERN void png_write_start_row PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_write_start_row PNGARG((png_structp png_ptr));
 
 /* Combine a row of data, dealing with alpha, etc. if requested.  'row' is an
  * array of png_ptr->width pixels.  If the image is not interlaced or this
  * is the final pass this just does a png_memcpy, otherwise the "display" flag
  * is used to determine whether to copy pixels that are not in the current pass.
  *
- * Because 'png_do_read_interlace' (below) replicates pixels this allows this
+ * Because '__kimtoy__png_do_read_interlace' (below) replicates pixels this allows this
  * function to achieve the documented 'blocky' appearance during interlaced read
  * if display is 1 and the 'sparkle' appearance, where existing pixels in 'row'
  * are not changed if they are not in the current pass, when display is 0.
@@ -907,7 +907,7 @@ PNG_EXTERN void png_write_start_row PNGARG((png_structp png_ptr));
  * 'display' must be 0 or 1, otherwise the memcpy will be done regardless.
  *
  * The API always reads from the png_struct row buffer and always assumes that
- * it is full width (png_do_read_interlace has already been called.)
+ * it is full width (__kimtoy__png_do_read_interlace has already been called.)
  *
  * This function is only ever used to write to row buffers provided by the
  * caller of the relevant libpng API and the row must have already been
@@ -920,7 +920,7 @@ PNG_EXTERN void png_write_start_row PNGARG((png_structp png_ptr));
 #ifndef PNG_USE_COMPILE_TIME_MASKS
 #  define PNG_USE_COMPILE_TIME_MASKS 1
 #endif
-PNG_EXTERN void png_combine_row PNGARG((png_structp png_ptr, png_bytep row,
+PNG_EXTERN void __kimtoy__png_combine_row PNGARG((png_structp png_ptr, png_bytep row,
     int display));
 
 #ifdef PNG_READ_INTERLACING_SUPPORTED
@@ -928,9 +928,9 @@ PNG_EXTERN void png_combine_row PNGARG((png_structp png_ptr, png_bytep row,
  * been read in and must correspond to the pixels in 'row', the pixels are
  * expanded (moved apart) in 'row' to match the final layout, when doing this
  * the pixels are *replicated* to the intervening space.  This is essential for
- * the correct operation of png_combine_row, above.
+ * the correct operation of __kimtoy__png_combine_row, above.
  */
-PNG_EXTERN void png_do_read_interlace PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_read_interlace PNGARG((png_row_infop row_info,
     png_bytep row, int pass, png_uint_32 transformations));
 #endif
 
@@ -938,128 +938,128 @@ PNG_EXTERN void png_do_read_interlace PNGARG((png_row_infop row_info,
 
 #ifdef PNG_WRITE_INTERLACING_SUPPORTED
 /* Grab pixels out of a row for an interlaced pass */
-PNG_EXTERN void png_do_write_interlace PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_write_interlace PNGARG((png_row_infop row_info,
     png_bytep row, int pass));
 #endif
 
 /* Unfilter a row: check the filter value before calling this, there is no point
  * calling it for PNG_FILTER_VALUE_NONE.
  */
-PNG_EXTERN void png_read_filter_row PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_read_filter_row PNGARG((png_row_infop row_info,
     png_bytep row, png_const_bytep prev_row, int filter));
 
 /* Choose the best filter to use and filter the row data */
-PNG_EXTERN void png_write_find_filter PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_write_find_filter PNGARG((png_structp png_ptr,
     png_row_infop row_info));
 
 /* Finish a row while reading, dealing with interlacing passes, etc. */
-PNG_EXTERN void png_read_finish_row PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_read_finish_row PNGARG((png_structp png_ptr));
 
 /* Initialize the row buffers, etc. */
-PNG_EXTERN void png_read_start_row PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_read_start_row PNGARG((png_structp png_ptr));
 
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
 /* Optional call to update the users info structure */
-PNG_EXTERN void png_read_transform_info PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_read_transform_info PNGARG((png_structp png_ptr,
     png_infop info_ptr));
 #endif
 
 #ifdef PNG_READ_APNG_SUPPORTED
 /* Private, reset some things to become ready for reading next frame */
-PNG_EXTERN void png_read_reset PNGARG((png_structp png_ptr));
-PNG_EXTERN void png_read_reinit PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_read_reset PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_read_reinit PNGARG((png_structp png_ptr,
    png_infop info_ptr));
-PNG_EXTERN void png_progressive_read_reset PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_progressive_read_reset PNGARG((png_structp png_ptr));
 #endif
 #ifdef PNG_WRITE_APNG_SUPPORTED
 /* Private, reset some things to become ready for writing next frame */
-PNG_EXTERN void png_write_reset PNGARG((png_structp png_ptr));
-PNG_EXTERN void png_write_reinit PNGARG((png_structp png_ptr, 
+PNG_EXTERN void __kimtoy__png_write_reset PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_write_reinit PNGARG((png_structp png_ptr, 
    png_infop info_ptr, png_uint_32 width, png_uint_32 height));
 #endif
 
 /* These are the functions that do the transformations */
 #ifdef PNG_READ_FILLER_SUPPORTED
-PNG_EXTERN void png_do_read_filler PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_read_filler PNGARG((png_row_infop row_info,
     png_bytep row, png_uint_32 filler, png_uint_32 flags));
 #endif
 
 #ifdef PNG_READ_SWAP_ALPHA_SUPPORTED
-PNG_EXTERN void png_do_read_swap_alpha PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_read_swap_alpha PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_WRITE_SWAP_ALPHA_SUPPORTED
-PNG_EXTERN void png_do_write_swap_alpha PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_write_swap_alpha PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_READ_INVERT_ALPHA_SUPPORTED
-PNG_EXTERN void png_do_read_invert_alpha PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_read_invert_alpha PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_WRITE_INVERT_ALPHA_SUPPORTED
-PNG_EXTERN void png_do_write_invert_alpha PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_write_invert_alpha PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #if defined(PNG_WRITE_FILLER_SUPPORTED) || \
     defined(PNG_READ_STRIP_ALPHA_SUPPORTED)
-PNG_EXTERN void png_do_strip_channel PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_strip_channel PNGARG((png_row_infop row_info,
     png_bytep row, int at_start));
 #endif
 
 #ifdef PNG_16BIT_SUPPORTED
 #if defined(PNG_READ_SWAP_SUPPORTED) || defined(PNG_WRITE_SWAP_SUPPORTED)
-PNG_EXTERN void png_do_swap PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_swap PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 #endif
 
 #if defined(PNG_READ_PACKSWAP_SUPPORTED) || \
     defined(PNG_WRITE_PACKSWAP_SUPPORTED)
-PNG_EXTERN void png_do_packswap PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_packswap PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_READ_RGB_TO_GRAY_SUPPORTED
-PNG_EXTERN int png_do_rgb_to_gray PNGARG((png_structp png_ptr,
+PNG_EXTERN int __kimtoy__png_do_rgb_to_gray PNGARG((png_structp png_ptr,
     png_row_infop row_info, png_bytep row));
 #endif
 
 #ifdef PNG_READ_GRAY_TO_RGB_SUPPORTED
-PNG_EXTERN void png_do_gray_to_rgb PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_gray_to_rgb PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_READ_PACK_SUPPORTED
-PNG_EXTERN void png_do_unpack PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_unpack PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_READ_SHIFT_SUPPORTED
-PNG_EXTERN void png_do_unshift PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_unshift PNGARG((png_row_infop row_info,
     png_bytep row, png_const_color_8p sig_bits));
 #endif
 
 #if defined(PNG_READ_INVERT_SUPPORTED) || defined(PNG_WRITE_INVERT_SUPPORTED)
-PNG_EXTERN void png_do_invert PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_invert PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED
-PNG_EXTERN void png_do_scale_16_to_8 PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_scale_16_to_8 PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_READ_STRIP_16_TO_8_SUPPORTED
-PNG_EXTERN void png_do_chop PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_chop PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_READ_QUANTIZE_SUPPORTED
-PNG_EXTERN void png_do_quantize PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_quantize PNGARG((png_row_infop row_info,
     png_bytep row, png_const_bytep palette_lookup,
     png_const_bytep quantize_lookup));
 
@@ -1070,46 +1070,46 @@ PNG_EXTERN void png_correct_palette PNGARG((png_structp png_ptr,
 #endif
 
 #if defined(PNG_READ_BGR_SUPPORTED) || defined(PNG_WRITE_BGR_SUPPORTED)
-PNG_EXTERN void png_do_bgr PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_bgr PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 #ifdef PNG_WRITE_PACK_SUPPORTED
-PNG_EXTERN void png_do_pack PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_pack PNGARG((png_row_infop row_info,
    png_bytep row, png_uint_32 bit_depth));
 #endif
 
 #ifdef PNG_WRITE_SHIFT_SUPPORTED
-PNG_EXTERN void png_do_shift PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_shift PNGARG((png_row_infop row_info,
     png_bytep row, png_const_color_8p bit_depth));
 #endif
 
 #if defined(PNG_READ_BACKGROUND_SUPPORTED) ||\
     defined(PNG_READ_ALPHA_MODE_SUPPORTED)
-PNG_EXTERN void png_do_compose PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_compose PNGARG((png_row_infop row_info,
     png_bytep row, png_structp png_ptr));
 #endif
 
 #ifdef PNG_READ_GAMMA_SUPPORTED
-PNG_EXTERN void png_do_gamma PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_gamma PNGARG((png_row_infop row_info,
     png_bytep row, png_structp png_ptr));
 #endif
 
 #ifdef PNG_READ_ALPHA_MODE_SUPPORTED
-PNG_EXTERN void png_do_encode_alpha PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_encode_alpha PNGARG((png_row_infop row_info,
    png_bytep row, png_structp png_ptr));
 #endif
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
-PNG_EXTERN void png_do_expand_palette PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_expand_palette PNGARG((png_row_infop row_info,
     png_bytep row, png_const_colorp palette, png_const_bytep trans,
     int num_trans));
-PNG_EXTERN void png_do_expand PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_expand PNGARG((png_row_infop row_info,
     png_bytep row, png_const_color_16p trans_color));
 #endif
 
 #ifdef PNG_READ_EXPAND_16_SUPPORTED
-PNG_EXTERN void png_do_expand_16 PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_expand_16 PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
@@ -1118,109 +1118,109 @@ PNG_EXTERN void png_do_expand_16 PNGARG((png_row_infop row_info,
  */
 
 /* Decode the IHDR chunk */
-PNG_EXTERN void png_handle_IHDR PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_IHDR PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
-PNG_EXTERN void png_handle_PLTE PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_PLTE PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
-PNG_EXTERN void png_handle_IEND PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_IEND PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 
 #ifdef PNG_READ_bKGD_SUPPORTED
-PNG_EXTERN void png_handle_bKGD PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_bKGD PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_cHRM_SUPPORTED
-PNG_EXTERN void png_handle_cHRM PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_cHRM PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_gAMA_SUPPORTED
-PNG_EXTERN void png_handle_gAMA PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_gAMA PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_hIST_SUPPORTED
-PNG_EXTERN void png_handle_hIST PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_hIST PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_iCCP_SUPPORTED
-PNG_EXTERN void png_handle_iCCP PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_iCCP PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif /* PNG_READ_iCCP_SUPPORTED */
 
 #ifdef PNG_READ_iTXt_SUPPORTED
-PNG_EXTERN void png_handle_iTXt PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_iTXt PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_oFFs_SUPPORTED
-PNG_EXTERN void png_handle_oFFs PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_oFFs PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_pCAL_SUPPORTED
-PNG_EXTERN void png_handle_pCAL PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_pCAL PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_pHYs_SUPPORTED
-PNG_EXTERN void png_handle_pHYs PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_pHYs PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_sBIT_SUPPORTED
-PNG_EXTERN void png_handle_sBIT PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_sBIT PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_sCAL_SUPPORTED
-PNG_EXTERN void png_handle_sCAL PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_sCAL PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_sPLT_SUPPORTED
-PNG_EXTERN void png_handle_sPLT PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_sPLT PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif /* PNG_READ_sPLT_SUPPORTED */
 
 #ifdef PNG_READ_sRGB_SUPPORTED
-PNG_EXTERN void png_handle_sRGB PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_sRGB PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_tEXt_SUPPORTED
-PNG_EXTERN void png_handle_tEXt PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_tEXt PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_tIME_SUPPORTED
-PNG_EXTERN void png_handle_tIME PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_tIME PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_tRNS_SUPPORTED
-PNG_EXTERN void png_handle_tRNS PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_tRNS PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_zTXt_SUPPORTED
-PNG_EXTERN void png_handle_zTXt PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_zTXt PNGARG((png_structp png_ptr, png_infop info_ptr,
     png_uint_32 length));
 #endif
 
 #ifdef PNG_READ_APNG_SUPPORTED
-PNG_EXTERN void png_handle_acTL PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_acTL PNGARG((png_structp png_ptr, png_infop info_ptr,
    png_uint_32 length));
-PNG_EXTERN void png_handle_fcTL PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_handle_fcTL PNGARG((png_structp png_ptr, png_infop info_ptr,
    png_uint_32 length));
-PNG_EXTERN void png_have_info PNGARG((png_structp png_ptr, png_infop info_ptr));
-PNG_EXTERN void png_handle_fdAT PNGARG((png_structp png_ptr, png_infop info_ptr,
+PNG_EXTERN void __kimtoy__png_have_info PNGARG((png_structp png_ptr, png_infop info_ptr));
+PNG_EXTERN void __kimtoy__png_handle_fdAT PNGARG((png_structp png_ptr, png_infop info_ptr,
    png_uint_32 length));
-PNG_EXTERN void png_ensure_sequence_number PNGARG((png_structp png_ptr, 
+PNG_EXTERN void __kimtoy__png_ensure_sequence_number PNGARG((png_structp png_ptr, 
    png_uint_32 length));
-PNG_EXTERN void png_ensure_fcTL_is_valid PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_ensure_fcTL_is_valid PNGARG((png_structp png_ptr,
    png_uint_32 width, png_uint_32 height,
    png_uint_32 x_offset, png_uint_32 y_offset,
    png_uint_16 delay_num, png_uint_16 delay_den,
@@ -1228,94 +1228,94 @@ PNG_EXTERN void png_ensure_fcTL_is_valid PNGARG((png_structp png_ptr,
 #endif
 
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
-PNG_EXTERN void png_handle_unknown PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_handle_unknown PNGARG((png_structp png_ptr,
     png_infop info_ptr, png_uint_32 length));
 #endif
 
-PNG_EXTERN void png_check_chunk_name PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_check_chunk_name PNGARG((png_structp png_ptr,
     png_uint_32 chunk_name));
 
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
-/* Exactly as png_handle_as_unknown() except that the argument is a 32-bit chunk
+/* Exactly as __kimtoy__png_handle_as_unknown() except that the argument is a 32-bit chunk
  * name, not a string.
  */
-PNG_EXTERN int png_chunk_unknown_handling PNGARG((png_structp png_ptr,
+PNG_EXTERN int __kimtoy__png_chunk_unknown_handling PNGARG((png_structp png_ptr,
     png_uint_32 chunk_name));
 #endif
 
 /* Handle the transformations for reading and writing */
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
-PNG_EXTERN void png_do_read_transformations PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_do_read_transformations PNGARG((png_structp png_ptr,
    png_row_infop row_info));
 #endif
 #ifdef PNG_WRITE_TRANSFORMS_SUPPORTED
-PNG_EXTERN void png_do_write_transformations PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_do_write_transformations PNGARG((png_structp png_ptr,
    png_row_infop row_info));
 #endif
 
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
-PNG_EXTERN void png_init_read_transformations PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_init_read_transformations PNGARG((png_structp png_ptr));
 #endif
 
 #ifdef PNG_PROGRESSIVE_READ_SUPPORTED
-PNG_EXTERN void png_push_read_chunk PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_read_chunk PNGARG((png_structp png_ptr,
     png_infop info_ptr));
-PNG_EXTERN void png_push_read_sig PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_read_sig PNGARG((png_structp png_ptr,
     png_infop info_ptr));
 PNG_EXTERN void png_push_check_crc PNGARG((png_structp png_ptr));
-PNG_EXTERN void png_push_crc_skip PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_crc_skip PNGARG((png_structp png_ptr,
     png_uint_32 length));
-PNG_EXTERN void png_push_crc_finish PNGARG((png_structp png_ptr));
-PNG_EXTERN void png_push_save_buffer PNGARG((png_structp png_ptr));
-PNG_EXTERN void png_push_restore_buffer PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_crc_finish PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_push_save_buffer PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_push_restore_buffer PNGARG((png_structp png_ptr,
     png_bytep buffer, png_size_t buffer_length));
-PNG_EXTERN void png_push_read_IDAT PNGARG((png_structp png_ptr));
-PNG_EXTERN void png_process_IDAT_data PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_read_IDAT PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_process_IDAT_data PNGARG((png_structp png_ptr,
     png_bytep buffer, png_size_t buffer_length));
-PNG_EXTERN void png_push_process_row PNGARG((png_structp png_ptr));
-PNG_EXTERN void png_push_handle_unknown PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_process_row PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_push_handle_unknown PNGARG((png_structp png_ptr,
    png_infop info_ptr, png_uint_32 length));
-PNG_EXTERN void png_push_have_info PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_have_info PNGARG((png_structp png_ptr,
    png_infop info_ptr));
-PNG_EXTERN void png_push_have_end PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_have_end PNGARG((png_structp png_ptr,
    png_infop info_ptr));
-PNG_EXTERN void png_push_have_row PNGARG((png_structp png_ptr, png_bytep row));
+PNG_EXTERN void __kimtoy__png_push_have_row PNGARG((png_structp png_ptr, png_bytep row));
 PNG_EXTERN void png_push_read_end PNGARG((png_structp png_ptr,
     png_infop info_ptr));
-PNG_EXTERN void png_process_some_data PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_process_some_data PNGARG((png_structp png_ptr,
     png_infop info_ptr));
-PNG_EXTERN void png_read_push_finish_row PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_read_push_finish_row PNGARG((png_structp png_ptr));
 #  ifdef PNG_READ_tEXt_SUPPORTED
-PNG_EXTERN void png_push_handle_tEXt PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_handle_tEXt PNGARG((png_structp png_ptr,
     png_infop info_ptr, png_uint_32 length));
-PNG_EXTERN void png_push_read_tEXt PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_read_tEXt PNGARG((png_structp png_ptr,
     png_infop info_ptr));
 #  endif
 #  ifdef PNG_READ_zTXt_SUPPORTED
-PNG_EXTERN void png_push_handle_zTXt PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_handle_zTXt PNGARG((png_structp png_ptr,
     png_infop info_ptr, png_uint_32 length));
-PNG_EXTERN void png_push_read_zTXt PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_read_zTXt PNGARG((png_structp png_ptr,
     png_infop info_ptr));
 #  endif
 #  ifdef PNG_READ_iTXt_SUPPORTED
-PNG_EXTERN void png_push_handle_iTXt PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_handle_iTXt PNGARG((png_structp png_ptr,
     png_infop info_ptr, png_uint_32 length));
-PNG_EXTERN void png_push_read_iTXt PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_push_read_iTXt PNGARG((png_structp png_ptr,
     png_infop info_ptr));
 #  endif
 
 #endif /* PNG_PROGRESSIVE_READ_SUPPORTED */
 
 #ifdef PNG_MNG_FEATURES_SUPPORTED
-PNG_EXTERN void png_do_read_intrapixel PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_read_intrapixel PNGARG((png_row_infop row_info,
     png_bytep row));
-PNG_EXTERN void png_do_write_intrapixel PNGARG((png_row_infop row_info,
+PNG_EXTERN void __kimtoy__png_do_write_intrapixel PNGARG((png_row_infop row_info,
     png_bytep row));
 #endif
 
 /* Added at libpng version 1.4.0 */
 #ifdef PNG_CHECK_cHRM_SUPPORTED
-PNG_EXTERN int png_check_cHRM_fixed PNGARG((png_structp png_ptr,
+PNG_EXTERN int __kimtoy__png_check_cHRM_fixed PNGARG((png_structp png_ptr,
     png_fixed_point int_white_x, png_fixed_point int_white_y,
     png_fixed_point int_red_x, png_fixed_point int_red_y, png_fixed_point
     int_green_x, png_fixed_point int_green_y, png_fixed_point int_blue_x,
@@ -1324,8 +1324,8 @@ PNG_EXTERN int png_check_cHRM_fixed PNGARG((png_structp png_ptr,
 
 #ifdef PNG_CHECK_cHRM_SUPPORTED
 /* Added at libpng version 1.2.34 and 1.4.0 */
-/* Currently only used by png_check_cHRM_fixed */
-PNG_EXTERN void png_64bit_product PNGARG((long v1, long v2,
+/* Currently only used by __kimtoy__png_check_cHRM_fixed */
+PNG_EXTERN void __kimtoy__png_64bit_product PNGARG((long v1, long v2,
     unsigned long *hi_product, unsigned long *lo_product));
 #endif
 
@@ -1352,24 +1352,24 @@ typedef struct png_XYZ
  * the end points is lost, when converting back the sum of the Y values of the
  * three end points will be 1.0
  */
-PNG_EXTERN int png_xy_from_XYZ PNGARG((png_xy *xy, png_XYZ XYZ));
-PNG_EXTERN int png_XYZ_from_xy PNGARG((png_XYZ *XYZ, png_xy xy));
-PNG_EXTERN int png_XYZ_from_xy_checked PNGARG((png_structp png_ptr,
+PNG_EXTERN int __kimtoy__png_xy_from_XYZ PNGARG((png_xy *xy, png_XYZ XYZ));
+PNG_EXTERN int __kimtoy__png_XYZ_from_xy PNGARG((png_XYZ *XYZ, png_xy xy));
+PNG_EXTERN int __kimtoy__png_XYZ_from_xy_checked PNGARG((png_structp png_ptr,
    png_XYZ *XYZ, png_xy xy));
 #endif
 
 /* Added at libpng version 1.4.0 */
-PNG_EXTERN void png_check_IHDR PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_check_IHDR PNGARG((png_structp png_ptr,
     png_uint_32 width, png_uint_32 height, int bit_depth,
     int color_type, int interlace_type, int compression_type,
     int filter_type));
 
 /* Free all memory used by the read (old method - NOT DLL EXPORTED) */
-PNG_EXTERN void png_read_destroy PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_read_destroy PNGARG((png_structp png_ptr,
     png_infop info_ptr, png_infop end_info_ptr));
 
 /* Free any memory used in png_ptr struct (old method - NOT DLL EXPORTED) */
-PNG_EXTERN void png_write_destroy PNGARG((png_structp png_ptr));
+PNG_EXTERN void __kimtoy__png_write_destroy PNGARG((png_structp png_ptr));
 
 #ifdef USE_FAR_KEYWORD  /* memory model conversion function */
 PNG_EXTERN void *png_far_to_near PNGARG((png_structp png_ptr, png_voidp ptr,
@@ -1377,7 +1377,7 @@ PNG_EXTERN void *png_far_to_near PNGARG((png_structp png_ptr, png_voidp ptr,
 #endif /* USE_FAR_KEYWORD */
 
 #if defined(PNG_FLOATING_POINT_SUPPORTED) && defined(PNG_ERROR_TEXT_SUPPORTED)
-PNG_EXTERN PNG_FUNCTION(void, png_fixed_error, (png_structp png_ptr,
+PNG_EXTERN PNG_FUNCTION(void, __kimtoy__png_fixed_error, (png_structp png_ptr,
    png_const_charp name),PNG_NORETURN);
 #endif
 
@@ -1385,7 +1385,7 @@ PNG_EXTERN PNG_FUNCTION(void, png_fixed_error, (png_structp png_ptr,
  * the end.  Always leaves the buffer nul terminated.  Never errors out (and
  * there is no error code.)
  */
-PNG_EXTERN size_t png_safecat(png_charp buffer, size_t bufsize, size_t pos,
+PNG_EXTERN size_t __kimtoy__png_safecat(png_charp buffer, size_t bufsize, size_t pos,
     png_const_charp string);
 
 /* Various internal functions to handle formatted warning messages, currently
@@ -1397,12 +1397,12 @@ PNG_EXTERN size_t png_safecat(png_charp buffer, size_t bufsize, size_t pos,
  * Returns the pointer to the start of the formatted string.  This utility only
  * does unsigned values.
  */
-PNG_EXTERN png_charp png_format_number(png_const_charp start, png_charp end,
+PNG_EXTERN png_charp __kimtoy__png_format_number(png_const_charp start, png_charp end,
    int format, png_alloc_size_t number);
 
 /* Convenience macro that takes an array: */
 #define PNG_FORMAT_NUMBER(buffer,format,number) \
-   png_format_number(buffer, buffer + (sizeof buffer), format, number)
+   __kimtoy__png_format_number(buffer, buffer + (sizeof buffer), format, number)
 
 /* Suggested size for a number buffer (enough for 64 bits and a sign!) */
 #define PNG_NUMBER_BUFFER_SIZE 24
@@ -1430,20 +1430,20 @@ PNG_EXTERN png_charp png_format_number(png_const_charp start, png_charp end,
 typedef char png_warning_parameters[PNG_WARNING_PARAMETER_COUNT][
    PNG_WARNING_PARAMETER_SIZE];
 
-PNG_EXTERN void png_warning_parameter(png_warning_parameters p, int number,
+PNG_EXTERN void __kimtoy__png_warning_parameter(png_warning_parameters p, int number,
     png_const_charp string);
     /* Parameters are limited in size to PNG_WARNING_PARAMETER_SIZE characters,
      * including the trailing '\0'.
      */
-PNG_EXTERN void png_warning_parameter_unsigned(png_warning_parameters p,
+PNG_EXTERN void __kimtoy__png_warning_parameter_unsigned(png_warning_parameters p,
     int number, int format, png_alloc_size_t value);
     /* Use png_alloc_size_t because it is an unsigned type as big as any we
      * need to output.  Use the following for a signed value.
      */
-PNG_EXTERN void png_warning_parameter_signed(png_warning_parameters p,
+PNG_EXTERN void __kimtoy__png_warning_parameter_signed(png_warning_parameters p,
     int number, int format, png_int_32 value);
 
-PNG_EXTERN void png_formatted_warning(png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_formatted_warning(png_structp png_ptr,
     png_warning_parameters p, png_const_charp message);
     /* 'message' follows the X/Open approach of using @1, @2 to insert
      * parameters previously supplied using the above functions.  Errors in
@@ -1463,12 +1463,12 @@ PNG_EXTERN void png_formatted_warning(png_structp png_ptr,
 #define PNG_sCAL_MAX_DIGITS (PNG_sCAL_PRECISION+1/*.*/+1/*E*/+10/*exponent*/)
 
 #ifdef PNG_FLOATING_POINT_SUPPORTED
-PNG_EXTERN void png_ascii_from_fp PNGARG((png_structp png_ptr, png_charp ascii,
+PNG_EXTERN void __kimtoy__png_ascii_from_fp PNGARG((png_structp png_ptr, png_charp ascii,
     png_size_t size, double fp, unsigned int precision));
 #endif /* FLOATING_POINT */
 
 #ifdef PNG_FIXED_POINT_SUPPORTED
-PNG_EXTERN void png_ascii_from_fixed PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_ascii_from_fixed PNGARG((png_structp png_ptr,
     png_charp ascii, png_size_t size, png_fixed_point fp));
 #endif /* FIXED_POINT */
 #endif /* READ_sCAL */
@@ -1561,7 +1561,7 @@ PNG_EXTERN void png_ascii_from_fixed PNGARG((png_structp png_ptr,
  * that omits the last character (i.e. set the size to the index of
  * the problem character.)  This has not been tested within libpng.
  */
-PNG_EXTERN int png_check_fp_number PNGARG((png_const_charp string,
+PNG_EXTERN int __kimtoy__png_check_fp_number PNGARG((png_const_charp string,
     png_size_t size, int *statep, png_size_tp whereami));
 
 /* This is the same but it checks a complete string and returns true
@@ -1570,7 +1570,7 @@ PNG_EXTERN int png_check_fp_number PNGARG((png_const_charp string,
  * it was valid (otherwise it returns 0.)  This can be used for testing
  * for negative or zero values using the sticky flag.
  */
-PNG_EXTERN int png_check_fp_string PNGARG((png_const_charp string,
+PNG_EXTERN int __kimtoy__png_check_fp_string PNGARG((png_const_charp string,
     png_size_t size));
 #endif /* pCAL || sCAL */
 
@@ -1582,13 +1582,13 @@ PNG_EXTERN int png_check_fp_string PNGARG((png_const_charp string,
  * for overflow, true (1) if no overflow, in which case *res
  * holds the result.
  */
-PNG_EXTERN int png_muldiv PNGARG((png_fixed_point_p res, png_fixed_point a,
+PNG_EXTERN int __kimtoy__png_muldiv PNGARG((png_fixed_point_p res, png_fixed_point a,
     png_int_32 multiplied_by, png_int_32 divided_by));
 #endif
 
 #if defined(PNG_READ_GAMMA_SUPPORTED) || defined(PNG_INCH_CONVERSIONS_SUPPORTED)
 /* Same deal, but issue a warning on overflow and return 0. */
-PNG_EXTERN png_fixed_point png_muldiv_warn PNGARG((png_structp png_ptr,
+PNG_EXTERN png_fixed_point __kimtoy__png_muldiv_warn PNGARG((png_structp png_ptr,
     png_fixed_point a, png_int_32 multiplied_by, png_int_32 divided_by));
 #endif
 
@@ -1597,13 +1597,13 @@ PNG_EXTERN png_fixed_point png_muldiv_warn PNGARG((png_structp png_ptr,
  * 0 if the argument is 0 in order to maintain an undefined value,
  * there are no warnings.
  */
-PNG_EXTERN png_fixed_point png_reciprocal PNGARG((png_fixed_point a));
+PNG_EXTERN png_fixed_point __kimtoy__png_reciprocal PNGARG((png_fixed_point a));
 
 /* The same but gives a reciprocal of the product of two fixed point
  * values.  Accuracy is suitable for gamma calculations but this is
- * not exact - use png_muldiv for that.
+ * not exact - use __kimtoy__png_muldiv for that.
  */
-PNG_EXTERN png_fixed_point png_reciprocal2 PNGARG((png_fixed_point a,
+PNG_EXTERN png_fixed_point __kimtoy__png_reciprocal2 PNGARG((png_fixed_point a,
     png_fixed_point b));
 #endif
 
@@ -1615,15 +1615,15 @@ PNG_EXTERN png_fixed_point png_reciprocal2 PNGARG((png_fixed_point a,
  * While the input is an 'unsigned' value it must actually be the
  * correct bit value - 0..255 or 0..65535 as required.
  */
-PNG_EXTERN png_uint_16 png_gamma_correct PNGARG((png_structp png_ptr,
+PNG_EXTERN png_uint_16 __kimtoy__png_gamma_correct PNGARG((png_structp png_ptr,
     unsigned int value, png_fixed_point gamma_value));
-PNG_EXTERN int png_gamma_significant PNGARG((png_fixed_point gamma_value));
-PNG_EXTERN png_uint_16 png_gamma_16bit_correct PNGARG((unsigned int value,
+PNG_EXTERN int __kimtoy__png_gamma_significant PNGARG((png_fixed_point gamma_value));
+PNG_EXTERN png_uint_16 __kimtoy__png_gamma_16bit_correct PNGARG((unsigned int value,
     png_fixed_point gamma_value));
-PNG_EXTERN png_byte png_gamma_8bit_correct PNGARG((unsigned int value,
+PNG_EXTERN png_byte __kimtoy__png_gamma_8bit_correct PNGARG((unsigned int value,
     png_fixed_point gamma_value));
-PNG_EXTERN void png_destroy_gamma_table(png_structp png_ptr);
-PNG_EXTERN void png_build_gamma_table PNGARG((png_structp png_ptr,
+PNG_EXTERN void __kimtoy__png_destroy_gamma_table(png_structp png_ptr);
+PNG_EXTERN void __kimtoy__png_build_gamma_table PNGARG((png_structp png_ptr,
     int bit_depth));
 #endif
 

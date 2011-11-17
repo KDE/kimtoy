@@ -20,9 +20,9 @@
  * transformations is significant.
  */
 void /* PRIVATE */
-png_do_write_transformations(png_structp png_ptr, png_row_infop row_info)
+__kimtoy__png_do_write_transformations(png_structp png_ptr, png_row_infop row_info)
 {
-   png_debug(1, "in png_do_write_transformations");
+   png_debug(1, "in __kimtoy__png_do_write_transformations");
 
    if (png_ptr == NULL)
       return;
@@ -45,50 +45,50 @@ png_do_write_transformations(png_structp png_ptr, png_row_infop row_info)
 
 #ifdef PNG_WRITE_FILLER_SUPPORTED
    if (png_ptr->transformations & PNG_FILLER)
-      png_do_strip_channel(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_strip_channel(row_info, png_ptr->row_buf + 1,
          !(png_ptr->flags & PNG_FLAG_FILLER_AFTER));
 #endif
 
 #ifdef PNG_WRITE_PACKSWAP_SUPPORTED
    if (png_ptr->transformations & PNG_PACKSWAP)
-      png_do_packswap(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_packswap(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_WRITE_PACK_SUPPORTED
    if (png_ptr->transformations & PNG_PACK)
-      png_do_pack(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_pack(row_info, png_ptr->row_buf + 1,
           (png_uint_32)png_ptr->bit_depth);
 #endif
 
 #ifdef PNG_WRITE_SWAP_SUPPORTED
    if (png_ptr->transformations & PNG_SWAP_BYTES)
-      png_do_swap(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_swap(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_WRITE_SHIFT_SUPPORTED
    if (png_ptr->transformations & PNG_SHIFT)
-      png_do_shift(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_shift(row_info, png_ptr->row_buf + 1,
           &(png_ptr->shift));
 #endif
 
 #ifdef PNG_WRITE_SWAP_ALPHA_SUPPORTED
    if (png_ptr->transformations & PNG_SWAP_ALPHA)
-      png_do_write_swap_alpha(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_write_swap_alpha(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_WRITE_INVERT_ALPHA_SUPPORTED
    if (png_ptr->transformations & PNG_INVERT_ALPHA)
-      png_do_write_invert_alpha(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_write_invert_alpha(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_WRITE_BGR_SUPPORTED
    if (png_ptr->transformations & PNG_BGR)
-      png_do_bgr(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_bgr(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_WRITE_INVERT_SUPPORTED
    if (png_ptr->transformations & PNG_INVERT_MONO)
-      png_do_invert(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_invert(row_info, png_ptr->row_buf + 1);
 #endif
 }
 
@@ -98,9 +98,9 @@ png_do_write_transformations(png_structp png_ptr, png_row_infop row_info)
  * should be 1 (this only happens on grayscale and paletted images).
  */
 void /* PRIVATE */
-png_do_pack(png_row_infop row_info, png_bytep row, png_uint_32 bit_depth)
+__kimtoy__png_do_pack(png_row_infop row_info, png_bytep row, png_uint_32 bit_depth)
 {
-   png_debug(1, "in png_do_pack");
+   png_debug(1, "in __kimtoy__png_do_pack");
 
    if (row_info->bit_depth == 8 &&
       row_info->channels == 1)
@@ -243,10 +243,10 @@ png_do_pack(png_row_infop row_info, png_bytep row, png_uint_32 bit_depth)
  * data to 0 to 15.
  */
 void /* PRIVATE */
-png_do_shift(png_row_infop row_info, png_bytep row,
+__kimtoy__png_do_shift(png_row_infop row_info, png_bytep row,
     png_const_color_8p bit_depth)
 {
-   png_debug(1, "in png_do_shift");
+   png_debug(1, "in __kimtoy__png_do_shift");
 
    if (row_info->color_type != PNG_COLOR_TYPE_PALETTE)
    {
@@ -378,9 +378,9 @@ png_do_shift(png_row_infop row_info, png_bytep row,
 
 #ifdef PNG_WRITE_SWAP_ALPHA_SUPPORTED
 void /* PRIVATE */
-png_do_write_swap_alpha(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_write_swap_alpha(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_write_swap_alpha");
+   png_debug(1, "in __kimtoy__png_do_write_swap_alpha");
 
    {
       if (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
@@ -472,9 +472,9 @@ png_do_write_swap_alpha(png_row_infop row_info, png_bytep row)
 
 #ifdef PNG_WRITE_INVERT_ALPHA_SUPPORTED
 void /* PRIVATE */
-png_do_write_invert_alpha(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_write_invert_alpha(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_write_invert_alpha");
+   png_debug(1, "in __kimtoy__png_do_write_invert_alpha");
 
    {
       if (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
@@ -569,9 +569,9 @@ png_do_write_invert_alpha(png_row_infop row_info, png_bytep row)
 #ifdef PNG_MNG_FEATURES_SUPPORTED
 /* Undoes intrapixel differencing  */
 void /* PRIVATE */
-png_do_write_intrapixel(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_write_intrapixel(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_write_intrapixel");
+   png_debug(1, "in __kimtoy__png_do_write_intrapixel");
 
    if ((row_info->color_type & PNG_COLOR_MASK_COLOR))
    {

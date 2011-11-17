@@ -17,7 +17,7 @@
 #if defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED)
 
 png_uint_32 PNGAPI
-png_get_valid(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_valid(png_const_structp png_ptr, png_const_infop info_ptr,
     png_uint_32 flag)
 {
    if (png_ptr != NULL && info_ptr != NULL)
@@ -27,7 +27,7 @@ png_get_valid(png_const_structp png_ptr, png_const_infop info_ptr,
 }
 
 png_size_t PNGAPI
-png_get_rowbytes(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_rowbytes(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return(info_ptr->rowbytes);
@@ -37,7 +37,7 @@ png_get_rowbytes(png_const_structp png_ptr, png_const_infop info_ptr)
 
 #ifdef PNG_INFO_IMAGE_SUPPORTED
 png_bytepp PNGAPI
-png_get_rows(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_rows(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return(info_ptr->row_pointers);
@@ -49,7 +49,7 @@ png_get_rows(png_const_structp png_ptr, png_const_infop info_ptr)
 #ifdef PNG_EASY_ACCESS_SUPPORTED
 /* Easy access to info, added in libpng-0.99 */
 png_uint_32 PNGAPI
-png_get_image_width(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_image_width(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return info_ptr->width;
@@ -58,7 +58,7 @@ png_get_image_width(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_image_height(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_image_height(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return info_ptr->height;
@@ -67,7 +67,7 @@ png_get_image_height(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_bit_depth(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_bit_depth(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return info_ptr->bit_depth;
@@ -76,7 +76,7 @@ png_get_bit_depth(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_color_type(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_color_type(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return info_ptr->color_type;
@@ -85,7 +85,7 @@ png_get_color_type(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_filter_type(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_filter_type(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return info_ptr->filter_type;
@@ -94,7 +94,7 @@ png_get_filter_type(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_interlace_type(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_interlace_type(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return info_ptr->interlace_type;
@@ -103,7 +103,7 @@ png_get_interlace_type(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_compression_type(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_compression_type(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return info_ptr->compression_type;
@@ -112,13 +112,13 @@ png_get_compression_type(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_x_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_x_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_pHYs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_pHYs))
       {
          png_debug1(1, "in %s retrieval function",
-             "png_get_x_pixels_per_meter");
+             "__kimtoy__png_get_x_pixels_per_meter");
 
          if (info_ptr->phys_unit_type == PNG_RESOLUTION_METER)
             return (info_ptr->x_pixels_per_unit);
@@ -129,13 +129,13 @@ png_get_x_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_y_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_y_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_pHYs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_pHYs))
    {
       png_debug1(1, "in %s retrieval function",
-          "png_get_y_pixels_per_meter");
+          "__kimtoy__png_get_y_pixels_per_meter");
 
       if (info_ptr->phys_unit_type == PNG_RESOLUTION_METER)
          return (info_ptr->y_pixels_per_unit);
@@ -146,12 +146,12 @@ png_get_y_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_pHYs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_pHYs))
    {
-      png_debug1(1, "in %s retrieval function", "png_get_pixels_per_meter");
+      png_debug1(1, "in %s retrieval function", "__kimtoy__png_get_pixels_per_meter");
 
       if (info_ptr->phys_unit_type == PNG_RESOLUTION_METER &&
           info_ptr->x_pixels_per_unit == info_ptr->y_pixels_per_unit)
@@ -164,7 +164,7 @@ png_get_pixels_per_meter(png_const_structp png_ptr, png_const_infop info_ptr)
 
 #ifdef PNG_FLOATING_POINT_SUPPORTED
 float PNGAPI
-png_get_pixel_aspect_ratio(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_pixel_aspect_ratio(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_READ_pHYs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_pHYs))
@@ -183,7 +183,7 @@ png_get_pixel_aspect_ratio(png_const_structp png_ptr, png_const_infop info_ptr)
 
 #ifdef PNG_FIXED_POINT_SUPPORTED
 png_fixed_point PNGAPI
-png_get_pixel_aspect_ratio_fixed(png_const_structp png_ptr,
+__kimtoy__png_get_pixel_aspect_ratio_fixed(png_const_structp png_ptr,
     png_const_infop info_ptr)
 {
 #ifdef PNG_READ_pHYs_SUPPORTED
@@ -199,7 +199,7 @@ png_get_pixel_aspect_ratio_fixed(png_const_structp png_ptr,
       /* The following casts work because a PNG 4 byte integer only has a valid
        * range of 0..2^31-1; otherwise the cast might overflow.
        */
-      if (png_muldiv(&res, (png_int_32)info_ptr->y_pixels_per_unit, PNG_FP_1,
+      if (__kimtoy__png_muldiv(&res, (png_int_32)info_ptr->y_pixels_per_unit, PNG_FP_1,
           (png_int_32)info_ptr->x_pixels_per_unit))
          return res;
    }
@@ -210,12 +210,12 @@ png_get_pixel_aspect_ratio_fixed(png_const_structp png_ptr,
 #endif
 
 png_int_32 PNGAPI
-png_get_x_offset_microns(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_x_offset_microns(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_oFFs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_oFFs))
    {
-      png_debug1(1, "in %s retrieval function", "png_get_x_offset_microns");
+      png_debug1(1, "in %s retrieval function", "__kimtoy__png_get_x_offset_microns");
 
       if (info_ptr->offset_unit_type == PNG_OFFSET_MICROMETER)
          return (info_ptr->x_offset);
@@ -226,12 +226,12 @@ png_get_x_offset_microns(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_int_32 PNGAPI
-png_get_y_offset_microns(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_y_offset_microns(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_oFFs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_oFFs))
    {
-      png_debug1(1, "in %s retrieval function", "png_get_y_offset_microns");
+      png_debug1(1, "in %s retrieval function", "__kimtoy__png_get_y_offset_microns");
 
       if (info_ptr->offset_unit_type == PNG_OFFSET_MICROMETER)
          return (info_ptr->y_offset);
@@ -242,12 +242,12 @@ png_get_y_offset_microns(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_int_32 PNGAPI
-png_get_x_offset_pixels(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_x_offset_pixels(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_oFFs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_oFFs))
    {
-      png_debug1(1, "in %s retrieval function", "png_get_x_offset_pixels");
+      png_debug1(1, "in %s retrieval function", "__kimtoy__png_get_x_offset_pixels");
 
       if (info_ptr->offset_unit_type == PNG_OFFSET_PIXEL)
          return (info_ptr->x_offset);
@@ -258,12 +258,12 @@ png_get_x_offset_pixels(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_int_32 PNGAPI
-png_get_y_offset_pixels(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_y_offset_pixels(png_const_structp png_ptr, png_const_infop info_ptr)
 {
 #ifdef PNG_oFFs_SUPPORTED
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_oFFs))
    {
-      png_debug1(1, "in %s retrieval function", "png_get_y_offset_pixels");
+      png_debug1(1, "in %s retrieval function", "__kimtoy__png_get_y_offset_pixels");
 
       if (info_ptr->offset_unit_type == PNG_OFFSET_PIXEL)
          return (info_ptr->y_offset);
@@ -297,7 +297,7 @@ ppi_from_ppm(png_uint_32 ppm)
     * to be bigger than 2^31.
     */
    png_fixed_point result;
-   if (ppm <= PNG_UINT_31_MAX && png_muldiv(&result, (png_int_32)ppm, 127,
+   if (ppm <= PNG_UINT_31_MAX && __kimtoy__png_muldiv(&result, (png_int_32)ppm, 127,
        5000))
       return result;
 
@@ -307,21 +307,21 @@ ppi_from_ppm(png_uint_32 ppm)
 }
 
 png_uint_32 PNGAPI
-png_get_pixels_per_inch(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_pixels_per_inch(png_const_structp png_ptr, png_const_infop info_ptr)
 {
-   return ppi_from_ppm(png_get_pixels_per_meter(png_ptr, info_ptr));
+   return ppi_from_ppm(__kimtoy__png_get_pixels_per_meter(png_ptr, info_ptr));
 }
 
 png_uint_32 PNGAPI
-png_get_x_pixels_per_inch(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_x_pixels_per_inch(png_const_structp png_ptr, png_const_infop info_ptr)
 {
-   return ppi_from_ppm(png_get_x_pixels_per_meter(png_ptr, info_ptr));
+   return ppi_from_ppm(__kimtoy__png_get_x_pixels_per_meter(png_ptr, info_ptr));
 }
 
 png_uint_32 PNGAPI
-png_get_y_pixels_per_inch(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_y_pixels_per_inch(png_const_structp png_ptr, png_const_infop info_ptr)
 {
-   return ppi_from_ppm(png_get_y_pixels_per_meter(png_ptr, info_ptr));
+   return ppi_from_ppm(__kimtoy__png_get_y_pixels_per_meter(png_ptr, info_ptr));
 }
 
 #ifdef PNG_FIXED_POINT_SUPPORTED
@@ -333,53 +333,53 @@ png_fixed_inches_from_microns(png_structp png_ptr, png_int_32 microns)
     * Notice that this can overflow - a warning is output and 0 is
     * returned.
     */
-   return png_muldiv_warn(png_ptr, microns, 500, 127);
+   return __kimtoy__png_muldiv_warn(png_ptr, microns, 500, 127);
 }
 
 png_fixed_point PNGAPI
-png_get_x_offset_inches_fixed(png_structp png_ptr,
+__kimtoy__png_get_x_offset_inches_fixed(png_structp png_ptr,
     png_const_infop info_ptr)
 {
    return png_fixed_inches_from_microns(png_ptr,
-       png_get_x_offset_microns(png_ptr, info_ptr));
+       __kimtoy__png_get_x_offset_microns(png_ptr, info_ptr));
 }
 #endif
 
 #ifdef PNG_FIXED_POINT_SUPPORTED
 png_fixed_point PNGAPI
-png_get_y_offset_inches_fixed(png_structp png_ptr,
+__kimtoy__png_get_y_offset_inches_fixed(png_structp png_ptr,
     png_const_infop info_ptr)
 {
    return png_fixed_inches_from_microns(png_ptr,
-       png_get_y_offset_microns(png_ptr, info_ptr));
+       __kimtoy__png_get_y_offset_microns(png_ptr, info_ptr));
 }
 #endif
 
 #ifdef PNG_FLOATING_POINT_SUPPORTED
 float PNGAPI
-png_get_x_offset_inches(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_x_offset_inches(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    /* To avoid the overflow do the conversion directly in floating
     * point.
     */
-   return (float)(png_get_x_offset_microns(png_ptr, info_ptr) * .00003937);
+   return (float)(__kimtoy__png_get_x_offset_microns(png_ptr, info_ptr) * .00003937);
 }
 #endif
 
 #ifdef PNG_FLOATING_POINT_SUPPORTED
 float PNGAPI
-png_get_y_offset_inches(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_y_offset_inches(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    /* To avoid the overflow do the conversion directly in floating
     * point.
     */
-   return (float)(png_get_y_offset_microns(png_ptr, info_ptr) * .00003937);
+   return (float)(__kimtoy__png_get_y_offset_microns(png_ptr, info_ptr) * .00003937);
 }
 #endif
 
 #ifdef PNG_pHYs_SUPPORTED
 png_uint_32 PNGAPI
-png_get_pHYs_dpi(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_pHYs_dpi(png_const_structp png_ptr, png_const_infop info_ptr,
     png_uint_32 *res_x, png_uint_32 *res_y, int *unit_type)
 {
    png_uint_32 retval = 0;
@@ -418,12 +418,12 @@ png_get_pHYs_dpi(png_const_structp png_ptr, png_const_infop info_ptr,
 #endif /* PNG_pHYs_SUPPORTED */
 #endif  /* PNG_INCH_CONVERSIONS_SUPPORTED */
 
-/* png_get_channels really belongs in here, too, but it's been around longer */
+/* __kimtoy__png_get_channels really belongs in here, too, but it's been around longer */
 
 #endif  /* PNG_EASY_ACCESS_SUPPORTED */
 
 png_byte PNGAPI
-png_get_channels(png_const_structp png_ptr, png_const_infop info_ptr)
+__kimtoy__png_get_channels(png_const_structp png_ptr, png_const_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return(info_ptr->channels);
@@ -432,7 +432,7 @@ png_get_channels(png_const_structp png_ptr, png_const_infop info_ptr)
 }
 
 png_const_bytep PNGAPI
-png_get_signature(png_const_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_signature(png_const_structp png_ptr, png_infop info_ptr)
 {
    if (png_ptr != NULL && info_ptr != NULL)
       return(info_ptr->signature);
@@ -442,7 +442,7 @@ png_get_signature(png_const_structp png_ptr, png_infop info_ptr)
 
 #ifdef PNG_bKGD_SUPPORTED
 png_uint_32 PNGAPI
-png_get_bKGD(png_const_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_get_bKGD(png_const_structp png_ptr, png_infop info_ptr,
    png_color_16p *background)
 {
    if (png_ptr != NULL && info_ptr != NULL && (info_ptr->valid & PNG_INFO_bKGD)
@@ -464,7 +464,7 @@ png_get_bKGD(png_const_structp png_ptr, png_infop info_ptr,
  * cHRM chunk in 1.5.4
  */
 png_uint_32 PNGFAPI
-png_get_cHRM_XYZ_fixed(png_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_cHRM_XYZ_fixed(png_structp png_ptr, png_const_infop info_ptr,
     png_fixed_point *int_red_X, png_fixed_point *int_red_Y,
     png_fixed_point *int_red_Z, png_fixed_point *int_green_X,
     png_fixed_point *int_green_Y, png_fixed_point *int_green_Z,
@@ -490,7 +490,7 @@ png_get_cHRM_XYZ_fixed(png_structp png_ptr, png_const_infop info_ptr,
       /* The *_checked function handles error reporting, so just return 0 if
        * there is a failure here.
        */
-      if (png_XYZ_from_xy_checked(png_ptr, &XYZ, xy))
+      if (__kimtoy__png_XYZ_from_xy_checked(png_ptr, &XYZ, xy))
       {
          if (int_red_X != NULL)
             *int_red_X = XYZ.redX;
@@ -520,7 +520,7 @@ png_get_cHRM_XYZ_fixed(png_structp png_ptr, png_const_infop info_ptr,
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 png_uint_32 PNGAPI
-png_get_cHRM(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_cHRM(png_const_structp png_ptr, png_const_infop info_ptr,
     double *white_x, double *white_y, double *red_x, double *red_y,
     double *green_x, double *green_y, double *blue_x, double *blue_y)
 {
@@ -551,14 +551,14 @@ png_get_cHRM(png_const_structp png_ptr, png_const_infop info_ptr,
 }
 
 png_uint_32 PNGAPI
-png_get_cHRM_XYZ(png_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_cHRM_XYZ(png_structp png_ptr, png_const_infop info_ptr,
    double *red_X, double *red_Y, double *red_Z, double *green_X,
    double *green_Y, double *green_Z, double *blue_X, double *blue_Y,
    double *blue_Z)
 {
    png_XYZ XYZ;
 
-   if (png_get_cHRM_XYZ_fixed(png_ptr, info_ptr,
+   if (__kimtoy__png_get_cHRM_XYZ_fixed(png_ptr, info_ptr,
       &XYZ.redX, &XYZ.redY, &XYZ.redZ, &XYZ.greenX, &XYZ.greenY, &XYZ.greenZ,
       &XYZ.blueX, &XYZ.blueY, &XYZ.blueZ) & PNG_INFO_cHRM)
    {
@@ -589,7 +589,7 @@ png_get_cHRM_XYZ(png_structp png_ptr, png_const_infop info_ptr,
 
 #  ifdef PNG_FIXED_POINT_SUPPORTED
 png_uint_32 PNGAPI
-png_get_cHRM_fixed(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_cHRM_fixed(png_const_structp png_ptr, png_const_infop info_ptr,
     png_fixed_point *white_x, png_fixed_point *white_y, png_fixed_point *red_x,
     png_fixed_point *red_y, png_fixed_point *green_x, png_fixed_point *green_y,
     png_fixed_point *blue_x, png_fixed_point *blue_y)
@@ -624,7 +624,7 @@ png_get_cHRM_fixed(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_gAMA_SUPPORTED
 png_uint_32 PNGFAPI
-png_get_gAMA_fixed(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_gAMA_fixed(png_const_structp png_ptr, png_const_infop info_ptr,
     png_fixed_point *file_gamma)
 {
    png_debug1(1, "in %s retrieval function", "gAMA");
@@ -640,14 +640,14 @@ png_get_gAMA_fixed(png_const_structp png_ptr, png_const_infop info_ptr,
 }
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 png_uint_32 PNGAPI
-png_get_gAMA(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_gAMA(png_const_structp png_ptr, png_const_infop info_ptr,
     double *file_gamma)
 {
    png_fixed_point igamma;
-   png_uint_32 ok = png_get_gAMA_fixed(png_ptr, info_ptr, &igamma);
+   png_uint_32 ok = __kimtoy__png_get_gAMA_fixed(png_ptr, info_ptr, &igamma);
 
    if (ok)
-      *file_gamma = png_float(png_ptr, igamma, "png_get_gAMA");
+      *file_gamma = png_float(png_ptr, igamma, "__kimtoy__png_get_gAMA");
 
    return ok;
 }
@@ -657,7 +657,7 @@ png_get_gAMA(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_sRGB_SUPPORTED
 png_uint_32 PNGAPI
-png_get_sRGB(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_sRGB(png_const_structp png_ptr, png_const_infop info_ptr,
     int *file_srgb_intent)
 {
    png_debug1(1, "in %s retrieval function", "sRGB");
@@ -675,7 +675,7 @@ png_get_sRGB(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_iCCP_SUPPORTED
 png_uint_32 PNGAPI
-png_get_iCCP(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_iCCP(png_const_structp png_ptr, png_const_infop info_ptr,
     png_charpp name, int *compression_type,
     png_bytepp profile, png_uint_32 *proflen)
 {
@@ -700,7 +700,7 @@ png_get_iCCP(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_sPLT_SUPPORTED
 png_uint_32 PNGAPI
-png_get_sPLT(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_sPLT(png_const_structp png_ptr, png_const_infop info_ptr,
     png_sPLT_tpp spalettes)
 {
    if (png_ptr != NULL && info_ptr != NULL && spalettes != NULL)
@@ -715,7 +715,7 @@ png_get_sPLT(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_hIST_SUPPORTED
 png_uint_32 PNGAPI
-png_get_hIST(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_hIST(png_const_structp png_ptr, png_const_infop info_ptr,
     png_uint_16p *hist)
 {
    png_debug1(1, "in %s retrieval function", "hIST");
@@ -732,7 +732,7 @@ png_get_hIST(png_const_structp png_ptr, png_const_infop info_ptr,
 #endif
 
 png_uint_32 PNGAPI
-png_get_IHDR(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_get_IHDR(png_structp png_ptr, png_infop info_ptr,
     png_uint_32 *width, png_uint_32 *height, int *bit_depth,
     int *color_type, int *interlace_type, int *compression_type,
     int *filter_type)
@@ -759,11 +759,11 @@ png_get_IHDR(png_structp png_ptr, png_infop info_ptr,
       *interlace_type = info_ptr->interlace_type;
 
    /* This is redundant if we can be sure that the info_ptr values were all
-    * assigned in png_set_IHDR().  We do the check anyhow in case an
+    * assigned in __kimtoy__png_set_IHDR().  We do the check anyhow in case an
     * application has ignored our advice not to mess with the members
     * of info_ptr directly.
     */
-   png_check_IHDR (png_ptr, info_ptr->width, info_ptr->height,
+   __kimtoy__png_check_IHDR (png_ptr, info_ptr->width, info_ptr->height,
        info_ptr->bit_depth, info_ptr->color_type, info_ptr->interlace_type,
        info_ptr->compression_type, info_ptr->filter_type);
 
@@ -772,7 +772,7 @@ png_get_IHDR(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_oFFs_SUPPORTED
 png_uint_32 PNGAPI
-png_get_oFFs(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_oFFs(png_const_structp png_ptr, png_const_infop info_ptr,
     png_int_32 *offset_x, png_int_32 *offset_y, int *unit_type)
 {
    png_debug1(1, "in %s retrieval function", "oFFs");
@@ -792,7 +792,7 @@ png_get_oFFs(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_pCAL_SUPPORTED
 png_uint_32 PNGAPI
-png_get_pCAL(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_pCAL(png_const_structp png_ptr, png_const_infop info_ptr,
     png_charp *purpose, png_int_32 *X0, png_int_32 *X1, int *type, int *nparams,
     png_charp *units, png_charpp *params)
 {
@@ -820,7 +820,7 @@ png_get_pCAL(png_const_structp png_ptr, png_const_infop info_ptr,
 #  ifdef PNG_FIXED_POINT_SUPPORTED
 #    ifdef PNG_FLOATING_ARITHMETIC_SUPPORTED
 png_uint_32 PNGAPI
-png_get_sCAL_fixed(png_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_sCAL_fixed(png_structp png_ptr, png_const_infop info_ptr,
     int *unit, png_fixed_point *width, png_fixed_point *height)
 {
    if (png_ptr != NULL && info_ptr != NULL &&
@@ -828,8 +828,8 @@ png_get_sCAL_fixed(png_structp png_ptr, png_const_infop info_ptr,
    {
       *unit = info_ptr->scal_unit;
       /*TODO: make this work without FP support */
-      *width = png_fixed(png_ptr, atof(info_ptr->scal_s_width), "sCAL width");
-      *height = png_fixed(png_ptr, atof(info_ptr->scal_s_height),
+      *width = __kimtoy__png_fixed(png_ptr, atof(info_ptr->scal_s_width), "sCAL width");
+      *height = __kimtoy__png_fixed(png_ptr, atof(info_ptr->scal_s_height),
          "sCAL height");
       return (PNG_INFO_sCAL);
    }
@@ -840,7 +840,7 @@ png_get_sCAL_fixed(png_structp png_ptr, png_const_infop info_ptr,
 #  endif /* FIXED_POINT */
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 png_uint_32 PNGAPI
-png_get_sCAL(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_sCAL(png_const_structp png_ptr, png_const_infop info_ptr,
     int *unit, double *width, double *height)
 {
    if (png_ptr != NULL && info_ptr != NULL &&
@@ -856,7 +856,7 @@ png_get_sCAL(png_const_structp png_ptr, png_const_infop info_ptr,
 }
 #  endif /* FLOATING POINT */
 png_uint_32 PNGAPI
-png_get_sCAL_s(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_sCAL_s(png_const_structp png_ptr, png_const_infop info_ptr,
     int *unit, png_charpp width, png_charpp height)
 {
    if (png_ptr != NULL && info_ptr != NULL &&
@@ -874,7 +874,7 @@ png_get_sCAL_s(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_pHYs_SUPPORTED
 png_uint_32 PNGAPI
-png_get_pHYs(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_pHYs(png_const_structp png_ptr, png_const_infop info_ptr,
     png_uint_32 *res_x, png_uint_32 *res_y, int *unit_type)
 {
    png_uint_32 retval = 0;
@@ -908,7 +908,7 @@ png_get_pHYs(png_const_structp png_ptr, png_const_infop info_ptr,
 #endif /* pHYs */
 
 png_uint_32 PNGAPI
-png_get_PLTE(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_PLTE(png_const_structp png_ptr, png_const_infop info_ptr,
     png_colorp *palette, int *num_palette)
 {
    png_debug1(1, "in %s retrieval function", "PLTE");
@@ -927,7 +927,7 @@ png_get_PLTE(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_sBIT_SUPPORTED
 png_uint_32 PNGAPI
-png_get_sBIT(png_const_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_get_sBIT(png_const_structp png_ptr, png_infop info_ptr,
     png_color_8p *sig_bit)
 {
    png_debug1(1, "in %s retrieval function", "sBIT");
@@ -945,7 +945,7 @@ png_get_sBIT(png_const_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_TEXT_SUPPORTED
 png_uint_32 PNGAPI
-png_get_text(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_text(png_const_structp png_ptr, png_const_infop info_ptr,
     png_textp *text_ptr, int *num_text)
 {
    if (png_ptr != NULL && info_ptr != NULL && info_ptr->num_text > 0)
@@ -971,7 +971,7 @@ png_get_text(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_tIME_SUPPORTED
 png_uint_32 PNGAPI
-png_get_tIME(png_const_structp png_ptr, png_infop info_ptr, png_timep *mod_time)
+__kimtoy__png_get_tIME(png_const_structp png_ptr, png_infop info_ptr, png_timep *mod_time)
 {
    png_debug1(1, "in %s retrieval function", "tIME");
 
@@ -988,7 +988,7 @@ png_get_tIME(png_const_structp png_ptr, png_infop info_ptr, png_timep *mod_time)
 
 #ifdef PNG_tRNS_SUPPORTED
 png_uint_32 PNGAPI
-png_get_tRNS(png_const_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_get_tRNS(png_const_structp png_ptr, png_infop info_ptr,
     png_bytep *trans_alpha, int *num_trans, png_color_16p *trans_color)
 {
    png_uint_32 retval = 0;
@@ -1033,7 +1033,7 @@ png_get_tRNS(png_const_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_APNG_SUPPORTED
 png_uint_32 PNGAPI
-png_get_acTL(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_get_acTL(png_structp png_ptr, png_infop info_ptr,
              png_uint_32 *num_frames, png_uint_32 *num_plays)
 {
     png_debug1(1, "in %s retrieval function", "acTL");
@@ -1051,9 +1051,9 @@ png_get_acTL(png_structp png_ptr, png_infop info_ptr,
 }
 
 png_uint_32 PNGAPI
-png_get_num_frames(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_num_frames(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_num_frames()");
+    png_debug(1, "in __kimtoy__png_get_num_frames()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->num_frames);
@@ -1061,9 +1061,9 @@ png_get_num_frames(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_num_plays(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_num_plays(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_num_plays()");
+    png_debug(1, "in __kimtoy__png_get_num_plays()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->num_plays);
@@ -1071,7 +1071,7 @@ png_get_num_plays(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_next_frame_fcTL(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_get_next_frame_fcTL(png_structp png_ptr, png_infop info_ptr,
              png_uint_32 *width, png_uint_32 *height,
              png_uint_32 *x_offset, png_uint_32 *y_offset,
              png_uint_16 *delay_num, png_uint_16 *delay_den,
@@ -1101,9 +1101,9 @@ png_get_next_frame_fcTL(png_structp png_ptr, png_infop info_ptr,
 }
 
 png_uint_32 PNGAPI
-png_get_next_frame_width(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_width(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_width()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_width()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_width);
@@ -1111,9 +1111,9 @@ png_get_next_frame_width(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_next_frame_height(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_height(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_height()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_height()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_height);
@@ -1121,9 +1121,9 @@ png_get_next_frame_height(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_next_frame_x_offset(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_x_offset(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_x_offset()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_x_offset()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_x_offset);
@@ -1131,9 +1131,9 @@ png_get_next_frame_x_offset(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_uint_32 PNGAPI
-png_get_next_frame_y_offset(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_y_offset(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_y_offset()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_y_offset()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_y_offset);
@@ -1141,9 +1141,9 @@ png_get_next_frame_y_offset(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_uint_16 PNGAPI
-png_get_next_frame_delay_num(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_delay_num(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_delay_num()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_delay_num()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_delay_num);
@@ -1151,9 +1151,9 @@ png_get_next_frame_delay_num(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_uint_16 PNGAPI
-png_get_next_frame_delay_den(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_delay_den(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_delay_den()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_delay_den()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_delay_den);
@@ -1161,9 +1161,9 @@ png_get_next_frame_delay_den(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_next_frame_dispose_op(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_dispose_op(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_dispose_op()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_dispose_op()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_dispose_op);
@@ -1171,9 +1171,9 @@ png_get_next_frame_dispose_op(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_next_frame_blend_op(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_next_frame_blend_op(png_structp png_ptr, png_infop info_ptr)
 {
-    png_debug(1, "in png_get_next_frame_blend_op()");
+    png_debug(1, "in __kimtoy__png_get_next_frame_blend_op()");
     
     if (png_ptr != NULL && info_ptr != NULL)
         return (info_ptr->next_frame_blend_op);
@@ -1181,7 +1181,7 @@ png_get_next_frame_blend_op(png_structp png_ptr, png_infop info_ptr)
 }
 
 png_byte PNGAPI
-png_get_first_frame_is_hidden(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_get_first_frame_is_hidden(png_structp png_ptr, png_infop info_ptr)
 {
     png_debug(1, "in png_first_frame_is_hidden()");
     
@@ -1194,7 +1194,7 @@ png_get_first_frame_is_hidden(png_structp png_ptr, png_infop info_ptr)
 
 #ifdef PNG_UNKNOWN_CHUNKS_SUPPORTED
 int PNGAPI
-png_get_unknown_chunks(png_const_structp png_ptr, png_const_infop info_ptr,
+__kimtoy__png_get_unknown_chunks(png_const_structp png_ptr, png_const_infop info_ptr,
     png_unknown_chunkpp unknowns)
 {
    if (png_ptr != NULL && info_ptr != NULL && unknowns != NULL)
@@ -1209,7 +1209,7 @@ png_get_unknown_chunks(png_const_structp png_ptr, png_const_infop info_ptr,
 
 #ifdef PNG_READ_RGB_TO_GRAY_SUPPORTED
 png_byte PNGAPI
-png_get_rgb_to_gray_status (png_const_structp png_ptr)
+__kimtoy__png_get_rgb_to_gray_status (png_const_structp png_ptr)
 {
    return (png_byte)(png_ptr ? png_ptr->rgb_to_gray_status : 0);
 }
@@ -1217,14 +1217,14 @@ png_get_rgb_to_gray_status (png_const_structp png_ptr)
 
 #ifdef PNG_USER_CHUNKS_SUPPORTED
 png_voidp PNGAPI
-png_get_user_chunk_ptr(png_const_structp png_ptr)
+__kimtoy__png_get_user_chunk_ptr(png_const_structp png_ptr)
 {
    return (png_ptr ? png_ptr->user_chunk_ptr : NULL);
 }
 #endif
 
 png_size_t PNGAPI
-png_get_compression_buffer_size(png_const_structp png_ptr)
+__kimtoy__png_get_compression_buffer_size(png_const_structp png_ptr)
 {
    return (png_ptr ? png_ptr->zbuf_size : 0);
 }
@@ -1233,27 +1233,27 @@ png_get_compression_buffer_size(png_const_structp png_ptr)
 /* These functions were added to libpng 1.2.6 and were enabled
  * by default in libpng-1.4.0 */
 png_uint_32 PNGAPI
-png_get_user_width_max (png_const_structp png_ptr)
+__kimtoy__png_get_user_width_max (png_const_structp png_ptr)
 {
    return (png_ptr ? png_ptr->user_width_max : 0);
 }
 
 png_uint_32 PNGAPI
-png_get_user_height_max (png_const_structp png_ptr)
+__kimtoy__png_get_user_height_max (png_const_structp png_ptr)
 {
    return (png_ptr ? png_ptr->user_height_max : 0);
 }
 
 /* This function was added to libpng 1.4.0 */
 png_uint_32 PNGAPI
-png_get_chunk_cache_max (png_const_structp png_ptr)
+__kimtoy__png_get_chunk_cache_max (png_const_structp png_ptr)
 {
    return (png_ptr ? png_ptr->user_chunk_cache_max : 0);
 }
 
 /* This function was added to libpng 1.4.1 */
 png_alloc_size_t PNGAPI
-png_get_chunk_malloc_max (png_const_structp png_ptr)
+__kimtoy__png_get_chunk_malloc_max (png_const_structp png_ptr)
 {
    return (png_ptr ? png_ptr->user_chunk_malloc_max : 0);
 }
@@ -1262,19 +1262,19 @@ png_get_chunk_malloc_max (png_const_structp png_ptr)
 /* These functions were added to libpng 1.4.0 */
 #ifdef PNG_IO_STATE_SUPPORTED
 png_uint_32 PNGAPI
-png_get_io_state (png_structp png_ptr)
+__kimtoy__png_get_io_state (png_structp png_ptr)
 {
    return png_ptr->io_state;
 }
 
 png_uint_32 PNGAPI
-png_get_io_chunk_type (png_const_structp png_ptr)
+__kimtoy__png_get_io_chunk_type (png_const_structp png_ptr)
 {
    return png_ptr->chunk_name;
 }
 
 png_const_bytep PNGAPI
-png_get_io_chunk_name (png_structp png_ptr)
+__kimtoy__png_get_io_chunk_name (png_structp png_ptr)
 {
    PNG_CSTRING_FROM_CHUNK(png_ptr->io_chunk_string, png_ptr->chunk_name);
    return png_ptr->io_chunk_string;

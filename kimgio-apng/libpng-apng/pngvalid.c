@@ -621,7 +621,7 @@ random_32(void)
       png_uint_32 result;
 
       store_pool_mark(mark);
-      result = png_get_uint_32(mark);
+      result = __kimtoy__png_get_uint_32(mark);
 
       if (result != 0)
          return result;
@@ -703,12 +703,12 @@ store_storenew(png_store *ps)
    png_store_buffer *pb;
 
    if (ps->writepos != STORE_BUFFER_SIZE)
-      png_error(ps->pwrite, "invalid store call");
+      __kimtoy__png_error(ps->pwrite, "invalid store call");
 
    pb = voidcast(png_store_buffer*, malloc(sizeof *pb));
 
    if (pb == NULL)
-      png_error(ps->pwrite, "store new: OOM");
+      __kimtoy__png_error(ps->pwrite, "store new: OOM");
 
    *pb = ps->new;
    ps->new.prev = pb;
@@ -743,7 +743,7 @@ store_storefile(png_store *ps, png_uint_32 id)
 {
    png_store_file *pf = voidcast(png_store_file*, malloc(sizeof *pf));
    if (pf == NULL)
-      png_error(ps->pwrite, "storefile: OOM");
+      __kimtoy__png_error(ps->pwrite, "storefile: OOM");
    safecat(pf->name, sizeof pf->name, 0, ps->wname);
    pf->id = id;
    pf->data = ps->new;
@@ -835,7 +835,7 @@ store_log(png_store* ps, png_structp pp, png_const_charp message, int is_error)
 static void
 store_error(png_structp pp, png_const_charp message) /* PNG_NORETURN */
 {
-   png_store *ps = voidcast(png_store*, png_get_error_ptr(pp));
+   png_store *ps = voidcast(png_store*, __kimtoy__png_get_error_ptr(pp));
 
    if (!ps->expect_error)
       store_log(ps, pp, message, 1 /* error */);
@@ -850,7 +850,7 @@ store_error(png_structp pp, png_const_charp message) /* PNG_NORETURN */
 static void
 store_warning(png_structp pp, png_const_charp message)
 {
-   png_store *ps = voidcast(png_store*, png_get_error_ptr(pp));
+   png_store *ps = voidcast(png_store*, __kimtoy__png_get_error_ptr(pp));
 
    if (!ps->expect_warning)
       store_log(ps, pp, message, 0 /* warning */);
@@ -869,10 +869,10 @@ store_image_row(PNG_CONST png_store* ps, png_structp pp, int nImage,
    png_size_t coffset = (nImage * ps->image_h + y) * (ps->cb_row + 5) + 2;
 
    if (ps->image == NULL)
-      png_error(pp, "no allocated image");
+      __kimtoy__png_error(pp, "no allocated image");
 
    if (coffset + ps->cb_row + 3 > ps->cb_image)
-      png_error(pp, "image too small");
+      __kimtoy__png_error(pp, "image too small");
 
    return ps->image + coffset;
 }
@@ -887,7 +887,7 @@ store_image_free(png_store *ps, png_structp pp)
       if (image[-1] != 0xed || image[ps->cb_image] != 0xfe)
       {
          if (pp != NULL)
-            png_error(pp, "png_store image overwrite (1)");
+            __kimtoy__png_error(pp, "png_store image overwrite (1)");
          else
             store_log(ps, NULL, "png_store image overwrite (2)", 1);
       }
@@ -919,7 +919,7 @@ store_ensure_image(png_store *ps, png_structp pp, int nImages, png_size_t cbRow,
          if (pp == NULL)
             return;
 
-         png_error(pp, "OOM allocating image buffer");
+         __kimtoy__png_error(pp, "OOM allocating image buffer");
       }
 
       /* These magic tags are used to detect overwrites above. */
@@ -971,7 +971,7 @@ store_image_check(PNG_CONST png_store* ps, png_structp pp, int iImage)
    png_const_bytep image = ps->image;
 
    if (image[-1] != 0xed || image[ps->cb_image] != 0xfe)
-      png_error(pp, "image overwrite");
+      __kimtoy__png_error(pp, "image overwrite");
    else
    {
       png_size_t cbRow = ps->cb_row;
@@ -984,11 +984,11 @@ store_image_check(PNG_CONST png_store* ps, png_structp pp, int iImage)
       while (rows-- > 0)
       {
          if (image[-2] != 190 || image[-1] != 239)
-            png_error(pp, "row start overwritten");
+            __kimtoy__png_error(pp, "row start overwritten");
 
          if (image[cbRow] != 222 || image[cbRow+1] != 173 ||
             image[cbRow+2] != 17)
-            png_error(pp, "row end overwritten");
+            __kimtoy__png_error(pp, "row end overwritten");
 
          image += cbRow+5;
       }
@@ -998,10 +998,10 @@ store_image_check(PNG_CONST png_store* ps, png_structp pp, int iImage)
 static void
 store_write(png_structp pp, png_bytep pb, png_size_t st)
 {
-   png_store *ps = voidcast(png_store*, png_get_io_ptr(pp));
+   png_store *ps = voidcast(png_store*, __kimtoy__png_get_io_ptr(pp));
 
    if (ps->pwrite != pp)
-      png_error(pp, "store state damaged");
+      __kimtoy__png_error(pp, "store state damaged");
 
    while (st > 0)
    {
@@ -1055,7 +1055,7 @@ store_read_buffer_avail(png_store *ps)
       }
 
       if (next != ps->next)
-         png_error(ps->pread, "buffer read error");
+         __kimtoy__png_error(ps->pread, "buffer read error");
 
       if (cbAvail > ps->readpos)
          return cbAvail - ps->readpos;
@@ -1082,7 +1082,7 @@ store_read_buffer_next(png_store *ps)
          return 1;
       }
 
-      png_error(ps->pread, "buffer lost");
+      __kimtoy__png_error(ps->pread, "buffer lost");
    }
 
    return 0; /* EOF or error */
@@ -1095,7 +1095,7 @@ static void
 store_read_imp(png_store *ps, png_bytep pb, png_size_t st)
 {
    if (ps->current == NULL || ps->next == NULL)
-      png_error(ps->pread, "store state damaged");
+      __kimtoy__png_error(ps->pread, "store state damaged");
 
    while (st > 0)
    {
@@ -1111,17 +1111,17 @@ store_read_imp(png_store *ps, png_bytep pb, png_size_t st)
       }
 
       else if (!store_read_buffer_next(ps))
-         png_error(ps->pread, "read beyond end of file");
+         __kimtoy__png_error(ps->pread, "read beyond end of file");
    }
 }
 
 static void
 store_read(png_structp pp, png_bytep pb, png_size_t st)
 {
-   png_store *ps = voidcast(png_store*, png_get_io_ptr(pp));
+   png_store *ps = voidcast(png_store*, __kimtoy__png_get_io_ptr(pp));
 
    if (ps == NULL || ps->pread != pp)
-      png_error(pp, "bad store read call");
+      __kimtoy__png_error(pp, "bad store read call");
 
    store_read_imp(ps, pb, st);
 }
@@ -1133,14 +1133,14 @@ store_progressive_read(png_store *ps, png_structp pp, png_infop pi)
     * readpos will be set.
     */
    if (ps->pread != pp || ps->current == NULL || ps->next == NULL)
-      png_error(pp, "store state damaged (progressive)");
+      __kimtoy__png_error(pp, "store state damaged (progressive)");
 
    do
    {
       if (ps->readpos != 0)
-         png_error(pp, "store_read called during progressive read");
+         __kimtoy__png_error(pp, "store_read called during progressive read");
 
-      png_process_data(pp, pi, ps->next->buffer, store_read_buffer_size(ps));
+      __kimtoy__png_process_data(pp, pi, ps->next->buffer, store_read_buffer_size(ps));
    }
    while (store_read_buffer_next(ps));
 }
@@ -1153,7 +1153,7 @@ store_write_palette(png_store *ps, int npalette)
       store_log(ps, NULL, "attempt to write palette without write stream", 1);
 
    if (ps->palette != NULL)
-      png_error(ps->pwrite, "multiple store_write_palette calls");
+      __kimtoy__png_error(ps->pwrite, "multiple store_write_palette calls");
 
    /* This function can only return NULL if called with '0'! */
    if (npalette > 0)
@@ -1162,7 +1162,7 @@ store_write_palette(png_store *ps, int npalette)
          sizeof *ps->palette));
 
       if (ps->palette == NULL)
-         png_error(ps->pwrite, "store new palette: OOM");
+         __kimtoy__png_error(ps->pwrite, "store new palette: OOM");
 
       ps->npalette = npalette;
    }
@@ -1197,9 +1197,9 @@ typedef struct store_memory
    png_byte             mark[4]; /* ID marker */
 } store_memory;
 
-/* Handle a fatal error in memory allocation.  This calls png_error if the
+/* Handle a fatal error in memory allocation.  This calls __kimtoy__png_error if the
  * libpng struct is non-NULL, else it outputs a message and returns.  This means
- * that a memory problem while libpng is running will abort (png_error) the
+ * that a memory problem while libpng is running will abort (__kimtoy__png_error) the
  * handling of particular file while one in cleanup (after the destroy of the
  * struct has returned) will simply keep going and free (or attempt to free)
  * all the memory.
@@ -1208,9 +1208,9 @@ static void
 store_pool_error(png_store *ps, png_structp pp, PNG_CONST char *msg)
 {
    if (pp != NULL)
-      png_error(pp, msg);
+      __kimtoy__png_error(pp, msg);
 
-   /* Else we have to do it ourselves.  png_error eventually calls store_log,
+   /* Else we have to do it ourselves.  __kimtoy__png_error eventually calls store_log,
     * above.  store_log accepts a NULL png_structp - it just changes what gets
     * output by store_message.
     */
@@ -1306,7 +1306,7 @@ store_pool_delete(png_store *ps, store_pool *pool)
 static png_voidp
 store_malloc(png_structp pp, png_alloc_size_t cb)
 {
-   store_pool *pool = voidcast(store_pool*, png_get_mem_ptr(pp));
+   store_pool *pool = voidcast(store_pool*, __kimtoy__png_get_mem_ptr(pp));
    store_memory *new = voidcast(store_memory*, malloc(cb + (sizeof *new) +
       (sizeof pool->mark)));
 
@@ -1340,7 +1340,7 @@ store_malloc(png_structp pp, png_alloc_size_t cb)
 static void
 store_free(png_structp pp, png_voidp memory)
 {
-   store_pool *pool = voidcast(store_pool*, png_get_mem_ptr(pp));
+   store_pool *pool = voidcast(store_pool*, __kimtoy__png_get_mem_ptr(pp));
    store_memory *this = voidcast(store_memory*, memory), **test;
 
    /* First check that this 'memory' really is valid memory - it must be in the
@@ -1372,7 +1372,7 @@ store_write_reset(png_store *ps)
       anon_context(ps);
 
       Try
-         png_destroy_write_struct(&ps->pwrite, &ps->piwrite);
+         __kimtoy__png_destroy_write_struct(&ps->pwrite, &ps->piwrite);
 
       Catch_anonymous
       {
@@ -1405,25 +1405,25 @@ set_store_for_write(png_store *ps, png_infopp ppi,
    Try
    {
       if (ps->pwrite != NULL)
-         png_error(ps->pwrite, "write store already in use");
+         __kimtoy__png_error(ps->pwrite, "write store already in use");
 
       store_write_reset(ps);
       safecat(ps->wname, sizeof ps->wname, 0, name);
 
       /* Don't do the slow memory checks if doing a speed test. */
       if (ps->speed)
-         ps->pwrite = png_create_write_struct(PNG_LIBPNG_VER_STRING,
+         ps->pwrite = __kimtoy__png_create_write_struct(PNG_LIBPNG_VER_STRING,
             ps, store_error, store_warning);
 
       else
-         ps->pwrite = png_create_write_struct_2(PNG_LIBPNG_VER_STRING,
+         ps->pwrite = __kimtoy__png_create_write_struct_2(PNG_LIBPNG_VER_STRING,
             ps, store_error, store_warning, &ps->write_memory_pool,
             store_malloc, store_free);
 
-      png_set_write_fn(ps->pwrite, ps, store_write, store_flush);
+      __kimtoy__png_set_write_fn(ps->pwrite, ps, store_write, store_flush);
 
       if (ppi != NULL)
-         *ppi = ps->piwrite = png_create_info_struct(ps->pwrite);
+         *ppi = ps->piwrite = __kimtoy__png_create_info_struct(ps->pwrite);
    }
 
    Catch_anonymous
@@ -1442,7 +1442,7 @@ store_read_reset(png_store *ps)
       anon_context(ps);
 
       Try
-         png_destroy_read_struct(&ps->pread, &ps->piread, NULL);
+         __kimtoy__png_destroy_read_struct(&ps->pread, &ps->piread, NULL);
 
       Catch_anonymous
       {
@@ -1486,7 +1486,7 @@ store_read_set(png_store *ps, png_uint_32 id)
 
       pos = standard_name_from_id(msg, sizeof msg, 0, id);
       pos = safecat(msg, sizeof msg, pos, ": file not found");
-      png_error(ps->pread, msg);
+      __kimtoy__png_error(ps->pread, msg);
       }
 }
 
@@ -1499,11 +1499,11 @@ static png_structp
 set_store_for_read(png_store *ps, png_infopp ppi, png_uint_32 id,
    PNG_CONST char *name)
 {
-   /* Set the name for png_error */
+   /* Set the name for __kimtoy__png_error */
    safecat(ps->test, sizeof ps->test, 0, name);
 
    if (ps->pread != NULL)
-      png_error(ps->pread, "read store already in use");
+      __kimtoy__png_error(ps->pread, "read store already in use");
 
    store_read_reset(ps);
 
@@ -1514,11 +1514,11 @@ set_store_for_read(png_store *ps, png_infopp ppi, png_uint_32 id,
     * we don't ever expect NULL in this program.
     */
    if (ps->speed)
-      ps->pread = png_create_read_struct(PNG_LIBPNG_VER_STRING, ps,
+      ps->pread = __kimtoy__png_create_read_struct(PNG_LIBPNG_VER_STRING, ps,
           store_error, store_warning);
 
    else
-      ps->pread = png_create_read_struct_2(PNG_LIBPNG_VER_STRING, ps,
+      ps->pread = __kimtoy__png_create_read_struct_2(PNG_LIBPNG_VER_STRING, ps,
           store_error, store_warning, &ps->read_memory_pool, store_malloc,
           store_free);
 
@@ -1526,7 +1526,7 @@ set_store_for_read(png_store *ps, png_infopp ppi, png_uint_32 id,
    {
       struct exception_context *the_exception_context = &ps->exception_context;
 
-      store_log(ps, NULL, "png_create_read_struct returned NULL (unexpected)",
+      store_log(ps, NULL, "__kimtoy__png_create_read_struct returned NULL (unexpected)",
          1 /*error*/);
 
       Throw ps;
@@ -1535,7 +1535,7 @@ set_store_for_read(png_store *ps, png_infopp ppi, png_uint_32 id,
    store_read_set(ps, id);
 
    if (ppi != NULL)
-      *ppi = ps->piread = png_create_info_struct(ps->pread);
+      *ppi = ps->piread = __kimtoy__png_create_info_struct(ps->pread);
 
    return ps->pread;
 }
@@ -1747,7 +1747,7 @@ typedef struct png_modifier
    double                   error_indexed;
 
    /* Flags: */
-   /* Whether to call png_read_update_info, not png_read_start_image, and how
+   /* Whether to call __kimtoy__png_read_update_info, not png_read_start_image, and how
     * many times to call it.
     */
    int                      use_update_info;
@@ -2260,18 +2260,18 @@ modifier_crc(png_bytep buffer)
    /* Recalculate the chunk CRC - a complete chunk must be in
     * the buffer, at the start.
     */
-   uInt datalen = png_get_uint_32(buffer);
+   uInt datalen = __kimtoy__png_get_uint_32(buffer);
    uLong crc = crc32(0, buffer+4, datalen+4);
    /* The cast to png_uint_32 is safe because a crc32 is always a 32 bit value.
     */
-   png_save_uint_32(buffer+datalen+8, (png_uint_32)crc);
+   __kimtoy__png_save_uint_32(buffer+datalen+8, (png_uint_32)crc);
 }
 
 static void
 modifier_setbuffer(png_modifier *pm)
 {
    modifier_crc(pm->buffer);
-   pm->buffer_count = png_get_uint_32(pm->buffer)+12;
+   pm->buffer_count = __kimtoy__png_get_uint_32(pm->buffer)+12;
    pm->buffer_position = 0;
 }
 
@@ -2297,7 +2297,7 @@ modifier_read_imp(png_modifier *pm, png_bytep pb, png_size_t st)
             pm->buffer_position = 0;
 
             if (memcmp(pm->buffer, sign, 8) != 0)
-               png_error(pm->this.pread, "invalid PNG file signature");
+               __kimtoy__png_error(pm->this.pread, "invalid PNG file signature");
             pm->state = modifier_signature;
             break;
 
@@ -2306,9 +2306,9 @@ modifier_read_imp(png_modifier *pm, png_bytep pb, png_size_t st)
             pm->buffer_count = 13+12;
             pm->buffer_position = 0;
 
-            if (png_get_uint_32(pm->buffer) != 13 ||
-                png_get_uint_32(pm->buffer+4) != CHUNK_IHDR)
-               png_error(pm->this.pread, "invalid IHDR");
+            if (__kimtoy__png_get_uint_32(pm->buffer) != 13 ||
+                __kimtoy__png_get_uint_32(pm->buffer+4) != CHUNK_IHDR)
+               __kimtoy__png_error(pm->this.pread, "invalid IHDR");
 
             /* Check the list of modifiers for modifications to the IHDR. */
             mod = pm->modifications;
@@ -2354,8 +2354,8 @@ modifier_read_imp(png_modifier *pm, png_bytep pb, png_size_t st)
              */
             if (pm->pending_chunk != 0)
             {
-               png_save_uint_32(pm->buffer, pm->pending_len);
-               png_save_uint_32(pm->buffer+4, pm->pending_chunk);
+               __kimtoy__png_save_uint_32(pm->buffer, pm->pending_len);
+               __kimtoy__png_save_uint_32(pm->buffer+4, pm->pending_chunk);
                pm->pending_len = 0;
                pm->pending_chunk = 0;
             }
@@ -2366,8 +2366,8 @@ modifier_read_imp(png_modifier *pm, png_bytep pb, png_size_t st)
             pm->buffer_position = 0;
 
             /* Check for something to modify or a terminator chunk. */
-            len = png_get_uint_32(pm->buffer);
-            chunk = png_get_uint_32(pm->buffer+4);
+            len = __kimtoy__png_get_uint_32(pm->buffer);
+            chunk = __kimtoy__png_get_uint_32(pm->buffer+4);
 
             /* Terminators first, they may have to be delayed for added
              * chunks
@@ -2487,10 +2487,10 @@ modifier_read_imp(png_modifier *pm, png_bytep pb, png_size_t st)
 static void
 modifier_read(png_structp pp, png_bytep pb, png_size_t st)
 {
-   png_modifier *pm = voidcast(png_modifier*, png_get_io_ptr(pp));
+   png_modifier *pm = voidcast(png_modifier*, __kimtoy__png_get_io_ptr(pp));
 
    if (pm == NULL || pm->this.pread != pp)
-      png_error(pp, "bad modifier_read call");
+      __kimtoy__png_error(pp, "bad modifier_read call");
 
    modifier_read_imp(pm, pb, st);
 }
@@ -2503,7 +2503,7 @@ modifier_progressive_read(png_modifier *pm, png_structp pp, png_infop pi)
 {
    if (pm->this.pread != pp || pm->this.current == NULL ||
        pm->this.next == NULL)
-      png_error(pp, "store state damaged (progressive)");
+      __kimtoy__png_error(pp, "store state damaged (progressive)");
 
    /* This is another Horowitz and Hill random noise generator.  In this case
     * the aim is to stress the progressive reader with truly horrible variable
@@ -2540,7 +2540,7 @@ modifier_progressive_read(png_modifier *pm, png_structp pp, png_infop pi)
       }
 
       modifier_read_imp(pm, buffer, cb);
-      png_process_data(pp, pi, buffer, cb);
+      __kimtoy__png_process_data(pp, pi, buffer, cb);
    }
 
    /* Check the invariants at the end (if this fails it's a problem in this
@@ -2549,7 +2549,7 @@ modifier_progressive_read(png_modifier *pm, png_structp pp, png_infop pi)
    if (pm->buffer_count > pm->buffer_position ||
        pm->this.next != &pm->this.current->data ||
        pm->this.readpos < pm->this.current->datacount)
-      png_error(pp, "progressive read implementation error");
+      __kimtoy__png_error(pp, "progressive read implementation error");
 }
 
 /* Set up a modifier. */
@@ -2591,9 +2591,9 @@ gama_modify(png_modifier *pm, png_modification *me, int add)
 {
    UNUSED(add)
    /* This simply dumps the given gamma value into the buffer. */
-   png_save_uint_32(pm->buffer, 4);
-   png_save_uint_32(pm->buffer+4, CHUNK_gAMA);
-   png_save_uint_32(pm->buffer+8, ((gama_modification*)me)->gamma);
+   __kimtoy__png_save_uint_32(pm->buffer, 4);
+   __kimtoy__png_save_uint_32(pm->buffer+4, CHUNK_gAMA);
+   __kimtoy__png_save_uint_32(pm->buffer+8, ((gama_modification*)me)->gamma);
    return 1;
 }
 
@@ -2624,16 +2624,16 @@ chrm_modify(png_modifier *pm, png_modification *me, int add)
 {
    UNUSED(add)
    /* As with gAMA this just adds the required cHRM chunk to the buffer. */
-   png_save_uint_32(pm->buffer   , 32);
-   png_save_uint_32(pm->buffer+ 4, CHUNK_cHRM);
-   png_save_uint_32(pm->buffer+ 8, ((chrm_modification*)me)->wx);
-   png_save_uint_32(pm->buffer+12, ((chrm_modification*)me)->wy);
-   png_save_uint_32(pm->buffer+16, ((chrm_modification*)me)->rx);
-   png_save_uint_32(pm->buffer+20, ((chrm_modification*)me)->ry);
-   png_save_uint_32(pm->buffer+24, ((chrm_modification*)me)->gx);
-   png_save_uint_32(pm->buffer+28, ((chrm_modification*)me)->gy);
-   png_save_uint_32(pm->buffer+32, ((chrm_modification*)me)->bx);
-   png_save_uint_32(pm->buffer+36, ((chrm_modification*)me)->by);
+   __kimtoy__png_save_uint_32(pm->buffer   , 32);
+   __kimtoy__png_save_uint_32(pm->buffer+ 4, CHUNK_cHRM);
+   __kimtoy__png_save_uint_32(pm->buffer+ 8, ((chrm_modification*)me)->wx);
+   __kimtoy__png_save_uint_32(pm->buffer+12, ((chrm_modification*)me)->wy);
+   __kimtoy__png_save_uint_32(pm->buffer+16, ((chrm_modification*)me)->rx);
+   __kimtoy__png_save_uint_32(pm->buffer+20, ((chrm_modification*)me)->ry);
+   __kimtoy__png_save_uint_32(pm->buffer+24, ((chrm_modification*)me)->gx);
+   __kimtoy__png_save_uint_32(pm->buffer+28, ((chrm_modification*)me)->gy);
+   __kimtoy__png_save_uint_32(pm->buffer+32, ((chrm_modification*)me)->bx);
+   __kimtoy__png_save_uint_32(pm->buffer+36, ((chrm_modification*)me)->by);
    return 1;
 }
 
@@ -2676,8 +2676,8 @@ srgb_modify(png_modifier *pm, png_modification *me, int add)
 {
    UNUSED(add)
    /* As above, ignore add and just make a new chunk */
-   png_save_uint_32(pm->buffer, 1);
-   png_save_uint_32(pm->buffer+4, CHUNK_sRGB);
+   __kimtoy__png_save_uint_32(pm->buffer, 1);
+   __kimtoy__png_save_uint_32(pm->buffer+4, CHUNK_sRGB);
    pm->buffer[8] = ((srgb_modification*)me)->intent;
    return 1;
 }
@@ -2739,12 +2739,12 @@ sbit_modify(png_modifier *pm, png_modification *me, int add)
             break;
 
          default:
-            png_error(pm->this.pread,
+            __kimtoy__png_error(pm->this.pread,
                "unexpected colour type in sBIT modification");
       }
 
-      png_save_uint_32(pm->buffer, cb);
-      png_save_uint_32(pm->buffer+4, CHUNK_sBIT);
+      __kimtoy__png_save_uint_32(pm->buffer, cb);
+      __kimtoy__png_save_uint_32(pm->buffer+4, CHUNK_sBIT);
 
       while (cb > 0)
          (pm->buffer+8)[--cb] = sbit;
@@ -2941,7 +2941,7 @@ init_standard_palette(png_store *ps, png_structp pp, png_infop pi, int npalette,
       for (; i<256; ++i)
          palette[i].red = palette[i].green = palette[i].blue = 42;
 
-      png_set_PLTE(pp, pi, palette, npalette);
+      __kimtoy__png_set_PLTE(pp, pi, palette, npalette);
    }
 
    if (do_tRNS)
@@ -2959,7 +2959,7 @@ init_standard_palette(png_store *ps, png_structp pp, png_infop pi, int npalette,
          tRNS[i] = 24;
 
       if (j > 0)
-         png_set_tRNS(pp, pi, tRNS, j, 0/*color*/);
+         __kimtoy__png_set_tRNS(pp, pi, tRNS, j, 0/*color*/);
    }
 }
 
@@ -2972,7 +2972,7 @@ npasses_from_interlace_type(png_structp pp, int interlace_type)
    switch (interlace_type)
    {
    default:
-      png_error(pp, "invalid interlace type");
+      __kimtoy__png_error(pp, "invalid interlace type");
 
    case PNG_INTERLACE_NONE:
       return 1;
@@ -2987,7 +2987,7 @@ bit_size(png_structp pp, png_byte colour_type, png_byte bit_depth)
 {
    switch (colour_type)
    {
-      default: png_error(pp, "invalid color type");
+      default: __kimtoy__png_error(pp, "invalid color type");
 
       case 0:  return bit_depth;
 
@@ -3189,7 +3189,7 @@ transform_row(png_structp pp, png_byte buffer[TRANSFORM_ROWMAX],
          break;
    }
 
-   png_error(pp, "internal error");
+   __kimtoy__png_error(pp, "internal error");
 }
 
 /* This is just to do the right cast - could be changed to a function to check
@@ -3225,7 +3225,7 @@ make_transform_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
 
       h = transform_height(pp, colour_type, bit_depth);
 
-      png_set_IHDR(pp, pi, transform_width(pp, colour_type, bit_depth), h,
+      __kimtoy__png_set_IHDR(pp, pi, transform_width(pp, colour_type, bit_depth), h,
          bit_depth, colour_type, interlace_type,
          PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
@@ -3249,30 +3249,30 @@ make_transform_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
          text.lang = 0;
          text.lang_key = 0;
 
-         png_set_text(pp, pi, &text, 1);
+         __kimtoy__png_set_text(pp, pi, &text, 1);
       }
 #endif
 
       if (colour_type == 3) /* palette */
          init_standard_palette(ps, pp, pi, 1U << bit_depth, 1/*do tRNS*/);
 
-      png_write_info(pp, pi);
+      __kimtoy__png_write_info(pp, pi);
 
-      if (png_get_rowbytes(pp, pi) !=
+      if (__kimtoy__png_get_rowbytes(pp, pi) !=
           transform_rowsize(pp, colour_type, bit_depth))
-         png_error(pp, "row size incorrect");
+         __kimtoy__png_error(pp, "row size incorrect");
 
       else
       {
-         /* Somewhat confusingly this must be called *after* png_write_info
+         /* Somewhat confusingly this must be called *after* __kimtoy__png_write_info
           * because if it is called before, the information in *pp has not been
           * updated to reflect the interlaced image.
           */
-         int npasses = png_set_interlace_handling(pp);
+         int npasses = __kimtoy__png_set_interlace_handling(pp);
          int pass;
 
          if (npasses != npasses_from_interlace_type(pp, interlace_type))
-            png_error(pp, "write: png_set_interlace_handling failed");
+            __kimtoy__png_error(pp, "write: __kimtoy__png_set_interlace_handling failed");
 
          for (pass=0; pass<npasses; ++pass)
          {
@@ -3283,7 +3283,7 @@ make_transform_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
                png_byte buffer[TRANSFORM_ROWMAX];
 
                transform_row(pp, buffer, colour_type, bit_depth, y);
-               png_write_row(pp, buffer);
+               __kimtoy__png_write_row(pp, buffer);
             }
          }
       }
@@ -3305,11 +3305,11 @@ make_transform_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
          text.lang = 0;
          text.lang_key = 0;
 
-         png_set_text(pp, pi, &text, 1);
+         __kimtoy__png_set_text(pp, pi, &text, 1);
       }
 #endif
 
-      png_write_end(pp, pi);
+      __kimtoy__png_write_end(pp, pi);
 
       /* And store this under the appropriate id, then clean up. */
       store_storefile(ps, FILEID(colour_type, bit_depth, palette_number,
@@ -3455,21 +3455,21 @@ make_size_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
       if (pp == NULL)
          Throw ps;
 
-      png_set_IHDR(pp, pi, w, h, bit_depth, colour_type, interlace_type,
+      __kimtoy__png_set_IHDR(pp, pi, w, h, bit_depth, colour_type, interlace_type,
          PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
       if (colour_type == 3) /* palette */
          init_standard_palette(ps, pp, pi, 1U << bit_depth, 0/*do tRNS*/);
 
-      png_write_info(pp, pi);
+      __kimtoy__png_write_info(pp, pi);
 
       /* Calculate the bit size, divide by 8 to get the byte size - this won't
        * overflow because we know the w values are all small enough even for
        * a system where 'unsigned int' is only 16 bits.
        */
       pixel_size = bit_size(pp, colour_type, bit_depth);
-      if (png_get_rowbytes(pp, pi) != ((w * pixel_size) + 7) / 8)
-         png_error(pp, "row size incorrect");
+      if (__kimtoy__png_get_rowbytes(pp, pi) != ((w * pixel_size) + 7) / 8)
+         __kimtoy__png_error(pp, "row size incorrect");
 
       else
       {
@@ -3483,8 +3483,8 @@ make_size_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
           */
          memset(image, 0xff, sizeof image);
 
-         if (!do_interlace && npasses != png_set_interlace_handling(pp))
-            png_error(pp, "write: png_set_interlace_handling failed");
+         if (!do_interlace && npasses != __kimtoy__png_set_interlace_handling(pp))
+            __kimtoy__png_error(pp, "write: __kimtoy__png_set_interlace_handling failed");
 
          /* Prepare the whole image first to avoid making it 7 times: */
          for (y=0; y<h; ++y)
@@ -3495,7 +3495,7 @@ make_size_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
             /* The following two are for checking the macros: */
             PNG_CONST png_uint_32 wPass = PNG_PASS_COLS(w, pass);
 
-            /* If do_interlace is set we don't call png_write_row for every
+            /* If do_interlace is set we don't call __kimtoy__png_write_row for every
              * row because some of them are empty.  In fact, for a 1x1 image,
              * most of them are empty!
              */
@@ -3530,12 +3530,12 @@ make_size_image(png_store* PNG_CONST ps, png_byte PNG_CONST colour_type,
                }
 
                /* Only get to here if the row has some pixels in it. */
-               png_write_row(pp, row);
+               __kimtoy__png_write_row(pp, row);
             }
          }
       }
 
-      png_write_end(pp, pi);
+      __kimtoy__png_write_end(pp, pi);
 
       /* And store this under the appropriate id, then clean up. */
       store_storefile(ps, id);
@@ -3623,7 +3623,7 @@ sBIT0_error_fn(png_structp pp, png_infop pi)
    /* 0 is invalid... */
    png_color_8 bad;
    bad.red = bad.green = bad.blue = bad.gray = bad.alpha = 0;
-   png_set_sBIT(pp, pi, &bad);
+   __kimtoy__png_set_sBIT(pp, pi, &bad);
 }
 
 static void
@@ -3632,16 +3632,16 @@ sBIT_error_fn(png_structp pp, png_infop pi)
    png_byte bit_depth;
    png_color_8 bad;
 
-   if (png_get_color_type(pp, pi) == PNG_COLOR_TYPE_PALETTE)
+   if (__kimtoy__png_get_color_type(pp, pi) == PNG_COLOR_TYPE_PALETTE)
       bit_depth = 8;
 
    else
-      bit_depth = png_get_bit_depth(pp, pi);
+      bit_depth = __kimtoy__png_get_bit_depth(pp, pi);
 
    /* Now we know the bit depth we can easily generate an invalid sBIT entry */
    bad.red = bad.green = bad.blue = bad.gray = bad.alpha =
       (png_byte)(bit_depth+1);
-   png_set_sBIT(pp, pi, &bad);
+   __kimtoy__png_set_sBIT(pp, pi, &bad);
 }
 
 static PNG_CONST struct
@@ -3672,7 +3672,7 @@ make_error(png_store* volatile ps, png_byte PNG_CONST colour_type,
       if (pp == NULL)
          Throw ps;
 
-      png_set_IHDR(pp, pi, transform_width(pp, colour_type, bit_depth),
+      __kimtoy__png_set_IHDR(pp, pi, transform_width(pp, colour_type, bit_depth),
          transform_height(pp, colour_type, bit_depth), bit_depth, colour_type,
          interlace_type, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
@@ -3693,7 +3693,7 @@ make_error(png_store* volatile ps, png_byte PNG_CONST colour_type,
          error_test[test].fn(pp, pi);
 
          /* Normally the error is only detected here: */
-         png_write_info(pp, pi);
+         __kimtoy__png_write_info(pp, pi);
 
          /* And handle the case where it was only a warning: */
          if (ps->expect_warning && ps->saw_warning)
@@ -3717,18 +3717,18 @@ make_error(png_store* volatile ps, png_byte PNG_CONST colour_type,
       /* Now write the whole image, just to make sure that the detected, or
        * undetected, errro has not created problems inside libpng.
        */
-      if (png_get_rowbytes(pp, pi) !=
+      if (__kimtoy__png_get_rowbytes(pp, pi) !=
           transform_rowsize(pp, colour_type, bit_depth))
-         png_error(pp, "row size incorrect");
+         __kimtoy__png_error(pp, "row size incorrect");
 
       else
       {
          png_uint_32 h = transform_height(pp, colour_type, bit_depth);
-         int npasses = png_set_interlace_handling(pp);
+         int npasses = __kimtoy__png_set_interlace_handling(pp);
          int pass;
 
          if (npasses != npasses_from_interlace_type(pp, interlace_type))
-            png_error(pp, "write: png_set_interlace_handling failed");
+            __kimtoy__png_error(pp, "write: __kimtoy__png_set_interlace_handling failed");
 
          for (pass=0; pass<npasses; ++pass)
          {
@@ -3739,12 +3739,12 @@ make_error(png_store* volatile ps, png_byte PNG_CONST colour_type,
                png_byte buffer[TRANSFORM_ROWMAX];
 
                transform_row(pp, buffer, colour_type, bit_depth, y);
-               png_write_row(pp, buffer);
+               __kimtoy__png_write_row(pp, buffer);
             }
          }
       }
 
-      png_write_end(pp, pi);
+      __kimtoy__png_write_end(pp, pi);
 
       /* The following deletes the file that was just written. */
       store_write_reset(ps);
@@ -3847,23 +3847,23 @@ perform_formatting_test(png_store *volatile ps)
       pt.minute = 53;
       pt.second = 60; /* a leap second */
 
-      result = png_convert_to_rfc1123(pp, &pt);
+      result = __kimtoy__png_convert_to_rfc1123(pp, &pt);
 
       if (result == NULL)
-         png_error(pp, "png_convert_to_rfc1123 failed");
+         __kimtoy__png_error(pp, "__kimtoy__png_convert_to_rfc1123 failed");
 
       if (strcmp(result, correct) != 0)
       {
          size_t pos = 0;
          char msg[128];
 
-         pos = safecat(msg, sizeof msg, pos, "png_convert_to_rfc1123(");
+         pos = safecat(msg, sizeof msg, pos, "__kimtoy__png_convert_to_rfc1123(");
          pos = safecat(msg, sizeof msg, pos, correct);
          pos = safecat(msg, sizeof msg, pos, ") returned: '");
          pos = safecat(msg, sizeof msg, pos, result);
          pos = safecat(msg, sizeof msg, pos, "'");
 
-         png_error(pp, msg);
+         __kimtoy__png_error(pp, msg);
       }
 
       store_write_reset(ps);
@@ -3880,7 +3880,7 @@ perform_formatting_test(png_store *volatile ps)
 
 /* Because we want to use the same code in both the progressive reader and the
  * sequential reader it is necessary to deal with the fact that the progressive
- * reader callbacks only have one parameter (png_get_progressive_ptr()), so this
+ * reader callbacks only have one parameter (__kimtoy__png_get_progressive_ptr()), so this
  * must contain all the test parameters and all the local variables directly
  * accessible to the sequential reader implementation.
  *
@@ -4013,12 +4013,12 @@ read_palette(store_palette palette, int *npalette, png_structp pp, png_infop pi)
    pal = 0;
    *npalette = -1;
 
-   if (png_get_PLTE(pp, pi, &pal, npalette) & PNG_INFO_PLTE)
+   if (__kimtoy__png_get_PLTE(pp, pi, &pal, npalette) & PNG_INFO_PLTE)
    {
       int i = *npalette;
 
       if (i <= 0 || i > 256)
-         png_error(pp, "validate: invalid PLTE count");
+         __kimtoy__png_error(pp, "validate: invalid PLTE count");
 
       while (--i >= 0)
       {
@@ -4033,10 +4033,10 @@ read_palette(store_palette palette, int *npalette, png_structp pp, png_infop pi)
       memset(palette + *npalette, 126, (256-*npalette) * sizeof *palette);
    }
 
-   else /* !png_get_PLTE */
+   else /* !__kimtoy__png_get_PLTE */
    {
       if (*npalette != (-1))
-         png_error(pp, "validate: invalid PLTE result");
+         __kimtoy__png_error(pp, "validate: invalid PLTE result");
       /* But there is no palette, so record this: */
       *npalette = 0;
       memset(palette, 113, sizeof palette);
@@ -4044,9 +4044,9 @@ read_palette(store_palette palette, int *npalette, png_structp pp, png_infop pi)
 
    trans_alpha = 0;
    num = 2; /* force error below */
-   if ((png_get_tRNS(pp, pi, &trans_alpha, &num, 0) & PNG_INFO_tRNS) != 0 &&
+   if ((__kimtoy__png_get_tRNS(pp, pi, &trans_alpha, &num, 0) & PNG_INFO_tRNS) != 0 &&
       (trans_alpha != NULL || num != 1/*returns 1 for a transparent color*/) &&
-      /* Oops, if a palette tRNS gets expanded png_read_update_info (at least so
+      /* Oops, if a palette tRNS gets expanded __kimtoy__png_read_update_info (at least so
        * far as 1.5.4) does not remove the trans_alpha pointer, only num_trans,
        * so in the above call we get a success, we get a pointer (who knows what
        * to) and we get num_trans == 0:
@@ -4056,13 +4056,13 @@ read_palette(store_palette palette, int *npalette, png_structp pp, png_infop pi)
       int i;
 
       /* Any of these are crash-worthy - given the implementation of
-       * png_get_tRNS up to 1.5 an app won't crash if it just checks the
+       * __kimtoy__png_get_tRNS up to 1.5 an app won't crash if it just checks the
        * result above and fails to check that the variables it passed have
        * actually been filled in!  Note that if the app were to pass the
        * last, png_color_16p, variable too it couldn't rely on this.
        */
       if (trans_alpha == NULL || num <= 0 || num > 256 || num > *npalette)
-         png_error(pp, "validate: unexpected png_get_tRNS (palette) result");
+         __kimtoy__png_error(pp, "validate: unexpected __kimtoy__png_get_tRNS (palette) result");
 
       for (i=0; i<num; ++i)
          palette[i].alpha = trans_alpha[i];
@@ -4101,7 +4101,7 @@ standard_palette_validate(standard_display *dp, png_structp pp, png_infop pi)
    store_palette palette;
 
    if (read_palette(palette, &npalette, pp, pi) != dp->is_transparent)
-      png_error(pp, "validate: palette transparency changed");
+      __kimtoy__png_error(pp, "validate: palette transparency changed");
 
    if (npalette != dp->npalette)
    {
@@ -4112,7 +4112,7 @@ standard_palette_validate(standard_display *dp, png_structp pp, png_infop pi)
       pos = safecatn(msg, sizeof msg, pos, dp->npalette);
       pos = safecat(msg, sizeof msg, pos, " -> ");
       pos = safecatn(msg, sizeof msg, pos, npalette);
-      png_error(pp, msg);
+      __kimtoy__png_error(pp, msg);
    }
 
    {
@@ -4123,7 +4123,7 @@ standard_palette_validate(standard_display *dp, png_structp pp, png_infop pi)
             palette[i].green != dp->palette[i].green ||
             palette[i].blue != dp->palette[i].blue ||
             palette[i].alpha != dp->palette[i].alpha)
-            png_error(pp, "validate: PLTE or tRNS chunk changed");
+            __kimtoy__png_error(pp, "validate: PLTE or tRNS chunk changed");
    }
 }
 
@@ -4132,36 +4132,36 @@ standard_palette_validate(standard_display *dp, png_structp pp, png_infop pi)
  * implementations, the functions without the suffix are the callbacks.
  *
  * The code for the info callback is split into two because this callback calls
- * png_read_update_info or png_start_read_image and what gets called depends on
+ * __kimtoy__png_read_update_info or __kimtoy__png_start_read_image and what gets called depends on
  * whether the info needs updating (we want to test both calls in pngvalid.)
  */
 static void
 standard_info_part1(standard_display *dp, png_structp pp, png_infop pi)
 {
-   if (png_get_bit_depth(pp, pi) != dp->bit_depth)
-      png_error(pp, "validate: bit depth changed");
+   if (__kimtoy__png_get_bit_depth(pp, pi) != dp->bit_depth)
+      __kimtoy__png_error(pp, "validate: bit depth changed");
 
-   if (png_get_color_type(pp, pi) != dp->colour_type)
-      png_error(pp, "validate: color type changed");
+   if (__kimtoy__png_get_color_type(pp, pi) != dp->colour_type)
+      __kimtoy__png_error(pp, "validate: color type changed");
 
-   if (png_get_filter_type(pp, pi) != PNG_FILTER_TYPE_BASE)
-      png_error(pp, "validate: filter type changed");
+   if (__kimtoy__png_get_filter_type(pp, pi) != PNG_FILTER_TYPE_BASE)
+      __kimtoy__png_error(pp, "validate: filter type changed");
 
-   if (png_get_interlace_type(pp, pi) != dp->interlace_type)
-      png_error(pp, "validate: interlacing changed");
+   if (__kimtoy__png_get_interlace_type(pp, pi) != dp->interlace_type)
+      __kimtoy__png_error(pp, "validate: interlacing changed");
 
-   if (png_get_compression_type(pp, pi) != PNG_COMPRESSION_TYPE_BASE)
-      png_error(pp, "validate: compression type changed");
+   if (__kimtoy__png_get_compression_type(pp, pi) != PNG_COMPRESSION_TYPE_BASE)
+      __kimtoy__png_error(pp, "validate: compression type changed");
 
-   dp->w = png_get_image_width(pp, pi);
+   dp->w = __kimtoy__png_get_image_width(pp, pi);
 
    if (dp->w != standard_width(pp, dp->id))
-      png_error(pp, "validate: image width changed");
+      __kimtoy__png_error(pp, "validate: image width changed");
 
-   dp->h = png_get_image_height(pp, pi);
+   dp->h = __kimtoy__png_get_image_height(pp, pi);
 
    if (dp->h != standard_height(pp, dp->id))
-      png_error(pp, "validate: image height changed");
+      __kimtoy__png_error(pp, "validate: image height changed");
 
    /* Record (but don't check at present) the input sBIT according to the colour
     * type information.
@@ -4169,12 +4169,12 @@ standard_info_part1(standard_display *dp, png_structp pp, png_infop pi)
    {
       png_color_8p sBIT = 0;
 
-      if (png_get_sBIT(pp, pi, &sBIT) & PNG_INFO_sBIT)
+      if (__kimtoy__png_get_sBIT(pp, pi, &sBIT) & PNG_INFO_sBIT)
       {
          int sBIT_invalid = 0;
 
          if (sBIT == 0)
-            png_error(pp, "validate: unexpected png_get_sBIT result");
+            __kimtoy__png_error(pp, "validate: unexpected __kimtoy__png_get_sBIT result");
 
          if (dp->colour_type & PNG_COLOR_MASK_COLOR)
          {
@@ -4214,17 +4214,17 @@ standard_info_part1(standard_display *dp, png_structp pp, png_infop pi)
          }
 
          if (sBIT_invalid)
-            png_error(pp, "validate: sBIT value out of range");
+            __kimtoy__png_error(pp, "validate: sBIT value out of range");
       }
    }
 
    /* Important: this is validating the value *before* any transforms have been
     * put in place.  It doesn't matter for the standard tests, where there are
     * no transforms, but it does for other tests where rowbytes may change after
-    * png_read_update_info.
+    * __kimtoy__png_read_update_info.
     */
-   if (png_get_rowbytes(pp, pi) != standard_rowsize(pp, dp->id))
-      png_error(pp, "validate: row size changed");
+   if (__kimtoy__png_get_rowbytes(pp, pi) != standard_rowsize(pp, dp->id))
+      __kimtoy__png_error(pp, "validate: row size changed");
 
    /* Validate the colour type 3 palette (this can be present on other color
     * types.)
@@ -4238,10 +4238,10 @@ standard_info_part1(standard_display *dp, png_structp pp, png_infop pi)
    {
       png_color_16p trans_color = 0;
 
-      if (png_get_tRNS(pp, pi, 0, 0, &trans_color) & PNG_INFO_tRNS)
+      if (__kimtoy__png_get_tRNS(pp, pi, 0, 0, &trans_color) & PNG_INFO_tRNS)
       {
          if (trans_color == 0)
-            png_error(pp, "validate: unexpected png_get_tRNS (color) result");
+            __kimtoy__png_error(pp, "validate: unexpected __kimtoy__png_get_tRNS (color) result");
 
          switch (dp->colour_type)
          {
@@ -4262,11 +4262,11 @@ standard_info_part1(standard_display *dp, png_structp pp, png_infop pi)
             /* Not expected because it should result in the array case
              * above.
              */
-            png_error(pp, "validate: unexpected png_get_tRNS result");
+            __kimtoy__png_error(pp, "validate: unexpected __kimtoy__png_get_tRNS result");
             break;
 
          default:
-            png_error(pp, "validate: invalid tRNS chunk with alpha image");
+            __kimtoy__png_error(pp, "validate: invalid tRNS chunk with alpha image");
          }
       }
    }
@@ -4276,16 +4276,16 @@ standard_info_part1(standard_display *dp, png_structp pp, png_infop pi)
     * turning on interlace handling (if do_interlace is not set.)
     */
    dp->npasses = npasses_from_interlace_type(pp, dp->interlace_type);
-   if (!dp->do_interlace && dp->npasses != png_set_interlace_handling(pp))
-      png_error(pp, "validate: file changed interlace type");
+   if (!dp->do_interlace && dp->npasses != __kimtoy__png_set_interlace_handling(pp))
+      __kimtoy__png_error(pp, "validate: file changed interlace type");
 
-   /* Caller calls png_read_update_info or png_start_read_image now, then calls
+   /* Caller calls __kimtoy__png_read_update_info or __kimtoy__png_start_read_image now, then calls
     * part2.
     */
 }
 
-/* This must be called *after* the png_read_update_info call to get the correct
- * 'rowbytes' value, otherwise png_get_rowbytes will refer to the untransformed
+/* This must be called *after* the __kimtoy__png_read_update_info call to get the correct
+ * 'rowbytes' value, otherwise __kimtoy__png_get_rowbytes will refer to the untransformed
  * image.
  */
 static void
@@ -4293,14 +4293,14 @@ standard_info_part2(standard_display *dp, png_structp pp, png_infop pi,
     int nImages)
 {
    /* Record cbRow now that it can be found. */
-   dp->pixel_size = bit_size(pp, png_get_color_type(pp, pi),
-      png_get_bit_depth(pp, pi));
-   dp->bit_width = png_get_image_width(pp, pi) * dp->pixel_size;
-   dp->cbRow = png_get_rowbytes(pp, pi);
+   dp->pixel_size = bit_size(pp, __kimtoy__png_get_color_type(pp, pi),
+      __kimtoy__png_get_bit_depth(pp, pi));
+   dp->bit_width = __kimtoy__png_get_image_width(pp, pi) * dp->pixel_size;
+   dp->cbRow = __kimtoy__png_get_rowbytes(pp, pi);
 
    /* Validate the rowbytes here again. */
    if (dp->cbRow != (dp->bit_width+7)/8)
-      png_error(pp, "bad png_get_rowbytes calculation");
+      __kimtoy__png_error(pp, "bad __kimtoy__png_get_rowbytes calculation");
 
    /* Then ensure there is enough space for the output image(s). */
    store_ensure_image(dp->ps, pp, nImages, dp->cbRow, dp->h);
@@ -4315,7 +4315,7 @@ standard_info_imp(standard_display *dp, png_structp pp, png_infop pi,
     */
    standard_info_part1(dp, pp, pi);
 
-   /* And the info callback has to call this (or png_read_update_info - see
+   /* And the info callback has to call this (or __kimtoy__png_read_update_info - see
     * below in the png_modifier code for that variant.
     */
    if (dp->use_update_info)
@@ -4323,11 +4323,11 @@ standard_info_imp(standard_display *dp, png_structp pp, png_infop pi,
       /* For debugging the effect of multiple calls: */
       int i = dp->use_update_info;
       while (i-- > 0)
-         png_read_update_info(pp, pi);
+         __kimtoy__png_read_update_info(pp, pi);
    }
 
    else
-      png_start_read_image(pp);
+      __kimtoy__png_start_read_image(pp);
 
    /* Validate the height, width and rowbytes plus ensure that sufficient buffer
     * exists for decoding the image.
@@ -4339,7 +4339,7 @@ static void
 standard_info(png_structp pp, png_infop pi)
 {
    standard_display *dp = voidcast(standard_display*,
-      png_get_progressive_ptr(pp));
+      __kimtoy__png_get_progressive_ptr(pp));
 
    /* Call with nImages==1 because the progressive reader can only produce one
     * image.
@@ -4351,12 +4351,12 @@ static void
 progressive_row(png_structp pp, png_bytep new_row, png_uint_32 y, int pass)
 {
    PNG_CONST standard_display *dp = voidcast(standard_display*,
-      png_get_progressive_ptr(pp));
+      __kimtoy__png_get_progressive_ptr(pp));
 
    /* When handling interlacing some rows will be absent in each pass, the
     * callback still gets called, but with a NULL pointer.  This is checked
     * in the 'else' clause below.  We need our own 'cbRow', but we can't call
-    * png_get_rowbytes because we got no info structure.
+    * __kimtoy__png_get_rowbytes because we got no info structure.
     */
    if (new_row != NULL)
    {
@@ -4369,11 +4369,11 @@ progressive_row(png_structp pp, png_bytep new_row, png_uint_32 y, int pass)
       {
 #ifdef PNG_USER_TRANSFORM_INFO_SUPPORTED
          /* Use this opportunity to validate the png 'current' APIs: */
-         if (y != png_get_current_row_number(pp))
-            png_error(pp, "png_get_current_row_number is broken");
+         if (y != __kimtoy__png_get_current_row_number(pp))
+            __kimtoy__png_error(pp, "__kimtoy__png_get_current_row_number is broken");
 
-         if (pass != png_get_current_pass_number(pp))
-            png_error(pp, "png_get_current_pass_number is broken");
+         if (pass != __kimtoy__png_get_current_pass_number(pp))
+            __kimtoy__png_error(pp, "__kimtoy__png_get_current_pass_number is broken");
 #endif
 
          y = PNG_ROW_FROM_PASS_ROW(y, pass);
@@ -4381,7 +4381,7 @@ progressive_row(png_structp pp, png_bytep new_row, png_uint_32 y, int pass)
 
       /* Validate this just in case. */
       if (y >= dp->h)
-         png_error(pp, "invalid y to progressive row callback");
+         __kimtoy__png_error(pp, "invalid y to progressive row callback");
 
       row = store_image_row(dp->ps, pp, 0, y);
 
@@ -4395,11 +4395,11 @@ progressive_row(png_structp pp, png_bytep new_row, png_uint_32 y, int pass)
             row_copy(row, new_row, dp->pixel_size * dp->w);
       }
       else
-         png_progressive_combine_row(pp, row, new_row);
+         __kimtoy__png_progressive_combine_row(pp, row, new_row);
    } else if (dp->interlace_type == PNG_INTERLACE_ADAM7 &&
       PNG_ROW_IN_INTERLACE_PASS(y, pass) &&
       PNG_PASS_COLS(dp->w, pass) > 0)
-      png_error(pp, "missing row in progressive de-interlacing");
+      __kimtoy__png_error(pp, "missing row in progressive de-interlacing");
 #endif /* PNG_READ_INTERLACING_SUPPORTED */
 }
 
@@ -4425,7 +4425,7 @@ sequential_row(standard_display *dp, png_structp pp, png_infop pi,
          if (do_interlace)
          {
             /* wPass may be zero or this row may not be in this pass.
-             * png_read_row must not be called in either case.
+             * __kimtoy__png_read_row must not be called in either case.
              */
             if (wPass > 0 && PNG_ROW_IN_INTERLACE_PASS(y, pass))
             {
@@ -4435,7 +4435,7 @@ sequential_row(standard_display *dp, png_structp pp, png_infop pi,
                png_byte row[STANDARD_ROWMAX], display[STANDARD_ROWMAX];
 
                /* The following aids (to some extent) error detection - we can
-                * see where png_read_row wrote.  Use opposite values in row and
+                * see where __kimtoy__png_read_row wrote.  Use opposite values in row and
                 * display to make this easier.  Don't use 0xff (which is used in
                 * the image write code to fill unused bits) or 0 (which is a
                 * likely value to overwrite unused bits with).
@@ -4443,7 +4443,7 @@ sequential_row(standard_display *dp, png_structp pp, png_infop pi,
                memset(row, 0xc5, sizeof row);
                memset(display, 0x5c, sizeof display);
 
-               png_read_row(pp, row, display);
+               __kimtoy__png_read_row(pp, row, display);
 
                if (iImage >= 0)
                   deinterlace_row(store_image_row(ps, pp, iImage, y), row,
@@ -4455,7 +4455,7 @@ sequential_row(standard_display *dp, png_structp pp, png_infop pi,
             }
          }
          else
-            png_read_row(pp,
+            __kimtoy__png_read_row(pp,
                iImage >= 0 ? store_image_row(ps, pp, iImage, y) : NULL,
                iDisplay >= 0 ? store_image_row(ps, pp, iDisplay, y) : NULL);
       }
@@ -4464,7 +4464,7 @@ sequential_row(standard_display *dp, png_structp pp, png_infop pi,
    /* And finish the read operation (only really necessary if the caller wants
     * to find additional data in png_info from chunks after the last IDAT.)
     */
-   png_read_end(pp, pi);
+   __kimtoy__png_read_end(pp, pi);
 }
 
 static void
@@ -4501,7 +4501,7 @@ standard_row_validate(standard_display *dp, png_structp pp,
       sprintf(msg, "PNG image row[%d][%d] changed from %.2x to %.2x", y,
          where-1, std[where-1],
          store_image_row(dp->ps, pp, iImage, y)[where-1]);
-      png_error(pp, msg);
+      __kimtoy__png_error(pp, msg);
    }
 
 #if PNG_LIBPNG_VER < 10506
@@ -4519,7 +4519,7 @@ standard_row_validate(standard_display *dp, png_structp pp,
       sprintf(msg, "display  row[%d][%d] changed from %.2x to %.2x", y,
          where-1, std[where-1],
          store_image_row(dp->ps, pp, iDisplay, y)[where-1]);
-      png_error(pp, msg);
+      __kimtoy__png_error(pp, msg);
    }
 }
 
@@ -4546,7 +4546,7 @@ static void
 standard_end(png_structp pp, png_infop pi)
 {
    standard_display *dp = voidcast(standard_display*,
-      png_get_progressive_ptr(pp));
+      __kimtoy__png_get_progressive_ptr(pp));
 
    UNUSED(pi)
 
@@ -4592,7 +4592,7 @@ standard_test(png_store* PNG_CONST psIn, png_uint_32 PNG_CONST id,
       /* Introduce the correct read function. */
       if (d.ps->progressive)
       {
-         png_set_progressive_read_fn(pp, &d, standard_info, progressive_row,
+         __kimtoy__png_set_progressive_read_fn(pp, &d, standard_info, progressive_row,
             standard_end);
 
          /* Now feed data into the reader until we reach the end: */
@@ -4601,10 +4601,10 @@ standard_test(png_store* PNG_CONST psIn, png_uint_32 PNG_CONST id,
       else
       {
          /* Note that this takes the store, not the display. */
-         png_set_read_fn(pp, d.ps, store_read);
+         __kimtoy__png_set_read_fn(pp, d.ps, store_read);
 
          /* Check the header values: */
-         png_read_info(pp, pi);
+         __kimtoy__png_read_info(pp, pi);
 
          /* The code tests both versions of the images that the sequential
           * reader can produce.
@@ -4630,7 +4630,7 @@ standard_test(png_store* PNG_CONST psIn, png_uint_32 PNG_CONST id,
 
       /* Check for validation. */
       if (!d.ps->validated)
-         png_error(pp, "image read failed silently");
+         __kimtoy__png_error(pp, "image read failed silently");
 
       /* Successful completion. */
    }
@@ -5048,7 +5048,7 @@ typedef struct image_transform
     * and modifies it by a pngvalid implementation of the transform (thus
     * duplicating the libpng intent without, we hope, duplicating the bugs
     * in the libpng implementation!)  The png_structp is solely to allow error
-    * reporting via png_error and png_warning.
+    * reporting via __kimtoy__png_error and __kimtoy__png_warning.
     */
    void (*mod)(PNG_CONST struct image_transform *this, image_pixel *that,
       png_structp pp, PNG_CONST struct transform_display *display);
@@ -5254,7 +5254,7 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
       int i = dp->this.use_update_info;
       /* Always do one call, even if use_update_info is 0. */
       do
-         png_read_update_info(pp, pi);
+         __kimtoy__png_read_update_info(pp, pi);
       while (--i > 0);
    }
 
@@ -5262,8 +5262,8 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
    standard_info_part2(&dp->this, pp, pi, 1/*images*/);
 
    /* Plus the extra stuff we need for the transform tests: */
-   dp->output_colour_type = png_get_color_type(pp, pi);
-   dp->output_bit_depth = png_get_bit_depth(pp, pi);
+   dp->output_colour_type = __kimtoy__png_get_color_type(pp, pi);
+   dp->output_bit_depth = __kimtoy__png_get_bit_depth(pp, pi);
 
    /* Validate the combination of colour type and bit depth that we are getting
     * out of libpng; the semantics of something not in the PNG spec are, at
@@ -5294,7 +5294,7 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
          pos = safecat(message, sizeof message, pos, ") with bit depth: ");
          pos = safecatn(message, sizeof message, pos, dp->output_bit_depth);
 
-         png_error(pp, message);
+         __kimtoy__png_error(pp, message);
       }
    }
 
@@ -5325,7 +5325,7 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
          pos = safecat(message, sizeof message, pos, " expected ");
          pos = safecatn(message, sizeof message, pos, test_pixel.colour_type);
 
-         png_error(pp, message);
+         __kimtoy__png_error(pp, message);
       }
 
       if (test_pixel.bit_depth != dp->output_bit_depth)
@@ -5337,7 +5337,7 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
          pos = safecat(message, sizeof message, pos, " expected ");
          pos = safecatn(message, sizeof message, pos, test_pixel.bit_depth);
 
-         png_error(pp, message);
+         __kimtoy__png_error(pp, message);
       }
 
       /* If both bit depth and colour type are correct check the sample depth.
@@ -5346,7 +5346,7 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
       if (test_pixel.colour_type == PNG_COLOR_TYPE_PALETTE)
       {
          if (test_pixel.sample_depth != 8) /* oops - internal error! */
-            png_error(pp, "pngvalid: internal: palette sample depth not 8");
+            __kimtoy__png_error(pp, "pngvalid: internal: palette sample depth not 8");
       }
       else if (test_pixel.sample_depth != dp->output_bit_depth)
       {
@@ -5358,7 +5358,7 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
          pos = safecat(message, sizeof message, pos, " expected ");
          pos = safecatn(message, sizeof message, pos, test_pixel.sample_depth);
 
-         png_error(pp, message);
+         __kimtoy__png_error(pp, message);
       }
    }
 }
@@ -5366,7 +5366,7 @@ transform_info_imp(transform_display *dp, png_structp pp, png_infop pi)
 static void
 transform_info(png_structp pp, png_infop pi)
 {
-   transform_info_imp(voidcast(transform_display*, png_get_progressive_ptr(pp)),
+   transform_info_imp(voidcast(transform_display*, __kimtoy__png_get_progressive_ptr(pp)),
       pp, pi);
 }
 
@@ -5409,7 +5409,7 @@ transform_range_check(png_structp pp, unsigned int r, unsigned int g,
       pos = safecatd(message, sizeof message, pos, (in+err)*max, 3);
       pos = safecat(message, sizeof message, pos, ")");
 
-      png_error(pp, message);
+      __kimtoy__png_error(pp, message);
    }
 }
 
@@ -5453,7 +5453,7 @@ transform_image_validate(transform_display *dp, png_structp pp, png_infop pi)
 
       (void)read_palette(out_palette, &npalette, pp, pi);
       if (npalette != dp->this.npalette)
-         png_error(pp, "unexpected change in palette size");
+         __kimtoy__png_error(pp, "unexpected change in palette size");
 
       digitization_error = .5;
    }
@@ -5467,7 +5467,7 @@ transform_image_validate(transform_display *dp, png_structp pp, png_infop pi)
        * (or less) samples and the output has 16 bit samples the calculations
        * will be done with 8 bit precision, not 16.
        *
-       * TODO: fix this in libpng; png_set_expand_16 should cause 16 bit
+       * TODO: fix this in libpng; __kimtoy__png_set_expand_16 should cause 16 bit
        * calculations to be used throughout.
        */
       if (in_ct == PNG_COLOR_TYPE_PALETTE || in_bd < 16)
@@ -5532,7 +5532,7 @@ transform_image_validate(transform_display *dp, png_structp pp, png_infop pi)
             out_ct == PNG_COLOR_TYPE_PALETTE)
          {
             if (in_pixel.palette_index != out_pixel.palette_index)
-               png_error(pp, "unexpected transformed palette index");
+               __kimtoy__png_error(pp, "unexpected transformed palette index");
          }
 
          /* Check the colours for palette images too - in fact the palette could
@@ -5575,7 +5575,7 @@ static void
 transform_end(png_structp pp, png_infop pi)
 {
    transform_display *dp = voidcast(transform_display*,
-      png_get_progressive_ptr(pp));
+      __kimtoy__png_get_progressive_ptr(pp));
 
    if (!dp->this.speed)
       transform_image_validate(dp, pp, pi);
@@ -5632,7 +5632,7 @@ transform_test(png_modifier *pmIn, PNG_CONST png_uint_32 idIn,
       if (d.pm->this.progressive)
       {
          /* Share the row function with the standard implementation. */
-         png_set_progressive_read_fn(pp, &d, transform_info, progressive_row,
+         __kimtoy__png_set_progressive_read_fn(pp, &d, transform_info, progressive_row,
             transform_end);
 
          /* Now feed data into the reader until we reach the end: */
@@ -5641,10 +5641,10 @@ transform_test(png_modifier *pmIn, PNG_CONST png_uint_32 idIn,
       else
       {
          /* modifier_read expects a png_modifier* */
-         png_set_read_fn(pp, d.pm, modifier_read);
+         __kimtoy__png_set_read_fn(pp, d.pm, modifier_read);
 
          /* Check the header values: */
-         png_read_info(pp, pi);
+         __kimtoy__png_read_info(pp, pi);
 
          /* Process the 'info' requirements. Only one image is generated */
          transform_info_imp(&d, pp, pi);
@@ -5708,12 +5708,12 @@ image_transform_default_add(image_transform *this,
 }
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
-/* png_set_palette_to_rgb */
+/* __kimtoy__png_set_palette_to_rgb */
 static void
 image_transform_png_set_palette_to_rgb_set(PNG_CONST image_transform *this,
     transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_palette_to_rgb(pp);
+   __kimtoy__png_set_palette_to_rgb(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -5745,12 +5745,12 @@ IT(palette_to_rgb);
 #endif /* PNG_READ_EXPAND_SUPPORTED */
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
-/* png_set_tRNS_to_alpha */
+/* __kimtoy__png_set_tRNS_to_alpha */
 static void
 image_transform_png_set_tRNS_to_alpha_set(PNG_CONST image_transform *this,
    transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_tRNS_to_alpha(pp);
+   __kimtoy__png_set_tRNS_to_alpha(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -5802,12 +5802,12 @@ IT(tRNS_to_alpha);
 #endif /* PNG_READ_EXPAND_SUPPORTED */
 
 #ifdef PNG_READ_GRAY_TO_RGB_SUPPORTED
-/* png_set_gray_to_rgb */
+/* __kimtoy__png_set_gray_to_rgb */
 static void
 image_transform_png_set_gray_to_rgb_set(PNG_CONST image_transform *this,
     transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_gray_to_rgb(pp);
+   __kimtoy__png_set_gray_to_rgb(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -5860,12 +5860,12 @@ IT(gray_to_rgb);
 #endif /* PNG_READ_GRAY_TO_RGB_SUPPORTED */
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
-/* png_set_expand */
+/* __kimtoy__png_set_expand */
 static void
 image_transform_png_set_expand_set(PNG_CONST image_transform *this,
     transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_expand(pp);
+   __kimtoy__png_set_expand(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -5906,7 +5906,7 @@ IT(expand);
 #endif /* PNG_READ_EXPAND_SUPPORTED */
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
-/* png_set_expand_gray_1_2_4_to_8
+/* __kimtoy__png_set_expand_gray_1_2_4_to_8
  * LIBPNG BUG: this just does an 'expand'
  */
 static void
@@ -5914,7 +5914,7 @@ image_transform_png_set_expand_gray_1_2_4_to_8_set(
     PNG_CONST image_transform *this, transform_display *that, png_structp pp,
     png_infop pi)
 {
-   png_set_expand_gray_1_2_4_to_8(pp);
+   __kimtoy__png_set_expand_gray_1_2_4_to_8(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -5940,12 +5940,12 @@ IT(expand_gray_1_2_4_to_8);
 #endif /* PNG_READ_EXPAND_SUPPORTED */
 
 #ifdef PNG_READ_EXPAND_16_SUPPORTED
-/* png_set_expand_16 */
+/* __kimtoy__png_set_expand_16 */
 static void
 image_transform_png_set_expand_16_set(PNG_CONST image_transform *this,
     transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_expand_16(pp);
+   __kimtoy__png_set_expand_16(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -5987,12 +5987,12 @@ IT(expand_16);
 #endif /* PNG_READ_EXPAND_16_SUPPORTED */
 
 #ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED  /* API added in 1.5.4 */
-/* png_set_scale_16 */
+/* __kimtoy__png_set_scale_16 */
 static void
 image_transform_png_set_scale_16_set(PNG_CONST image_transform *this,
     transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_scale_16(pp);
+   __kimtoy__png_set_scale_16(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -6030,12 +6030,12 @@ IT(scale_16);
 #endif /* PNG_READ_SCALE_16_TO_8_SUPPORTED (1.5.4 on) */
 
 #ifdef PNG_READ_16_TO_8_SUPPORTED /* the default before 1.5.4 */
-/* png_set_strip_16 */
+/* __kimtoy__png_set_strip_16 */
 static void
 image_transform_png_set_strip_16_set(PNG_CONST image_transform *this,
     transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_strip_16(pp);
+   __kimtoy__png_set_strip_16(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -6051,7 +6051,7 @@ image_transform_png_set_strip_16_mod(PNG_CONST image_transform *this,
       if (that->blue_sBIT > 8) that->blue_sBIT = 8;
       if (that->alpha_sBIT > 8) that->alpha_sBIT = 8;
 
-      /* Prior to 1.5.4 png_set_strip_16 would use an 'accurate' method if this
+      /* Prior to 1.5.4 __kimtoy__png_set_strip_16 would use an 'accurate' method if this
        * configuration option is set.  From 1.5.4 the flag is never set and the
        * 'scale' API (above) must be used.
        */
@@ -6063,7 +6063,7 @@ image_transform_png_set_strip_16_mod(PNG_CONST image_transform *this,
          /* The strip 16 algorithm drops the low 8 bits rather than calculating
           * 1/257, so we need to adjust the permitted errors appropriately:
           * Notice that this is only relevant prior to the addition of the
-          * png_set_scale_16 API in 1.5.4 (but 1.5.4+ always defines the above!)
+          * __kimtoy__png_set_scale_16 API in 1.5.4 (but 1.5.4+ always defines the above!)
           */
          {
             PNG_CONST double d = (255-128.5)/65535;
@@ -6096,12 +6096,12 @@ IT(strip_16);
 #endif /* PNG_READ_16_TO_8_SUPPORTED */
 
 #ifdef PNG_READ_STRIP_ALPHA_SUPPORTED
-/* png_set_strip_alpha */
+/* __kimtoy__png_set_strip_alpha */
 static void
 image_transform_png_set_strip_alpha_set(PNG_CONST image_transform *this,
     transform_display *that, png_structp pp, png_infop pi)
 {
-   png_set_strip_alpha(pp);
+   __kimtoy__png_set_strip_alpha(pp);
    this->next->set(this->next, that, pp, pi);
 }
 
@@ -6138,10 +6138,10 @@ IT(strip_alpha);
 #endif /* PNG_READ_STRIP_ALPHA_SUPPORTED */
 
 #ifdef PNG_READ_RGB_TO_GRAY_SUPPORTED
-/* png_set_rgb_to_gray(png_structp, int err_action, double red, double green)
- * png_set_rgb_to_gray_fixed(png_structp, int err_action, png_fixed_point red,
+/* __kimtoy__png_set_rgb_to_gray(png_structp, int err_action, double red, double green)
+ * __kimtoy__png_set_rgb_to_gray_fixed(png_structp, int err_action, png_fixed_point red,
  *    png_fixed_point green)
- * png_get_rgb_to_gray_status
+ * __kimtoy__png_get_rgb_to_gray_status
  *
  * The 'default' test here uses values known to be used inside libpng:
  *
@@ -6159,7 +6159,7 @@ static struct
 {
    double gamma;      /* File gamma to use in processing */
 
-   /* The following are the parameters for png_set_rgb_to_gray: */
+   /* The following are the parameters for __kimtoy__png_set_rgb_to_gray: */
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
       double red_to_set;
       double green_to_set;
@@ -6227,7 +6227,7 @@ image_transform_png_set_rgb_to_gray_ini(PNG_CONST image_transform *this,
    if (data.gamma == 0)
       data.gamma = 1;
 
-   /* The arguments to png_set_rgb_to_gray can override the coefficients implied
+   /* The arguments to __kimtoy__png_set_rgb_to_gray can override the coefficients implied
     * by the color space encoding.  If doing exhaustive checks do the override
     * in each case, otherwise do it randomly.
     */
@@ -6317,9 +6317,9 @@ image_transform_png_set_rgb_to_gray_set(PNG_CONST image_transform *this,
    PNG_CONST int error_action = 1; /* no error, no defines in png.h */
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
-      png_set_rgb_to_gray(pp, error_action, data.red_to_set, data.green_to_set);
+      __kimtoy__png_set_rgb_to_gray(pp, error_action, data.red_to_set, data.green_to_set);
 #  else
-      png_set_rgb_to_gray_fixed(pp, error_action, data.red_to_set,
+      __kimtoy__png_set_rgb_to_gray_fixed(pp, error_action, data.red_to_set,
          data.green_to_set);
 #  endif
 
@@ -6332,12 +6332,12 @@ image_transform_png_set_rgb_to_gray_set(PNG_CONST image_transform *this,
           * form.
           */
 #        ifdef PNG_FLOATING_POINT_SUPPORTED
-#           define API_function png_get_cHRM_XYZ
+#           define API_function __kimtoy__png_get_cHRM_XYZ
 #           define API_form "FP"
 #           define API_type double
 #           define API_cvt(x) (x)
 #        else
-#           define API_function png_get_cHRM_XYZ_fixed
+#           define API_function __kimtoy__png_get_cHRM_XYZ_fixed
 #           define API_form "fixed"
 #           define API_type png_fixed_point
 #           define API_cvt(x) ((double)(x)/PNG_FP_1)
@@ -6368,7 +6368,7 @@ image_transform_png_set_rgb_to_gray_set(PNG_CONST image_transform *this,
                (fabs(o.red.Y - data.red_coefficient) > DBL_EPSILON ||
                fabs(o.green.Y - data.green_coefficient) > DBL_EPSILON ||
                fabs(o.blue.Y - data.blue_coefficient) > DBL_EPSILON))
-               png_error(pp, "internal pngvalid cHRM coefficient error");
+               __kimtoy__png_error(pp, "internal pngvalid cHRM coefficient error");
 
             /* Generate a colour space encoding. */
             e.gamma = o.gamma; /* not used */
@@ -6428,7 +6428,7 @@ image_transform_png_set_rgb_to_gray_set(PNG_CONST image_transform *this,
                pos = safecat(buffer, sizeof buffer, pos, " -> ");
                pos = safecat_color_encoding(buffer, sizeof buffer, pos, &e, 0);
 
-               png_error(pp, buffer);
+               __kimtoy__png_error(pp, buffer);
             }
          }
       }
@@ -6462,7 +6462,7 @@ image_transform_png_set_rgb_to_gray_mod(PNG_CONST image_transform *this,
           * To handle the gamma correction work out the upper and lower bounds
           * of the digitized value.  Assume rounding here - normally the values
           * will be identical after this operation if there is only one
-          * transform, feel free to delete the png_error checks on this below in
+          * transform, feel free to delete the __kimtoy__png_error checks on this below in
           * the future (this is just me trying to ensure it works!)
           */
          r = rlo = rhi = that->redf;
@@ -6574,7 +6574,7 @@ image_transform_png_set_rgb_to_gray_mod(PNG_CONST image_transform *this,
                pos = safecat(buffer, sizeof buffer, pos, " exceeds limit ");
                pos = safecatd(buffer, sizeof buffer, pos,
                   display->pm->limit, 6);
-               png_error(pp, buffer);
+               __kimtoy__png_error(pp, buffer);
             }
          }
       }
@@ -6620,9 +6620,9 @@ IT(rgb_to_gray);
 #endif /* PNG_READ_RGB_TO_GRAY_SUPPORTED */
 
 #ifdef PNG_READ_BACKGROUND_SUPPORTED
-/* png_set_background(png_structp, png_const_color_16p background_color,
+/* __kimtoy__png_set_background(png_structp, png_const_color_16p background_color,
  *    int background_gamma_code, int need_expand, double background_gamma)
- * png_set_background_fixed(png_structp, png_const_color_16p background_color,
+ * __kimtoy__png_set_background_fixed(png_structp, png_const_color_16p background_color,
  *    int background_gamma_code, int need_expand,
  *    png_fixed_point background_gamma)
  *
@@ -6678,10 +6678,10 @@ image_transform_png_set_background_set(PNG_CONST image_transform *this,
       back.gray = (png_uint_16)data.red;
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
-      png_set_background(pp, &back, PNG_BACKGROUND_GAMMA_FILE, 1/*need expand*/,
+      __kimtoy__png_set_background(pp, &back, PNG_BACKGROUND_GAMMA_FILE, 1/*need expand*/,
          0);
 #  else
-      png_set_background_fixed(pp, &back, PNG_BACKGROUND_GAMMA_FILE,
+      __kimtoy__png_set_background_fixed(pp, &back, PNG_BACKGROUND_GAMMA_FILE,
          1/*need expand*/, 0);
 #  endif
 
@@ -6961,7 +6961,7 @@ image_transform_png_set_@_add(image_transform *this,
 IT(@);
 #endif
 
-/* png_set_quantize(png_structp, png_colorp palette, int num_palette,
+/* __kimtoy__png_set_quantize(png_structp, png_colorp palette, int num_palette,
  *    int maximum_colors, png_const_uint_16p histogram, int full_quantize)
  *
  * Very difficult to validate this!
@@ -6975,34 +6975,34 @@ IT(@);
  * the layout of the data at the sub-sample level so sample() won't get the
  * right answer.
  */
-/* png_set_invert_alpha */
+/* __kimtoy__png_set_invert_alpha */
 /*NOTE: TBD NYI */
 
-/* png_set_bgr */
+/* __kimtoy__png_set_bgr */
 /*NOTE: TBD NYI */
 
-/* png_set_swap_alpha */
+/* __kimtoy__png_set_swap_alpha */
 /*NOTE: TBD NYI */
 
-/* png_set_swap */
+/* __kimtoy__png_set_swap */
 /*NOTE: TBD NYI */
 
-/* png_set_filler, (png_structp png_ptr, png_uint_32 filler, int flags)); */
+/* __kimtoy__png_set_filler, (png_structp png_ptr, png_uint_32 filler, int flags)); */
 /*NOTE: TBD NYI */
 
-/* png_set_add_alpha, (png_structp png_ptr, png_uint_32 filler, int flags)); */
+/* __kimtoy__png_set_add_alpha, (png_structp png_ptr, png_uint_32 filler, int flags)); */
 /*NOTE: TBD NYI */
 
-/* png_set_packing */
+/* __kimtoy__png_set_packing */
 /*NOTE: TBD NYI */
 
-/* png_set_packswap */
+/* __kimtoy__png_set_packswap */
 /*NOTE: TBD NYI */
 
-/* png_set_invert_mono */
+/* __kimtoy__png_set_invert_mono */
 /*NOTE: TBD NYI */
 
-/* png_set_shift(png_structp, png_const_color_8p true_bits) */
+/* __kimtoy__png_set_shift(png_structp, png_const_color_8p true_bits) */
 /*NOTE: TBD NYI */
 
 static void
@@ -7124,21 +7124,21 @@ gamma_info_imp(gamma_display *dp, png_structp pp, png_infop pi)
     */
    if (dp->scale16)
 #     ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED
-         png_set_scale_16(pp);
+         __kimtoy__png_set_scale_16(pp);
 #     else
          /* The following works both in 1.5.4 and earlier versions: */
 #        ifdef PNG_READ_16_TO_8_SUPPORTED
-            png_set_strip_16(pp);
+            __kimtoy__png_set_strip_16(pp);
 #        else
-            png_error(pp, "scale16 (16 to 8 bit conversion) not supported");
+            __kimtoy__png_error(pp, "scale16 (16 to 8 bit conversion) not supported");
 #        endif
 #     endif
 
    if (dp->expand16)
 #     ifdef PNG_READ_EXPAND_16_SUPPORTED
-         png_set_expand_16(pp);
+         __kimtoy__png_set_expand_16(pp);
 #     else
-         png_error(pp, "expand16 (8 to 16 bit conversion) not supported");
+         __kimtoy__png_error(pp, "expand16 (8 to 16 bit conversion) not supported");
 #     endif
 
    if (dp->do_background >= ALPHA_MODE_OFFSET)
@@ -7158,9 +7158,9 @@ gamma_info_imp(gamma_display *dp, png_structp pp, png_infop pi)
 #        endif
 
 #        ifdef PNG_FLOATING_POINT_SUPPORTED
-            png_set_alpha_mode(pp, mode, sg);
+            __kimtoy__png_set_alpha_mode(pp, mode, sg);
 #        else
-            png_set_alpha_mode_fixed(pp, mode, g);
+            __kimtoy__png_set_alpha_mode_fixed(pp, mode, g);
 #        endif
 
          /* However, for the standard Porter-Duff algorithm the output defaults
@@ -7170,15 +7170,15 @@ gamma_info_imp(gamma_display *dp, png_structp pp, png_infop pi)
          if (mode == PNG_ALPHA_STANDARD && sg != 1)
          {
 #           ifdef PNG_FLOATING_POINT_SUPPORTED
-               png_set_gamma(pp, sg, dp->file_gamma);
+               __kimtoy__png_set_gamma(pp, sg, dp->file_gamma);
 #           else
                png_fixed_point f = fix(dp->file_gamma);
-               png_set_gamma_fixed(pp, g, f);
+               __kimtoy__png_set_gamma_fixed(pp, g, f);
 #           endif
          }
       }
 #     else
-         png_error(pp, "alpha mode handling not supported");
+         __kimtoy__png_error(pp, "alpha mode handling not supported");
 #     endif
    }
 
@@ -7186,12 +7186,12 @@ gamma_info_imp(gamma_display *dp, png_structp pp, png_infop pi)
    {
       /* Set up gamma processing. */
 #     ifdef PNG_FLOATING_POINT_SUPPORTED
-         png_set_gamma(pp, dp->screen_gamma, dp->file_gamma);
+         __kimtoy__png_set_gamma(pp, dp->screen_gamma, dp->file_gamma);
 #     else
       {
          png_fixed_point s = fix(dp->screen_gamma);
          png_fixed_point f = fix(dp->file_gamma);
-         png_set_gamma_fixed(pp, s, f);
+         __kimtoy__png_set_gamma_fixed(pp, s, f);
       }
 #     endif
 
@@ -7206,14 +7206,14 @@ gamma_info_imp(gamma_display *dp, png_structp pp, png_infop pi)
 #        endif
 
 #        ifdef PNG_FLOATING_POINT_SUPPORTED
-            png_set_background(pp, &dp->background_color, dp->do_background,
+            __kimtoy__png_set_background(pp, &dp->background_color, dp->do_background,
                0/*need_expand*/, bg);
 #        else
-            png_set_background_fixed(pp, &dp->background_color,
+            __kimtoy__png_set_background_fixed(pp, &dp->background_color,
                dp->do_background, 0/*need_expand*/, g);
 #        endif
 #     else
-         png_error(pp, "png_set_background not supported");
+         __kimtoy__png_error(pp, "__kimtoy__png_set_background not supported");
 #     endif
       }
    }
@@ -7222,7 +7222,7 @@ gamma_info_imp(gamma_display *dp, png_structp pp, png_infop pi)
       int i = dp->this.use_update_info;
       /* Always do one call, even if use_update_info is 0. */
       do
-         png_read_update_info(pp, pi);
+         __kimtoy__png_read_update_info(pp, pi);
       while (--i > 0);
    }
 
@@ -7233,7 +7233,7 @@ gamma_info_imp(gamma_display *dp, png_structp pp, png_infop pi)
 static void
 gamma_info(png_structp pp, png_infop pi)
 {
-   gamma_info_imp(voidcast(gamma_display*, png_get_progressive_ptr(pp)), pp,
+   gamma_info_imp(voidcast(gamma_display*, __kimtoy__png_get_progressive_ptr(pp)), pp,
       pi);
 }
 
@@ -7841,7 +7841,7 @@ gamma_component_validate(PNG_CONST char *name, PNG_CONST validate_info *vi,
 
             /* Check the 'compose' flag */
             if (compose != do_compose)
-               png_error(vi->pp, "internal error (compose)");
+               __kimtoy__png_error(vi->pp, "internal error (compose)");
 
             /* 'name' is the component name */
             pos = safecat(msg, sizeof msg, pos, name);
@@ -7970,7 +7970,7 @@ gamma_component_validate(PNG_CONST char *name, PNG_CONST validate_info *vi,
             if (pass == 0) /* The error condition */
             {
 #              ifdef PNG_WARNINGS_SUPPORTED
-                  png_warning(vi->pp, msg);
+                  __kimtoy__png_warning(vi->pp, msg);
 #              else
                   store_warning(vi->pp, msg);
 #              endif
@@ -7995,8 +7995,8 @@ gamma_image_validate(gamma_display *dp, png_structp pp, png_infop pi)
    PNG_CONST png_uint_32 w = dp->this.w;
    PNG_CONST png_uint_32 h = dp->this.h;
    PNG_CONST size_t cbRow = dp->this.cbRow;
-   PNG_CONST png_byte out_ct = png_get_color_type(pp, pi);
-   PNG_CONST png_byte out_bd = png_get_bit_depth(pp, pi);
+   PNG_CONST png_byte out_ct = __kimtoy__png_get_color_type(pp, pi);
+   PNG_CONST png_byte out_bd = __kimtoy__png_get_bit_depth(pp, pi);
 
    /* There are three sources of error, firstly the quantization in the
     * file encoding, determined by sbit and/or the file depth, secondly
@@ -8060,7 +8060,7 @@ gamma_image_validate(gamma_display *dp, png_structp pp, png_infop pi)
 
    /* TODO: FIX THIS: MAJOR BUG!  If the transformations all happen inside
     * the palette there is no way of finding out, because libpng fails to
-    * update the palette on png_read_update_info.  Indeed, libpng doesn't
+    * update the palette on __kimtoy__png_read_update_info.  Indeed, libpng doesn't
     * even do the required work until much later, when it doesn't have any
     * info pointer.  Oops.  For the moment 'processing' is turned off if
     * out_ct is palette.
@@ -8092,7 +8092,7 @@ gamma_image_validate(gamma_display *dp, png_structp pp, png_infop pi)
             PNG_CONST unsigned int out_index =
                out_ct == 3 ? sample(std, 3, out_bd, x, 0) : 256;
 
-            /* Handle input alpha - png_set_background will cause the output
+            /* Handle input alpha - __kimtoy__png_set_background will cause the output
              * alpha to disappear so there is nothing to check.
              */
             if ((in_ct & PNG_COLOR_MASK_ALPHA) != 0 || (in_ct == 3 &&
@@ -8167,7 +8167,7 @@ gamma_image_validate(gamma_display *dp, png_structp pp, png_infop pi)
          /* No transform is expected on the threshold tests. */
          sprintf(msg, "gamma: below threshold row %d changed", y);
 
-         png_error(pp, msg);
+         __kimtoy__png_error(pp, msg);
       }
    } /* row (y) loop */
 
@@ -8177,7 +8177,7 @@ gamma_image_validate(gamma_display *dp, png_structp pp, png_infop pi)
 static void
 gamma_end(png_structp pp, png_infop pi)
 {
-   gamma_display *dp = voidcast(gamma_display*, png_get_progressive_ptr(pp));
+   gamma_display *dp = voidcast(gamma_display*, __kimtoy__png_get_progressive_ptr(pp));
 
    if (!dp->this.speed)
       gamma_image_validate(dp, pp, pi);
@@ -8243,7 +8243,7 @@ gamma_test(png_modifier *pmIn, PNG_CONST png_byte colour_typeIn,
       if (d.pm->this.progressive)
       {
          /* Share the row function with the standard implementation. */
-         png_set_progressive_read_fn(pp, &d, gamma_info, progressive_row,
+         __kimtoy__png_set_progressive_read_fn(pp, &d, gamma_info, progressive_row,
             gamma_end);
 
          /* Now feed data into the reader until we reach the end: */
@@ -8252,10 +8252,10 @@ gamma_test(png_modifier *pmIn, PNG_CONST png_byte colour_typeIn,
       else
       {
          /* modifier_read expects a png_modifier* */
-         png_set_read_fn(pp, d.pm, modifier_read);
+         __kimtoy__png_set_read_fn(pp, d.pm, modifier_read);
 
          /* Check the header values: */
-         png_read_info(pp, pi);
+         __kimtoy__png_read_info(pp, pi);
 
          /* Process the 'info' requirements. Only one image is generated */
          gamma_info_imp(&d, pp, pi);
@@ -8308,7 +8308,7 @@ gamma_test(png_modifier *pmIn, PNG_CONST png_byte colour_typeIn,
             break;
 
          default:
-            png_error(pp, "bad bit depth (internal: 1)");
+            __kimtoy__png_error(pp, "bad bit depth (internal: 1)");
          }
       }
 
@@ -8331,7 +8331,7 @@ gamma_test(png_modifier *pmIn, PNG_CONST png_byte colour_typeIn,
             break;
 
          default:
-            png_error(pp, "bad bit depth (internal: 2)");
+            __kimtoy__png_error(pp, "bad bit depth (internal: 2)");
          }
       }
 

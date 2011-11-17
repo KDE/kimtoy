@@ -24,15 +24,15 @@ typedef png_libpng_version_1_5_6 Your_png_h_is_not_version_1_5_6;
 
 #ifdef PNG_READ_SUPPORTED
 void PNGAPI
-png_set_sig_bytes(png_structp png_ptr, int num_bytes)
+__kimtoy__png_set_sig_bytes(png_structp png_ptr, int num_bytes)
 {
-   png_debug(1, "in png_set_sig_bytes");
+   png_debug(1, "in __kimtoy__png_set_sig_bytes");
 
    if (png_ptr == NULL)
       return;
 
    if (num_bytes > 8)
-      png_error(png_ptr, "Too many bytes for PNG signature");
+      __kimtoy__png_error(png_ptr, "Too many bytes for PNG signature");
 
    png_ptr->sig_bytes = (png_byte)(num_bytes < 0 ? 0 : num_bytes);
 }
@@ -46,7 +46,7 @@ png_set_sig_bytes(png_structp png_ptr, int num_bytes)
  * PNG signature (this is the same behavior as strcmp, memcmp, etc).
  */
 int PNGAPI
-png_sig_cmp(png_const_bytep sig, png_size_t start, png_size_t num_to_check)
+__kimtoy__png_sig_cmp(png_const_bytep sig, png_size_t start, png_size_t num_to_check)
 {
    png_byte png_signature[8] = {137, 80, 78, 71, 13, 10, 26, 10};
 
@@ -70,7 +70,7 @@ png_sig_cmp(png_const_bytep sig, png_size_t start, png_size_t num_to_check)
 #if defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED)
 /* Function to allocate memory for zlib */
 PNG_FUNCTION(voidpf /* PRIVATE */,
-png_zalloc,(voidpf png_ptr, uInt items, uInt size),PNG_ALLOCATED)
+__kimtoy__png_zalloc,(voidpf png_ptr, uInt items, uInt size),PNG_ALLOCATED)
 {
    png_voidp ptr;
    png_structp p=(png_structp)png_ptr;
@@ -82,13 +82,13 @@ png_zalloc,(voidpf png_ptr, uInt items, uInt size),PNG_ALLOCATED)
 
    if (items > PNG_UINT_32_MAX/size)
    {
-     png_warning (p, "Potential overflow in png_zalloc()");
+     __kimtoy__png_warning (p, "Potential overflow in __kimtoy__png_zalloc()");
      return (NULL);
    }
    num_bytes = (png_alloc_size_t)items * size;
 
    p->flags|=PNG_FLAG_MALLOC_NULL_MEM_OK;
-   ptr = (png_voidp)png_malloc((png_structp)png_ptr, num_bytes);
+   ptr = (png_voidp)__kimtoy__png_malloc((png_structp)png_ptr, num_bytes);
    p->flags=save_flags;
 
    return ((voidpf)ptr);
@@ -96,16 +96,16 @@ png_zalloc,(voidpf png_ptr, uInt items, uInt size),PNG_ALLOCATED)
 
 /* Function to free memory for zlib */
 void /* PRIVATE */
-png_zfree(voidpf png_ptr, voidpf ptr)
+__kimtoy__png_zfree(voidpf png_ptr, voidpf ptr)
 {
-   png_free((png_structp)png_ptr, (png_voidp)ptr);
+   __kimtoy__png_free((png_structp)png_ptr, (png_voidp)ptr);
 }
 
 /* Reset the CRC variable to 32 bits of 1's.  Care must be taken
  * in case CRC is > 32 bits to leave the top bits 0.
  */
 void /* PRIVATE */
-png_reset_crc(png_structp png_ptr)
+__kimtoy__png_reset_crc(png_structp png_ptr)
 {
    /* The cast is safe because the crc is a 32 bit value. */
    png_ptr->crc = (png_uint_32)crc32(0, Z_NULL, 0);
@@ -117,7 +117,7 @@ png_reset_crc(png_structp png_ptr)
  * trouble of calculating it.
  */
 void /* PRIVATE */
-png_calculate_crc(png_structp png_ptr, png_const_bytep ptr, png_size_t length)
+__kimtoy__png_calculate_crc(png_structp png_ptr, png_const_bytep ptr, png_size_t length)
 {
    int need_crc = 1;
 
@@ -169,7 +169,7 @@ png_calculate_crc(png_structp png_ptr, png_const_bytep ptr, png_size_t length)
  * functions that create a png_struct
  */
 int
-png_user_version_check(png_structp png_ptr, png_const_charp user_png_ver)
+__kimtoy__png_user_version_check(png_structp png_ptr, png_const_charp user_png_ver)
 {
    if (user_png_ver)
    {
@@ -200,12 +200,12 @@ png_user_version_check(png_structp png_ptr, png_const_charp user_png_ver)
          size_t pos = 0;
          char m[128];
 
-         pos = png_safecat(m, sizeof m, pos, "Application built with libpng-");
-         pos = png_safecat(m, sizeof m, pos, user_png_ver);
-         pos = png_safecat(m, sizeof m, pos, " but running with ");
-         pos = png_safecat(m, sizeof m, pos, png_libpng_ver);
+         pos = __kimtoy__png_safecat(m, sizeof m, pos, "Application built with libpng-");
+         pos = __kimtoy__png_safecat(m, sizeof m, pos, user_png_ver);
+         pos = __kimtoy__png_safecat(m, sizeof m, pos, " but running with ");
+         pos = __kimtoy__png_safecat(m, sizeof m, pos, png_libpng_ver);
 
-         png_warning(png_ptr, m);
+         __kimtoy__png_warning(png_ptr, m);
 #endif
 
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
@@ -227,38 +227,38 @@ png_user_version_check(png_structp png_ptr, png_const_charp user_png_ver)
  * libpng don't have to be recompiled if png_info changes size.
  */
 PNG_FUNCTION(png_infop,PNGAPI
-png_create_info_struct,(png_structp png_ptr),PNG_ALLOCATED)
+__kimtoy__png_create_info_struct,(png_structp png_ptr),PNG_ALLOCATED)
 {
    png_infop info_ptr;
 
-   png_debug(1, "in png_create_info_struct");
+   png_debug(1, "in __kimtoy__png_create_info_struct");
 
    if (png_ptr == NULL)
       return (NULL);
 
 #ifdef PNG_USER_MEM_SUPPORTED
-   info_ptr = (png_infop)png_create_struct_2(PNG_STRUCT_INFO,
+   info_ptr = (png_infop)__kimtoy__png_create_struct_2(PNG_STRUCT_INFO,
       png_ptr->malloc_fn, png_ptr->mem_ptr);
 #else
-   info_ptr = (png_infop)png_create_struct(PNG_STRUCT_INFO);
+   info_ptr = (png_infop)__kimtoy__png_create_struct(PNG_STRUCT_INFO);
 #endif
    if (info_ptr != NULL)
-      png_info_init_3(&info_ptr, png_sizeof(png_info));
+      __kimtoy__png_info_init_3(&info_ptr, png_sizeof(png_info));
 
    return (info_ptr);
 }
 
 /* This function frees the memory associated with a single info struct.
- * Normally, one would use either png_destroy_read_struct() or
- * png_destroy_write_struct() to free an info struct, but this may be
+ * Normally, one would use either __kimtoy__png_destroy_read_struct() or
+ * __kimtoy__png_destroy_write_struct() to free an info struct, but this may be
  * useful for some applications.
  */
 void PNGAPI
-png_destroy_info_struct(png_structp png_ptr, png_infopp info_ptr_ptr)
+__kimtoy__png_destroy_info_struct(png_structp png_ptr, png_infopp info_ptr_ptr)
 {
    png_infop info_ptr = NULL;
 
-   png_debug(1, "in png_destroy_info_struct");
+   png_debug(1, "in __kimtoy__png_destroy_info_struct");
 
    if (png_ptr == NULL)
       return;
@@ -268,37 +268,37 @@ png_destroy_info_struct(png_structp png_ptr, png_infopp info_ptr_ptr)
 
    if (info_ptr != NULL)
    {
-      png_info_destroy(png_ptr, info_ptr);
+      __kimtoy__png_info_destroy(png_ptr, info_ptr);
 
 #ifdef PNG_USER_MEM_SUPPORTED
-      png_destroy_struct_2((png_voidp)info_ptr, png_ptr->free_fn,
+      __kimtoy__png_destroy_struct_2((png_voidp)info_ptr, png_ptr->free_fn,
           png_ptr->mem_ptr);
 #else
-      png_destroy_struct((png_voidp)info_ptr);
+      __kimtoy__png_destroy_struct((png_voidp)info_ptr);
 #endif
       *info_ptr_ptr = NULL;
    }
 }
 
 /* Initialize the info structure.  This is now an internal function (0.89)
- * and applications using it are urged to use png_create_info_struct()
+ * and applications using it are urged to use __kimtoy__png_create_info_struct()
  * instead.
  */
 
 void PNGAPI
-png_info_init_3(png_infopp ptr_ptr, png_size_t png_info_struct_size)
+__kimtoy__png_info_init_3(png_infopp ptr_ptr, png_size_t png_info_struct_size)
 {
    png_infop info_ptr = *ptr_ptr;
 
-   png_debug(1, "in png_info_init_3");
+   png_debug(1, "in __kimtoy__png_info_init_3");
 
    if (info_ptr == NULL)
       return;
 
    if (png_sizeof(png_info) > png_info_struct_size)
    {
-      png_destroy_struct(info_ptr);
-      info_ptr = (png_infop)png_create_struct(PNG_STRUCT_INFO);
+      __kimtoy__png_destroy_struct(info_ptr);
+      info_ptr = (png_infop)__kimtoy__png_create_struct(PNG_STRUCT_INFO);
       *ptr_ptr = info_ptr;
    }
 
@@ -307,10 +307,10 @@ png_info_init_3(png_infopp ptr_ptr, png_size_t png_info_struct_size)
 }
 
 void PNGAPI
-png_data_freer(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_data_freer(png_structp png_ptr, png_infop info_ptr,
    int freer, png_uint_32 mask)
 {
-   png_debug(1, "in png_data_freer");
+   png_debug(1, "in __kimtoy__png_data_freer");
 
    if (png_ptr == NULL || info_ptr == NULL)
       return;
@@ -322,15 +322,15 @@ png_data_freer(png_structp png_ptr, png_infop info_ptr,
       info_ptr->free_me &= ~mask;
 
    else
-      png_warning(png_ptr,
-         "Unknown freer parameter in png_data_freer");
+      __kimtoy__png_warning(png_ptr,
+         "Unknown freer parameter in __kimtoy__png_data_freer");
 }
 
 void PNGAPI
-png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
+__kimtoy__png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    int num)
 {
-   png_debug(1, "in png_free_data");
+   png_debug(1, "in __kimtoy__png_free_data");
 
    if (png_ptr == NULL || info_ptr == NULL)
       return;
@@ -343,7 +343,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
       {
          if (info_ptr->text && info_ptr->text[num].key)
          {
-            png_free(png_ptr, info_ptr->text[num].key);
+            __kimtoy__png_free(png_ptr, info_ptr->text[num].key);
             info_ptr->text[num].key = NULL;
          }
       }
@@ -352,8 +352,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
       {
          int i;
          for (i = 0; i < info_ptr->num_text; i++)
-             png_free_data(png_ptr, info_ptr, PNG_FREE_TEXT, i);
-         png_free(png_ptr, info_ptr->text);
+             __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_TEXT, i);
+         __kimtoy__png_free(png_ptr, info_ptr->text);
          info_ptr->text = NULL;
          info_ptr->num_text=0;
       }
@@ -364,7 +364,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    /* Free any tRNS entry */
    if ((mask & PNG_FREE_TRNS) & info_ptr->free_me)
    {
-      png_free(png_ptr, info_ptr->trans_alpha);
+      __kimtoy__png_free(png_ptr, info_ptr->trans_alpha);
       info_ptr->trans_alpha = NULL;
       info_ptr->valid &= ~PNG_INFO_tRNS;
    }
@@ -374,8 +374,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    /* Free any sCAL entry */
    if ((mask & PNG_FREE_SCAL) & info_ptr->free_me)
    {
-      png_free(png_ptr, info_ptr->scal_s_width);
-      png_free(png_ptr, info_ptr->scal_s_height);
+      __kimtoy__png_free(png_ptr, info_ptr->scal_s_width);
+      __kimtoy__png_free(png_ptr, info_ptr->scal_s_height);
       info_ptr->scal_s_width = NULL;
       info_ptr->scal_s_height = NULL;
       info_ptr->valid &= ~PNG_INFO_sCAL;
@@ -386,8 +386,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    /* Free any pCAL entry */
    if ((mask & PNG_FREE_PCAL) & info_ptr->free_me)
    {
-      png_free(png_ptr, info_ptr->pcal_purpose);
-      png_free(png_ptr, info_ptr->pcal_units);
+      __kimtoy__png_free(png_ptr, info_ptr->pcal_purpose);
+      __kimtoy__png_free(png_ptr, info_ptr->pcal_units);
       info_ptr->pcal_purpose = NULL;
       info_ptr->pcal_units = NULL;
       if (info_ptr->pcal_params != NULL)
@@ -395,10 +395,10 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
             int i;
             for (i = 0; i < (int)info_ptr->pcal_nparams; i++)
             {
-               png_free(png_ptr, info_ptr->pcal_params[i]);
+               __kimtoy__png_free(png_ptr, info_ptr->pcal_params[i]);
                info_ptr->pcal_params[i] = NULL;
             }
-            png_free(png_ptr, info_ptr->pcal_params);
+            __kimtoy__png_free(png_ptr, info_ptr->pcal_params);
             info_ptr->pcal_params = NULL;
          }
       info_ptr->valid &= ~PNG_INFO_pCAL;
@@ -409,8 +409,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    /* Free any iCCP entry */
    if ((mask & PNG_FREE_ICCP) & info_ptr->free_me)
    {
-      png_free(png_ptr, info_ptr->iccp_name);
-      png_free(png_ptr, info_ptr->iccp_profile);
+      __kimtoy__png_free(png_ptr, info_ptr->iccp_name);
+      __kimtoy__png_free(png_ptr, info_ptr->iccp_profile);
       info_ptr->iccp_name = NULL;
       info_ptr->iccp_profile = NULL;
       info_ptr->valid &= ~PNG_INFO_iCCP;
@@ -425,8 +425,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
       {
          if (info_ptr->splt_palettes)
          {
-            png_free(png_ptr, info_ptr->splt_palettes[num].name);
-            png_free(png_ptr, info_ptr->splt_palettes[num].entries);
+            __kimtoy__png_free(png_ptr, info_ptr->splt_palettes[num].name);
+            __kimtoy__png_free(png_ptr, info_ptr->splt_palettes[num].entries);
             info_ptr->splt_palettes[num].name = NULL;
             info_ptr->splt_palettes[num].entries = NULL;
          }
@@ -438,9 +438,9 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
          {
             int i;
             for (i = 0; i < (int)info_ptr->splt_palettes_num; i++)
-               png_free_data(png_ptr, info_ptr, PNG_FREE_SPLT, i);
+               __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_SPLT, i);
 
-            png_free(png_ptr, info_ptr->splt_palettes);
+            __kimtoy__png_free(png_ptr, info_ptr->splt_palettes);
             info_ptr->splt_palettes = NULL;
             info_ptr->splt_palettes_num = 0;
          }
@@ -452,7 +452,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
 #ifdef PNG_UNKNOWN_CHUNKS_SUPPORTED
    if (png_ptr->unknown_chunk.data)
    {
-      png_free(png_ptr, png_ptr->unknown_chunk.data);
+      __kimtoy__png_free(png_ptr, png_ptr->unknown_chunk.data);
       png_ptr->unknown_chunk.data = NULL;
    }
 
@@ -462,7 +462,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
       {
           if (info_ptr->unknown_chunks)
           {
-             png_free(png_ptr, info_ptr->unknown_chunks[num].data);
+             __kimtoy__png_free(png_ptr, info_ptr->unknown_chunks[num].data);
              info_ptr->unknown_chunks[num].data = NULL;
           }
       }
@@ -474,9 +474,9 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
          if (info_ptr->unknown_chunks_num)
          {
             for (i = 0; i < info_ptr->unknown_chunks_num; i++)
-               png_free_data(png_ptr, info_ptr, PNG_FREE_UNKN, i);
+               __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_UNKN, i);
 
-            png_free(png_ptr, info_ptr->unknown_chunks);
+            __kimtoy__png_free(png_ptr, info_ptr->unknown_chunks);
             info_ptr->unknown_chunks = NULL;
             info_ptr->unknown_chunks_num = 0;
          }
@@ -488,7 +488,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    /* Free any hIST entry */
    if ((mask & PNG_FREE_HIST)  & info_ptr->free_me)
    {
-      png_free(png_ptr, info_ptr->hist);
+      __kimtoy__png_free(png_ptr, info_ptr->hist);
       info_ptr->hist = NULL;
       info_ptr->valid &= ~PNG_INFO_hIST;
    }
@@ -497,7 +497,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    /* Free any PLTE entry that was internally allocated */
    if ((mask & PNG_FREE_PLTE) & info_ptr->free_me)
    {
-      png_zfree(png_ptr, info_ptr->palette);
+      __kimtoy__png_zfree(png_ptr, info_ptr->palette);
       info_ptr->palette = NULL;
       info_ptr->valid &= ~PNG_INFO_PLTE;
       info_ptr->num_palette = 0;
@@ -512,10 +512,10 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
          int row;
          for (row = 0; row < (int)info_ptr->height; row++)
          {
-            png_free(png_ptr, info_ptr->row_pointers[row]);
+            __kimtoy__png_free(png_ptr, info_ptr->row_pointers[row]);
             info_ptr->row_pointers[row] = NULL;
          }
-         png_free(png_ptr, info_ptr->row_pointers);
+         __kimtoy__png_free(png_ptr, info_ptr->row_pointers);
          info_ptr->row_pointers = NULL;
       }
       info_ptr->valid &= ~PNG_INFO_IDAT;
@@ -530,34 +530,34 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
 
 /* This is an internal routine to free any memory that the info struct is
  * pointing to before re-using it or freeing the struct itself.  Recall
- * that png_free() checks for NULL pointers for us.
+ * that __kimtoy__png_free() checks for NULL pointers for us.
  */
 void /* PRIVATE */
-png_info_destroy(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_info_destroy(png_structp png_ptr, png_infop info_ptr)
 {
-   png_debug(1, "in png_info_destroy");
+   png_debug(1, "in __kimtoy__png_info_destroy");
 
-   png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+   __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
    if (png_ptr->num_chunk_list)
    {
-      png_free(png_ptr, png_ptr->chunk_list);
+      __kimtoy__png_free(png_ptr, png_ptr->chunk_list);
       png_ptr->chunk_list = NULL;
       png_ptr->num_chunk_list = 0;
    }
 #endif
 
-   png_info_init_3(&info_ptr, png_sizeof(png_info));
+   __kimtoy__png_info_init_3(&info_ptr, png_sizeof(png_info));
 }
 #endif /* defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED) */
 
 /* This function returns a pointer to the io_ptr associated with the user
  * functions.  The application should free any memory associated with this
- * pointer before png_write_destroy() or png_read_destroy() are called.
+ * pointer before __kimtoy__png_write_destroy() or __kimtoy__png_read_destroy() are called.
  */
 png_voidp PNGAPI
-png_get_io_ptr(png_structp png_ptr)
+__kimtoy__png_get_io_ptr(png_structp png_ptr)
 {
    if (png_ptr == NULL)
       return (NULL);
@@ -568,15 +568,15 @@ png_get_io_ptr(png_structp png_ptr)
 #if defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED)
 #  ifdef PNG_STDIO_SUPPORTED
 /* Initialize the default input/output functions for the PNG file.  If you
- * use your own read or write routines, you can call either png_set_read_fn()
- * or png_set_write_fn() instead of png_init_io().  If you have defined
+ * use your own read or write routines, you can call either __kimtoy__png_set_read_fn()
+ * or __kimtoy__png_set_write_fn() instead of __kimtoy__png_init_io().  If you have defined
  * PNG_NO_STDIO or otherwise disabled PNG_STDIO_SUPPORTED, you must use a
  * function of your own because "FILE *" isn't necessarily available.
  */
 void PNGAPI
-png_init_io(png_structp png_ptr, png_FILE_p fp)
+__kimtoy__png_init_io(png_structp png_ptr, png_FILE_p fp)
 {
-   png_debug(1, "in png_init_io");
+   png_debug(1, "in __kimtoy__png_init_io");
 
    if (png_ptr == NULL)
       return;
@@ -590,7 +590,7 @@ png_init_io(png_structp png_ptr, png_FILE_p fp)
  * a "Creation Time" or other text-based time string.
  */
 png_const_charp PNGAPI
-png_convert_to_rfc1123(png_structp png_ptr, png_const_timep ptime)
+__kimtoy__png_convert_to_rfc1123(png_structp png_ptr, png_const_timep ptime)
 {
    static PNG_CONST char short_months[12][4] =
         {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -604,7 +604,7 @@ png_convert_to_rfc1123(png_structp png_ptr, png_const_timep ptime)
       char number_buf[5]; /* enough for a four digit year */
 
 #     define APPEND_STRING(string)\
-         pos = png_safecat(png_ptr->time_buffer, sizeof png_ptr->time_buffer,\
+         pos = __kimtoy__png_safecat(png_ptr->time_buffer, sizeof png_ptr->time_buffer,\
             pos, (string))
 #     define APPEND_NUMBER(format, value)\
          APPEND_STRING(PNG_FORMAT_NUMBER(number_buf, format, (value)))
@@ -637,7 +637,7 @@ png_convert_to_rfc1123(png_structp png_ptr, png_const_timep ptime)
 #endif /* defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED) */
 
 png_const_charp PNGAPI
-png_get_copyright(png_const_structp png_ptr)
+__kimtoy__png_get_copyright(png_const_structp png_ptr)
 {
    PNG_UNUSED(png_ptr)  /* Silence compiler warning about unused png_ptr */
 #ifdef PNG_STRING_COPYRIGHT
@@ -663,19 +663,19 @@ png_get_copyright(png_const_structp png_ptr)
  * format 1.0.0 through 99.99.99zz.  To get the version of *.h files
  * used with your application, print out PNG_LIBPNG_VER_STRING, which
  * is defined in png.h.
- * Note: now there is no difference between png_get_libpng_ver() and
- * png_get_header_ver().  Due to the version_nn_nn_nn typedef guard,
+ * Note: now there is no difference between __kimtoy__png_get_libpng_ver() and
+ * __kimtoy__png_get_header_ver().  Due to the version_nn_nn_nn typedef guard,
  * it is guaranteed that png.c uses the correct version of png.h.
  */
 png_const_charp PNGAPI
-png_get_libpng_ver(png_const_structp png_ptr)
+__kimtoy__png_get_libpng_ver(png_const_structp png_ptr)
 {
    /* Version of *.c files used when building libpng */
-   return png_get_header_ver(png_ptr);
+   return __kimtoy__png_get_header_ver(png_ptr);
 }
 
 png_const_charp PNGAPI
-png_get_header_ver(png_const_structp png_ptr)
+__kimtoy__png_get_header_ver(png_const_structp png_ptr)
 {
    /* Version of *.h files used when building libpng */
    PNG_UNUSED(png_ptr)  /* Silence compiler warning about unused png_ptr */
@@ -683,7 +683,7 @@ png_get_header_ver(png_const_structp png_ptr)
 }
 
 png_const_charp PNGAPI
-png_get_header_version(png_const_structp png_ptr)
+__kimtoy__png_get_header_version(png_const_structp png_ptr)
 {
    /* Returns longer string containing both version and date */
    PNG_UNUSED(png_ptr)  /* Silence compiler warning about unused png_ptr */
@@ -700,7 +700,7 @@ png_get_header_version(png_const_structp png_ptr)
 
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
 int PNGAPI
-png_handle_as_unknown(png_structp png_ptr, png_const_bytep chunk_name)
+__kimtoy__png_handle_as_unknown(png_structp png_ptr, png_const_bytep chunk_name)
 {
    /* Check chunk_name and return "keep" value if it's on the list, else 0 */
    png_const_bytep p, p_end;
@@ -727,19 +727,19 @@ png_handle_as_unknown(png_structp png_ptr, png_const_bytep chunk_name)
 }
 
 int /* PRIVATE */
-png_chunk_unknown_handling(png_structp png_ptr, png_uint_32 chunk_name)
+__kimtoy__png_chunk_unknown_handling(png_structp png_ptr, png_uint_32 chunk_name)
 {
    png_byte chunk_string[5];
 
    PNG_CSTRING_FROM_CHUNK(chunk_string, chunk_name);
-   return png_handle_as_unknown(png_ptr, chunk_string);
+   return __kimtoy__png_handle_as_unknown(png_ptr, chunk_string);
 }
 #endif
 
 #ifdef PNG_READ_SUPPORTED
 /* This function, added to libpng-1.0.6g, is untested. */
 int PNGAPI
-png_reset_zstream(png_structp png_ptr)
+__kimtoy__png_reset_zstream(png_structp png_ptr)
 {
    if (png_ptr == NULL)
       return Z_STREAM_ERROR;
@@ -750,7 +750,7 @@ png_reset_zstream(png_structp png_ptr)
 
 /* This function was added to libpng-1.0.7 */
 png_uint_32 PNGAPI
-png_access_version_number(void)
+__kimtoy__png_access_version_number(void)
 {
    /* Version of *.c files used when building libpng */
    return((png_uint_32)PNG_LIBPNG_VER);
@@ -767,7 +767,7 @@ png_access_version_number(void)
 #  ifdef PNG_CHECK_cHRM_SUPPORTED
 
 int /* PRIVATE */
-png_check_cHRM_fixed(png_structp png_ptr,
+__kimtoy__png_check_cHRM_fixed(png_structp png_ptr,
    png_fixed_point white_x, png_fixed_point white_y, png_fixed_point red_x,
    png_fixed_point red_y, png_fixed_point green_x, png_fixed_point green_y,
    png_fixed_point blue_x, png_fixed_point blue_y)
@@ -775,7 +775,7 @@ png_check_cHRM_fixed(png_structp png_ptr,
    int ret = 1;
    unsigned long xy_hi,xy_lo,yx_hi,yx_lo;
 
-   png_debug(1, "in function png_check_cHRM_fixed");
+   png_debug(1, "in function __kimtoy__png_check_cHRM_fixed");
 
    if (png_ptr == NULL)
       return 0;
@@ -792,41 +792,41 @@ png_check_cHRM_fixed(png_structp png_ptr,
        green_x < 0 || green_y <  0 ||
         blue_x < 0 ||  blue_y <  0)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
         "Ignoring attempt to set negative chromaticity value");
       ret = 0;
    }
    /* And (x+y) must be <= PNG_FP_1 (so z is >= 0) */
    if (white_x > PNG_FP_1 - white_y)
    {
-      png_warning(png_ptr, "Invalid cHRM white point");
+      __kimtoy__png_warning(png_ptr, "Invalid cHRM white point");
       ret = 0;
    }
 
    if (red_x > PNG_FP_1 - red_y)
    {
-      png_warning(png_ptr, "Invalid cHRM red point");
+      __kimtoy__png_warning(png_ptr, "Invalid cHRM red point");
       ret = 0;
    }
 
    if (green_x > PNG_FP_1 - green_y)
    {
-      png_warning(png_ptr, "Invalid cHRM green point");
+      __kimtoy__png_warning(png_ptr, "Invalid cHRM green point");
       ret = 0;
    }
 
    if (blue_x > PNG_FP_1 - blue_y)
    {
-      png_warning(png_ptr, "Invalid cHRM blue point");
+      __kimtoy__png_warning(png_ptr, "Invalid cHRM blue point");
       ret = 0;
    }
 
-   png_64bit_product(green_x - red_x, blue_y - red_y, &xy_hi, &xy_lo);
-   png_64bit_product(green_y - red_y, blue_x - red_x, &yx_hi, &yx_lo);
+   __kimtoy__png_64bit_product(green_x - red_x, blue_y - red_y, &xy_hi, &xy_lo);
+   __kimtoy__png_64bit_product(green_y - red_y, blue_x - red_x, &yx_hi, &yx_lo);
 
    if (xy_hi == yx_hi && xy_lo == yx_lo)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
          "Ignoring attempt to set cHRM RGB triangle with zero area");
       ret = 0;
    }
@@ -841,27 +841,27 @@ png_check_cHRM_fixed(png_structp png_ptr,
  * non-zero on a parameter error.  The X, Y and Z values are required to be
  * positive and less than 1.0.
  */
-int png_xy_from_XYZ(png_xy *xy, png_XYZ XYZ)
+int __kimtoy__png_xy_from_XYZ(png_xy *xy, png_XYZ XYZ)
 {
    png_int_32 d, dwhite, whiteX, whiteY;
 
    d = XYZ.redX + XYZ.redY + XYZ.redZ;
-   if (!png_muldiv(&xy->redx, XYZ.redX, PNG_FP_1, d)) return 1;
-   if (!png_muldiv(&xy->redy, XYZ.redY, PNG_FP_1, d)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->redx, XYZ.redX, PNG_FP_1, d)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->redy, XYZ.redY, PNG_FP_1, d)) return 1;
    dwhite = d;
    whiteX = XYZ.redX;
    whiteY = XYZ.redY;
 
    d = XYZ.greenX + XYZ.greenY + XYZ.greenZ;
-   if (!png_muldiv(&xy->greenx, XYZ.greenX, PNG_FP_1, d)) return 1;
-   if (!png_muldiv(&xy->greeny, XYZ.greenY, PNG_FP_1, d)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->greenx, XYZ.greenX, PNG_FP_1, d)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->greeny, XYZ.greenY, PNG_FP_1, d)) return 1;
    dwhite += d;
    whiteX += XYZ.greenX;
    whiteY += XYZ.greenY;
 
    d = XYZ.blueX + XYZ.blueY + XYZ.blueZ;
-   if (!png_muldiv(&xy->bluex, XYZ.blueX, PNG_FP_1, d)) return 1;
-   if (!png_muldiv(&xy->bluey, XYZ.blueY, PNG_FP_1, d)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->bluex, XYZ.blueX, PNG_FP_1, d)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->bluey, XYZ.blueY, PNG_FP_1, d)) return 1;
    dwhite += d;
    whiteX += XYZ.blueX;
    whiteY += XYZ.blueY;
@@ -869,13 +869,13 @@ int png_xy_from_XYZ(png_xy *xy, png_XYZ XYZ)
    /* The reference white is simply the same of the end-point (X,Y,Z) vectors,
     * thus:
     */
-   if (!png_muldiv(&xy->whitex, whiteX, PNG_FP_1, dwhite)) return 1;
-   if (!png_muldiv(&xy->whitey, whiteY, PNG_FP_1, dwhite)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->whitex, whiteX, PNG_FP_1, dwhite)) return 1;
+   if (!__kimtoy__png_muldiv(&xy->whitey, whiteY, PNG_FP_1, dwhite)) return 1;
 
    return 0;
 }
 
-int png_XYZ_from_xy(png_XYZ *XYZ, png_xy xy)
+int __kimtoy__png_XYZ_from_xy(png_XYZ *XYZ, png_xy xy)
 {
    png_fixed_point red_inverse, green_inverse, blue_scale;
    png_fixed_point left, right, denominator;
@@ -1072,63 +1072,63 @@ int png_XYZ_from_xy(png_XYZ *XYZ, png_xy xy)
    /* By the argument, above overflow should be impossible here. The return
     * value of 2 indicates an internal error to the caller.
     */
-   if (!png_muldiv(&left, xy.greenx-xy.bluex, xy.redy - xy.bluey, 7)) return 2;
-   if (!png_muldiv(&right, xy.greeny-xy.bluey, xy.redx - xy.bluex, 7)) return 2;
+   if (!__kimtoy__png_muldiv(&left, xy.greenx-xy.bluex, xy.redy - xy.bluey, 7)) return 2;
+   if (!__kimtoy__png_muldiv(&right, xy.greeny-xy.bluey, xy.redx - xy.bluex, 7)) return 2;
    denominator = left - right;
 
    /* Now find the red numerator. */
-   if (!png_muldiv(&left, xy.greenx-xy.bluex, xy.whitey-xy.bluey, 7)) return 2;
-   if (!png_muldiv(&right, xy.greeny-xy.bluey, xy.whitex-xy.bluex, 7)) return 2;
+   if (!__kimtoy__png_muldiv(&left, xy.greenx-xy.bluex, xy.whitey-xy.bluey, 7)) return 2;
+   if (!__kimtoy__png_muldiv(&right, xy.greeny-xy.bluey, xy.whitex-xy.bluex, 7)) return 2;
 
    /* Overflow is possible here and it indicates an extreme set of PNG cHRM
     * chunk values.  This calculation actually returns the reciprocal of the
     * scale value because this allows us to delay the multiplication of white-y
     * into the denominator, which tends to produce a small number.
     */
-   if (!png_muldiv(&red_inverse, xy.whitey, denominator, left-right) ||
+   if (!__kimtoy__png_muldiv(&red_inverse, xy.whitey, denominator, left-right) ||
        red_inverse <= xy.whitey /* r+g+b scales = white scale */)
       return 1;
 
    /* Similarly for green_inverse: */
-   if (!png_muldiv(&left, xy.redy-xy.bluey, xy.whitex-xy.bluex, 7)) return 2;
-   if (!png_muldiv(&right, xy.redx-xy.bluex, xy.whitey-xy.bluey, 7)) return 2;
-   if (!png_muldiv(&green_inverse, xy.whitey, denominator, left-right) ||
+   if (!__kimtoy__png_muldiv(&left, xy.redy-xy.bluey, xy.whitex-xy.bluex, 7)) return 2;
+   if (!__kimtoy__png_muldiv(&right, xy.redx-xy.bluex, xy.whitey-xy.bluey, 7)) return 2;
+   if (!__kimtoy__png_muldiv(&green_inverse, xy.whitey, denominator, left-right) ||
        green_inverse <= xy.whitey)
       return 1;
 
    /* And the blue scale, the checks above guarantee this can't overflow but it
     * can still produce 0 for extreme cHRM values.
     */
-   blue_scale = png_reciprocal(xy.whitey) - png_reciprocal(red_inverse) -
-      png_reciprocal(green_inverse);
+   blue_scale = __kimtoy__png_reciprocal(xy.whitey) - __kimtoy__png_reciprocal(red_inverse) -
+      __kimtoy__png_reciprocal(green_inverse);
    if (blue_scale <= 0) return 1;
 
 
    /* And fill in the png_XYZ: */
-   if (!png_muldiv(&XYZ->redX, xy.redx, PNG_FP_1, red_inverse)) return 1;
-   if (!png_muldiv(&XYZ->redY, xy.redy, PNG_FP_1, red_inverse)) return 1;
-   if (!png_muldiv(&XYZ->redZ, PNG_FP_1 - xy.redx - xy.redy, PNG_FP_1,
+   if (!__kimtoy__png_muldiv(&XYZ->redX, xy.redx, PNG_FP_1, red_inverse)) return 1;
+   if (!__kimtoy__png_muldiv(&XYZ->redY, xy.redy, PNG_FP_1, red_inverse)) return 1;
+   if (!__kimtoy__png_muldiv(&XYZ->redZ, PNG_FP_1 - xy.redx - xy.redy, PNG_FP_1,
       red_inverse))
       return 1;
 
-   if (!png_muldiv(&XYZ->greenX, xy.greenx, PNG_FP_1, green_inverse)) return 1;
-   if (!png_muldiv(&XYZ->greenY, xy.greeny, PNG_FP_1, green_inverse)) return 1;
-   if (!png_muldiv(&XYZ->greenZ, PNG_FP_1 - xy.greenx - xy.greeny, PNG_FP_1,
+   if (!__kimtoy__png_muldiv(&XYZ->greenX, xy.greenx, PNG_FP_1, green_inverse)) return 1;
+   if (!__kimtoy__png_muldiv(&XYZ->greenY, xy.greeny, PNG_FP_1, green_inverse)) return 1;
+   if (!__kimtoy__png_muldiv(&XYZ->greenZ, PNG_FP_1 - xy.greenx - xy.greeny, PNG_FP_1,
       green_inverse))
       return 1;
 
-   if (!png_muldiv(&XYZ->blueX, xy.bluex, blue_scale, PNG_FP_1)) return 1;
-   if (!png_muldiv(&XYZ->blueY, xy.bluey, blue_scale, PNG_FP_1)) return 1;
-   if (!png_muldiv(&XYZ->blueZ, PNG_FP_1 - xy.bluex - xy.bluey, blue_scale,
+   if (!__kimtoy__png_muldiv(&XYZ->blueX, xy.bluex, blue_scale, PNG_FP_1)) return 1;
+   if (!__kimtoy__png_muldiv(&XYZ->blueY, xy.bluey, blue_scale, PNG_FP_1)) return 1;
+   if (!__kimtoy__png_muldiv(&XYZ->blueZ, PNG_FP_1 - xy.bluex - xy.bluey, blue_scale,
       PNG_FP_1))
       return 1;
 
    return 0; /*success*/
 }
 
-int png_XYZ_from_xy_checked(png_structp png_ptr, png_XYZ *XYZ, png_xy xy)
+int __kimtoy__png_XYZ_from_xy_checked(png_structp png_ptr, png_XYZ *XYZ, png_xy xy)
 {
-   switch (png_XYZ_from_xy(XYZ, xy))
+   switch (__kimtoy__png_XYZ_from_xy(XYZ, xy))
    {
       case 0: /* success */
          return 1;
@@ -1138,7 +1138,7 @@ int png_XYZ_from_xy_checked(png_structp png_ptr, png_XYZ *XYZ, png_xy xy)
           * overflow while trying to get XYZ values out of it.  This is
           * entirely benign - the cHRM chunk is pretty extreme.
           */
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
             "extreme cHRM chunk cannot be converted to tristimulus values");
          break;
 
@@ -1146,7 +1146,7 @@ int png_XYZ_from_xy_checked(png_structp png_ptr, png_XYZ *XYZ, png_xy xy)
          /* libpng is broken; this should be a warning but if it happens we
           * want error reports so for the moment it is an error.
           */
-         png_error(png_ptr, "internal error in png_XYZ_from_xy");
+         __kimtoy__png_error(png_ptr, "internal error in __kimtoy__png_XYZ_from_xy");
          break;
    }
 
@@ -1156,7 +1156,7 @@ int png_XYZ_from_xy_checked(png_structp png_ptr, png_XYZ *XYZ, png_xy xy)
 #endif
 
 void /* PRIVATE */
-png_check_IHDR(png_structp png_ptr,
+__kimtoy__png_check_IHDR(png_structp png_ptr,
    png_uint_32 width, png_uint_32 height, int bit_depth,
    int color_type, int interlace_type, int compression_type,
    int filter_type)
@@ -1166,13 +1166,13 @@ png_check_IHDR(png_structp png_ptr,
    /* Check for width and height valid values */
    if (width == 0)
    {
-      png_warning(png_ptr, "Image width is zero in IHDR");
+      __kimtoy__png_warning(png_ptr, "Image width is zero in IHDR");
       error = 1;
    }
 
    if (height == 0)
    {
-      png_warning(png_ptr, "Image height is zero in IHDR");
+      __kimtoy__png_warning(png_ptr, "Image height is zero in IHDR");
       error = 1;
    }
 
@@ -1183,7 +1183,7 @@ png_check_IHDR(png_structp png_ptr,
    if (width > PNG_USER_WIDTH_MAX)
 #  endif
    {
-      png_warning(png_ptr, "Image width exceeds user limit in IHDR");
+      __kimtoy__png_warning(png_ptr, "Image width exceeds user limit in IHDR");
       error = 1;
    }
 
@@ -1193,19 +1193,19 @@ png_check_IHDR(png_structp png_ptr,
    if (height > PNG_USER_HEIGHT_MAX)
 #  endif
    {
-      png_warning(png_ptr, "Image height exceeds user limit in IHDR");
+      __kimtoy__png_warning(png_ptr, "Image height exceeds user limit in IHDR");
       error = 1;
    }
 
    if (width > PNG_UINT_31_MAX)
    {
-      png_warning(png_ptr, "Invalid image width in IHDR");
+      __kimtoy__png_warning(png_ptr, "Invalid image width in IHDR");
       error = 1;
    }
 
    if (height > PNG_UINT_31_MAX)
    {
-      png_warning(png_ptr, "Invalid image height in IHDR");
+      __kimtoy__png_warning(png_ptr, "Invalid image height in IHDR");
       error = 1;
    }
 
@@ -1215,20 +1215,20 @@ png_check_IHDR(png_structp png_ptr,
                  - 1        /* filter byte */
                  - 7*8      /* rounding of width to multiple of 8 pixels */
                  - 8)       /* extra max_pixel_depth pad */
-      png_warning(png_ptr, "Width is too large for libpng to process pixels");
+      __kimtoy__png_warning(png_ptr, "Width is too large for libpng to process pixels");
 
    /* Check other values */
    if (bit_depth != 1 && bit_depth != 2 && bit_depth != 4 &&
        bit_depth != 8 && bit_depth != 16)
    {
-      png_warning(png_ptr, "Invalid bit depth in IHDR");
+      __kimtoy__png_warning(png_ptr, "Invalid bit depth in IHDR");
       error = 1;
    }
 
    if (color_type < 0 || color_type == 1 ||
        color_type == 5 || color_type > 6)
    {
-      png_warning(png_ptr, "Invalid color type in IHDR");
+      __kimtoy__png_warning(png_ptr, "Invalid color type in IHDR");
       error = 1;
    }
 
@@ -1237,19 +1237,19 @@ png_check_IHDR(png_structp png_ptr,
          color_type == PNG_COLOR_TYPE_GRAY_ALPHA ||
          color_type == PNG_COLOR_TYPE_RGB_ALPHA) && bit_depth < 8))
    {
-      png_warning(png_ptr, "Invalid color type/bit depth combination in IHDR");
+      __kimtoy__png_warning(png_ptr, "Invalid color type/bit depth combination in IHDR");
       error = 1;
    }
 
    if (interlace_type >= PNG_INTERLACE_LAST)
    {
-      png_warning(png_ptr, "Unknown interlace method in IHDR");
+      __kimtoy__png_warning(png_ptr, "Unknown interlace method in IHDR");
       error = 1;
    }
 
    if (compression_type != PNG_COMPRESSION_TYPE_BASE)
    {
-      png_warning(png_ptr, "Unknown compression method in IHDR");
+      __kimtoy__png_warning(png_ptr, "Unknown compression method in IHDR");
       error = 1;
    }
 
@@ -1258,14 +1258,14 @@ png_check_IHDR(png_structp png_ptr,
     * 1. Libpng was compiled with PNG_MNG_FEATURES_SUPPORTED and
     * 2. Libpng did not read a PNG signature (this filter_method is only
     *    used in PNG datastreams that are embedded in MNG datastreams) and
-    * 3. The application called png_permit_mng_features with a mask that
+    * 3. The application called __kimtoy__png_permit_mng_features with a mask that
     *    included PNG_FLAG_MNG_FILTER_64 and
     * 4. The filter_method is 64 and
     * 5. The color_type is RGB or RGBA
     */
    if ((png_ptr->mode & PNG_HAVE_PNG_SIGNATURE) &&
        png_ptr->mng_features_permitted)
-      png_warning(png_ptr, "MNG features are not allowed in a PNG datastream");
+      __kimtoy__png_warning(png_ptr, "MNG features are not allowed in a PNG datastream");
 
    if (filter_type != PNG_FILTER_TYPE_BASE)
    {
@@ -1275,13 +1275,13 @@ png_check_IHDR(png_structp png_ptr,
           (color_type == PNG_COLOR_TYPE_RGB ||
           color_type == PNG_COLOR_TYPE_RGB_ALPHA)))
       {
-         png_warning(png_ptr, "Unknown filter method in IHDR");
+         __kimtoy__png_warning(png_ptr, "Unknown filter method in IHDR");
          error = 1;
       }
 
       if (png_ptr->mode & PNG_HAVE_PNG_SIGNATURE)
       {
-         png_warning(png_ptr, "Invalid filter method in IHDR");
+         __kimtoy__png_warning(png_ptr, "Invalid filter method in IHDR");
          error = 1;
       }
    }
@@ -1289,13 +1289,13 @@ png_check_IHDR(png_structp png_ptr,
 #  else
    if (filter_type != PNG_FILTER_TYPE_BASE)
    {
-      png_warning(png_ptr, "Unknown filter method in IHDR");
+      __kimtoy__png_warning(png_ptr, "Unknown filter method in IHDR");
       error = 1;
    }
 #  endif
 
    if (error == 1)
-      png_error(png_ptr, "Invalid IHDR data");
+      __kimtoy__png_error(png_ptr, "Invalid IHDR data");
 }
 
 #if defined(PNG_sCAL_SUPPORTED) || defined(PNG_pCAL_SUPPORTED)
@@ -1308,7 +1308,7 @@ png_check_IHDR(png_structp png_ptr,
 #define png_fp_set(state, value) ((state) = (value) | ((state) & PNG_FP_STICKY))
 
 int /* PRIVATE */
-png_check_fp_number(png_const_charp string, png_size_t size, int *statep,
+__kimtoy__png_check_fp_number(png_const_charp string, png_size_t size, int *statep,
    png_size_tp whereami)
 {
    int state = *statep;
@@ -1435,12 +1435,12 @@ PNG_FP_End:
 
 /* The same but for a complete string. */
 int
-png_check_fp_string(png_const_charp string, png_size_t size)
+__kimtoy__png_check_fp_string(png_const_charp string, png_size_t size)
 {
    int        state=0;
    png_size_t char_index=0;
 
-   if (png_check_fp_number(string, size, &state, &char_index) &&
+   if (__kimtoy__png_check_fp_number(string, size, &state, &char_index) &&
       (char_index == size || string[char_index] == 0))
       return state /* must be non-zero - see above */;
 
@@ -1491,12 +1491,12 @@ png_pow10(int power)
  * precision.
  */
 void /* PRIVATE */
-png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
+__kimtoy__png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
     double fp, unsigned int precision)
 {
    /* We use standard functions from math.h, but not printf because
     * that would require stdio.  The caller must supply a buffer of
-    * sufficient size or we will png_error.  The tests on size and
+    * sufficient size or we will __kimtoy__png_error.  The tests on size and
     * the space in ascii[] consumed are indicated below.
     */
    if (precision < 1)
@@ -1796,7 +1796,7 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
    }
 
    /* Here on buffer too small. */
-   png_error(png_ptr, "ASCII conversion buffer too small");
+   __kimtoy__png_error(png_ptr, "ASCII conversion buffer too small");
 }
 
 #  endif /* FLOATING_POINT */
@@ -1805,7 +1805,7 @@ png_ascii_from_fp(png_structp png_ptr, png_charp ascii, png_size_t size,
 /* Function to format a fixed point value in ASCII.
  */
 void /* PRIVATE */
-png_ascii_from_fixed(png_structp png_ptr, png_charp ascii, png_size_t size,
+__kimtoy__png_ascii_from_fixed(png_structp png_ptr, png_charp ascii, png_size_t size,
     png_fixed_point fp)
 {
    /* Require space for 10 decimal digits, a decimal point, a minus sign and a
@@ -1870,7 +1870,7 @@ png_ascii_from_fixed(png_structp png_ptr, png_charp ascii, png_size_t size,
    }
 
    /* Here on buffer too small. */
-   png_error(png_ptr, "ASCII conversion buffer too small");
+   __kimtoy__png_error(png_ptr, "ASCII conversion buffer too small");
 }
 #   endif /* FIXED_POINT */
 #endif /* READ_SCAL */
@@ -1878,12 +1878,12 @@ png_ascii_from_fixed(png_structp png_ptr, png_charp ascii, png_size_t size,
 #if defined(PNG_FLOATING_POINT_SUPPORTED) && \
    !defined(PNG_FIXED_POINT_MACRO_SUPPORTED)
 png_fixed_point
-png_fixed(png_structp png_ptr, double fp, png_const_charp text)
+__kimtoy__png_fixed(png_structp png_ptr, double fp, png_const_charp text)
 {
    double r = floor(100000 * fp + .5);
 
    if (r > 2147483647. || r < -2147483648.)
-      png_fixed_error(png_ptr, text);
+      __kimtoy__png_fixed_error(png_ptr, text);
 
    return (png_fixed_point)r;
 }
@@ -1898,7 +1898,7 @@ png_fixed(png_structp png_ptr, double fp, png_const_charp text)
  * the result, a boolean - true on success, false on overflow.
  */
 int
-png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
+__kimtoy__png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
     png_int_32 divisor)
 {
    /* Return a * times / divisor, rounded. */
@@ -2017,15 +2017,15 @@ png_muldiv(png_fixed_point_p res, png_fixed_point a, png_int_32 times,
  * result.
  */
 png_fixed_point
-png_muldiv_warn(png_structp png_ptr, png_fixed_point a, png_int_32 times,
+__kimtoy__png_muldiv_warn(png_structp png_ptr, png_fixed_point a, png_int_32 times,
     png_int_32 divisor)
 {
    png_fixed_point result;
 
-   if (png_muldiv(&result, a, times, divisor))
+   if (__kimtoy__png_muldiv(&result, a, times, divisor))
       return result;
 
-   png_warning(png_ptr, "fixed point overflow ignored");
+   __kimtoy__png_warning(png_ptr, "fixed point overflow ignored");
    return 0;
 }
 #endif
@@ -2033,7 +2033,7 @@ png_muldiv_warn(png_structp png_ptr, png_fixed_point a, png_int_32 times,
 #ifdef PNG_READ_GAMMA_SUPPORTED /* more fixed point functions for gammma */
 /* Calculate a reciprocal, return 0 on div-by-zero or overflow. */
 png_fixed_point
-png_reciprocal(png_fixed_point a)
+__kimtoy__png_reciprocal(png_fixed_point a)
 {
 #ifdef PNG_FLOATING_ARITHMETIC_SUPPORTED
    double r = floor(1E10/a+.5);
@@ -2043,7 +2043,7 @@ png_reciprocal(png_fixed_point a)
 #else
    png_fixed_point res;
 
-   if (png_muldiv(&res, 100000, 100000, a))
+   if (__kimtoy__png_muldiv(&res, 100000, 100000, a))
       return res;
 #endif
 
@@ -2065,7 +2065,7 @@ png_product2(png_fixed_point a, png_fixed_point b)
 #else
    png_fixed_point res;
 
-   if (png_muldiv(&res, a, b, 100000))
+   if (__kimtoy__png_muldiv(&res, a, b, 100000))
       return res;
 #endif
 
@@ -2074,7 +2074,7 @@ png_product2(png_fixed_point a, png_fixed_point b)
 
 /* The inverse of the above. */
 png_fixed_point
-png_reciprocal2(png_fixed_point a, png_fixed_point b)
+__kimtoy__png_reciprocal2(png_fixed_point a, png_fixed_point b)
 {
    /* The required result is 1/a * 1/b; the following preserves accuracy. */
 #ifdef PNG_FLOATING_ARITHMETIC_SUPPORTED
@@ -2093,7 +2093,7 @@ png_reciprocal2(png_fixed_point a, png_fixed_point b)
    png_fixed_point res = png_product2(a, b);
 
    if (res != 0)
-      return png_reciprocal(res);
+      return __kimtoy__png_reciprocal(res);
 #endif
 
    return 0; /* overflow */
@@ -2119,7 +2119,7 @@ png_reciprocal2(png_fixed_point a, png_fixed_point b)
 */
 
 void /* PRIVATE */
-png_64bit_product (long v1, long v2, unsigned long *hi_product,
+__kimtoy__png_64bit_product (long v1, long v2, unsigned long *hi_product,
     unsigned long *lo_product)
 {
    int a, b, c, d;
@@ -2435,7 +2435,7 @@ png_exp16bit(png_fixed_point lg2)
 #endif /* FLOATING_ARITHMETIC */
 
 png_byte
-png_gamma_8bit_correct(unsigned int value, png_fixed_point gamma_val)
+__kimtoy__png_gamma_8bit_correct(unsigned int value, png_fixed_point gamma_val)
 {
    if (value > 0 && value < 255)
    {
@@ -2446,7 +2446,7 @@ png_gamma_8bit_correct(unsigned int value, png_fixed_point gamma_val)
          png_int_32 lg2 = png_log8bit(value);
          png_fixed_point res;
 
-         if (png_muldiv(&res, gamma_val, lg2, PNG_FP_1))
+         if (__kimtoy__png_muldiv(&res, gamma_val, lg2, PNG_FP_1))
             return png_exp8bit(res);
 
          /* Overflow. */
@@ -2458,7 +2458,7 @@ png_gamma_8bit_correct(unsigned int value, png_fixed_point gamma_val)
 }
 
 png_uint_16
-png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma_val)
+__kimtoy__png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma_val)
 {
    if (value > 0 && value < 65535)
    {
@@ -2469,7 +2469,7 @@ png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma_val)
          png_int_32 lg2 = png_log16bit(value);
          png_fixed_point res;
 
-         if (png_muldiv(&res, gamma_val, lg2, PNG_FP_1))
+         if (__kimtoy__png_muldiv(&res, gamma_val, lg2, PNG_FP_1))
             return png_exp16bit(res);
 
          /* Overflow. */
@@ -2486,21 +2486,21 @@ png_gamma_16bit_correct(unsigned int value, png_fixed_point gamma_val)
  * 8-bit (as are the arguments.)
  */
 png_uint_16 /* PRIVATE */
-png_gamma_correct(png_structp png_ptr, unsigned int value,
+__kimtoy__png_gamma_correct(png_structp png_ptr, unsigned int value,
     png_fixed_point gamma_val)
 {
    if (png_ptr->bit_depth == 8)
-      return png_gamma_8bit_correct(value, gamma_val);
+      return __kimtoy__png_gamma_8bit_correct(value, gamma_val);
 
    else
-      return png_gamma_16bit_correct(value, gamma_val);
+      return __kimtoy__png_gamma_16bit_correct(value, gamma_val);
 }
 
 /* This is the shared test on whether a gamma value is 'significant' - whether
  * it is worth doing gamma correction.
  */
 int /* PRIVATE */
-png_gamma_significant(png_fixed_point gamma_val)
+__kimtoy__png_gamma_significant(png_fixed_point gamma_val)
 {
    return gamma_val < PNG_FP_1 - PNG_GAMMA_THRESHOLD_FIXED ||
        gamma_val > PNG_FP_1 + PNG_GAMMA_THRESHOLD_FIXED;
@@ -2511,11 +2511,11 @@ png_gamma_significant(png_fixed_point gamma_val)
  * to shift the input values right (or 16-number_of_signifiant_bits).
  *
  * The caller is responsible for ensuring that the table gets cleaned up on
- * png_error (i.e. if one of the mallocs below fails) - i.e. the *table argument
+ * __kimtoy__png_error (i.e. if one of the mallocs below fails) - i.e. the *table argument
  * should be somewhere that will be cleaned.
  */
 static void
-png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
+__kimtoy__png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
    PNG_CONST unsigned int shift, PNG_CONST png_fixed_point gamma_val)
 {
    /* Various values derived from 'shift': */
@@ -2525,17 +2525,17 @@ png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
    unsigned int i;
 
    png_uint_16pp table = *ptable =
-       (png_uint_16pp)png_calloc(png_ptr, num * png_sizeof(png_uint_16p));
+       (png_uint_16pp)__kimtoy__png_calloc(png_ptr, num * png_sizeof(png_uint_16p));
 
    for (i = 0; i < num; i++)
    {
       png_uint_16p sub_table = table[i] =
-          (png_uint_16p)png_malloc(png_ptr, 256 * png_sizeof(png_uint_16));
+          (png_uint_16p)__kimtoy__png_malloc(png_ptr, 256 * png_sizeof(png_uint_16));
 
       /* The 'threshold' test is repeated here because it can arise for one of
        * the 16-bit tables even if the others don't hit it.
        */
-      if (png_gamma_significant(gamma_val))
+      if (__kimtoy__png_gamma_significant(gamma_val))
       {
          /* The old code would overflow at the end and this would cause the
           * 'pow' function to return a result >1, resulting in an
@@ -2557,7 +2557,7 @@ png_build_16bit_table(png_structp png_ptr, png_uint_16pp *ptable,
                if (shift)
                   ig = (ig * 65535U + max_by_2)/max;
 
-               sub_table[j] = png_gamma_16bit_correct(ig, gamma_val);
+               sub_table[j] = __kimtoy__png_gamma_16bit_correct(ig, gamma_val);
 #           endif
          }
       }
@@ -2592,14 +2592,14 @@ png_build_16to8_table(png_structp png_ptr, png_uint_16pp *ptable,
    png_uint_32 last;
 
    png_uint_16pp table = *ptable =
-       (png_uint_16pp)png_calloc(png_ptr, num * png_sizeof(png_uint_16p));
+       (png_uint_16pp)__kimtoy__png_calloc(png_ptr, num * png_sizeof(png_uint_16p));
 
    /* 'num' is the number of tables and also the number of low bits of low
     * bits of the input 16-bit value used to select a table.  Each table is
     * itself index by the high 8 bits of the value.
     */
    for (i = 0; i < num; i++)
-      table[i] = (png_uint_16p)png_malloc(png_ptr,
+      table[i] = (png_uint_16p)__kimtoy__png_malloc(png_ptr,
           256 * png_sizeof(png_uint_16));
 
    /* 'gamma_val' is set to the reciprocal of the value calculated above, so
@@ -2625,7 +2625,7 @@ png_build_16to8_table(png_structp png_ptr, png_uint_16pp *ptable,
       png_uint_16 out = (png_uint_16)(i * 257U); /* 16-bit output value */
 
       /* Find the boundary value in 16 bits: */
-      png_uint_32 bound = png_gamma_16bit_correct(out+128U, gamma_val);
+      png_uint_32 bound = __kimtoy__png_gamma_16bit_correct(out+128U, gamma_val);
 
       /* Adjust (round) to (16-shift) bits: */
       bound = (bound * max + 32768U)/65535U + 1U;
@@ -2650,26 +2650,26 @@ png_build_16to8_table(png_structp png_ptr, png_uint_16pp *ptable,
  * (apparently contrary to the spec) so a 256 entry table is always generated.
  */
 static void
-png_build_8bit_table(png_structp png_ptr, png_bytepp ptable,
+__kimtoy__png_build_8bit_table(png_structp png_ptr, png_bytepp ptable,
    PNG_CONST png_fixed_point gamma_val)
 {
    unsigned int i;
-   png_bytep table = *ptable = (png_bytep)png_malloc(png_ptr, 256);
+   png_bytep table = *ptable = (png_bytep)__kimtoy__png_malloc(png_ptr, 256);
 
-   if (png_gamma_significant(gamma_val)) for (i=0; i<256; i++)
-      table[i] = png_gamma_8bit_correct(i, gamma_val);
+   if (__kimtoy__png_gamma_significant(gamma_val)) for (i=0; i<256; i++)
+      table[i] = __kimtoy__png_gamma_8bit_correct(i, gamma_val);
 
    else for (i=0; i<256; ++i)
       table[i] = (png_byte)i;
 }
 
-/* Used from png_read_destroy and below to release the memory used by the gamma
+/* Used from __kimtoy__png_read_destroy and below to release the memory used by the gamma
  * tables.
  */
 void /* PRIVATE */
-png_destroy_gamma_table(png_structp png_ptr)
+__kimtoy__png_destroy_gamma_table(png_structp png_ptr)
 {
-   png_free(png_ptr, png_ptr->gamma_table);
+   __kimtoy__png_free(png_ptr, png_ptr->gamma_table);
    png_ptr->gamma_table = NULL;
 
    if (png_ptr->gamma_16_table != NULL)
@@ -2678,18 +2678,18 @@ png_destroy_gamma_table(png_structp png_ptr)
       int istop = (1 << (8 - png_ptr->gamma_shift));
       for (i = 0; i < istop; i++)
       {
-         png_free(png_ptr, png_ptr->gamma_16_table[i]);
+         __kimtoy__png_free(png_ptr, png_ptr->gamma_16_table[i]);
       }
-   png_free(png_ptr, png_ptr->gamma_16_table);
+   __kimtoy__png_free(png_ptr, png_ptr->gamma_16_table);
    png_ptr->gamma_16_table = NULL;
    }
 
 #if defined(PNG_READ_BACKGROUND_SUPPORTED) || \
    defined(PNG_READ_ALPHA_MODE_SUPPORTED) || \
    defined(PNG_READ_RGB_TO_GRAY_SUPPORTED)
-   png_free(png_ptr, png_ptr->gamma_from_1);
+   __kimtoy__png_free(png_ptr, png_ptr->gamma_from_1);
    png_ptr->gamma_from_1 = NULL;
-   png_free(png_ptr, png_ptr->gamma_to_1);
+   __kimtoy__png_free(png_ptr, png_ptr->gamma_to_1);
    png_ptr->gamma_to_1 = NULL;
 
    if (png_ptr->gamma_16_from_1 != NULL)
@@ -2698,9 +2698,9 @@ png_destroy_gamma_table(png_structp png_ptr)
       int istop = (1 << (8 - png_ptr->gamma_shift));
       for (i = 0; i < istop; i++)
       {
-         png_free(png_ptr, png_ptr->gamma_16_from_1[i]);
+         __kimtoy__png_free(png_ptr, png_ptr->gamma_16_from_1[i]);
       }
-   png_free(png_ptr, png_ptr->gamma_16_from_1);
+   __kimtoy__png_free(png_ptr, png_ptr->gamma_16_from_1);
    png_ptr->gamma_16_from_1 = NULL;
    }
    if (png_ptr->gamma_16_to_1 != NULL)
@@ -2709,9 +2709,9 @@ png_destroy_gamma_table(png_structp png_ptr)
       int istop = (1 << (8 - png_ptr->gamma_shift));
       for (i = 0; i < istop; i++)
       {
-         png_free(png_ptr, png_ptr->gamma_16_to_1[i]);
+         __kimtoy__png_free(png_ptr, png_ptr->gamma_16_to_1[i]);
       }
-   png_free(png_ptr, png_ptr->gamma_16_to_1);
+   __kimtoy__png_free(png_ptr, png_ptr->gamma_16_to_1);
    png_ptr->gamma_16_to_1 = NULL;
    }
 #endif /* READ_BACKGROUND || READ_ALPHA_MODE || RGB_TO_GRAY */
@@ -2723,26 +2723,26 @@ png_destroy_gamma_table(png_structp png_ptr)
  * we don't need to allocate > 64K chunks for a full 16-bit table.
  */
 void /* PRIVATE */
-png_build_gamma_table(png_structp png_ptr, int bit_depth)
+__kimtoy__png_build_gamma_table(png_structp png_ptr, int bit_depth)
 {
-  png_debug(1, "in png_build_gamma_table");
+  png_debug(1, "in __kimtoy__png_build_gamma_table");
 
   /* Remove any existing table; this copes with multiple calls to
-   * png_read_update_info.  The warning is because building the gamma tables
+   * __kimtoy__png_read_update_info.  The warning is because building the gamma tables
    * multiple times is a performance hit - it's harmless but the ability to call
-   * png_read_update_info() multiple times is new in 1.5.6 so it seems sensible
+   * __kimtoy__png_read_update_info() multiple times is new in 1.5.6 so it seems sensible
    * to warn if the app introduces such a hit.
    */
   if (png_ptr->gamma_table != NULL || png_ptr->gamma_16_table != NULL)
   {
-    png_warning(png_ptr, "gamma table being rebuilt");
-    png_destroy_gamma_table(png_ptr);
+    __kimtoy__png_warning(png_ptr, "gamma table being rebuilt");
+    __kimtoy__png_destroy_gamma_table(png_ptr);
   }
 
   if (bit_depth <= 8)
   {
-     png_build_8bit_table(png_ptr, &png_ptr->gamma_table,
-         png_ptr->screen_gamma > 0 ?  png_reciprocal2(png_ptr->gamma,
+     __kimtoy__png_build_8bit_table(png_ptr, &png_ptr->gamma_table,
+         png_ptr->screen_gamma > 0 ?  __kimtoy__png_reciprocal2(png_ptr->gamma,
          png_ptr->screen_gamma) : PNG_FP_1);
 
 #if defined(PNG_READ_BACKGROUND_SUPPORTED) || \
@@ -2750,11 +2750,11 @@ png_build_gamma_table(png_structp png_ptr, int bit_depth)
    defined(PNG_READ_RGB_TO_GRAY_SUPPORTED)
      if (png_ptr->transformations & (PNG_COMPOSE | PNG_RGB_TO_GRAY))
      {
-        png_build_8bit_table(png_ptr, &png_ptr->gamma_to_1,
-            png_reciprocal(png_ptr->gamma));
+        __kimtoy__png_build_8bit_table(png_ptr, &png_ptr->gamma_to_1,
+            __kimtoy__png_reciprocal(png_ptr->gamma));
 
-        png_build_8bit_table(png_ptr, &png_ptr->gamma_from_1,
-            png_ptr->screen_gamma > 0 ?  png_reciprocal(png_ptr->screen_gamma) :
+        __kimtoy__png_build_8bit_table(png_ptr, &png_ptr->gamma_from_1,
+            png_ptr->screen_gamma > 0 ?  __kimtoy__png_reciprocal(png_ptr->screen_gamma) :
             png_ptr->gamma/* Probably doing rgb_to_gray */);
      }
 #endif /* READ_BACKGROUND || READ_ALPHA_MODE || RGB_TO_GRAY */
@@ -2829,8 +2829,8 @@ png_build_gamma_table(png_structp png_ptr, int bit_depth)
 
 #ifdef PNG_16BIT_SUPPORTED
      else
-         png_build_16bit_table(png_ptr, &png_ptr->gamma_16_table, shift,
-         png_ptr->screen_gamma > 0 ? png_reciprocal2(png_ptr->gamma,
+         __kimtoy__png_build_16bit_table(png_ptr, &png_ptr->gamma_16_table, shift,
+         png_ptr->screen_gamma > 0 ? __kimtoy__png_reciprocal2(png_ptr->gamma,
          png_ptr->screen_gamma) : PNG_FP_1);
 #endif
 
@@ -2839,15 +2839,15 @@ png_build_gamma_table(png_structp png_ptr, int bit_depth)
    defined(PNG_READ_RGB_TO_GRAY_SUPPORTED)
      if (png_ptr->transformations & (PNG_COMPOSE | PNG_RGB_TO_GRAY))
      {
-        png_build_16bit_table(png_ptr, &png_ptr->gamma_16_to_1, shift,
-            png_reciprocal(png_ptr->gamma));
+        __kimtoy__png_build_16bit_table(png_ptr, &png_ptr->gamma_16_to_1, shift,
+            __kimtoy__png_reciprocal(png_ptr->gamma));
 
         /* Notice that the '16 from 1' table should be full precision, however
          * the lookup on this table still uses gamma_shift, so it can't be.
          * TODO: fix this.
          */
-        png_build_16bit_table(png_ptr, &png_ptr->gamma_16_from_1, shift,
-            png_ptr->screen_gamma > 0 ? png_reciprocal(png_ptr->screen_gamma) :
+        __kimtoy__png_build_16bit_table(png_ptr, &png_ptr->gamma_16_from_1, shift,
+            png_ptr->screen_gamma > 0 ? __kimtoy__png_reciprocal(png_ptr->screen_gamma) :
             png_ptr->gamma/* Probably doing rgb_to_gray */);
      }
 #endif /* READ_BACKGROUND || READ_ALPHA_MODE || RGB_TO_GRAY */

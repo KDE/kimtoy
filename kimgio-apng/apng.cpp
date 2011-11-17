@@ -23,6 +23,7 @@
 
 #ifdef USE_INTERNAL_PNG
 #include "libpng-apng/png.h"
+#include "apnginternal.h"
 #else // USE_INTERNAL_PNG
 #include <png.h>
 #endif // USE_INTERNAL_PNG

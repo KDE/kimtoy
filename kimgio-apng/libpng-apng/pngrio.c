@@ -15,7 +15,7 @@
  * arguments as this and performs a similar function, but that possibly
  * has a different input method.  Note that you shouldn't change this
  * function, but rather write a replacement function and then make
- * libpng use it at run time with png_set_read_fn(...).
+ * libpng use it at run time with __kimtoy__png_set_read_fn(...).
  */
 
 #include "pngpriv.h"
@@ -29,7 +29,7 @@
  * to read more then 64K on a 16 bit machine.
  */
 void /* PRIVATE */
-png_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
+__kimtoy__png_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
    png_debug1(4, "reading %d bytes", (int)length);
 
@@ -37,18 +37,18 @@ png_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
       (*(png_ptr->read_data_fn))(png_ptr, data, length);
 
    else
-      png_error(png_ptr, "Call to NULL read function");
+      __kimtoy__png_error(png_ptr, "Call to NULL read function");
 }
 
 #ifdef PNG_STDIO_SUPPORTED
 /* This is the function that does the actual reading of data.  If you are
  * not reading from a standard C stream, you should create a replacement
- * read_data function and use it at run time with png_set_read_fn(), rather
+ * read_data function and use it at run time with __kimtoy__png_set_read_fn(), rather
  * than changing the library.
  */
 #  ifndef USE_FAR_KEYWORD
 void PNGCBAPI
-png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
+__kimtoy__png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
    png_size_t check;
 
@@ -61,7 +61,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
    check = fread(data, 1, length, (png_FILE_p)png_ptr->io_ptr);
 
    if (check != length)
-      png_error(png_ptr, "Read Error");
+      __kimtoy__png_error(png_ptr, "Read Error");
 }
 #  else
 /* This is the model-independent version. Since the standard I/O library
@@ -73,7 +73,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 #define MIN(a,b) (a <= b ? a : b)
 
 static void PNGCBAPI
-png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
+__kimtoy__png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
    png_size_t check;
    png_byte *n_data;
@@ -117,7 +117,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
    }
 
    if ((png_uint_32)check != (png_uint_32)length)
-      png_error(png_ptr, "read Error");
+      __kimtoy__png_error(png_ptr, "read Error");
 }
 #  endif
 #endif
@@ -137,12 +137,12 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
  *                a location where input data can be stored, and a 32-bit
  *                unsigned int that is the number of bytes to be read.
  *                To exit and output any fatal error messages the new write
- *                function should call png_error(png_ptr, "Error msg").
+ *                function should call __kimtoy__png_error(png_ptr, "Error msg").
  *                May be NULL, in which case libpng's default function will
  *                be used.
  */
 void PNGAPI
-png_set_read_fn(png_structp png_ptr, png_voidp io_ptr,
+__kimtoy__png_set_read_fn(png_structp png_ptr, png_voidp io_ptr,
    png_rw_ptr read_data_fn)
 {
    if (png_ptr == NULL)
@@ -155,7 +155,7 @@ png_set_read_fn(png_structp png_ptr, png_voidp io_ptr,
       png_ptr->read_data_fn = read_data_fn;
 
    else
-      png_ptr->read_data_fn = png_default_read_data;
+      png_ptr->read_data_fn = __kimtoy__png_default_read_data;
 #else
    png_ptr->read_data_fn = read_data_fn;
 #endif
@@ -164,7 +164,7 @@ png_set_read_fn(png_structp png_ptr, png_voidp io_ptr,
    if (png_ptr->write_data_fn != NULL)
    {
       png_ptr->write_data_fn = NULL;
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Can't set both read_data_fn and write_data_fn in the"
           " same structure");
    }

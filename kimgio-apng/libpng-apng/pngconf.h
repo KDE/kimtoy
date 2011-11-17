@@ -581,7 +581,7 @@ typedef char            FAR * FAR * FAR * png_charppp;
      typedef unsigned long    png_alloc_size_t;
 #  else
      /* This is an attempt to detect an old Windows system where (int) is
-      * actually 16 bits, in that case png_malloc must have an argument with a
+      * actually 16 bits, in that case __kimtoy__png_malloc must have an argument with a
       * bigger size to accomodate the requirements of the library.
       */
 #    if (defined(_Windows) || defined(_WINDOWS) || defined(_WINDOWS_)) && \

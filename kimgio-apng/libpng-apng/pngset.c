@@ -22,7 +22,7 @@
 
 #ifdef PNG_bKGD_SUPPORTED
 void PNGAPI
-png_set_bKGD(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_bKGD(png_structp png_ptr, png_infop info_ptr,
     png_const_color_16p background)
 {
    png_debug1(1, "in %s storage function", "bKGD");
@@ -37,7 +37,7 @@ png_set_bKGD(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_cHRM_SUPPORTED
 void PNGFAPI
-png_set_cHRM_fixed(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_cHRM_fixed(png_structp png_ptr, png_infop info_ptr,
     png_fixed_point white_x, png_fixed_point white_y, png_fixed_point red_x,
     png_fixed_point red_y, png_fixed_point green_x, png_fixed_point green_y,
     png_fixed_point blue_x, png_fixed_point blue_y)
@@ -48,7 +48,7 @@ png_set_cHRM_fixed(png_structp png_ptr, png_infop info_ptr,
       return;
 
 #  ifdef PNG_CHECK_cHRM_SUPPORTED
-   if (png_check_cHRM_fixed(png_ptr,
+   if (__kimtoy__png_check_cHRM_fixed(png_ptr,
        white_x, white_y, red_x, red_y, green_x, green_y, blue_x, blue_y))
 #  endif
    {
@@ -65,7 +65,7 @@ png_set_cHRM_fixed(png_structp png_ptr, png_infop info_ptr,
 }
 
 void PNGFAPI
-png_set_cHRM_XYZ_fixed(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_cHRM_XYZ_fixed(png_structp png_ptr, png_infop info_ptr,
     png_fixed_point int_red_X, png_fixed_point int_red_Y,
     png_fixed_point int_red_Z, png_fixed_point int_green_X,
     png_fixed_point int_green_Y, png_fixed_point int_green_Z,
@@ -90,45 +90,45 @@ png_set_cHRM_XYZ_fixed(png_structp png_ptr, png_infop info_ptr,
    XYZ.blueY = int_blue_Y;
    XYZ.blueZ = int_blue_Z;
 
-   if (png_xy_from_XYZ(&xy, XYZ))
-      png_error(png_ptr, "XYZ values out of representable range");
+   if (__kimtoy__png_xy_from_XYZ(&xy, XYZ))
+      __kimtoy__png_error(png_ptr, "XYZ values out of representable range");
 
-   png_set_cHRM_fixed(png_ptr, info_ptr, xy.whitex, xy.whitey, xy.redx, xy.redy,
+   __kimtoy__png_set_cHRM_fixed(png_ptr, info_ptr, xy.whitex, xy.whitey, xy.redx, xy.redy,
       xy.greenx, xy.greeny, xy.bluex, xy.bluey);
 }
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
-png_set_cHRM(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_cHRM(png_structp png_ptr, png_infop info_ptr,
     double white_x, double white_y, double red_x, double red_y,
     double green_x, double green_y, double blue_x, double blue_y)
 {
-   png_set_cHRM_fixed(png_ptr, info_ptr,
-      png_fixed(png_ptr, white_x, "cHRM White X"),
-      png_fixed(png_ptr, white_y, "cHRM White Y"),
-      png_fixed(png_ptr, red_x, "cHRM Red X"),
-      png_fixed(png_ptr, red_y, "cHRM Red Y"),
-      png_fixed(png_ptr, green_x, "cHRM Green X"),
-      png_fixed(png_ptr, green_y, "cHRM Green Y"),
-      png_fixed(png_ptr, blue_x, "cHRM Blue X"),
-      png_fixed(png_ptr, blue_y, "cHRM Blue Y"));
+   __kimtoy__png_set_cHRM_fixed(png_ptr, info_ptr,
+      __kimtoy__png_fixed(png_ptr, white_x, "cHRM White X"),
+      __kimtoy__png_fixed(png_ptr, white_y, "cHRM White Y"),
+      __kimtoy__png_fixed(png_ptr, red_x, "cHRM Red X"),
+      __kimtoy__png_fixed(png_ptr, red_y, "cHRM Red Y"),
+      __kimtoy__png_fixed(png_ptr, green_x, "cHRM Green X"),
+      __kimtoy__png_fixed(png_ptr, green_y, "cHRM Green Y"),
+      __kimtoy__png_fixed(png_ptr, blue_x, "cHRM Blue X"),
+      __kimtoy__png_fixed(png_ptr, blue_y, "cHRM Blue Y"));
 }
 
 void PNGAPI
-png_set_cHRM_XYZ(png_structp png_ptr, png_infop info_ptr, double red_X,
+__kimtoy__png_set_cHRM_XYZ(png_structp png_ptr, png_infop info_ptr, double red_X,
     double red_Y, double red_Z, double green_X, double green_Y, double green_Z,
     double blue_X, double blue_Y, double blue_Z)
 {
-   png_set_cHRM_XYZ_fixed(png_ptr, info_ptr,
-      png_fixed(png_ptr, red_X, "cHRM Red X"),
-      png_fixed(png_ptr, red_Y, "cHRM Red Y"),
-      png_fixed(png_ptr, red_Z, "cHRM Red Z"),
-      png_fixed(png_ptr, green_X, "cHRM Red X"),
-      png_fixed(png_ptr, green_Y, "cHRM Red Y"),
-      png_fixed(png_ptr, green_Z, "cHRM Red Z"),
-      png_fixed(png_ptr, blue_X, "cHRM Red X"),
-      png_fixed(png_ptr, blue_Y, "cHRM Red Y"),
-      png_fixed(png_ptr, blue_Z, "cHRM Red Z"));
+   __kimtoy__png_set_cHRM_XYZ_fixed(png_ptr, info_ptr,
+      __kimtoy__png_fixed(png_ptr, red_X, "cHRM Red X"),
+      __kimtoy__png_fixed(png_ptr, red_Y, "cHRM Red Y"),
+      __kimtoy__png_fixed(png_ptr, red_Z, "cHRM Red Z"),
+      __kimtoy__png_fixed(png_ptr, green_X, "cHRM Red X"),
+      __kimtoy__png_fixed(png_ptr, green_Y, "cHRM Red Y"),
+      __kimtoy__png_fixed(png_ptr, green_Z, "cHRM Red Z"),
+      __kimtoy__png_fixed(png_ptr, blue_X, "cHRM Red X"),
+      __kimtoy__png_fixed(png_ptr, blue_Y, "cHRM Red Y"),
+      __kimtoy__png_fixed(png_ptr, blue_Z, "cHRM Red Z"));
 }
 #  endif /* PNG_FLOATING_POINT_SUPPORTED */
 
@@ -136,7 +136,7 @@ png_set_cHRM_XYZ(png_structp png_ptr, png_infop info_ptr, double red_X,
 
 #ifdef PNG_gAMA_SUPPORTED
 void PNGFAPI
-png_set_gAMA_fixed(png_structp png_ptr, png_infop info_ptr, png_fixed_point
+__kimtoy__png_set_gAMA_fixed(png_structp png_ptr, png_infop info_ptr, png_fixed_point
     file_gamma)
 {
    png_debug1(1, "in %s storage function", "gAMA");
@@ -153,7 +153,7 @@ png_set_gAMA_fixed(png_structp png_ptr, png_infop info_ptr, png_fixed_point
     * displays that are all black or all white.)
     */
    if (file_gamma < 16 || file_gamma > 625000000)
-      png_warning(png_ptr, "Out of range gamma value ignored");
+      __kimtoy__png_warning(png_ptr, "Out of range gamma value ignored");
 
    else
    {
@@ -164,17 +164,17 @@ png_set_gAMA_fixed(png_structp png_ptr, png_infop info_ptr, png_fixed_point
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
-png_set_gAMA(png_structp png_ptr, png_infop info_ptr, double file_gamma)
+__kimtoy__png_set_gAMA(png_structp png_ptr, png_infop info_ptr, double file_gamma)
 {
-   png_set_gAMA_fixed(png_ptr, info_ptr, png_fixed(png_ptr, file_gamma,
-       "png_set_gAMA"));
+   __kimtoy__png_set_gAMA_fixed(png_ptr, info_ptr, __kimtoy__png_fixed(png_ptr, file_gamma,
+       "__kimtoy__png_set_gAMA"));
 }
 #  endif
 #endif
 
 #ifdef PNG_hIST_SUPPORTED
 void PNGAPI
-png_set_hIST(png_structp png_ptr, png_infop info_ptr, png_const_uint_16p hist)
+__kimtoy__png_set_hIST(png_structp png_ptr, png_infop info_ptr, png_const_uint_16p hist)
 {
    int i;
 
@@ -186,23 +186,23 @@ png_set_hIST(png_structp png_ptr, png_infop info_ptr, png_const_uint_16p hist)
    if (info_ptr->num_palette == 0 || info_ptr->num_palette
        > PNG_MAX_PALETTE_LENGTH)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Invalid palette size, hIST allocation skipped");
 
       return;
    }
 
-   png_free_data(png_ptr, info_ptr, PNG_FREE_HIST, 0);
+   __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_HIST, 0);
 
    /* Changed from info->num_palette to PNG_MAX_PALETTE_LENGTH in
     * version 1.2.1
     */
-   png_ptr->hist = (png_uint_16p)png_malloc_warn(png_ptr,
+   png_ptr->hist = (png_uint_16p)__kimtoy__png_malloc_warn(png_ptr,
        PNG_MAX_PALETTE_LENGTH * png_sizeof(png_uint_16));
 
    if (png_ptr->hist == NULL)
    {
-      png_warning(png_ptr, "Insufficient memory for hIST chunk data");
+      __kimtoy__png_warning(png_ptr, "Insufficient memory for hIST chunk data");
       return;
    }
 
@@ -216,7 +216,7 @@ png_set_hIST(png_structp png_ptr, png_infop info_ptr, png_const_uint_16p hist)
 #endif
 
 void PNGAPI
-png_set_IHDR(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_IHDR(png_structp png_ptr, png_infop info_ptr,
     png_uint_32 width, png_uint_32 height, int bit_depth,
     int color_type, int interlace_type, int compression_type,
     int filter_type)
@@ -234,7 +234,7 @@ png_set_IHDR(png_structp png_ptr, png_infop info_ptr,
    info_ptr->filter_type = (png_byte)filter_type;
    info_ptr->interlace_type = (png_byte)interlace_type;
 
-   png_check_IHDR (png_ptr, info_ptr->width, info_ptr->height,
+   __kimtoy__png_check_IHDR (png_ptr, info_ptr->width, info_ptr->height,
        info_ptr->bit_depth, info_ptr->color_type, info_ptr->interlace_type,
        info_ptr->compression_type, info_ptr->filter_type);
 
@@ -271,7 +271,7 @@ png_set_IHDR(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_oFFs_SUPPORTED
 void PNGAPI
-png_set_oFFs(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_oFFs(png_structp png_ptr, png_infop info_ptr,
     png_int_32 offset_x, png_int_32 offset_y, int unit_type)
 {
    png_debug1(1, "in %s storage function", "oFFs");
@@ -288,7 +288,7 @@ png_set_oFFs(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_pCAL_SUPPORTED
 void PNGAPI
-png_set_pCAL(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_pCAL(png_structp png_ptr, png_infop info_ptr,
     png_const_charp purpose, png_int_32 X0, png_int_32 X1, int type,
     int nparams, png_const_charp units, png_charpp params)
 {
@@ -308,18 +308,18 @@ png_set_pCAL(png_structp png_ptr, png_infop info_ptr,
 
    /* Check that the type matches the specification. */
    if (type < 0 || type > 3)
-      png_error(png_ptr, "Invalid pCAL equation type");
+      __kimtoy__png_error(png_ptr, "Invalid pCAL equation type");
 
    /* Validate params[nparams] */
    for (i=0; i<nparams; ++i)
-      if (!png_check_fp_string(params[i], png_strlen(params[i])))
-         png_error(png_ptr, "Invalid format for pCAL parameter");
+      if (!__kimtoy__png_check_fp_string(params[i], png_strlen(params[i])))
+         __kimtoy__png_error(png_ptr, "Invalid format for pCAL parameter");
 
-   info_ptr->pcal_purpose = (png_charp)png_malloc_warn(png_ptr, length);
+   info_ptr->pcal_purpose = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length);
 
    if (info_ptr->pcal_purpose == NULL)
    {
-      png_warning(png_ptr, "Insufficient memory for pCAL purpose");
+      __kimtoy__png_warning(png_ptr, "Insufficient memory for pCAL purpose");
       return;
    }
 
@@ -335,22 +335,22 @@ png_set_pCAL(png_structp png_ptr, png_infop info_ptr,
    png_debug1(3, "allocating units for info (%lu bytes)",
      (unsigned long)length);
 
-   info_ptr->pcal_units = (png_charp)png_malloc_warn(png_ptr, length);
+   info_ptr->pcal_units = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length);
 
    if (info_ptr->pcal_units == NULL)
    {
-      png_warning(png_ptr, "Insufficient memory for pCAL units");
+      __kimtoy__png_warning(png_ptr, "Insufficient memory for pCAL units");
       return;
    }
 
    png_memcpy(info_ptr->pcal_units, units, length);
 
-   info_ptr->pcal_params = (png_charpp)png_malloc_warn(png_ptr,
+   info_ptr->pcal_params = (png_charpp)__kimtoy__png_malloc_warn(png_ptr,
        (png_size_t)((nparams + 1) * png_sizeof(png_charp)));
 
    if (info_ptr->pcal_params == NULL)
    {
-      png_warning(png_ptr, "Insufficient memory for pCAL params");
+      __kimtoy__png_warning(png_ptr, "Insufficient memory for pCAL params");
       return;
    }
 
@@ -362,11 +362,11 @@ png_set_pCAL(png_structp png_ptr, png_infop info_ptr,
       png_debug2(3, "allocating parameter %d for info (%lu bytes)", i,
           (unsigned long)length);
 
-      info_ptr->pcal_params[i] = (png_charp)png_malloc_warn(png_ptr, length);
+      info_ptr->pcal_params[i] = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length);
 
       if (info_ptr->pcal_params[i] == NULL)
       {
-         png_warning(png_ptr, "Insufficient memory for pCAL parameter");
+         __kimtoy__png_warning(png_ptr, "Insufficient memory for pCAL parameter");
          return;
       }
 
@@ -380,7 +380,7 @@ png_set_pCAL(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_sCAL_SUPPORTED
 void PNGAPI
-png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
     int unit, png_const_charp swidth, png_const_charp sheight)
 {
    png_size_t lengthw = 0, lengthh = 0;
@@ -394,15 +394,15 @@ png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
     * unit unless this is an API call.)
     */
    if (unit != 1 && unit != 2)
-      png_error(png_ptr, "Invalid sCAL unit");
+      __kimtoy__png_error(png_ptr, "Invalid sCAL unit");
 
    if (swidth == NULL || (lengthw = png_strlen(swidth)) == 0 ||
-       swidth[0] == 45 /* '-' */ || !png_check_fp_string(swidth, lengthw))
-      png_error(png_ptr, "Invalid sCAL width");
+       swidth[0] == 45 /* '-' */ || !__kimtoy__png_check_fp_string(swidth, lengthw))
+      __kimtoy__png_error(png_ptr, "Invalid sCAL width");
 
    if (sheight == NULL || (lengthh = png_strlen(sheight)) == 0 ||
-       sheight[0] == 45 /* '-' */ || !png_check_fp_string(sheight, lengthh))
-      png_error(png_ptr, "Invalid sCAL height");
+       sheight[0] == 45 /* '-' */ || !__kimtoy__png_check_fp_string(sheight, lengthh))
+      __kimtoy__png_error(png_ptr, "Invalid sCAL height");
 
    info_ptr->scal_unit = (png_byte)unit;
 
@@ -410,11 +410,11 @@ png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
 
    png_debug1(3, "allocating unit for info (%u bytes)", (unsigned int)lengthw);
 
-   info_ptr->scal_s_width = (png_charp)png_malloc_warn(png_ptr, lengthw);
+   info_ptr->scal_s_width = (png_charp)__kimtoy__png_malloc_warn(png_ptr, lengthw);
 
    if (info_ptr->scal_s_width == NULL)
    {
-      png_warning(png_ptr, "Memory allocation failed while processing sCAL");
+      __kimtoy__png_warning(png_ptr, "Memory allocation failed while processing sCAL");
       return;
    }
 
@@ -424,14 +424,14 @@ png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
 
    png_debug1(3, "allocating unit for info (%u bytes)", (unsigned int)lengthh);
 
-   info_ptr->scal_s_height = (png_charp)png_malloc_warn(png_ptr, lengthh);
+   info_ptr->scal_s_height = (png_charp)__kimtoy__png_malloc_warn(png_ptr, lengthh);
 
    if (info_ptr->scal_s_height == NULL)
    {
-      png_free (png_ptr, info_ptr->scal_s_width);
+      __kimtoy__png_free (png_ptr, info_ptr->scal_s_width);
       info_ptr->scal_s_width = NULL;
 
-      png_warning(png_ptr, "Memory allocation failed while processing sCAL");
+      __kimtoy__png_warning(png_ptr, "Memory allocation failed while processing sCAL");
       return;
    }
 
@@ -443,17 +443,17 @@ png_set_sCAL_s(png_structp png_ptr, png_infop info_ptr,
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
-png_set_sCAL(png_structp png_ptr, png_infop info_ptr, int unit, double width,
+__kimtoy__png_set_sCAL(png_structp png_ptr, png_infop info_ptr, int unit, double width,
     double height)
 {
    png_debug1(1, "in %s storage function", "sCAL");
 
    /* Check the arguments. */
    if (width <= 0)
-      png_warning(png_ptr, "Invalid sCAL width ignored");
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL width ignored");
 
    else if (height <= 0)
-      png_warning(png_ptr, "Invalid sCAL height ignored");
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL height ignored");
 
    else
    {
@@ -461,29 +461,29 @@ png_set_sCAL(png_structp png_ptr, png_infop info_ptr, int unit, double width,
       char swidth[PNG_sCAL_MAX_DIGITS+1];
       char sheight[PNG_sCAL_MAX_DIGITS+1];
 
-      png_ascii_from_fp(png_ptr, swidth, sizeof swidth, width,
+      __kimtoy__png_ascii_from_fp(png_ptr, swidth, sizeof swidth, width,
          PNG_sCAL_PRECISION);
-      png_ascii_from_fp(png_ptr, sheight, sizeof sheight, height,
+      __kimtoy__png_ascii_from_fp(png_ptr, sheight, sizeof sheight, height,
          PNG_sCAL_PRECISION);
 
-      png_set_sCAL_s(png_ptr, info_ptr, unit, swidth, sheight);
+      __kimtoy__png_set_sCAL_s(png_ptr, info_ptr, unit, swidth, sheight);
    }
 }
 #  endif
 
 #  ifdef PNG_FIXED_POINT_SUPPORTED
 void PNGAPI
-png_set_sCAL_fixed(png_structp png_ptr, png_infop info_ptr, int unit,
+__kimtoy__png_set_sCAL_fixed(png_structp png_ptr, png_infop info_ptr, int unit,
     png_fixed_point width, png_fixed_point height)
 {
    png_debug1(1, "in %s storage function", "sCAL");
 
    /* Check the arguments. */
    if (width <= 0)
-      png_warning(png_ptr, "Invalid sCAL width ignored");
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL width ignored");
 
    else if (height <= 0)
-      png_warning(png_ptr, "Invalid sCAL height ignored");
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL height ignored");
 
    else
    {
@@ -491,10 +491,10 @@ png_set_sCAL_fixed(png_structp png_ptr, png_infop info_ptr, int unit,
       char swidth[PNG_sCAL_MAX_DIGITS+1];
       char sheight[PNG_sCAL_MAX_DIGITS+1];
 
-      png_ascii_from_fixed(png_ptr, swidth, sizeof swidth, width);
-      png_ascii_from_fixed(png_ptr, sheight, sizeof sheight, height);
+      __kimtoy__png_ascii_from_fixed(png_ptr, swidth, sizeof swidth, width);
+      __kimtoy__png_ascii_from_fixed(png_ptr, sheight, sizeof sheight, height);
 
-      png_set_sCAL_s(png_ptr, info_ptr, unit, swidth, sheight);
+      __kimtoy__png_set_sCAL_s(png_ptr, info_ptr, unit, swidth, sheight);
    }
 }
 #  endif
@@ -502,7 +502,7 @@ png_set_sCAL_fixed(png_structp png_ptr, png_infop info_ptr, int unit,
 
 #ifdef PNG_pHYs_SUPPORTED
 void PNGAPI
-png_set_pHYs(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_pHYs(png_structp png_ptr, png_infop info_ptr,
     png_uint_32 res_x, png_uint_32 res_y, int unit_type)
 {
    png_debug1(1, "in %s storage function", "pHYs");
@@ -518,7 +518,7 @@ png_set_pHYs(png_structp png_ptr, png_infop info_ptr,
 #endif
 
 void PNGAPI
-png_set_PLTE(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_PLTE(png_structp png_ptr, png_infop info_ptr,
     png_const_colorp palette, int num_palette)
 {
 
@@ -530,26 +530,26 @@ png_set_PLTE(png_structp png_ptr, png_infop info_ptr,
    if (num_palette < 0 || num_palette > PNG_MAX_PALETTE_LENGTH)
    {
       if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
-         png_error(png_ptr, "Invalid palette length");
+         __kimtoy__png_error(png_ptr, "Invalid palette length");
 
       else
       {
-         png_warning(png_ptr, "Invalid palette length");
+         __kimtoy__png_warning(png_ptr, "Invalid palette length");
          return;
       }
    }
 
    /* It may not actually be necessary to set png_ptr->palette here;
-    * we do it for backward compatibility with the way the png_handle_tRNS
+    * we do it for backward compatibility with the way the __kimtoy__png_handle_tRNS
     * function used to do the allocation.
     */
-   png_free_data(png_ptr, info_ptr, PNG_FREE_PLTE, 0);
+   __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_PLTE, 0);
 
    /* Changed in libpng-1.2.1 to allocate PNG_MAX_PALETTE_LENGTH instead
     * of num_palette entries, in case of an invalid PNG file that has
     * too-large sample values.
     */
-   png_ptr->palette = (png_colorp)png_calloc(png_ptr,
+   png_ptr->palette = (png_colorp)__kimtoy__png_calloc(png_ptr,
        PNG_MAX_PALETTE_LENGTH * png_sizeof(png_color));
 
    png_memcpy(png_ptr->palette, palette, num_palette * png_sizeof(png_color));
@@ -563,7 +563,7 @@ png_set_PLTE(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_sBIT_SUPPORTED
 void PNGAPI
-png_set_sBIT(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_sBIT(png_structp png_ptr, png_infop info_ptr,
     png_const_color_8p sig_bit)
 {
    png_debug1(1, "in %s storage function", "sBIT");
@@ -578,7 +578,7 @@ png_set_sBIT(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_sRGB_SUPPORTED
 void PNGAPI
-png_set_sRGB(png_structp png_ptr, png_infop info_ptr, int srgb_intent)
+__kimtoy__png_set_sRGB(png_structp png_ptr, png_infop info_ptr, int srgb_intent)
 {
    png_debug1(1, "in %s storage function", "sRGB");
 
@@ -590,7 +590,7 @@ png_set_sRGB(png_structp png_ptr, png_infop info_ptr, int srgb_intent)
 }
 
 void PNGAPI
-png_set_sRGB_gAMA_and_cHRM(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_sRGB_gAMA_and_cHRM(png_structp png_ptr, png_infop info_ptr,
     int srgb_intent)
 {
    png_debug1(1, "in %s storage function", "sRGB_gAMA_and_cHRM");
@@ -598,14 +598,14 @@ png_set_sRGB_gAMA_and_cHRM(png_structp png_ptr, png_infop info_ptr,
    if (png_ptr == NULL || info_ptr == NULL)
       return;
 
-   png_set_sRGB(png_ptr, info_ptr, srgb_intent);
+   __kimtoy__png_set_sRGB(png_ptr, info_ptr, srgb_intent);
 
 #  ifdef PNG_gAMA_SUPPORTED
-   png_set_gAMA_fixed(png_ptr, info_ptr, PNG_GAMMA_sRGB_INVERSE);
+   __kimtoy__png_set_gAMA_fixed(png_ptr, info_ptr, PNG_GAMMA_sRGB_INVERSE);
 #  endif
 
 #  ifdef PNG_cHRM_SUPPORTED
-   png_set_cHRM_fixed(png_ptr, info_ptr,
+   __kimtoy__png_set_cHRM_fixed(png_ptr, info_ptr,
       /* color      x       y */
       /* white */ 31270, 32900,
       /* red   */ 64000, 33000,
@@ -619,7 +619,7 @@ png_set_sRGB_gAMA_and_cHRM(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_iCCP_SUPPORTED
 void PNGAPI
-png_set_iCCP(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_iCCP(png_structp png_ptr, png_infop info_ptr,
     png_const_charp name, int compression_type,
     png_const_bytep profile, png_uint_32 proflen)
 {
@@ -633,28 +633,28 @@ png_set_iCCP(png_structp png_ptr, png_infop info_ptr,
       return;
 
    length = png_strlen(name)+1;
-   new_iccp_name = (png_charp)png_malloc_warn(png_ptr, length);
+   new_iccp_name = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length);
 
    if (new_iccp_name == NULL)
    {
-        png_warning(png_ptr, "Insufficient memory to process iCCP chunk");
+        __kimtoy__png_warning(png_ptr, "Insufficient memory to process iCCP chunk");
       return;
    }
 
    png_memcpy(new_iccp_name, name, length);
-   new_iccp_profile = (png_bytep)png_malloc_warn(png_ptr, proflen);
+   new_iccp_profile = (png_bytep)__kimtoy__png_malloc_warn(png_ptr, proflen);
 
    if (new_iccp_profile == NULL)
    {
-      png_free (png_ptr, new_iccp_name);
-      png_warning(png_ptr,
+      __kimtoy__png_free (png_ptr, new_iccp_name);
+      __kimtoy__png_warning(png_ptr,
           "Insufficient memory to process iCCP profile");
       return;
    }
 
    png_memcpy(new_iccp_profile, profile, (png_size_t)proflen);
 
-   png_free_data(png_ptr, info_ptr, PNG_FREE_ICCP, 0);
+   __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_ICCP, 0);
 
    info_ptr->iccp_proflen = proflen;
    info_ptr->iccp_name = new_iccp_name;
@@ -670,18 +670,18 @@ png_set_iCCP(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_TEXT_SUPPORTED
 void PNGAPI
-png_set_text(png_structp png_ptr, png_infop info_ptr, png_const_textp text_ptr,
+__kimtoy__png_set_text(png_structp png_ptr, png_infop info_ptr, png_const_textp text_ptr,
     int num_text)
 {
    int ret;
-   ret = png_set_text_2(png_ptr, info_ptr, text_ptr, num_text);
+   ret = __kimtoy__png_set_text_2(png_ptr, info_ptr, text_ptr, num_text);
 
    if (ret)
-      png_error(png_ptr, "Insufficient memory to store text");
+      __kimtoy__png_error(png_ptr, "Insufficient memory to store text");
 }
 
 int /* PRIVATE */
-png_set_text_2(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_text_2(png_structp png_ptr, png_infop info_ptr,
     png_const_textp text_ptr, int num_text)
 {
    int i;
@@ -705,25 +705,25 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr,
          old_max = info_ptr->max_text;
          info_ptr->max_text = info_ptr->num_text + num_text + 8;
          old_text = info_ptr->text;
-         info_ptr->text = (png_textp)png_malloc_warn(png_ptr,
+         info_ptr->text = (png_textp)__kimtoy__png_malloc_warn(png_ptr,
             (png_size_t)(info_ptr->max_text * png_sizeof(png_text)));
 
          if (info_ptr->text == NULL)
          {
-            png_free(png_ptr, old_text);
+            __kimtoy__png_free(png_ptr, old_text);
             return(1);
          }
 
          png_memcpy(info_ptr->text, old_text, (png_size_t)(old_max *
              png_sizeof(png_text)));
-         png_free(png_ptr, old_text);
+         __kimtoy__png_free(png_ptr, old_text);
       }
 
       else
       {
          info_ptr->max_text = num_text + 8;
          info_ptr->num_text = 0;
-         info_ptr->text = (png_textp)png_malloc_warn(png_ptr,
+         info_ptr->text = (png_textp)__kimtoy__png_malloc_warn(png_ptr,
              (png_size_t)(info_ptr->max_text * png_sizeof(png_text)));
          if (info_ptr->text == NULL)
             return(1);
@@ -745,7 +745,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr,
       if (text_ptr[i].compression < PNG_TEXT_COMPRESSION_NONE ||
           text_ptr[i].compression >= PNG_TEXT_COMPRESSION_LAST)
       {
-         png_warning(png_ptr, "text compression mode is out of range");
+         __kimtoy__png_warning(png_ptr, "text compression mode is out of range");
          continue;
       }
 
@@ -776,7 +776,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr,
       }
 #  else /* PNG_iTXt_SUPPORTED */
       {
-         png_warning(png_ptr, "iTXt chunk not supported");
+         __kimtoy__png_warning(png_ptr, "iTXt chunk not supported");
          continue;
       }
 #  endif
@@ -799,14 +799,14 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr,
          textp->compression = text_ptr[i].compression;
       }
 
-      textp->key = (png_charp)png_malloc_warn(png_ptr,
+      textp->key = (png_charp)__kimtoy__png_malloc_warn(png_ptr,
           (png_size_t)
           (key_len + text_length + lang_len + lang_key_len + 4));
 
       if (textp->key == NULL)
          return(1);
 
-      png_debug2(2, "Allocated %lu bytes at %p in png_set_text",
+      png_debug2(2, "Allocated %lu bytes at %p in __kimtoy__png_set_text",
           (unsigned long)(png_uint_32)
           (key_len + lang_len + lang_key_len + text_length + 4),
           textp->key);
@@ -861,7 +861,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_tIME_SUPPORTED
 void PNGAPI
-png_set_tIME(png_structp png_ptr, png_infop info_ptr, png_const_timep mod_time)
+__kimtoy__png_set_tIME(png_structp png_ptr, png_infop info_ptr, png_const_timep mod_time)
 {
    png_debug1(1, "in %s storage function", "tIME");
 
@@ -876,7 +876,7 @@ png_set_tIME(png_structp png_ptr, png_infop info_ptr, png_const_timep mod_time)
 
 #ifdef PNG_tRNS_SUPPORTED
 void PNGAPI
-png_set_tRNS(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_tRNS(png_structp png_ptr, png_infop info_ptr,
     png_const_bytep trans_alpha, int num_trans, png_const_color_16p trans_color)
 {
    png_debug1(1, "in %s storage function", "tRNS");
@@ -887,15 +887,15 @@ png_set_tRNS(png_structp png_ptr, png_infop info_ptr,
    if (trans_alpha != NULL)
    {
        /* It may not actually be necessary to set png_ptr->trans_alpha here;
-        * we do it for backward compatibility with the way the png_handle_tRNS
+        * we do it for backward compatibility with the way the __kimtoy__png_handle_tRNS
         * function used to do the allocation.
         */
 
-       png_free_data(png_ptr, info_ptr, PNG_FREE_TRNS, 0);
+       __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_TRNS, 0);
 
        /* Changed from num_trans to PNG_MAX_PALETTE_LENGTH in version 1.2.1 */
        png_ptr->trans_alpha = info_ptr->trans_alpha =
-           (png_bytep)png_malloc(png_ptr, (png_size_t)PNG_MAX_PALETTE_LENGTH);
+           (png_bytep)__kimtoy__png_malloc(png_ptr, (png_size_t)PNG_MAX_PALETTE_LENGTH);
 
        if (num_trans > 0 && num_trans <= PNG_MAX_PALETTE_LENGTH)
           png_memcpy(info_ptr->trans_alpha, trans_alpha, (png_size_t)num_trans);
@@ -911,7 +911,7 @@ png_set_tRNS(png_structp png_ptr, png_infop info_ptr,
           ((int)trans_color->red > sample_max ||
           (int)trans_color->green > sample_max ||
           (int)trans_color->blue > sample_max)))
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
             "tRNS chunk has out-of-range samples for bit_depth");
 
       png_memcpy(&(info_ptr->trans_color), trans_color,
@@ -933,7 +933,7 @@ png_set_tRNS(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_sPLT_SUPPORTED
 void PNGAPI
-png_set_sPLT(png_structp png_ptr,
+__kimtoy__png_set_sPLT(png_structp png_ptr,
     png_infop info_ptr, png_const_sPLT_tp entries, int nentries)
 /*
  *  entries        - array of png_sPLT_t structures
@@ -950,20 +950,20 @@ png_set_sPLT(png_structp png_ptr,
    if (png_ptr == NULL || info_ptr == NULL)
       return;
 
-   np = (png_sPLT_tp)png_malloc_warn(png_ptr,
+   np = (png_sPLT_tp)__kimtoy__png_malloc_warn(png_ptr,
        (info_ptr->splt_palettes_num + nentries) *
        (png_size_t)png_sizeof(png_sPLT_t));
 
    if (np == NULL)
    {
-      png_warning(png_ptr, "No memory for sPLT palettes");
+      __kimtoy__png_warning(png_ptr, "No memory for sPLT palettes");
       return;
    }
 
    png_memcpy(np, info_ptr->splt_palettes,
        info_ptr->splt_palettes_num * png_sizeof(png_sPLT_t));
 
-   png_free(png_ptr, info_ptr->splt_palettes);
+   __kimtoy__png_free(png_ptr, info_ptr->splt_palettes);
    info_ptr->splt_palettes=NULL;
 
    for (i = 0; i < nentries; i++)
@@ -973,24 +973,24 @@ png_set_sPLT(png_structp png_ptr,
       png_size_t length;
 
       length = png_strlen(from->name) + 1;
-      to->name = (png_charp)png_malloc_warn(png_ptr, length);
+      to->name = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length);
 
       if (to->name == NULL)
       {
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
              "Out of memory while processing sPLT chunk");
          continue;
       }
 
       png_memcpy(to->name, from->name, length);
-      to->entries = (png_sPLT_entryp)png_malloc_warn(png_ptr,
+      to->entries = (png_sPLT_entryp)__kimtoy__png_malloc_warn(png_ptr,
           from->nentries * png_sizeof(png_sPLT_entry));
 
       if (to->entries == NULL)
       {
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
              "Out of memory while processing sPLT chunk");
-         png_free(png_ptr, to->name);
+         __kimtoy__png_free(png_ptr, to->name);
          to->name = NULL;
          continue;
       }
@@ -1011,33 +1011,33 @@ png_set_sPLT(png_structp png_ptr,
 
 #ifdef PNG_APNG_SUPPORTED
 png_uint_32 PNGAPI
-png_set_acTL(png_structp png_ptr, png_infop info_ptr, 
+__kimtoy__png_set_acTL(png_structp png_ptr, png_infop info_ptr, 
     png_uint_32 num_frames, png_uint_32 num_plays)
 {
     png_debug1(1, "in %s storage function", "acTL");
 
     if (png_ptr == NULL || info_ptr == NULL)
     {
-        png_warning(png_ptr,
-                    "Call to png_set_acTL() with NULL png_ptr "
+        __kimtoy__png_warning(png_ptr,
+                    "Call to __kimtoy__png_set_acTL() with NULL png_ptr "
                     "or info_ptr ignored");
         return (0);
     }
     if (num_frames == 0)
     {
-        png_warning(png_ptr,
+        __kimtoy__png_warning(png_ptr,
                     "Ignoring attempt to set acTL with num_frames zero");
         return (0);
     }
     if (num_frames > PNG_UINT_31_MAX)
     {
-        png_warning(png_ptr,
+        __kimtoy__png_warning(png_ptr,
                     "Ignoring attempt to set acTL with num_frames > 2^31-1");
         return (0);
     }
     if (num_plays > PNG_UINT_31_MAX)
     {
-        png_warning(png_ptr,
+        __kimtoy__png_warning(png_ptr,
                     "Ignoring attempt to set acTL with num_plays "
                     "> 2^31-1");
         return (0);
@@ -1053,7 +1053,7 @@ png_set_acTL(png_structp png_ptr, png_infop info_ptr,
 
 /* delay_num and delay_den can hold any 16-bit values including zero */
 png_uint_32 PNGAPI
-png_set_next_frame_fcTL(png_structp png_ptr, png_infop info_ptr, 
+__kimtoy__png_set_next_frame_fcTL(png_structp png_ptr, png_infop info_ptr, 
     png_uint_32 width, png_uint_32 height,
     png_uint_32 x_offset, png_uint_32 y_offset,
     png_uint_16 delay_num, png_uint_16 delay_den,
@@ -1063,21 +1063,21 @@ png_set_next_frame_fcTL(png_structp png_ptr, png_infop info_ptr,
 
     if (png_ptr == NULL || info_ptr == NULL)
     {
-        png_warning(png_ptr,
+        __kimtoy__png_warning(png_ptr,
                     "Call to png_set_fcTL() with NULL png_ptr or info_ptr "
                     "ignored");
         return (0);
     }
     
-    png_ensure_fcTL_is_valid(png_ptr, width, height, x_offset, y_offset, 
+    __kimtoy__png_ensure_fcTL_is_valid(png_ptr, width, height, x_offset, y_offset, 
                              delay_num, delay_den, dispose_op, blend_op);
     
     if (blend_op == PNG_BLEND_OP_OVER)
     {
         if (!(png_ptr->color_type & PNG_COLOR_MASK_ALPHA) &&
-            !(png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)))
+            !(__kimtoy__png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)))
         {
-          png_warning(png_ptr,
+          __kimtoy__png_warning(png_ptr,
                       "PNG_BLEND_OP_OVER is meaningless and wasteful "
                       "for opaque images, ignored");
           blend_op = PNG_BLEND_OP_SOURCE;
@@ -1099,7 +1099,7 @@ png_set_next_frame_fcTL(png_structp png_ptr, png_infop info_ptr,
 }
 
 void /* PRIVATE */
-png_ensure_fcTL_is_valid(png_structp png_ptr, 
+__kimtoy__png_ensure_fcTL_is_valid(png_structp png_ptr, 
     png_uint_32 width, png_uint_32 height,
     png_uint_32 x_offset, png_uint_32 y_offset,
     png_uint_16 delay_num, png_uint_16 delay_den,
@@ -1107,29 +1107,29 @@ png_ensure_fcTL_is_valid(png_structp png_ptr,
 {
     if (width + x_offset > png_ptr->first_frame_width || 
         height + y_offset > png_ptr->first_frame_height)
-        png_error(png_ptr, "dimensions of a frame are greater than"
+        __kimtoy__png_error(png_ptr, "dimensions of a frame are greater than"
                            "the ones in IHDR");
     if (width > PNG_UINT_31_MAX)
-        png_error(png_ptr, "invalid width in fcTL (> 2^31-1)");
+        __kimtoy__png_error(png_ptr, "invalid width in fcTL (> 2^31-1)");
     if (height > PNG_UINT_31_MAX)
-        png_error(png_ptr, "invalid height in fcTL (> 2^31-1)");
+        __kimtoy__png_error(png_ptr, "invalid height in fcTL (> 2^31-1)");
     if (x_offset > PNG_UINT_31_MAX)
-        png_error(png_ptr, "invalid x_offset in fcTL (> 2^31-1)");
+        __kimtoy__png_error(png_ptr, "invalid x_offset in fcTL (> 2^31-1)");
     if (y_offset > PNG_UINT_31_MAX)
-        png_error(png_ptr, "invalid y_offset in fcTL (> 2^31-1)");
+        __kimtoy__png_error(png_ptr, "invalid y_offset in fcTL (> 2^31-1)");
 
     if (dispose_op != PNG_DISPOSE_OP_NONE &&
 	dispose_op != PNG_DISPOSE_OP_BACKGROUND &&
 	dispose_op != PNG_DISPOSE_OP_PREVIOUS)
-        png_error(png_ptr, "invalid dispose_op in fcTL");
+        __kimtoy__png_error(png_ptr, "invalid dispose_op in fcTL");
 
     if (blend_op != PNG_BLEND_OP_SOURCE &&
 	blend_op != PNG_BLEND_OP_OVER)
-        png_error(png_ptr, "invalid blend_op in fcTL");
+        __kimtoy__png_error(png_ptr, "invalid blend_op in fcTL");
 }
 
 png_uint_32 PNGAPI
-png_set_first_frame_is_hidden(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_first_frame_is_hidden(png_structp png_ptr, png_infop info_ptr,
                               png_byte is_hidden)
 {
     png_debug(1, "in png_first_frame_is_hidden()");
@@ -1148,7 +1148,7 @@ png_set_first_frame_is_hidden(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_UNKNOWN_CHUNKS_SUPPORTED
 void PNGAPI
-png_set_unknown_chunks(png_structp png_ptr,
+__kimtoy__png_set_unknown_chunks(png_structp png_ptr,
    png_infop info_ptr, png_const_unknown_chunkp unknowns, int num_unknowns)
 {
    png_unknown_chunkp np;
@@ -1157,13 +1157,13 @@ png_set_unknown_chunks(png_structp png_ptr,
    if (png_ptr == NULL || info_ptr == NULL || num_unknowns == 0)
       return;
 
-   np = (png_unknown_chunkp)png_malloc_warn(png_ptr,
+   np = (png_unknown_chunkp)__kimtoy__png_malloc_warn(png_ptr,
        (png_size_t)(info_ptr->unknown_chunks_num + num_unknowns) *
        png_sizeof(png_unknown_chunk));
 
    if (np == NULL)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Out of memory while processing unknown chunk");
       return;
    }
@@ -1172,7 +1172,7 @@ png_set_unknown_chunks(png_structp png_ptr,
        (png_size_t)info_ptr->unknown_chunks_num *
        png_sizeof(png_unknown_chunk));
 
-   png_free(png_ptr, info_ptr->unknown_chunks);
+   __kimtoy__png_free(png_ptr, info_ptr->unknown_chunks);
    info_ptr->unknown_chunks = NULL;
 
    for (i = 0; i < num_unknowns; i++)
@@ -1192,12 +1192,12 @@ png_set_unknown_chunks(png_structp png_ptr,
 
       else
       {
-         to->data = (png_bytep)png_malloc_warn(png_ptr,
+         to->data = (png_bytep)__kimtoy__png_malloc_warn(png_ptr,
              (png_size_t)from->size);
 
          if (to->data == NULL)
          {
-            png_warning(png_ptr,
+            __kimtoy__png_warning(png_ptr,
                 "Out of memory while processing unknown chunk");
             to->size = 0;
          }
@@ -1213,7 +1213,7 @@ png_set_unknown_chunks(png_structp png_ptr,
 }
 
 void PNGAPI
-png_set_unknown_chunk_location(png_structp png_ptr, png_infop info_ptr,
+__kimtoy__png_set_unknown_chunk_location(png_structp png_ptr, png_infop info_ptr,
     int chunk, int location)
 {
    if (png_ptr != NULL && info_ptr != NULL && chunk >= 0 && chunk <
@@ -1225,9 +1225,9 @@ png_set_unknown_chunk_location(png_structp png_ptr, png_infop info_ptr,
 
 #ifdef PNG_MNG_FEATURES_SUPPORTED
 png_uint_32 PNGAPI
-png_permit_mng_features (png_structp png_ptr, png_uint_32 mng_features)
+__kimtoy__png_permit_mng_features (png_structp png_ptr, png_uint_32 mng_features)
 {
-   png_debug(1, "in png_permit_mng_features");
+   png_debug(1, "in __kimtoy__png_permit_mng_features");
 
    if (png_ptr == NULL)
       return (png_uint_32)0;
@@ -1241,7 +1241,7 @@ png_permit_mng_features (png_structp png_ptr, png_uint_32 mng_features)
 
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
 void PNGAPI
-png_set_keep_unknown_chunks(png_structp png_ptr, int keep, png_const_bytep
+__kimtoy__png_set_keep_unknown_chunks(png_structp png_ptr, int keep, png_const_bytep
     chunk_list, int num_chunks)
 {
    png_bytep new_list, p;
@@ -1270,14 +1270,14 @@ png_set_keep_unknown_chunks(png_structp png_ptr, int keep, png_const_bytep
       return;
 
    old_num_chunks = png_ptr->num_chunk_list;
-   new_list=(png_bytep)png_malloc(png_ptr,
+   new_list=(png_bytep)__kimtoy__png_malloc(png_ptr,
        (png_size_t)(5*(num_chunks + old_num_chunks)));
 
    if (png_ptr->chunk_list != NULL)
    {
       png_memcpy(new_list, png_ptr->chunk_list,
           (png_size_t)(5*old_num_chunks));
-      png_free(png_ptr, png_ptr->chunk_list);
+      __kimtoy__png_free(png_ptr, png_ptr->chunk_list);
       png_ptr->chunk_list=NULL;
    }
 
@@ -1295,10 +1295,10 @@ png_set_keep_unknown_chunks(png_structp png_ptr, int keep, png_const_bytep
 
 #ifdef PNG_READ_USER_CHUNKS_SUPPORTED
 void PNGAPI
-png_set_read_user_chunk_fn(png_structp png_ptr, png_voidp user_chunk_ptr,
+__kimtoy__png_set_read_user_chunk_fn(png_structp png_ptr, png_voidp user_chunk_ptr,
     png_user_chunk_ptr read_user_chunk_fn)
 {
-   png_debug(1, "in png_set_read_user_chunk_fn");
+   png_debug(1, "in __kimtoy__png_set_read_user_chunk_fn");
 
    if (png_ptr == NULL)
       return;
@@ -1310,7 +1310,7 @@ png_set_read_user_chunk_fn(png_structp png_ptr, png_voidp user_chunk_ptr,
 
 #ifdef PNG_INFO_IMAGE_SUPPORTED
 void PNGAPI
-png_set_rows(png_structp png_ptr, png_infop info_ptr, png_bytepp row_pointers)
+__kimtoy__png_set_rows(png_structp png_ptr, png_infop info_ptr, png_bytepp row_pointers)
 {
    png_debug1(1, "in %s storage function", "rows");
 
@@ -1318,7 +1318,7 @@ png_set_rows(png_structp png_ptr, png_infop info_ptr, png_bytepp row_pointers)
       return;
 
    if (info_ptr->row_pointers && (info_ptr->row_pointers != row_pointers))
-      png_free_data(png_ptr, info_ptr, PNG_FREE_ROWS, 0);
+      __kimtoy__png_free_data(png_ptr, info_ptr, PNG_FREE_ROWS, 0);
 
    info_ptr->row_pointers = row_pointers;
 
@@ -1328,16 +1328,16 @@ png_set_rows(png_structp png_ptr, png_infop info_ptr, png_bytepp row_pointers)
 #endif
 
 void PNGAPI
-png_set_compression_buffer_size(png_structp png_ptr, png_size_t size)
+__kimtoy__png_set_compression_buffer_size(png_structp png_ptr, png_size_t size)
 {
     if (png_ptr == NULL)
        return;
 
-    png_free(png_ptr, png_ptr->zbuf);
+    __kimtoy__png_free(png_ptr, png_ptr->zbuf);
 
     if (size > ZLIB_IO_MAX)
     {
-       png_warning(png_ptr, "Attempt to set buffer size beyond max ignored");
+       __kimtoy__png_warning(png_ptr, "Attempt to set buffer size beyond max ignored");
        png_ptr->zbuf_size = ZLIB_IO_MAX;
        size = ZLIB_IO_MAX; /* must fit */
     }
@@ -1345,7 +1345,7 @@ png_set_compression_buffer_size(png_structp png_ptr, png_size_t size)
     else
        png_ptr->zbuf_size = (uInt)size;
 
-    png_ptr->zbuf = (png_bytep)png_malloc(png_ptr, size);
+    png_ptr->zbuf = (png_bytep)__kimtoy__png_malloc(png_ptr, size);
 
     /* The following ensures a relatively safe failure if this gets called while
      * the buffer is actually in use.
@@ -1356,7 +1356,7 @@ png_set_compression_buffer_size(png_structp png_ptr, png_size_t size)
 }
 
 void PNGAPI
-png_set_invalid(png_structp png_ptr, png_infop info_ptr, int mask)
+__kimtoy__png_set_invalid(png_structp png_ptr, png_infop info_ptr, int mask)
 {
    if (png_ptr && info_ptr)
       info_ptr->valid &= ~mask;
@@ -1367,11 +1367,11 @@ png_set_invalid(png_structp png_ptr, png_infop info_ptr, int mask)
 #ifdef PNG_SET_USER_LIMITS_SUPPORTED
 /* This function was added to libpng 1.2.6 */
 void PNGAPI
-png_set_user_limits (png_structp png_ptr, png_uint_32 user_width_max,
+__kimtoy__png_set_user_limits (png_structp png_ptr, png_uint_32 user_width_max,
     png_uint_32 user_height_max)
 {
    /* Images with dimensions larger than these limits will be
-    * rejected by png_set_IHDR().  To accept any PNG datastream
+    * rejected by __kimtoy__png_set_IHDR().  To accept any PNG datastream
     * regardless of dimensions, set both limits to 0x7ffffffL.
     */
    if (png_ptr == NULL)
@@ -1383,7 +1383,7 @@ png_set_user_limits (png_structp png_ptr, png_uint_32 user_width_max,
 
 /* This function was added to libpng 1.4.0 */
 void PNGAPI
-png_set_chunk_cache_max (png_structp png_ptr,
+__kimtoy__png_set_chunk_cache_max (png_structp png_ptr,
    png_uint_32 user_chunk_cache_max)
 {
     if (png_ptr)
@@ -1392,7 +1392,7 @@ png_set_chunk_cache_max (png_structp png_ptr,
 
 /* This function was added to libpng 1.4.1 */
 void PNGAPI
-png_set_chunk_malloc_max (png_structp png_ptr,
+__kimtoy__png_set_chunk_malloc_max (png_structp png_ptr,
     png_alloc_size_t user_chunk_malloc_max)
 {
    if (png_ptr)
@@ -1403,9 +1403,9 @@ png_set_chunk_malloc_max (png_structp png_ptr,
 
 #ifdef PNG_BENIGN_ERRORS_SUPPORTED
 void PNGAPI
-png_set_benign_errors(png_structp png_ptr, int allowed)
+__kimtoy__png_set_benign_errors(png_structp png_ptr, int allowed)
 {
-   png_debug(1, "in png_set_benign_errors");
+   png_debug(1, "in __kimtoy__png_set_benign_errors");
 
    if (allowed)
       png_ptr->flags |= PNG_FLAG_BENIGN_ERRORS_WARN;

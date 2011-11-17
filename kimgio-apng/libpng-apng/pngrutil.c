@@ -21,19 +21,19 @@
 #define png_strtod(p,a,b) strtod(a,b)
 
 png_uint_32 PNGAPI
-png_get_uint_31(png_structp png_ptr, png_const_bytep buf)
+__kimtoy__png_get_uint_31(png_structp png_ptr, png_const_bytep buf)
 {
-   png_uint_32 uval = png_get_uint_32(buf);
+   png_uint_32 uval = __kimtoy__png_get_uint_32(buf);
 
    if (uval > PNG_UINT_31_MAX)
-      png_error(png_ptr, "PNG unsigned integer out of range");
+      __kimtoy__png_error(png_ptr, "PNG unsigned integer out of range");
 
    return (uval);
 }
 
 #if defined(PNG_READ_gAMA_SUPPORTED) || defined(PNG_READ_cHRM_SUPPORTED)
 /* The following is a variation on the above for use with the fixed
- * point values used for gAMA and cHRM.  Instead of png_error it
+ * point values used for gAMA and cHRM.  Instead of __kimtoy__png_error it
  * issues a warning and returns (-1) - an invalid value because both
  * gAMA and cHRM use *unsigned* integers for fixed point values.
  */
@@ -42,14 +42,14 @@ png_get_uint_31(png_structp png_ptr, png_const_bytep buf)
 static png_fixed_point /* PRIVATE */
 png_get_fixed_point(png_structp png_ptr, png_const_bytep buf)
 {
-   png_uint_32 uval = png_get_uint_32(buf);
+   png_uint_32 uval = __kimtoy__png_get_uint_32(buf);
 
    if (uval <= PNG_UINT_31_MAX)
       return (png_fixed_point)uval; /* known to be in range */
 
    /* The caller can turn off the warning by passing NULL. */
    if (png_ptr != NULL)
-      png_warning(png_ptr, "PNG fixed point integer out of range");
+      __kimtoy__png_warning(png_ptr, "PNG fixed point integer out of range");
 
    return PNG_FIXED_ERROR;
 }
@@ -67,7 +67,7 @@ png_get_fixed_point(png_structp png_ptr, png_const_bytep buf)
 
 /* Grab an unsigned 32-bit integer from a buffer in big-endian format. */
 png_uint_32 (PNGAPI
-png_get_uint_32)(png_const_bytep buf)
+__kimtoy__png_get_uint_32)(png_const_bytep buf)
 {
    png_uint_32 uval =
        ((png_uint_32)(*(buf    )) << 24) +
@@ -84,9 +84,9 @@ png_get_uint_32)(png_const_bytep buf)
  * the following code does a two's complement to native conversion.
  */
 png_int_32 (PNGAPI
-png_get_int_32)(png_const_bytep buf)
+__kimtoy__png_get_int_32)(png_const_bytep buf)
 {
-   png_uint_32 uval = png_get_uint_32(buf);
+   png_uint_32 uval = __kimtoy__png_get_uint_32(buf);
    if ((uval & 0x80000000) == 0) /* non-negative */
       return uval;
 
@@ -96,7 +96,7 @@ png_get_int_32)(png_const_bytep buf)
 
 /* Grab an unsigned 16-bit integer from a buffer in big-endian format. */
 png_uint_16 (PNGAPI
-png_get_uint_16)(png_const_bytep buf)
+__kimtoy__png_get_uint_16)(png_const_bytep buf)
 {
    /* ANSI-C requires an int value to accomodate at least 16 bits so this
     * works and allows the compiler not to worry about possible narrowing
@@ -114,7 +114,7 @@ png_get_uint_16)(png_const_bytep buf)
 
 /* Read and check the PNG file signature */
 void /* PRIVATE */
-png_read_sig(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_read_sig(png_structp png_ptr, png_infop info_ptr)
 {
    png_size_t num_checked, num_to_check;
 
@@ -130,16 +130,16 @@ png_read_sig(png_structp png_ptr, png_infop info_ptr)
 #endif
 
    /* The signature must be serialized in a single I/O call. */
-   png_read_data(png_ptr, &(info_ptr->signature[num_checked]), num_to_check);
+   __kimtoy__png_read_data(png_ptr, &(info_ptr->signature[num_checked]), num_to_check);
    png_ptr->sig_bytes = 8;
 
-   if (png_sig_cmp(info_ptr->signature, num_checked, num_to_check))
+   if (__kimtoy__png_sig_cmp(info_ptr->signature, num_checked, num_to_check))
    {
       if (num_checked < 4 &&
-          png_sig_cmp(info_ptr->signature, num_checked, num_to_check - 4))
-         png_error(png_ptr, "Not a PNG file");
+          __kimtoy__png_sig_cmp(info_ptr->signature, num_checked, num_to_check - 4))
+         __kimtoy__png_error(png_ptr, "Not a PNG file");
       else
-         png_error(png_ptr, "PNG file corrupted by ASCII conversion");
+         __kimtoy__png_error(png_ptr, "PNG file corrupted by ASCII conversion");
    }
    if (num_checked < 3)
       png_ptr->mode |= PNG_HAVE_PNG_SIGNATURE;
@@ -149,7 +149,7 @@ png_read_sig(png_structp png_ptr, png_infop info_ptr)
  * Put the type name into png_ptr->chunk_name, and return the length.
  */
 png_uint_32 /* PRIVATE */
-png_read_chunk_header(png_structp png_ptr)
+__kimtoy__png_read_chunk_header(png_structp png_ptr)
 {
    png_byte buf[8];
    png_uint_32 length;
@@ -161,8 +161,8 @@ png_read_chunk_header(png_structp png_ptr)
    /* Read the length and the chunk name.
     * This must be performed in a single I/O call.
     */
-   png_read_data(png_ptr, buf, 8);
-   length = png_get_uint_31(png_ptr, buf);
+   __kimtoy__png_read_data(png_ptr, buf, 8);
+   length = __kimtoy__png_get_uint_31(png_ptr, buf);
 
    /* Put the chunk name into png_ptr->chunk_name. */
    png_ptr->chunk_name = PNG_CHUNK_FROM_STRING(buf+4);
@@ -171,11 +171,11 @@ png_read_chunk_header(png_structp png_ptr)
        (unsigned long)png_ptr->chunk_name, (unsigned long)length);
 
    /* Reset the crc and run it over the chunk name. */
-   png_reset_crc(png_ptr);
-   png_calculate_crc(png_ptr, buf + 4, 4);
+   __kimtoy__png_reset_crc(png_ptr);
+   __kimtoy__png_calculate_crc(png_ptr, buf + 4, 4);
 
    /* Check to see if chunk name is valid. */
-   png_check_chunk_name(png_ptr, png_ptr->chunk_name);
+   __kimtoy__png_check_chunk_name(png_ptr, png_ptr->chunk_name);
 
 #ifdef PNG_IO_STATE_SUPPORTED
    png_ptr->io_state = PNG_IO_READING | PNG_IO_CHUNK_DATA;
@@ -186,13 +186,13 @@ png_read_chunk_header(png_structp png_ptr)
 
 /* Read data, and (optionally) run it through the CRC. */
 void /* PRIVATE */
-png_crc_read(png_structp png_ptr, png_bytep buf, png_size_t length)
+__kimtoy__png_crc_read(png_structp png_ptr, png_bytep buf, png_size_t length)
 {
    if (png_ptr == NULL)
       return;
 
-   png_read_data(png_ptr, buf, length);
-   png_calculate_crc(png_ptr, buf, length);
+   __kimtoy__png_read_data(png_ptr, buf, length);
+   __kimtoy__png_calculate_crc(png_ptr, buf, length);
 }
 
 /* Optionally skip data and then check the CRC.  Depending on whether we
@@ -201,33 +201,33 @@ png_crc_read(png_structp png_ptr, png_bytep buf, png_size_t length)
  * Returns '1' if there was a CRC error, '0' otherwise.
  */
 int /* PRIVATE */
-png_crc_finish(png_structp png_ptr, png_uint_32 skip)
+__kimtoy__png_crc_finish(png_structp png_ptr, png_uint_32 skip)
 {
    png_size_t i;
    png_size_t istop = png_ptr->zbuf_size;
 
    for (i = (png_size_t)skip; i > istop; i -= istop)
    {
-      png_crc_read(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
+      __kimtoy__png_crc_read(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
    }
 
    if (i)
    {
-      png_crc_read(png_ptr, png_ptr->zbuf, i);
+      __kimtoy__png_crc_read(png_ptr, png_ptr->zbuf, i);
    }
 
-   if (png_crc_error(png_ptr))
+   if (__kimtoy__png_crc_error(png_ptr))
    {
       if (PNG_CHUNK_ANCILLIARY(png_ptr->chunk_name) ?
           !(png_ptr->flags & PNG_FLAG_CRC_ANCILLARY_NOWARN) :
           (png_ptr->flags & PNG_FLAG_CRC_CRITICAL_USE))
       {
-         png_chunk_warning(png_ptr, "CRC error");
+         __kimtoy__png_chunk_warning(png_ptr, "CRC error");
       }
 
       else
       {
-         png_chunk_benign_error(png_ptr, "CRC error");
+         __kimtoy__png_chunk_benign_error(png_ptr, "CRC error");
          return (0);
       }
 
@@ -241,7 +241,7 @@ png_crc_finish(png_structp png_ptr, png_uint_32 skip)
  * the data it has read thus far.
  */
 int /* PRIVATE */
-png_crc_error(png_structp png_ptr)
+__kimtoy__png_crc_error(png_structp png_ptr)
 {
    png_byte crc_bytes[4];
    png_uint_32 crc;
@@ -265,11 +265,11 @@ png_crc_error(png_structp png_ptr)
 #endif
 
    /* The chunk CRC must be serialized in a single I/O call. */
-   png_read_data(png_ptr, crc_bytes, 4);
+   __kimtoy__png_read_data(png_ptr, crc_bytes, 4);
 
    if (need_crc)
    {
-      crc = png_get_uint_32(crc_bytes);
+      crc = __kimtoy__png_get_uint_32(crc_bytes);
       return ((int)(crc != png_ptr->crc));
    }
 
@@ -279,7 +279,7 @@ png_crc_error(png_structp png_ptr)
 
 #ifdef PNG_READ_COMPRESSED_TEXT_SUPPORTED
 static png_size_t
-png_inflate(png_structp png_ptr, png_bytep data, png_size_t size,
+__kimtoy__png_inflate(png_structp png_ptr, png_bytep data, png_size_t size,
     png_bytep output, png_size_t output_size)
 {
    png_size_t count = 0;
@@ -390,7 +390,7 @@ png_inflate(png_structp png_ptr, png_bytep data, png_size_t size,
                break;
          }
 
-         png_chunk_warning(png_ptr, msg);
+         __kimtoy__png_chunk_warning(png_ptr, msg);
       }
 #     endif
 
@@ -409,7 +409,7 @@ png_inflate(png_structp png_ptr, png_bytep data, png_size_t size,
  * trailing part (the malloc area passed in is freed).
  */
 void /* PRIVATE */
-png_decompress_chunk(png_structp png_ptr, int comp_type,
+__kimtoy__png_decompress_chunk(png_structp png_ptr, int comp_type,
     png_size_t chunklength,
     png_size_t prefix_size, png_size_t *newlength)
 {
@@ -417,13 +417,13 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
    if (prefix_size > chunklength)
    {
       /* The recovery is to delete the chunk. */
-      png_warning(png_ptr, "invalid chunklength");
+      __kimtoy__png_warning(png_ptr, "invalid chunklength");
       prefix_size = 0; /* To delete everything */
    }
 
    else if (comp_type == PNG_COMPRESSION_TYPE_BASE)
    {
-      png_size_t expanded_size = png_inflate(png_ptr,
+      png_size_t expanded_size = __kimtoy__png_inflate(png_ptr,
           (png_bytep)(png_ptr->chunkdata + prefix_size),
           chunklength - prefix_size,
           0,            /* output */
@@ -441,7 +441,7 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
           prefix_size + expanded_size >= PNG_USER_CHUNK_MALLOC_MAX - 1)
 #  endif
 #endif
-         png_warning(png_ptr, "Exceeded size limit while expanding chunk");
+         __kimtoy__png_warning(png_ptr, "Exceeded size limit while expanding chunk");
 
       /* If the size is zero either there was an error and a message
        * has already been output (warning) or the size really is zero
@@ -457,13 +457,13 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
       {
          /* Success (maybe) - really uncompress the chunk. */
          png_size_t new_size = 0;
-         png_charp text = (png_charp)png_malloc_warn(png_ptr,
+         png_charp text = (png_charp)__kimtoy__png_malloc_warn(png_ptr,
              prefix_size + expanded_size + 1);
 
          if (text != NULL)
          {
             png_memcpy(text, png_ptr->chunkdata, prefix_size);
-            new_size = png_inflate(png_ptr,
+            new_size = __kimtoy__png_inflate(png_ptr,
                 (png_bytep)(png_ptr->chunkdata + prefix_size),
                 chunklength - prefix_size,
                 (png_bytep)(text + prefix_size), expanded_size);
@@ -471,26 +471,26 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
 
             if (new_size == expanded_size)
             {
-               png_free(png_ptr, png_ptr->chunkdata);
+               __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
                png_ptr->chunkdata = text;
                *newlength = prefix_size + expanded_size;
                return; /* The success return! */
             }
 
-            png_warning(png_ptr, "png_inflate logic error");
-            png_free(png_ptr, text);
+            __kimtoy__png_warning(png_ptr, "__kimtoy__png_inflate logic error");
+            __kimtoy__png_free(png_ptr, text);
          }
 
          else
-            png_warning(png_ptr, "Not enough memory to decompress chunk");
+            __kimtoy__png_warning(png_ptr, "Not enough memory to decompress chunk");
       }
    }
 
    else /* if (comp_type != PNG_COMPRESSION_TYPE_BASE) */
    {
       PNG_WARNING_PARAMETERS(p)
-      png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_d, comp_type);
-      png_formatted_warning(png_ptr, p, "Unknown zTXt compression type @1");
+      __kimtoy__png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_d, comp_type);
+      __kimtoy__png_formatted_warning(png_ptr, p, "Unknown zTXt compression type @1");
 
       /* The recovery is to simply drop the data. */
    }
@@ -500,14 +500,14 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
     * amount of compressed data.
     */
    {
-      png_charp text = (png_charp)png_malloc_warn(png_ptr, prefix_size + 1);
+      png_charp text = (png_charp)__kimtoy__png_malloc_warn(png_ptr, prefix_size + 1);
 
       if (text != NULL)
       {
          if (prefix_size > 0)
             png_memcpy(text, png_ptr->chunkdata, prefix_size);
 
-         png_free(png_ptr, png_ptr->chunkdata);
+         __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
          png_ptr->chunkdata = text;
 
          /* This is an extra zero in the 'uncompressed' part. */
@@ -522,29 +522,29 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
 
 /* Read and check the IDHR chunk */
 void /* PRIVATE */
-png_handle_IHDR(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_IHDR(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_byte buf[13];
    png_uint_32 width, height;
    int bit_depth, color_type, compression_type, filter_type;
    int interlace_type;
 
-   png_debug(1, "in png_handle_IHDR");
+   png_debug(1, "in __kimtoy__png_handle_IHDR");
 
    if (png_ptr->mode & PNG_HAVE_IHDR)
-      png_error(png_ptr, "Out of place IHDR");
+      __kimtoy__png_error(png_ptr, "Out of place IHDR");
 
    /* Check the length */
    if (length != 13)
-      png_error(png_ptr, "Invalid IHDR chunk");
+      __kimtoy__png_error(png_ptr, "Invalid IHDR chunk");
 
    png_ptr->mode |= PNG_HAVE_IHDR;
 
-   png_crc_read(png_ptr, buf, 13);
-   png_crc_finish(png_ptr, 0);
+   __kimtoy__png_crc_read(png_ptr, buf, 13);
+   __kimtoy__png_crc_finish(png_ptr, 0);
 
-   width = png_get_uint_31(png_ptr, buf);
-   height = png_get_uint_31(png_ptr, buf + 4);
+   width = __kimtoy__png_get_uint_31(png_ptr, buf);
+   height = __kimtoy__png_get_uint_31(png_ptr, buf + 4);
    bit_depth = buf[8];
    color_type = buf[9];
    compression_type = buf[10];
@@ -570,7 +570,7 @@ png_handle_IHDR(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* Find number of channels */
    switch (png_ptr->color_type)
    {
-      default: /* invalid, png_set_IHDR calls png_error */
+      default: /* invalid, __kimtoy__png_set_IHDR calls __kimtoy__png_error */
       case PNG_COLOR_TYPE_GRAY:
       case PNG_COLOR_TYPE_PALETTE:
          png_ptr->channels = 1;
@@ -596,13 +596,13 @@ png_handle_IHDR(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_debug1(3, "bit_depth = %d", png_ptr->bit_depth);
    png_debug1(3, "channels = %d", png_ptr->channels);
    png_debug1(3, "rowbytes = %lu", (unsigned long)png_ptr->rowbytes);
-   png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth,
+   __kimtoy__png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth,
        color_type, interlace_type, compression_type, filter_type);
 }
 
 /* Read and check the palette */
 void /* PRIVATE */
-png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_color palette[PNG_MAX_PALETTE_LENGTH];
    int num, i;
@@ -610,35 +610,35 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_colorp pal_ptr;
 #endif
 
-   png_debug(1, "in png_handle_PLTE");
+   png_debug(1, "in __kimtoy__png_handle_PLTE");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before PLTE");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before PLTE");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid PLTE after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid PLTE after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (png_ptr->mode & PNG_HAVE_PLTE)
-      png_error(png_ptr, "Duplicate PLTE chunk");
+      __kimtoy__png_error(png_ptr, "Duplicate PLTE chunk");
 
    png_ptr->mode |= PNG_HAVE_PLTE;
 
    if (!(png_ptr->color_type&PNG_COLOR_MASK_COLOR))
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Ignoring PLTE chunk in grayscale PNG");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
 #ifndef PNG_READ_OPT_PLTE_SUPPORTED
    if (png_ptr->color_type != PNG_COLOR_TYPE_PALETTE)
    {
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 #endif
@@ -647,14 +647,14 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       if (png_ptr->color_type != PNG_COLOR_TYPE_PALETTE)
       {
-         png_warning(png_ptr, "Invalid palette chunk");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "Invalid palette chunk");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
       else
       {
-         png_error(png_ptr, "Invalid palette chunk");
+         __kimtoy__png_error(png_ptr, "Invalid palette chunk");
       }
    }
 
@@ -665,7 +665,7 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_byte buf[3];
 
-      png_crc_read(png_ptr, buf, 3);
+      __kimtoy__png_crc_read(png_ptr, buf, 3);
       pal_ptr->red = buf[0];
       pal_ptr->green = buf[1];
       pal_ptr->blue = buf[2];
@@ -675,7 +675,7 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_byte buf[3];
 
-      png_crc_read(png_ptr, buf, 3);
+      __kimtoy__png_crc_read(png_ptr, buf, 3);
       /* Don't depend upon png_color being any order */
       palette[i].red = buf[0];
       palette[i].green = buf[1];
@@ -692,11 +692,11 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
 #endif
    {
-      png_crc_finish(png_ptr, 0);
+      __kimtoy__png_crc_finish(png_ptr, 0);
    }
 
 #ifndef PNG_READ_OPT_PLTE_SUPPORTED
-   else if (png_crc_error(png_ptr))  /* Only if we have a CRC error */
+   else if (__kimtoy__png_crc_error(png_ptr))  /* Only if we have a CRC error */
    {
       /* If we don't want to use the data from an ancillary chunk,
        * we have two options: an error abort, or a warning and we
@@ -707,12 +707,12 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       {
          if (png_ptr->flags & PNG_FLAG_CRC_ANCILLARY_NOWARN)
          {
-            png_chunk_benign_error(png_ptr, "CRC error");
+            __kimtoy__png_chunk_benign_error(png_ptr, "CRC error");
          }
 
          else
          {
-            png_chunk_warning(png_ptr, "CRC error");
+            __kimtoy__png_chunk_warning(png_ptr, "CRC error");
             return;
          }
       }
@@ -720,12 +720,12 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       /* Otherwise, we (optionally) emit a warning and use the chunk. */
       else if (!(png_ptr->flags & PNG_FLAG_CRC_ANCILLARY_NOWARN))
       {
-         png_chunk_warning(png_ptr, "CRC error");
+         __kimtoy__png_chunk_warning(png_ptr, "CRC error");
       }
    }
 #endif
 
-   png_set_PLTE(png_ptr, info_ptr, palette, num);
+   __kimtoy__png_set_PLTE(png_ptr, info_ptr, palette, num);
 
 #ifdef PNG_READ_tRNS_SUPPORTED
    if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
@@ -734,13 +734,13 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       {
          if (png_ptr->num_trans > (png_uint_16)num)
          {
-            png_warning(png_ptr, "Truncating incorrect tRNS chunk length");
+            __kimtoy__png_warning(png_ptr, "Truncating incorrect tRNS chunk length");
             png_ptr->num_trans = (png_uint_16)num;
          }
 
          if (info_ptr->num_trans > (png_uint_16)num)
          {
-            png_warning(png_ptr, "Truncating incorrect info tRNS chunk length");
+            __kimtoy__png_warning(png_ptr, "Truncating incorrect info tRNS chunk length");
             info_ptr->num_trans = (png_uint_16)num;
          }
       }
@@ -750,49 +750,49 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 }
 
 void /* PRIVATE */
-png_handle_IEND(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_IEND(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
-   png_debug(1, "in png_handle_IEND");
+   png_debug(1, "in __kimtoy__png_handle_IEND");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR) || !(png_ptr->mode & PNG_HAVE_IDAT))
    {
-      png_error(png_ptr, "No image in file");
+      __kimtoy__png_error(png_ptr, "No image in file");
    }
 
    png_ptr->mode |= (PNG_AFTER_IDAT | PNG_HAVE_IEND);
 
    if (length != 0)
    {
-      png_warning(png_ptr, "Incorrect IEND chunk length");
+      __kimtoy__png_warning(png_ptr, "Incorrect IEND chunk length");
    }
 
-   png_crc_finish(png_ptr, length);
+   __kimtoy__png_crc_finish(png_ptr, length);
 
    PNG_UNUSED(info_ptr) /* Quiet compiler warnings about unused info_ptr */
 }
 
 #ifdef PNG_READ_gAMA_SUPPORTED
 void /* PRIVATE */
-png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_fixed_point igamma;
    png_byte buf[4];
 
-   png_debug(1, "in png_handle_gAMA");
+   png_debug(1, "in __kimtoy__png_handle_gAMA");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before gAMA");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before gAMA");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid gAMA after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid gAMA after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (png_ptr->mode & PNG_HAVE_PLTE)
       /* Should be an error, but we can cope with it */
-      png_warning(png_ptr, "Out of place gAMA chunk");
+      __kimtoy__png_warning(png_ptr, "Out of place gAMA chunk");
 
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_gAMA)
 #ifdef PNG_READ_sRGB_SUPPORTED
@@ -800,21 +800,21 @@ png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #endif
        )
    {
-      png_warning(png_ptr, "Duplicate gAMA chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate gAMA chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    if (length != 4)
    {
-      png_warning(png_ptr, "Incorrect gAMA chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect gAMA chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, 4);
+   __kimtoy__png_crc_read(png_ptr, buf, 4);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
    igamma = png_get_fixed_point(NULL, buf);
@@ -822,7 +822,7 @@ png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* Check for zero gamma or an error. */
    if (igamma <= 0)
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
           "Ignoring gAMA chunk with out of range gamma");
 
       return;
@@ -834,8 +834,8 @@ png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       if (PNG_OUT_OF_RANGE(igamma, 45500, 500))
       {
          PNG_WARNING_PARAMETERS(p)
-         png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_fixed, igamma);
-         png_formatted_warning(png_ptr, p,
+         __kimtoy__png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_fixed, igamma);
+         __kimtoy__png_formatted_warning(png_ptr, p,
              "Ignoring incorrect gAMA value @1 when sRGB is also present");
          return;
       }
@@ -847,41 +847,41 @@ png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_ptr->gamma = igamma;
 #  endif
    /* And set the 'info' structure members. */
-   png_set_gAMA_fixed(png_ptr, info_ptr, igamma);
+   __kimtoy__png_set_gAMA_fixed(png_ptr, info_ptr, igamma);
 }
 #endif
 
 #ifdef PNG_READ_sBIT_SUPPORTED
 void /* PRIVATE */
-png_handle_sBIT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_sBIT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_size_t truelen;
    png_byte buf[4];
 
-   png_debug(1, "in png_handle_sBIT");
+   png_debug(1, "in __kimtoy__png_handle_sBIT");
 
    buf[0] = buf[1] = buf[2] = buf[3] = 0;
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before sBIT");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before sBIT");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid sBIT after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid sBIT after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (png_ptr->mode & PNG_HAVE_PLTE)
    {
       /* Should be an error, but we can cope with it */
-      png_warning(png_ptr, "Out of place sBIT chunk");
+      __kimtoy__png_warning(png_ptr, "Out of place sBIT chunk");
    }
 
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sBIT))
    {
-      png_warning(png_ptr, "Duplicate sBIT chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate sBIT chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
@@ -893,14 +893,14 @@ png_handle_sBIT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (length != truelen || length > 4)
    {
-      png_warning(png_ptr, "Incorrect sBIT chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect sBIT chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, truelen);
+   __kimtoy__png_crc_read(png_ptr, buf, truelen);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
    if (png_ptr->color_type & PNG_COLOR_MASK_COLOR)
@@ -920,33 +920,33 @@ png_handle_sBIT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_ptr->sig_bit.alpha = buf[1];
    }
 
-   png_set_sBIT(png_ptr, info_ptr, &(png_ptr->sig_bit));
+   __kimtoy__png_set_sBIT(png_ptr, info_ptr, &(png_ptr->sig_bit));
 }
 #endif
 
 #ifdef PNG_READ_cHRM_SUPPORTED
 void /* PRIVATE */
-png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_byte buf[32];
    png_fixed_point x_white, y_white, x_red, y_red, x_green, y_green, x_blue,
       y_blue;
 
-   png_debug(1, "in png_handle_cHRM");
+   png_debug(1, "in __kimtoy__png_handle_cHRM");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before cHRM");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before cHRM");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid cHRM after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid cHRM after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (png_ptr->mode & PNG_HAVE_PLTE)
       /* Should be an error, but we can cope with it */
-      png_warning(png_ptr, "Out of place cHRM chunk");
+      __kimtoy__png_warning(png_ptr, "Out of place cHRM chunk");
 
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_cHRM)
 #  ifdef PNG_READ_sRGB_SUPPORTED
@@ -954,21 +954,21 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #  endif
       )
    {
-      png_warning(png_ptr, "Duplicate cHRM chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate cHRM chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    if (length != 32)
    {
-      png_warning(png_ptr, "Incorrect cHRM chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect cHRM chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, 32);
+   __kimtoy__png_crc_read(png_ptr, buf, 32);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
    x_white = png_get_fixed_point(NULL, buf);
@@ -989,7 +989,7 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
        x_blue  == PNG_FIXED_ERROR ||
        y_blue  == PNG_FIXED_ERROR)
    {
-      png_warning(png_ptr, "Ignoring cHRM chunk with negative chromaticities");
+      __kimtoy__png_warning(png_ptr, "Ignoring cHRM chunk with negative chromaticities");
       return;
    }
 
@@ -1007,16 +1007,16 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       {
          PNG_WARNING_PARAMETERS(p)
 
-         png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_fixed, x_white);
-         png_warning_parameter_signed(p, 2, PNG_NUMBER_FORMAT_fixed, y_white);
-         png_warning_parameter_signed(p, 3, PNG_NUMBER_FORMAT_fixed, x_red);
-         png_warning_parameter_signed(p, 4, PNG_NUMBER_FORMAT_fixed, y_red);
-         png_warning_parameter_signed(p, 5, PNG_NUMBER_FORMAT_fixed, x_green);
-         png_warning_parameter_signed(p, 6, PNG_NUMBER_FORMAT_fixed, y_green);
-         png_warning_parameter_signed(p, 7, PNG_NUMBER_FORMAT_fixed, x_blue);
-         png_warning_parameter_signed(p, 8, PNG_NUMBER_FORMAT_fixed, y_blue);
+         __kimtoy__png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_fixed, x_white);
+         __kimtoy__png_warning_parameter_signed(p, 2, PNG_NUMBER_FORMAT_fixed, y_white);
+         __kimtoy__png_warning_parameter_signed(p, 3, PNG_NUMBER_FORMAT_fixed, x_red);
+         __kimtoy__png_warning_parameter_signed(p, 4, PNG_NUMBER_FORMAT_fixed, y_red);
+         __kimtoy__png_warning_parameter_signed(p, 5, PNG_NUMBER_FORMAT_fixed, x_green);
+         __kimtoy__png_warning_parameter_signed(p, 6, PNG_NUMBER_FORMAT_fixed, y_green);
+         __kimtoy__png_warning_parameter_signed(p, 7, PNG_NUMBER_FORMAT_fixed, x_blue);
+         __kimtoy__png_warning_parameter_signed(p, 8, PNG_NUMBER_FORMAT_fixed, y_blue);
 
-         png_formatted_warning(png_ptr, p,
+         __kimtoy__png_formatted_warning(png_ptr, p,
              "Ignoring incorrect cHRM white(@1,@2) r(@3,@4)g(@5,@6)b(@7,@8) "
              "when sRGB is also present");
       }
@@ -1031,7 +1031,7 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
     */
    if (!png_ptr->rgb_to_gray_coefficients_set)
    {
-      /* png_set_background has not been called and we haven't seen an sRGB
+      /* __kimtoy__png_set_background has not been called and we haven't seen an sRGB
        * chunk yet.  Find the XYZ of the three end points.
        */
       png_XYZ XYZ;
@@ -1046,7 +1046,7 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       xy.whitex = x_white;
       xy.whitey = y_white;
 
-      if (png_XYZ_from_xy_checked(png_ptr, &XYZ, xy))
+      if (__kimtoy__png_XYZ_from_xy_checked(png_ptr, &XYZ, xy))
       {
          /* The success case, because XYZ_from_xy normalises to a reference
           * white Y of 1.0 we just need to scale the numbers.  This should
@@ -1054,11 +1054,11 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
           */
          {
             png_fixed_point r, g, b;
-            if (png_muldiv(&r, XYZ.redY, 32768, PNG_FP_1) &&
+            if (__kimtoy__png_muldiv(&r, XYZ.redY, 32768, PNG_FP_1) &&
                r >= 0 && r <= 32768 &&
-               png_muldiv(&g, XYZ.greenY, 32768, PNG_FP_1) &&
+               __kimtoy__png_muldiv(&g, XYZ.greenY, 32768, PNG_FP_1) &&
                g >= 0 && g <= 32768 &&
-               png_muldiv(&b, XYZ.blueY, 32768, PNG_FP_1) &&
+               __kimtoy__png_muldiv(&b, XYZ.blueY, 32768, PNG_FP_1) &&
                b >= 0 && b <= 32768 &&
                r+g+b <= 32769)
             {
@@ -1086,69 +1086,69 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
                /* Check for an internal error. */
                if (r+g+b != 32768)
-                  png_error(png_ptr,
+                  __kimtoy__png_error(png_ptr,
                      "internal error handling cHRM coefficients");
 
                png_ptr->rgb_to_gray_red_coeff   = (png_uint_16)r;
                png_ptr->rgb_to_gray_green_coeff = (png_uint_16)g;
             }
 
-            /* This is a png_error at present even though it could be ignored -
+            /* This is a __kimtoy__png_error at present even though it could be ignored -
              * it should never happen, but it is important that if it does, the
              * bug is fixed.
              */
             else
-               png_error(png_ptr, "internal error handling cHRM->XYZ");
+               __kimtoy__png_error(png_ptr, "internal error handling cHRM->XYZ");
          }
       }
    }
 #endif
 
-   png_set_cHRM_fixed(png_ptr, info_ptr, x_white, y_white, x_red, y_red,
+   __kimtoy__png_set_cHRM_fixed(png_ptr, info_ptr, x_white, y_white, x_red, y_red,
       x_green, y_green, x_blue, y_blue);
 }
 #endif
 
 #ifdef PNG_READ_sRGB_SUPPORTED
 void /* PRIVATE */
-png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    int intent;
    png_byte buf[1];
 
-   png_debug(1, "in png_handle_sRGB");
+   png_debug(1, "in __kimtoy__png_handle_sRGB");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before sRGB");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before sRGB");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid sRGB after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid sRGB after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (png_ptr->mode & PNG_HAVE_PLTE)
       /* Should be an error, but we can cope with it */
-      png_warning(png_ptr, "Out of place sRGB chunk");
+      __kimtoy__png_warning(png_ptr, "Out of place sRGB chunk");
 
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sRGB))
    {
-      png_warning(png_ptr, "Duplicate sRGB chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate sRGB chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    if (length != 1)
    {
-      png_warning(png_ptr, "Incorrect sRGB chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect sRGB chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, 1);
+   __kimtoy__png_crc_read(png_ptr, buf, 1);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
    intent = buf[0];
@@ -1156,7 +1156,7 @@ png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* Check for bad intent */
    if (intent >= PNG_sRGB_INTENT_LAST)
    {
-      png_warning(png_ptr, "Unknown sRGB intent");
+      __kimtoy__png_warning(png_ptr, "Unknown sRGB intent");
       return;
    }
 
@@ -1167,10 +1167,10 @@ png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       {
          PNG_WARNING_PARAMETERS(p)
 
-         png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_fixed,
+         __kimtoy__png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_fixed,
             info_ptr->gamma);
 
-         png_formatted_warning(png_ptr, p,
+         __kimtoy__png_formatted_warning(png_ptr, p,
              "Ignoring incorrect gAMA value @1 when sRGB is also present");
       }
    }
@@ -1187,7 +1187,7 @@ png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
           PNG_OUT_OF_RANGE(info_ptr->x_blue,  15000,  1000) ||
           PNG_OUT_OF_RANGE(info_ptr->y_blue,   6000,  1000))
       {
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
              "Ignoring incorrect cHRM value when sRGB is also present");
       }
 #endif /* PNG_READ_cHRM_SUPPORTED */
@@ -1233,13 +1233,13 @@ png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       }
 #  endif
 
-   png_set_sRGB_gAMA_and_cHRM(png_ptr, info_ptr, intent);
+   __kimtoy__png_set_sRGB_gAMA_and_cHRM(png_ptr, info_ptr, intent);
 }
 #endif /* PNG_READ_sRGB_SUPPORTED */
 
 #ifdef PNG_READ_iCCP_SUPPORTED
 void /* PRIVATE */
-png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 /* Note: this does not properly handle chunks that are > 64K under DOS */
 {
    png_byte compression_type;
@@ -1250,46 +1250,46 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_alloc_size_t profile_length;
    png_size_t slength, prefix_length, data_length;
 
-   png_debug(1, "in png_handle_iCCP");
+   png_debug(1, "in __kimtoy__png_handle_iCCP");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before iCCP");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before iCCP");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid iCCP after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid iCCP after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (png_ptr->mode & PNG_HAVE_PLTE)
       /* Should be an error, but we can cope with it */
-      png_warning(png_ptr, "Out of place iCCP chunk");
+      __kimtoy__png_warning(png_ptr, "Out of place iCCP chunk");
 
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_iCCP))
    {
-      png_warning(png_ptr, "Duplicate iCCP chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate iCCP chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
 #ifdef PNG_MAX_MALLOC_64K
    if (length > (png_uint_32)65535L)
    {
-      png_warning(png_ptr, "iCCP chunk too large to fit in memory");
+      __kimtoy__png_warning(png_ptr, "iCCP chunk too large to fit in memory");
       skip = length - (png_uint_32)65535L;
       length = (png_uint_32)65535L;
    }
 #endif
 
-   png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = (png_charp)png_malloc(png_ptr, length + 1);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
+   png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc(png_ptr, length + 1);
    slength = (png_size_t)length;
-   png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
+   __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
-   if (png_crc_finish(png_ptr, skip))
+   if (__kimtoy__png_crc_finish(png_ptr, skip))
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -1306,9 +1306,9 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
     */
    if (profile >= png_ptr->chunkdata + slength - 1)
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
-      png_warning(png_ptr, "Malformed iCCP chunk");
+      __kimtoy__png_warning(png_ptr, "Malformed iCCP chunk");
       return;
    }
 
@@ -1317,22 +1317,22 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (compression_type)
    {
-      png_warning(png_ptr, "Ignoring nonzero compression type in iCCP chunk");
+      __kimtoy__png_warning(png_ptr, "Ignoring nonzero compression type in iCCP chunk");
       compression_type = 0x00;  /* Reset it to zero (libpng-1.0.6 through 1.0.8
                                  wrote nonzero) */
    }
 
    prefix_length = profile - png_ptr->chunkdata;
-   png_decompress_chunk(png_ptr, compression_type,
+   __kimtoy__png_decompress_chunk(png_ptr, compression_type,
        slength, prefix_length, &data_length);
 
    profile_length = data_length - prefix_length;
 
    if (prefix_length > data_length || profile_length < 4)
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
-      png_warning(png_ptr, "Profile size field missing from iCCP chunk");
+      __kimtoy__png_warning(png_ptr, "Profile size field missing from iCCP chunk");
       return;
    }
 
@@ -1354,27 +1354,27 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       PNG_WARNING_PARAMETERS(p)
 
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
 
-      png_warning_parameter_unsigned(p, 1, PNG_NUMBER_FORMAT_u, profile_size);
-      png_warning_parameter_unsigned(p, 2, PNG_NUMBER_FORMAT_u, profile_length);
-      png_formatted_warning(png_ptr, p,
+      __kimtoy__png_warning_parameter_unsigned(p, 1, PNG_NUMBER_FORMAT_u, profile_size);
+      __kimtoy__png_warning_parameter_unsigned(p, 2, PNG_NUMBER_FORMAT_u, profile_length);
+      __kimtoy__png_formatted_warning(png_ptr, p,
          "Ignoring iCCP chunk with declared size = @1 and actual length = @2");
       return;
    }
 
-   png_set_iCCP(png_ptr, info_ptr, png_ptr->chunkdata,
+   __kimtoy__png_set_iCCP(png_ptr, info_ptr, png_ptr->chunkdata,
        compression_type, (png_bytep)png_ptr->chunkdata + prefix_length,
        profile_size);
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = NULL;
 }
 #endif /* PNG_READ_iCCP_SUPPORTED */
 
 #ifdef PNG_READ_sPLT_SUPPORTED
 void /* PRIVATE */
-png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 /* Note: this does not properly handle chunks that are > 64K under DOS */
 {
    png_bytep entry_start;
@@ -1387,7 +1387,7 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_uint_32 dl;
    png_size_t max_dl;
 
-   png_debug(1, "in png_handle_sPLT");
+   png_debug(1, "in __kimtoy__png_handle_sPLT");
 
 #ifdef PNG_USER_LIMITS_SUPPORTED
 
@@ -1395,51 +1395,51 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       if (png_ptr->user_chunk_cache_max == 1)
       {
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
       if (--png_ptr->user_chunk_cache_max == 1)
       {
-         png_warning(png_ptr, "No space in chunk cache for sPLT");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "No space in chunk cache for sPLT");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
    }
 #endif
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before sPLT");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before sPLT");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid sPLT after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid sPLT after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
 #ifdef PNG_MAX_MALLOC_64K
    if (length > (png_uint_32)65535L)
    {
-      png_warning(png_ptr, "sPLT chunk too large to fit in memory");
+      __kimtoy__png_warning(png_ptr, "sPLT chunk too large to fit in memory");
       skip = length - (png_uint_32)65535L;
       length = (png_uint_32)65535L;
    }
 #endif
 
-   png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = (png_charp)png_malloc(png_ptr, length + 1);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
+   png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc(png_ptr, length + 1);
 
    /* WARNING: this may break if size_t is less than 32 bits; it is assumed
     * that the PNG_MAX_MALLOC_64K test is enabled in this case, but this is a
     * potential breakage point if the types in pngconf.h aren't exactly right.
     */
    slength = (png_size_t)length;
-   png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
+   __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
-   if (png_crc_finish(png_ptr, skip))
+   if (__kimtoy__png_crc_finish(png_ptr, skip))
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -1455,9 +1455,9 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* A sample depth should follow the separator, and we should be on it  */
    if (entry_start > (png_bytep)png_ptr->chunkdata + slength - 2)
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
-      png_warning(png_ptr, "malformed sPLT chunk");
+      __kimtoy__png_warning(png_ptr, "malformed sPLT chunk");
       return;
    }
 
@@ -1473,9 +1473,9 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* Integrity-check the data length */
    if (data_length % entry_size)
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
-      png_warning(png_ptr, "sPLT chunk has bad length");
+      __kimtoy__png_warning(png_ptr, "sPLT chunk has bad length");
       return;
    }
 
@@ -1484,18 +1484,18 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (dl > max_dl)
    {
-       png_warning(png_ptr, "sPLT chunk too long");
+       __kimtoy__png_warning(png_ptr, "sPLT chunk too long");
        return;
    }
 
    new_palette.nentries = (png_int_32)(data_length / entry_size);
 
-   new_palette.entries = (png_sPLT_entryp)png_malloc_warn(
+   new_palette.entries = (png_sPLT_entryp)__kimtoy__png_malloc_warn(
        png_ptr, new_palette.nentries * png_sizeof(png_sPLT_entry));
 
    if (new_palette.entries == NULL)
    {
-       png_warning(png_ptr, "sPLT chunk requires too much memory");
+       __kimtoy__png_warning(png_ptr, "sPLT chunk requires too much memory");
        return;
    }
 
@@ -1514,13 +1514,13 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
       else
       {
-         pp->red   = png_get_uint_16(entry_start); entry_start += 2;
-         pp->green = png_get_uint_16(entry_start); entry_start += 2;
-         pp->blue  = png_get_uint_16(entry_start); entry_start += 2;
-         pp->alpha = png_get_uint_16(entry_start); entry_start += 2;
+         pp->red   = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
+         pp->green = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
+         pp->blue  = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
+         pp->alpha = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
       }
 
-      pp->frequency = png_get_uint_16(entry_start); entry_start += 2;
+      pp->frequency = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
    }
 #else
    pp = new_palette.entries;
@@ -1538,49 +1538,49 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
       else
       {
-         pp[i].red   = png_get_uint_16(entry_start); entry_start += 2;
-         pp[i].green = png_get_uint_16(entry_start); entry_start += 2;
-         pp[i].blue  = png_get_uint_16(entry_start); entry_start += 2;
-         pp[i].alpha = png_get_uint_16(entry_start); entry_start += 2;
+         pp[i].red   = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
+         pp[i].green = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
+         pp[i].blue  = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
+         pp[i].alpha = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
       }
 
-      pp[i].frequency = png_get_uint_16(entry_start); entry_start += 2;
+      pp[i].frequency = __kimtoy__png_get_uint_16(entry_start); entry_start += 2;
    }
 #endif
 
    /* Discard all chunk data except the name and stash that */
    new_palette.name = png_ptr->chunkdata;
 
-   png_set_sPLT(png_ptr, info_ptr, &new_palette, 1);
+   __kimtoy__png_set_sPLT(png_ptr, info_ptr, &new_palette, 1);
 
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = NULL;
-   png_free(png_ptr, new_palette.entries);
+   __kimtoy__png_free(png_ptr, new_palette.entries);
 }
 #endif /* PNG_READ_sPLT_SUPPORTED */
 
 #ifdef PNG_READ_tRNS_SUPPORTED
 void /* PRIVATE */
-png_handle_tRNS(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_tRNS(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_byte readbuf[PNG_MAX_PALETTE_LENGTH];
 
-   png_debug(1, "in png_handle_tRNS");
+   png_debug(1, "in __kimtoy__png_handle_tRNS");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before tRNS");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before tRNS");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid tRNS after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid tRNS after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_tRNS))
    {
-      png_warning(png_ptr, "Duplicate tRNS chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate tRNS chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
@@ -1590,14 +1590,14 @@ png_handle_tRNS(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
       if (length != 2)
       {
-         png_warning(png_ptr, "Incorrect tRNS chunk length");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "Incorrect tRNS chunk length");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
-      png_crc_read(png_ptr, buf, 2);
+      __kimtoy__png_crc_read(png_ptr, buf, 2);
       png_ptr->num_trans = 1;
-      png_ptr->trans_color.gray = png_get_uint_16(buf);
+      png_ptr->trans_color.gray = __kimtoy__png_get_uint_16(buf);
    }
 
    else if (png_ptr->color_type == PNG_COLOR_TYPE_RGB)
@@ -1606,16 +1606,16 @@ png_handle_tRNS(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
       if (length != 6)
       {
-         png_warning(png_ptr, "Incorrect tRNS chunk length");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "Incorrect tRNS chunk length");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
-      png_crc_read(png_ptr, buf, (png_size_t)length);
+      __kimtoy__png_crc_read(png_ptr, buf, (png_size_t)length);
       png_ptr->num_trans = 1;
-      png_ptr->trans_color.red = png_get_uint_16(buf);
-      png_ptr->trans_color.green = png_get_uint_16(buf + 2);
-      png_ptr->trans_color.blue = png_get_uint_16(buf + 4);
+      png_ptr->trans_color.red = __kimtoy__png_get_uint_16(buf);
+      png_ptr->trans_color.green = __kimtoy__png_get_uint_16(buf + 2);
+      png_ptr->trans_color.blue = __kimtoy__png_get_uint_16(buf + 4);
    }
 
    else if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
@@ -1623,78 +1623,78 @@ png_handle_tRNS(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       if (!(png_ptr->mode & PNG_HAVE_PLTE))
       {
          /* Should be an error, but we can cope with it. */
-         png_warning(png_ptr, "Missing PLTE before tRNS");
+         __kimtoy__png_warning(png_ptr, "Missing PLTE before tRNS");
       }
 
       if (length > (png_uint_32)png_ptr->num_palette ||
           length > PNG_MAX_PALETTE_LENGTH)
       {
-         png_warning(png_ptr, "Incorrect tRNS chunk length");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "Incorrect tRNS chunk length");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
       if (length == 0)
       {
-         png_warning(png_ptr, "Zero length tRNS chunk");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "Zero length tRNS chunk");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
-      png_crc_read(png_ptr, readbuf, (png_size_t)length);
+      __kimtoy__png_crc_read(png_ptr, readbuf, (png_size_t)length);
       png_ptr->num_trans = (png_uint_16)length;
    }
 
    else
    {
-      png_warning(png_ptr, "tRNS chunk not allowed with alpha channel");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "tRNS chunk not allowed with alpha channel");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
    {
       png_ptr->num_trans = 0;
       return;
    }
 
-   png_set_tRNS(png_ptr, info_ptr, readbuf, png_ptr->num_trans,
+   __kimtoy__png_set_tRNS(png_ptr, info_ptr, readbuf, png_ptr->num_trans,
        &(png_ptr->trans_color));
 }
 #endif
 
 #ifdef PNG_READ_bKGD_SUPPORTED
 void /* PRIVATE */
-png_handle_bKGD(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_bKGD(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_size_t truelen;
    png_byte buf[6];
    png_color_16 background;
 
-   png_debug(1, "in png_handle_bKGD");
+   png_debug(1, "in __kimtoy__png_handle_bKGD");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before bKGD");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before bKGD");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid bKGD after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid bKGD after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE &&
        !(png_ptr->mode & PNG_HAVE_PLTE))
    {
-      png_warning(png_ptr, "Missing PLTE before bKGD");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Missing PLTE before bKGD");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_bKGD))
    {
-      png_warning(png_ptr, "Duplicate bKGD chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate bKGD chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
@@ -1709,14 +1709,14 @@ png_handle_bKGD(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (length != truelen)
    {
-      png_warning(png_ptr, "Incorrect bKGD chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect bKGD chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, truelen);
+   __kimtoy__png_crc_read(png_ptr, buf, truelen);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
    /* We convert the index value into RGB components so that we can allow
@@ -1732,7 +1732,7 @@ png_handle_bKGD(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       {
          if (buf[0] >= info_ptr->num_palette)
          {
-            png_warning(png_ptr, "Incorrect bKGD chunk index value");
+            __kimtoy__png_warning(png_ptr, "Incorrect bKGD chunk index value");
             return;
          }
 
@@ -1753,52 +1753,52 @@ png_handle_bKGD(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       background.red =
       background.green =
       background.blue =
-      background.gray = png_get_uint_16(buf);
+      background.gray = __kimtoy__png_get_uint_16(buf);
    }
 
    else
    {
       background.index = 0;
-      background.red = png_get_uint_16(buf);
-      background.green = png_get_uint_16(buf + 2);
-      background.blue = png_get_uint_16(buf + 4);
+      background.red = __kimtoy__png_get_uint_16(buf);
+      background.green = __kimtoy__png_get_uint_16(buf + 2);
+      background.blue = __kimtoy__png_get_uint_16(buf + 4);
       background.gray = 0;
    }
 
-   png_set_bKGD(png_ptr, info_ptr, &background);
+   __kimtoy__png_set_bKGD(png_ptr, info_ptr, &background);
 }
 #endif
 
 #ifdef PNG_READ_hIST_SUPPORTED
 void /* PRIVATE */
-png_handle_hIST(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_hIST(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    unsigned int num, i;
    png_uint_16 readbuf[PNG_MAX_PALETTE_LENGTH];
 
-   png_debug(1, "in png_handle_hIST");
+   png_debug(1, "in __kimtoy__png_handle_hIST");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before hIST");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before hIST");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid hIST after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid hIST after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (!(png_ptr->mode & PNG_HAVE_PLTE))
    {
-      png_warning(png_ptr, "Missing PLTE before hIST");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Missing PLTE before hIST");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_hIST))
    {
-      png_warning(png_ptr, "Duplicate hIST chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate hIST chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
@@ -1807,8 +1807,8 @@ png_handle_hIST(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (num != (unsigned int)png_ptr->num_palette || num >
        (unsigned int)PNG_MAX_PALETTE_LENGTH)
    {
-      png_warning(png_ptr, "Incorrect hIST chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect hIST chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
@@ -1816,113 +1816,113 @@ png_handle_hIST(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_byte buf[2];
 
-      png_crc_read(png_ptr, buf, 2);
-      readbuf[i] = png_get_uint_16(buf);
+      __kimtoy__png_crc_read(png_ptr, buf, 2);
+      readbuf[i] = __kimtoy__png_get_uint_16(buf);
    }
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
-   png_set_hIST(png_ptr, info_ptr, readbuf);
+   __kimtoy__png_set_hIST(png_ptr, info_ptr, readbuf);
 }
 #endif
 
 #ifdef PNG_READ_pHYs_SUPPORTED
 void /* PRIVATE */
-png_handle_pHYs(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_pHYs(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_byte buf[9];
    png_uint_32 res_x, res_y;
    int unit_type;
 
-   png_debug(1, "in png_handle_pHYs");
+   png_debug(1, "in __kimtoy__png_handle_pHYs");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before pHYs");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before pHYs");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid pHYs after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid pHYs after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_pHYs))
    {
-      png_warning(png_ptr, "Duplicate pHYs chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate pHYs chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    if (length != 9)
    {
-      png_warning(png_ptr, "Incorrect pHYs chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect pHYs chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, 9);
+   __kimtoy__png_crc_read(png_ptr, buf, 9);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
-   res_x = png_get_uint_32(buf);
-   res_y = png_get_uint_32(buf + 4);
+   res_x = __kimtoy__png_get_uint_32(buf);
+   res_y = __kimtoy__png_get_uint_32(buf + 4);
    unit_type = buf[8];
-   png_set_pHYs(png_ptr, info_ptr, res_x, res_y, unit_type);
+   __kimtoy__png_set_pHYs(png_ptr, info_ptr, res_x, res_y, unit_type);
 }
 #endif
 
 #ifdef PNG_READ_oFFs_SUPPORTED
 void /* PRIVATE */
-png_handle_oFFs(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_oFFs(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_byte buf[9];
    png_int_32 offset_x, offset_y;
    int unit_type;
 
-   png_debug(1, "in png_handle_oFFs");
+   png_debug(1, "in __kimtoy__png_handle_oFFs");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before oFFs");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before oFFs");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid oFFs after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid oFFs after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_oFFs))
    {
-      png_warning(png_ptr, "Duplicate oFFs chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate oFFs chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    if (length != 9)
    {
-      png_warning(png_ptr, "Incorrect oFFs chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect oFFs chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, 9);
+   __kimtoy__png_crc_read(png_ptr, buf, 9);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
-   offset_x = png_get_int_32(buf);
-   offset_y = png_get_int_32(buf + 4);
+   offset_x = __kimtoy__png_get_int_32(buf);
+   offset_y = __kimtoy__png_get_int_32(buf + 4);
    unit_type = buf[8];
-   png_set_oFFs(png_ptr, info_ptr, offset_x, offset_y, unit_type);
+   __kimtoy__png_set_oFFs(png_ptr, info_ptr, offset_x, offset_y, unit_type);
 }
 #endif
 
 #ifdef PNG_READ_pCAL_SUPPORTED
 /* Read the pCAL chunk (described in the PNG Extensions document) */
 void /* PRIVATE */
-png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_int_32 X0, X1;
    png_byte type, nparams;
@@ -1931,42 +1931,42 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_size_t slength;
    int i;
 
-   png_debug(1, "in png_handle_pCAL");
+   png_debug(1, "in __kimtoy__png_handle_pCAL");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before pCAL");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before pCAL");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid pCAL after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid pCAL after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_pCAL))
    {
-      png_warning(png_ptr, "Duplicate pCAL chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate pCAL chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    png_debug1(2, "Allocating and reading pCAL chunk data (%u bytes)",
        length + 1);
-   png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
+   png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length + 1);
 
    if (png_ptr->chunkdata == NULL)
    {
-      png_warning(png_ptr, "No memory for pCAL purpose");
+      __kimtoy__png_warning(png_ptr, "No memory for pCAL purpose");
       return;
    }
 
    slength = (png_size_t)length;
-   png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
+   __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -1984,15 +1984,15 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
     */
    if (endptr <= buf + 12)
    {
-      png_warning(png_ptr, "Invalid pCAL data");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Invalid pCAL data");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
 
    png_debug(3, "Reading pCAL X0, X1, type, nparams, and units");
-   X0 = png_get_int_32((png_bytep)buf+1);
-   X1 = png_get_int_32((png_bytep)buf+5);
+   X0 = __kimtoy__png_get_int_32((png_bytep)buf+1);
+   X1 = __kimtoy__png_get_int_32((png_bytep)buf+5);
    type = buf[9];
    nparams = buf[10];
    units = buf + 11;
@@ -2006,15 +2006,15 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
        (type == PNG_EQUATION_ARBITRARY && nparams != 3) ||
        (type == PNG_EQUATION_HYPERBOLIC && nparams != 4))
    {
-      png_warning(png_ptr, "Invalid pCAL parameters for equation type");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Invalid pCAL parameters for equation type");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
 
    else if (type >= PNG_EQUATION_LAST)
    {
-      png_warning(png_ptr, "Unrecognized equation type for pCAL chunk");
+      __kimtoy__png_warning(png_ptr, "Unrecognized equation type for pCAL chunk");
    }
 
    for (buf = units; *buf; buf++)
@@ -2022,14 +2022,14 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    png_debug(3, "Allocating pCAL parameters array");
 
-   params = (png_charpp)png_malloc_warn(png_ptr,
+   params = (png_charpp)__kimtoy__png_malloc_warn(png_ptr,
        (png_size_t)(nparams * png_sizeof(png_charp)));
 
    if (params == NULL)
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
-      png_warning(png_ptr, "No memory for pCAL params");
+      __kimtoy__png_warning(png_ptr, "No memory for pCAL params");
       return;
    }
 
@@ -2046,77 +2046,77 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       /* Make sure we haven't run out of data yet */
       if (buf > endptr)
       {
-         png_warning(png_ptr, "Invalid pCAL data");
-         png_free(png_ptr, png_ptr->chunkdata);
+         __kimtoy__png_warning(png_ptr, "Invalid pCAL data");
+         __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
          png_ptr->chunkdata = NULL;
-         png_free(png_ptr, params);
+         __kimtoy__png_free(png_ptr, params);
          return;
       }
    }
 
-   png_set_pCAL(png_ptr, info_ptr, png_ptr->chunkdata, X0, X1, type, nparams,
+   __kimtoy__png_set_pCAL(png_ptr, info_ptr, png_ptr->chunkdata, X0, X1, type, nparams,
       units, params);
 
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = NULL;
-   png_free(png_ptr, params);
+   __kimtoy__png_free(png_ptr, params);
 }
 #endif
 
 #ifdef PNG_READ_sCAL_SUPPORTED
 /* Read the sCAL chunk */
 void /* PRIVATE */
-png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_size_t slength, i;
    int state;
 
-   png_debug(1, "in png_handle_sCAL");
+   png_debug(1, "in __kimtoy__png_handle_sCAL");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before sCAL");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before sCAL");
 
    else if (png_ptr->mode & PNG_HAVE_IDAT)
    {
-      png_warning(png_ptr, "Invalid sCAL after IDAT");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL after IDAT");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sCAL))
    {
-      png_warning(png_ptr, "Duplicate sCAL chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate sCAL chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    /* Need unit type, width, \0, height: minimum 4 bytes */
    else if (length < 4)
    {
-      png_warning(png_ptr, "sCAL chunk too short");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "sCAL chunk too short");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    png_debug1(2, "Allocating and reading sCAL chunk data (%u bytes)",
       length + 1);
 
-   png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
+   png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length + 1);
 
    if (png_ptr->chunkdata == NULL)
    {
-      png_warning(png_ptr, "Out of memory while processing sCAL chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Out of memory while processing sCAL chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
    slength = (png_size_t)length;
-   png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
+   __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
    png_ptr->chunkdata[slength] = 0x00; /* Null terminate the last string */
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2124,8 +2124,8 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* Validate the unit. */
    if (png_ptr->chunkdata[0] != 1 && png_ptr->chunkdata[0] != 2)
    {
-      png_warning(png_ptr, "Invalid sCAL ignored: invalid unit");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL ignored: invalid unit");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2136,54 +2136,54 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    i = 1;
    state = 0;
 
-   if (!png_check_fp_number(png_ptr->chunkdata, slength, &state, &i) ||
+   if (!__kimtoy__png_check_fp_number(png_ptr->chunkdata, slength, &state, &i) ||
        i >= slength || png_ptr->chunkdata[i++] != 0)
-      png_warning(png_ptr, "Invalid sCAL chunk ignored: bad width format");
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL chunk ignored: bad width format");
 
    else if (!PNG_FP_IS_POSITIVE(state))
-      png_warning(png_ptr, "Invalid sCAL chunk ignored: non-positive width");
+      __kimtoy__png_warning(png_ptr, "Invalid sCAL chunk ignored: non-positive width");
 
    else
    {
       png_size_t heighti = i;
 
       state = 0;
-      if (!png_check_fp_number(png_ptr->chunkdata, slength, &state, &i) ||
+      if (!__kimtoy__png_check_fp_number(png_ptr->chunkdata, slength, &state, &i) ||
           i != slength)
-         png_warning(png_ptr, "Invalid sCAL chunk ignored: bad height format");
+         __kimtoy__png_warning(png_ptr, "Invalid sCAL chunk ignored: bad height format");
 
       else if (!PNG_FP_IS_POSITIVE(state))
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
             "Invalid sCAL chunk ignored: non-positive height");
 
       else
          /* This is the (only) success case. */
-         png_set_sCAL_s(png_ptr, info_ptr, png_ptr->chunkdata[0],
+         __kimtoy__png_set_sCAL_s(png_ptr, info_ptr, png_ptr->chunkdata[0],
             png_ptr->chunkdata+1, png_ptr->chunkdata+heighti);
    }
 
    /* Clean up - just free the temporarily allocated buffer. */
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = NULL;
 }
 #endif
 
 #ifdef PNG_READ_tIME_SUPPORTED
 void /* PRIVATE */
-png_handle_tIME(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_tIME(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_byte buf[7];
    png_time mod_time;
 
-   png_debug(1, "in png_handle_tIME");
+   png_debug(1, "in __kimtoy__png_handle_tIME");
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Out of place tIME chunk");
+      __kimtoy__png_error(png_ptr, "Out of place tIME chunk");
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_tIME))
    {
-      png_warning(png_ptr, "Duplicate tIME chunk");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Duplicate tIME chunk");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
@@ -2192,14 +2192,14 @@ png_handle_tIME(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (length != 7)
    {
-      png_warning(png_ptr, "Incorrect tIME chunk length");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "Incorrect tIME chunk length");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 
-   png_crc_read(png_ptr, buf, 7);
+   __kimtoy__png_crc_read(png_ptr, buf, 7);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
       return;
 
    mod_time.second = buf[6];
@@ -2207,16 +2207,16 @@ png_handle_tIME(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    mod_time.hour = buf[4];
    mod_time.day = buf[3];
    mod_time.month = buf[2];
-   mod_time.year = png_get_uint_16(buf);
+   mod_time.year = __kimtoy__png_get_uint_16(buf);
 
-   png_set_tIME(png_ptr, info_ptr, &mod_time);
+   __kimtoy__png_set_tIME(png_ptr, info_ptr, &mod_time);
 }
 #endif
 
 #ifdef PNG_READ_tEXt_SUPPORTED
 /* Note: this does not properly handle chunks that are > 64K under DOS */
 void /* PRIVATE */
-png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_textp text_ptr;
    png_charp key;
@@ -2225,28 +2225,28 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_size_t slength;
    int ret;
 
-   png_debug(1, "in png_handle_tEXt");
+   png_debug(1, "in __kimtoy__png_handle_tEXt");
 
 #ifdef PNG_USER_LIMITS_SUPPORTED
    if (png_ptr->user_chunk_cache_max != 0)
    {
       if (png_ptr->user_chunk_cache_max == 1)
       {
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
       if (--png_ptr->user_chunk_cache_max == 1)
       {
-         png_warning(png_ptr, "No space in chunk cache for tEXt");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "No space in chunk cache for tEXt");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
    }
 #endif
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before tEXt");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before tEXt");
 
    if (png_ptr->mode & PNG_HAVE_IDAT)
       png_ptr->mode |= PNG_AFTER_IDAT;
@@ -2254,28 +2254,28 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #ifdef PNG_MAX_MALLOC_64K
    if (length > (png_uint_32)65535L)
    {
-      png_warning(png_ptr, "tEXt chunk too large to fit in memory");
+      __kimtoy__png_warning(png_ptr, "tEXt chunk too large to fit in memory");
       skip = length - (png_uint_32)65535L;
       length = (png_uint_32)65535L;
    }
 #endif
 
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
 
-   png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
+   png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length + 1);
 
    if (png_ptr->chunkdata == NULL)
    {
-     png_warning(png_ptr, "No memory to process text chunk");
+     __kimtoy__png_warning(png_ptr, "No memory to process text chunk");
      return;
    }
 
    slength = (png_size_t)length;
-   png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
+   __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
-   if (png_crc_finish(png_ptr, skip))
+   if (__kimtoy__png_crc_finish(png_ptr, skip))
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2290,13 +2290,13 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (text != key + slength)
       text++;
 
-   text_ptr = (png_textp)png_malloc_warn(png_ptr,
+   text_ptr = (png_textp)__kimtoy__png_malloc_warn(png_ptr,
        png_sizeof(png_text));
 
    if (text_ptr == NULL)
    {
-      png_warning(png_ptr, "Not enough memory to process text chunk");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Not enough memory to process text chunk");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2309,21 +2309,21 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    text_ptr->text = text;
    text_ptr->text_length = png_strlen(text);
 
-   ret = png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
+   ret = __kimtoy__png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
 
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = NULL;
-   png_free(png_ptr, text_ptr);
+   __kimtoy__png_free(png_ptr, text_ptr);
 
    if (ret)
-      png_warning(png_ptr, "Insufficient memory to process text chunk");
+      __kimtoy__png_warning(png_ptr, "Insufficient memory to process text chunk");
 }
 #endif
 
 #ifdef PNG_READ_zTXt_SUPPORTED
 /* Note: this does not correctly handle chunks that are > 64K under DOS */
 void /* PRIVATE */
-png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_textp text_ptr;
    png_charp text;
@@ -2331,28 +2331,28 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    int ret;
    png_size_t slength, prefix_len, data_len;
 
-   png_debug(1, "in png_handle_zTXt");
+   png_debug(1, "in __kimtoy__png_handle_zTXt");
 
 #ifdef PNG_USER_LIMITS_SUPPORTED
    if (png_ptr->user_chunk_cache_max != 0)
    {
       if (png_ptr->user_chunk_cache_max == 1)
       {
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
       if (--png_ptr->user_chunk_cache_max == 1)
       {
-         png_warning(png_ptr, "No space in chunk cache for zTXt");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "No space in chunk cache for zTXt");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
    }
 #endif
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before zTXt");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before zTXt");
 
    if (png_ptr->mode & PNG_HAVE_IDAT)
       png_ptr->mode |= PNG_AFTER_IDAT;
@@ -2363,27 +2363,27 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
     */
    if (length > (png_uint_32)65535L)
    {
-      png_warning(png_ptr, "zTXt chunk too large to fit in memory");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "zTXt chunk too large to fit in memory");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 #endif
 
-   png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
+   png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length + 1);
 
    if (png_ptr->chunkdata == NULL)
    {
-      png_warning(png_ptr, "Out of memory processing zTXt chunk");
+      __kimtoy__png_warning(png_ptr, "Out of memory processing zTXt chunk");
       return;
    }
 
    slength = (png_size_t)length;
-   png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
+   __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2396,8 +2396,8 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    /* zTXt must have some text after the chunkdataword */
    if (text >= png_ptr->chunkdata + slength - 2)
    {
-      png_warning(png_ptr, "Truncated zTXt chunk");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Truncated zTXt chunk");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2408,7 +2408,7 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
        if (comp_type != PNG_TEXT_COMPRESSION_zTXt)
        {
-          png_warning(png_ptr, "Unknown compression type in zTXt chunk");
+          __kimtoy__png_warning(png_ptr, "Unknown compression type in zTXt chunk");
           comp_type = PNG_TEXT_COMPRESSION_zTXt;
        }
 
@@ -2417,16 +2417,16 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    prefix_len = text - png_ptr->chunkdata;
 
-   png_decompress_chunk(png_ptr, comp_type,
+   __kimtoy__png_decompress_chunk(png_ptr, comp_type,
        (png_size_t)length, prefix_len, &data_len);
 
-   text_ptr = (png_textp)png_malloc_warn(png_ptr,
+   text_ptr = (png_textp)__kimtoy__png_malloc_warn(png_ptr,
        png_sizeof(png_text));
 
    if (text_ptr == NULL)
    {
-      png_warning(png_ptr, "Not enough memory to process zTXt chunk");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Not enough memory to process zTXt chunk");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2439,21 +2439,21 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    text_ptr->text = png_ptr->chunkdata + prefix_len;
    text_ptr->text_length = data_len;
 
-   ret = png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
+   ret = __kimtoy__png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
 
-   png_free(png_ptr, text_ptr);
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, text_ptr);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = NULL;
 
    if (ret)
-      png_error(png_ptr, "Insufficient memory to store zTXt chunk");
+      __kimtoy__png_error(png_ptr, "Insufficient memory to store zTXt chunk");
 }
 #endif
 
 #ifdef PNG_READ_iTXt_SUPPORTED
 /* Note: this does not correctly handle chunks that are > 64K under DOS */
 void /* PRIVATE */
-png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_textp text_ptr;
    png_charp key, lang, text, lang_key;
@@ -2462,28 +2462,28 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    int ret;
    png_size_t slength, prefix_len, data_len;
 
-   png_debug(1, "in png_handle_iTXt");
+   png_debug(1, "in __kimtoy__png_handle_iTXt");
 
 #ifdef PNG_USER_LIMITS_SUPPORTED
    if (png_ptr->user_chunk_cache_max != 0)
    {
       if (png_ptr->user_chunk_cache_max == 1)
       {
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
       if (--png_ptr->user_chunk_cache_max == 1)
       {
-         png_warning(png_ptr, "No space in chunk cache for iTXt");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "No space in chunk cache for iTXt");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
    }
 #endif
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
-      png_error(png_ptr, "Missing IHDR before iTXt");
+      __kimtoy__png_error(png_ptr, "Missing IHDR before iTXt");
 
    if (png_ptr->mode & PNG_HAVE_IDAT)
       png_ptr->mode |= PNG_AFTER_IDAT;
@@ -2494,27 +2494,27 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
     */
    if (length > (png_uint_32)65535L)
    {
-      png_warning(png_ptr, "iTXt chunk too large to fit in memory");
-      png_crc_finish(png_ptr, length);
+      __kimtoy__png_warning(png_ptr, "iTXt chunk too large to fit in memory");
+      __kimtoy__png_crc_finish(png_ptr, length);
       return;
    }
 #endif
 
-   png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
+   png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc_warn(png_ptr, length + 1);
 
    if (png_ptr->chunkdata == NULL)
    {
-      png_warning(png_ptr, "No memory to process iTXt chunk");
+      __kimtoy__png_warning(png_ptr, "No memory to process iTXt chunk");
       return;
    }
 
    slength = (png_size_t)length;
-   png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
+   __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
-   if (png_crc_finish(png_ptr, 0))
+   if (__kimtoy__png_crc_finish(png_ptr, 0))
    {
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2533,8 +2533,8 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (lang >= png_ptr->chunkdata + slength - 3)
    {
-      png_warning(png_ptr, "Truncated iTXt chunk");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Truncated iTXt chunk");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2552,8 +2552,8 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (lang_key >= png_ptr->chunkdata + slength)
    {
-      png_warning(png_ptr, "Truncated iTXt chunk");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Truncated iTXt chunk");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2565,8 +2565,8 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (text >= png_ptr->chunkdata + slength)
    {
-      png_warning(png_ptr, "Malformed iTXt chunk");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Malformed iTXt chunk");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2576,19 +2576,19 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    key=png_ptr->chunkdata;
 
    if (comp_flag)
-      png_decompress_chunk(png_ptr, comp_type,
+      __kimtoy__png_decompress_chunk(png_ptr, comp_type,
           (size_t)length, prefix_len, &data_len);
 
    else
       data_len = png_strlen(png_ptr->chunkdata + prefix_len);
 
-   text_ptr = (png_textp)png_malloc_warn(png_ptr,
+   text_ptr = (png_textp)__kimtoy__png_malloc_warn(png_ptr,
        png_sizeof(png_text));
 
    if (text_ptr == NULL)
    {
-      png_warning(png_ptr, "Not enough memory to process iTXt chunk");
-      png_free(png_ptr, png_ptr->chunkdata);
+      __kimtoy__png_warning(png_ptr, "Not enough memory to process iTXt chunk");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
       png_ptr->chunkdata = NULL;
       return;
    }
@@ -2601,65 +2601,65 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    text_ptr->key = png_ptr->chunkdata;
    text_ptr->text = png_ptr->chunkdata + prefix_len;
 
-   ret = png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
+   ret = __kimtoy__png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
 
-   png_free(png_ptr, text_ptr);
-   png_free(png_ptr, png_ptr->chunkdata);
+   __kimtoy__png_free(png_ptr, text_ptr);
+   __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = NULL;
 
    if (ret)
-      png_error(png_ptr, "Insufficient memory to store iTXt chunk");
+      __kimtoy__png_error(png_ptr, "Insufficient memory to store iTXt chunk");
 }
 #endif
 
 #ifdef PNG_READ_APNG_SUPPORTED
 void /* PRIVATE */
-png_handle_acTL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_acTL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
     png_byte data[8];
     png_uint_32 num_frames;
     png_uint_32 num_plays;
     png_uint_32 didSet;
     
-    png_debug(1, "in png_handle_acTL");
+    png_debug(1, "in __kimtoy__png_handle_acTL");
 
     if (!(png_ptr->mode & PNG_HAVE_IHDR))
     {
-        png_error(png_ptr, "Missing IHDR before acTL");
+        __kimtoy__png_error(png_ptr, "Missing IHDR before acTL");
     }
     else if (png_ptr->mode & PNG_HAVE_IDAT)
     {
-        png_warning(png_ptr, "Invalid acTL after IDAT skipped");
-        png_crc_finish(png_ptr, length);
+        __kimtoy__png_warning(png_ptr, "Invalid acTL after IDAT skipped");
+        __kimtoy__png_crc_finish(png_ptr, length);
         return;
     }
     else if (png_ptr->mode & PNG_HAVE_acTL)
     {
-        png_warning(png_ptr, "Duplicate acTL skipped");
-        png_crc_finish(png_ptr, length);
+        __kimtoy__png_warning(png_ptr, "Duplicate acTL skipped");
+        __kimtoy__png_crc_finish(png_ptr, length);
         return;
     }
     else if (length != 8)
     {
-        png_warning(png_ptr, "acTL with invalid length skipped");
-        png_crc_finish(png_ptr, length);
+        __kimtoy__png_warning(png_ptr, "acTL with invalid length skipped");
+        __kimtoy__png_crc_finish(png_ptr, length);
         return;
     }
     
-    png_crc_read(png_ptr, data, 8);
-    png_crc_finish(png_ptr, 0);
+    __kimtoy__png_crc_read(png_ptr, data, 8);
+    __kimtoy__png_crc_finish(png_ptr, 0);
     
-    num_frames = png_get_uint_31(png_ptr, data);
-    num_plays = png_get_uint_31(png_ptr, data + 4);
+    num_frames = __kimtoy__png_get_uint_31(png_ptr, data);
+    num_plays = __kimtoy__png_get_uint_31(png_ptr, data + 4);
     
     /* the set function will do error checking on num_frames */
-    didSet = png_set_acTL(png_ptr, info_ptr, num_frames, num_plays);
+    didSet = __kimtoy__png_set_acTL(png_ptr, info_ptr, num_frames, num_plays);
     if(didSet)
         png_ptr->mode |= PNG_HAVE_acTL;
 }
 
 void /* PRIVATE */
-png_handle_fcTL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_fcTL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
     png_byte data[22];
     png_uint_32 width;
@@ -2671,71 +2671,71 @@ png_handle_fcTL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
     png_byte dispose_op;
     png_byte blend_op;
 
-    png_debug(1, "in png_handle_fcTL");
+    png_debug(1, "in __kimtoy__png_handle_fcTL");
 
-    png_ensure_sequence_number(png_ptr, length);
+    __kimtoy__png_ensure_sequence_number(png_ptr, length);
 
     if (!(png_ptr->mode & PNG_HAVE_IHDR))
     {
-        png_error(png_ptr, "Missing IHDR before fcTL");
+        __kimtoy__png_error(png_ptr, "Missing IHDR before fcTL");
     }
     else if (png_ptr->mode & PNG_HAVE_IDAT)
     {
         /* for any frames other then the first this message may be misleading,
         * but correct. PNG_HAVE_IDAT is unset before the frame head is read
         * i can't think of a better message */
-        png_warning(png_ptr, "Invalid fcTL after IDAT skipped");
-        png_crc_finish(png_ptr, length-4);
+        __kimtoy__png_warning(png_ptr, "Invalid fcTL after IDAT skipped");
+        __kimtoy__png_crc_finish(png_ptr, length-4);
         return;
     }
     else if (png_ptr->mode & PNG_HAVE_fcTL)
     {
-        png_warning(png_ptr, "Duplicate fcTL within one frame skipped");
-        png_crc_finish(png_ptr, length-4);
+        __kimtoy__png_warning(png_ptr, "Duplicate fcTL within one frame skipped");
+        __kimtoy__png_crc_finish(png_ptr, length-4);
         return;
     }
     else if (length != 26)
     {
-        png_warning(png_ptr, "fcTL with invalid length skipped");
-        png_crc_finish(png_ptr, length-4);
+        __kimtoy__png_warning(png_ptr, "fcTL with invalid length skipped");
+        __kimtoy__png_crc_finish(png_ptr, length-4);
         return;
     }
 
-    png_crc_read(png_ptr, data, 22);
-    png_crc_finish(png_ptr, 0);
+    __kimtoy__png_crc_read(png_ptr, data, 22);
+    __kimtoy__png_crc_finish(png_ptr, 0);
 
-    width = png_get_uint_31(png_ptr, data);
-    height = png_get_uint_31(png_ptr, data + 4);
-    x_offset = png_get_uint_31(png_ptr, data + 8);
-    y_offset = png_get_uint_31(png_ptr, data + 12);
-    delay_num = png_get_uint_16(data + 16);
-    delay_den = png_get_uint_16(data + 18);
+    width = __kimtoy__png_get_uint_31(png_ptr, data);
+    height = __kimtoy__png_get_uint_31(png_ptr, data + 4);
+    x_offset = __kimtoy__png_get_uint_31(png_ptr, data + 8);
+    y_offset = __kimtoy__png_get_uint_31(png_ptr, data + 12);
+    delay_num = __kimtoy__png_get_uint_16(data + 16);
+    delay_den = __kimtoy__png_get_uint_16(data + 18);
     dispose_op = data[20];
     blend_op = data[21];
 
     if (png_ptr->num_frames_read == 0 && (x_offset != 0 || y_offset != 0))
-        png_error(png_ptr, "fcTL for the first frame must have zero offset");
+        __kimtoy__png_error(png_ptr, "fcTL for the first frame must have zero offset");
 
     if (info_ptr != NULL)
     {
         if (png_ptr->num_frames_read == 0 &&
             (width != info_ptr->width || height != info_ptr->height))
-            png_error(png_ptr, "size in first frame's fcTL must match "
+            __kimtoy__png_error(png_ptr, "size in first frame's fcTL must match "
                                "the size in IHDR");
 
         /* the set function will do more error checking */
-        png_set_next_frame_fcTL(png_ptr, info_ptr, width, height,
+        __kimtoy__png_set_next_frame_fcTL(png_ptr, info_ptr, width, height,
                                 x_offset, y_offset, delay_num, delay_den,
                                 dispose_op, blend_op);
 
-        png_read_reinit(png_ptr, info_ptr);
+        __kimtoy__png_read_reinit(png_ptr, info_ptr);
     }
 
     png_ptr->mode |= PNG_HAVE_fcTL;
 }
 
 void /* PRIVATE */
-png_have_info(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_have_info(png_structp png_ptr, png_infop info_ptr)
 {
     if((info_ptr->valid & PNG_INFO_acTL) && !(info_ptr->valid & PNG_INFO_fcTL))
     {
@@ -2745,33 +2745,33 @@ png_have_info(png_structp png_ptr, png_infop info_ptr)
 }
 
 void /* PRIVATE */
-png_handle_fdAT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_fdAT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
-    png_ensure_sequence_number(png_ptr, length);
+    __kimtoy__png_ensure_sequence_number(png_ptr, length);
     
-    /* This function is only called from png_read_end(), png_read_info(), 
-    * and png_push_read_chunk() which means that:
+    /* This function is only called from __kimtoy__png_read_end(), __kimtoy__png_read_info(), 
+    * and __kimtoy__png_push_read_chunk() which means that:
     * - the user doesn't want to read this frame
     * - or this is an out-of-place fdAT
     * in either case it is safe to ignore the chunk with a warning */
-    png_warning(png_ptr, "ignoring fdAT chunk");
-    png_crc_finish(png_ptr, length - 4);
+    __kimtoy__png_warning(png_ptr, "ignoring fdAT chunk");
+    __kimtoy__png_crc_finish(png_ptr, length - 4);
 }
 
 void /* PRIVATE */
-png_ensure_sequence_number(png_structp png_ptr, png_uint_32 length)
+__kimtoy__png_ensure_sequence_number(png_structp png_ptr, png_uint_32 length)
 {
     png_byte data[4];
     png_uint_32 sequence_number;
     
     if (length < 4)
-        png_error(png_ptr, "invalid fcTL or fdAT chunk found");
+        __kimtoy__png_error(png_ptr, "invalid fcTL or fdAT chunk found");
     
-    png_crc_read(png_ptr, data, 4);
-    sequence_number = png_get_uint_31(png_ptr, data);
+    __kimtoy__png_crc_read(png_ptr, data, 4);
+    sequence_number = __kimtoy__png_get_uint_31(png_ptr, data);
     
     if (sequence_number != png_ptr->next_seq_num)
-        png_error(png_ptr, "fcTL or fdAT chunk with out-of-order sequence "
+        __kimtoy__png_error(png_ptr, "fcTL or fdAT chunk with out-of-order sequence "
                            "number found");
     
     png_ptr->next_seq_num++;
@@ -2785,25 +2785,25 @@ png_ensure_sequence_number(png_structp png_ptr, png_uint_32 length)
  * case it will be saved away to be written out later.
  */
 void /* PRIVATE */
-png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+__kimtoy__png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 {
    png_uint_32 skip = 0;
 
-   png_debug(1, "in png_handle_unknown");
+   png_debug(1, "in __kimtoy__png_handle_unknown");
 
 #ifdef PNG_USER_LIMITS_SUPPORTED
    if (png_ptr->user_chunk_cache_max != 0)
    {
       if (png_ptr->user_chunk_cache_max == 1)
       {
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
 
       if (--png_ptr->user_chunk_cache_max == 1)
       {
-         png_warning(png_ptr, "No space in chunk cache for unknown chunk");
-         png_crc_finish(png_ptr, length);
+         __kimtoy__png_warning(png_ptr, "No space in chunk cache for unknown chunk");
+         __kimtoy__png_crc_finish(png_ptr, length);
          return;
       }
    }
@@ -2818,14 +2818,14 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (PNG_CHUNK_CRITICAL(png_ptr->chunk_name))
    {
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
-      if (png_chunk_unknown_handling(png_ptr, png_ptr->chunk_name) !=
+      if (__kimtoy__png_chunk_unknown_handling(png_ptr, png_ptr->chunk_name) !=
           PNG_HANDLE_CHUNK_ALWAYS
 #ifdef PNG_READ_USER_CHUNKS_SUPPORTED
           && png_ptr->read_user_chunk_fn == NULL
 #endif
           )
 #endif
-         png_chunk_error(png_ptr, "unknown critical chunk");
+         __kimtoy__png_chunk_error(png_ptr, "unknown critical chunk");
    }
 
 #ifdef PNG_READ_UNKNOWN_CHUNKS_SUPPORTED
@@ -2838,7 +2838,7 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #ifdef PNG_MAX_MALLOC_64K
       if (length > 65535)
       {
-         png_warning(png_ptr, "unknown chunk too large to fit in memory");
+         __kimtoy__png_warning(png_ptr, "unknown chunk too large to fit in memory");
          skip = length - 65535;
          length = 65535;
       }
@@ -2857,8 +2857,8 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
       else
       {
-         png_ptr->unknown_chunk.data = (png_bytep)png_malloc(png_ptr, length);
-         png_crc_read(png_ptr, png_ptr->unknown_chunk.data, length);
+         png_ptr->unknown_chunk.data = (png_bytep)__kimtoy__png_malloc(png_ptr, length);
+         __kimtoy__png_crc_read(png_ptr, png_ptr->unknown_chunk.data, length);
       }
 
 #ifdef PNG_READ_USER_CHUNKS_SUPPORTED
@@ -2871,29 +2871,29 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
              (png_ptr, &png_ptr->unknown_chunk);
 
          if (ret < 0)
-            png_chunk_error(png_ptr, "error in user chunk");
+            __kimtoy__png_chunk_error(png_ptr, "error in user chunk");
 
          if (ret == 0)
          {
             if (PNG_CHUNK_CRITICAL(png_ptr->chunk_name))
             {
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
-               if (png_chunk_unknown_handling(png_ptr, png_ptr->chunk_name) !=
+               if (__kimtoy__png_chunk_unknown_handling(png_ptr, png_ptr->chunk_name) !=
                    PNG_HANDLE_CHUNK_ALWAYS)
 #endif
-                  png_chunk_error(png_ptr, "unknown critical chunk");
+                  __kimtoy__png_chunk_error(png_ptr, "unknown critical chunk");
             }
 
-            png_set_unknown_chunks(png_ptr, info_ptr,
+            __kimtoy__png_set_unknown_chunks(png_ptr, info_ptr,
                 &png_ptr->unknown_chunk, 1);
          }
       }
 
       else
 #endif
-         png_set_unknown_chunks(png_ptr, info_ptr, &png_ptr->unknown_chunk, 1);
+         __kimtoy__png_set_unknown_chunks(png_ptr, info_ptr, &png_ptr->unknown_chunk, 1);
 
-      png_free(png_ptr, png_ptr->unknown_chunk.data);
+      __kimtoy__png_free(png_ptr, png_ptr->unknown_chunk.data);
       png_ptr->unknown_chunk.data = NULL;
    }
 
@@ -2901,7 +2901,7 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #endif
       skip = length;
 
-   png_crc_finish(png_ptr, skip);
+   __kimtoy__png_crc_finish(png_ptr, skip);
 
 #ifndef PNG_READ_USER_CHUNKS_SUPPORTED
    PNG_UNUSED(info_ptr) /* Quiet compiler warnings about unused info_ptr */
@@ -2921,18 +2921,18 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
  */
 
 void /* PRIVATE */
-png_check_chunk_name(png_structp png_ptr, png_uint_32 chunk_name)
+__kimtoy__png_check_chunk_name(png_structp png_ptr, png_uint_32 chunk_name)
 {
    int i;
 
-   png_debug(1, "in png_check_chunk_name");
+   png_debug(1, "in __kimtoy__png_check_chunk_name");
 
    for (i=1; i<=4; ++i)
    {
       int c = chunk_name & 0xff;
 
       if (c < 65 || c > 122 || (c > 90 && c < 97))
-         png_chunk_error(png_ptr, "invalid chunk type");
+         __kimtoy__png_chunk_error(png_ptr, "invalid chunk type");
 
       chunk_name >>= 8;
    }
@@ -2951,7 +2951,7 @@ png_check_chunk_name(png_structp png_ptr, png_uint_32 chunk_name)
  */
 
 void /* PRIVATE */
-png_combine_row(png_structp png_ptr, png_bytep dp, int display)
+__kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
 {
    unsigned int pixel_depth = png_ptr->transformed_pixel_depth;
    png_const_bytep sp = png_ptr->row_buf + 1;
@@ -2961,25 +2961,25 @@ png_combine_row(png_structp png_ptr, png_bytep dp, int display)
    png_byte end_byte = 0;
    unsigned int end_mask;
 
-   png_debug(1, "in png_combine_row");
+   png_debug(1, "in __kimtoy__png_combine_row");
 
    /* Added in 1.5.6: it should not be possible to enter this routine until at
     * least one row has been read from the PNG data and transformed.
     */
    if (pixel_depth == 0)
-      png_error(png_ptr, "internal row logic error");
+      __kimtoy__png_error(png_ptr, "internal row logic error");
 
    /* Added in 1.5.4: the pixel depth should match the information returned by
-    * any call to png_read_update_info at this point.  Do not continue if we got
+    * any call to __kimtoy__png_read_update_info at this point.  Do not continue if we got
     * this wrong.
     */
    if (png_ptr->info_rowbytes != 0 && png_ptr->info_rowbytes !=
           PNG_ROWBYTES(pixel_depth, row_width))
-      png_error(png_ptr, "internal row size calculation error");
+      __kimtoy__png_error(png_ptr, "internal row size calculation error");
 
    /* Don't expect this to ever happen: */
    if (row_width == 0)
-      png_error(png_ptr, "internal row width error");
+      __kimtoy__png_error(png_ptr, "internal row width error");
 
    /* Preserve the last byte in cases where only part of it will be overwritten,
     * the multiply below may overflow, we don't care because ANSI-C guarantees
@@ -3003,7 +3003,7 @@ png_combine_row(png_structp png_ptr, png_bytep dp, int display)
 
    /* For non-interlaced images this reduces to a png_memcpy(). A png_memcpy()
     * will also happen if interlacing isn't supported or if the application
-    * does not call png_set_interlace_handling().  In the latter cases the
+    * does not call __kimtoy__png_set_interlace_handling().  In the latter cases the
     * caller just gets a sequence of the unexpanded rows from each interlace
     * pass.
     */
@@ -3198,7 +3198,7 @@ png_combine_row(png_structp png_ptr, png_bytep dp, int display)
 
          /* Validate the depth - it must be a multiple of 8 */
          if (pixel_depth & 7)
-            png_error(png_ptr, "invalid user transform pixel depth");
+            __kimtoy__png_error(png_ptr, "invalid user transform pixel depth");
 
          pixel_depth >>= 3; /* now in bytes */
          row_width *= pixel_depth;
@@ -3429,14 +3429,14 @@ png_combine_row(png_structp png_ptr, png_bytep dp, int display)
 
 #ifdef PNG_READ_INTERLACING_SUPPORTED
 void /* PRIVATE */
-png_do_read_interlace(png_row_infop row_info, png_bytep row, int pass,
+__kimtoy__png_do_read_interlace(png_row_infop row_info, png_bytep row, int pass,
    png_uint_32 transformations /* Because these may affect the byte layout */)
 {
    /* Arrays to facilitate easy interlacing - use pass (0 - 6) as index */
    /* Offset to next interlace block */
    static PNG_CONST int png_pass_inc[7] = {8, 8, 4, 4, 2, 2, 1};
 
-   png_debug(1, "in png_do_read_interlace");
+   png_debug(1, "in __kimtoy__png_do_read_interlace");
    if (row != NULL && row_info != NULL)
    {
       png_uint_32 final_width;
@@ -3673,7 +3673,7 @@ png_do_read_interlace(png_row_infop row_info, png_bytep row, int pass,
  * adaptive filter bytes.
  */
 void /* PRIVATE */
-png_read_filter_row(png_row_infop row_info, png_bytep row,
+__kimtoy__png_read_filter_row(png_row_infop row_info, png_bytep row,
    png_const_bytep prev_row, int filter)
 {
    switch (filter)
@@ -3799,7 +3799,7 @@ png_read_filter_row(png_row_infop row_info, png_bytep row,
 
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
 void /* PRIVATE */
-png_read_finish_row(png_structp png_ptr)
+__kimtoy__png_read_finish_row(png_structp png_ptr)
 {
 #ifdef PNG_READ_INTERLACING_SUPPORTED
    /* Arrays to facilitate easy interlacing - use pass (0 - 6) as index */
@@ -3817,7 +3817,7 @@ png_read_finish_row(png_structp png_ptr)
    static PNG_CONST png_byte png_pass_yinc[7] = {8, 8, 8, 4, 4, 2, 2};
 #endif /* PNG_READ_INTERLACING_SUPPORTED */
 
-   png_debug(1, "in png_read_finish_row");
+   png_debug(1, "in __kimtoy__png_read_finish_row");
    png_ptr->row_number++;
    if (png_ptr->row_number < png_ptr->num_rows)
       return;
@@ -3876,10 +3876,10 @@ png_read_finish_row(png_structp png_ptr)
          {
             while (!png_ptr->idat_size)
             {
-               png_crc_finish(png_ptr, 0);
-               png_ptr->idat_size = png_read_chunk_header(png_ptr);
+               __kimtoy__png_crc_finish(png_ptr, 0);
+               png_ptr->idat_size = __kimtoy__png_read_chunk_header(png_ptr);
                if (png_ptr->chunk_name != png_IDAT)
-                  png_error(png_ptr, "Not enough image data");
+                  __kimtoy__png_error(png_ptr, "Not enough image data");
             }
 
             png_ptr->zstream.avail_in = (uInt)png_ptr->zbuf_size;
@@ -3888,7 +3888,7 @@ png_read_finish_row(png_structp png_ptr)
             if (png_ptr->zbuf_size > png_ptr->idat_size)
                png_ptr->zstream.avail_in = (uInt)png_ptr->idat_size;
 
-            png_crc_read(png_ptr, png_ptr->zbuf, png_ptr->zstream.avail_in);
+            __kimtoy__png_crc_read(png_ptr, png_ptr->zbuf, png_ptr->zstream.avail_in);
             png_ptr->idat_size -= png_ptr->zstream.avail_in;
          }
 
@@ -3898,7 +3898,7 @@ png_read_finish_row(png_structp png_ptr)
          {
             if (!(png_ptr->zstream.avail_out) || png_ptr->zstream.avail_in ||
                 png_ptr->idat_size)
-               png_warning(png_ptr, "Extra compressed data");
+               __kimtoy__png_warning(png_ptr, "Extra compressed data");
 
             png_ptr->mode |= PNG_AFTER_IDAT;
             png_ptr->flags |= PNG_FLAG_ZLIB_FINISHED;
@@ -3906,12 +3906,12 @@ png_read_finish_row(png_structp png_ptr)
          }
 
          if (ret != Z_OK)
-            png_error(png_ptr, png_ptr->zstream.msg ? png_ptr->zstream.msg :
+            __kimtoy__png_error(png_ptr, png_ptr->zstream.msg ? png_ptr->zstream.msg :
                 "Decompression Error");
 
          if (!(png_ptr->zstream.avail_out))
          {
-            png_warning(png_ptr, "Extra compressed data");
+            __kimtoy__png_warning(png_ptr, "Extra compressed data");
             png_ptr->mode |= PNG_AFTER_IDAT;
             png_ptr->flags |= PNG_FLAG_ZLIB_FINISHED;
             break;
@@ -3922,7 +3922,7 @@ png_read_finish_row(png_structp png_ptr)
    }
 
    if (png_ptr->idat_size || png_ptr->zstream.avail_in)
-      png_warning(png_ptr, "Extra compression data");
+      __kimtoy__png_warning(png_ptr, "Extra compression data");
 
    inflateReset(&png_ptr->zstream);
 
@@ -3931,7 +3931,7 @@ png_read_finish_row(png_structp png_ptr)
 #endif /* PNG_SEQUENTIAL_READ_SUPPORTED */
 
 void /* PRIVATE */
-png_read_start_row(png_structp png_ptr)
+__kimtoy__png_read_start_row(png_structp png_ptr)
 {
 #ifdef PNG_READ_INTERLACING_SUPPORTED
    /* Arrays to facilitate easy interlacing - use pass (0 - 6) as index */
@@ -3952,10 +3952,10 @@ png_read_start_row(png_structp png_ptr)
    int max_pixel_depth;
    png_size_t row_bytes;
 
-   png_debug(1, "in png_read_start_row");
+   png_debug(1, "in __kimtoy__png_read_start_row");
    png_ptr->zstream.avail_in = 0;
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
-   png_init_read_transformations(png_ptr);
+   __kimtoy__png_init_read_transformations(png_ptr);
 #endif
 #ifdef PNG_READ_INTERLACING_SUPPORTED
    if (png_ptr->interlaced)
@@ -4132,22 +4132,22 @@ defined(PNG_USER_TRANSFORM_PTR_SUPPORTED)
 
 #ifdef PNG_MAX_MALLOC_64K
    if (row_bytes > (png_uint_32)65536L)
-      png_error(png_ptr, "This image requires a row greater than 64KB");
+      __kimtoy__png_error(png_ptr, "This image requires a row greater than 64KB");
 #endif
 
    if (row_bytes + 48 > png_ptr->old_big_row_buf_size)
    {
-     png_free(png_ptr, png_ptr->big_row_buf);
-     png_free(png_ptr, png_ptr->big_prev_row);
+     __kimtoy__png_free(png_ptr, png_ptr->big_row_buf);
+     __kimtoy__png_free(png_ptr, png_ptr->big_prev_row);
 
      if (png_ptr->interlaced)
-        png_ptr->big_row_buf = (png_bytep)png_calloc(png_ptr,
+        png_ptr->big_row_buf = (png_bytep)__kimtoy__png_calloc(png_ptr,
             row_bytes + 48);
 
      else
-        png_ptr->big_row_buf = (png_bytep)png_malloc(png_ptr, row_bytes + 48);
+        png_ptr->big_row_buf = (png_bytep)__kimtoy__png_malloc(png_ptr, row_bytes + 48);
 
-     png_ptr->big_prev_row = (png_bytep)png_malloc(png_ptr, row_bytes + 48);
+     png_ptr->big_prev_row = (png_bytep)__kimtoy__png_malloc(png_ptr, row_bytes + 48);
 
 #ifdef PNG_ALIGNED_MEMORY_SUPPORTED
      /* Use 16-byte aligned memory for row_buf with at least 16 bytes
@@ -4177,11 +4177,11 @@ defined(PNG_USER_TRANSFORM_PTR_SUPPORTED)
 
 #ifdef PNG_MAX_MALLOC_64K
    if (png_ptr->rowbytes > 65535)
-      png_error(png_ptr, "This image requires a row greater than 64KB");
+      __kimtoy__png_error(png_ptr, "This image requires a row greater than 64KB");
 
 #endif
    if (png_ptr->rowbytes > (PNG_SIZE_MAX - 1))
-      png_error(png_ptr, "Row has too many bytes to allocate in memory");
+      __kimtoy__png_error(png_ptr, "Row has too many bytes to allocate in memory");
 
    png_memset(png_ptr->prev_row, 0, png_ptr->rowbytes + 1);
 
@@ -4201,7 +4201,7 @@ defined(PNG_USER_TRANSFORM_PTR_SUPPORTED)
  * before a new IDAT is read. It resets some parts of png_ptr
  * to make them usable by the read functions again */
 void /* PRIVATE */
-png_read_reset(png_structp png_ptr)
+__kimtoy__png_read_reset(png_structp png_ptr)
 {
     png_ptr->mode &= ~PNG_HAVE_IDAT;
     png_ptr->mode &= ~PNG_AFTER_IDAT;
@@ -4211,7 +4211,7 @@ png_read_reset(png_structp png_ptr)
 }
 
 void /* PRIVATE */
-png_read_reinit(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_read_reinit(png_structp png_ptr, png_infop info_ptr)
 {
     png_ptr->width = info_ptr->next_frame_width;
     png_ptr->height = info_ptr->next_frame_height;
@@ -4222,9 +4222,9 @@ png_read_reinit(png_structp png_ptr, png_infop info_ptr)
         png_memset(png_ptr->prev_row, 0, png_ptr->rowbytes + 1);
 }
 
-/* same as png_read_reset() but for the progressive reader */
+/* same as __kimtoy__png_read_reset() but for the progressive reader */
 void /* PRIVATE */
-png_progressive_read_reset(png_structp png_ptr)
+__kimtoy__png_progressive_read_reset(png_structp png_ptr)
 {
     /* start of interlace block */
     const int FARDATA png_pass_start[] = {0, 4, 0, 2, 0, 1, 0};
@@ -4259,7 +4259,7 @@ png_progressive_read_reset(png_structp png_ptr)
 
     png_ptr->flags &= ~PNG_FLAG_ZLIB_FINISHED;
     if (inflateReset(&(png_ptr->zstream)) != Z_OK)
-        png_error(png_ptr, "inflateReset failed");
+        __kimtoy__png_error(png_ptr, "inflateReset failed");
     png_ptr->zstream.avail_in = 0;
     png_ptr->zstream.next_in = 0;
     png_ptr->zstream.next_out = png_ptr->row_buf;

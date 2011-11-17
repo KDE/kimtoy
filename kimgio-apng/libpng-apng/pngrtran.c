@@ -22,9 +22,9 @@
 
 /* Set the action on getting a CRC error for an ancillary or critical chunk. */
 void PNGAPI
-png_set_crc_action(png_structp png_ptr, int crit_action, int ancil_action)
+__kimtoy__png_set_crc_action(png_structp png_ptr, int crit_action, int ancil_action)
 {
-   png_debug(1, "in png_set_crc_action");
+   png_debug(1, "in __kimtoy__png_set_crc_action");
 
    if (png_ptr == NULL)
       return;
@@ -47,7 +47,7 @@ png_set_crc_action(png_structp png_ptr, int crit_action, int ancil_action)
          break;
 
       case PNG_CRC_WARN_DISCARD:    /* Not a valid action for critical data */
-         png_warning(png_ptr,
+         __kimtoy__png_warning(png_ptr,
             "Can't discard critical data on CRC error");
       case PNG_CRC_ERROR_QUIT:                                /* Error/quit */
 
@@ -91,18 +91,18 @@ png_set_crc_action(png_structp png_ptr, int crit_action, int ancil_action)
 #ifdef PNG_READ_BACKGROUND_SUPPORTED
 /* Handle alpha and tRNS via a background color */
 void PNGFAPI
-png_set_background_fixed(png_structp png_ptr,
+__kimtoy__png_set_background_fixed(png_structp png_ptr,
     png_const_color_16p background_color, int background_gamma_code,
     int need_expand, png_fixed_point background_gamma)
 {
-   png_debug(1, "in png_set_background_fixed");
+   png_debug(1, "in __kimtoy__png_set_background_fixed");
 
    if (png_ptr == NULL)
       return;
 
    if (background_gamma_code == PNG_BACKGROUND_GAMMA_UNKNOWN)
    {
-      png_warning(png_ptr, "Application must supply a known background gamma");
+      __kimtoy__png_warning(png_ptr, "Application must supply a known background gamma");
       return;
    }
 
@@ -122,12 +122,12 @@ png_set_background_fixed(png_structp png_ptr,
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
-png_set_background(png_structp png_ptr,
+__kimtoy__png_set_background(png_structp png_ptr,
     png_const_color_16p background_color, int background_gamma_code,
     int need_expand, double background_gamma)
 {
-   png_set_background_fixed(png_ptr, background_color, background_gamma_code,
-      need_expand, png_fixed(png_ptr, background_gamma, "png_set_background"));
+   __kimtoy__png_set_background_fixed(png_ptr, background_color, background_gamma_code,
+      need_expand, __kimtoy__png_fixed(png_ptr, background_gamma, "__kimtoy__png_set_background"));
 }
 #  endif  /* FLOATING_POINT */
 #endif /* READ_BACKGROUND */
@@ -138,9 +138,9 @@ png_set_background(png_structp png_ptr,
  */
 #ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED
 void PNGAPI
-png_set_scale_16(png_structp png_ptr)
+__kimtoy__png_set_scale_16(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_scale_16");
+   png_debug(1, "in __kimtoy__png_set_scale_16");
 
    if (png_ptr == NULL)
       return;
@@ -152,9 +152,9 @@ png_set_scale_16(png_structp png_ptr)
 #ifdef PNG_READ_STRIP_16_TO_8_SUPPORTED
 /* Chop 16-bit depth files to 8-bit depth */
 void PNGAPI
-png_set_strip_16(png_structp png_ptr)
+__kimtoy__png_set_strip_16(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_strip_16");
+   png_debug(1, "in __kimtoy__png_set_strip_16");
 
    if (png_ptr == NULL)
       return;
@@ -165,9 +165,9 @@ png_set_strip_16(png_structp png_ptr)
 
 #ifdef PNG_READ_STRIP_ALPHA_SUPPORTED
 void PNGAPI
-png_set_strip_alpha(png_structp png_ptr)
+__kimtoy__png_set_strip_alpha(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_strip_alpha");
+   png_debug(1, "in __kimtoy__png_set_strip_alpha");
 
    if (png_ptr == NULL)
       return;
@@ -231,7 +231,7 @@ convert_gamma_value(png_structp png_ptr, double output_gamma)
    output_gamma = floor(output_gamma + .5);
 
    if (output_gamma > PNG_FP_MAX || output_gamma < PNG_FP_MIN)
-      png_fixed_error(png_ptr, "gamma value");
+      __kimtoy__png_fixed_error(png_ptr, "gamma value");
 
    return (png_fixed_point)output_gamma;
 }
@@ -240,13 +240,13 @@ convert_gamma_value(png_structp png_ptr, double output_gamma)
 
 #ifdef PNG_READ_ALPHA_MODE_SUPPORTED
 void PNGFAPI
-png_set_alpha_mode_fixed(png_structp png_ptr, int mode,
+__kimtoy__png_set_alpha_mode_fixed(png_structp png_ptr, int mode,
    png_fixed_point output_gamma)
 {
    int compose = 0;
    png_fixed_point file_gamma;
 
-   png_debug(1, "in png_set_alpha_mode");
+   png_debug(1, "in __kimtoy__png_set_alpha_mode");
 
    if (png_ptr == NULL)
       return;
@@ -260,12 +260,12 @@ png_set_alpha_mode_fixed(png_structp png_ptr, int mode,
     * values are reasonable this may have to be changed.
     */
    if (output_gamma < 70000 || output_gamma > 300000)
-      png_error(png_ptr, "output gamma out of expected range");
+      __kimtoy__png_error(png_ptr, "output gamma out of expected range");
 
    /* The default file gamma is the inverse of the output gamma; the output
     * gamma may be changed below so get the file value first:
     */
-   file_gamma = png_reciprocal(output_gamma);
+   file_gamma = __kimtoy__png_reciprocal(output_gamma);
 
    /* There are really 8 possibilities here, composed of any combination
     * of:
@@ -278,15 +278,15 @@ png_set_alpha_mode_fixed(png_structp png_ptr, int mode,
     * because then the encoding is a no-op and there is only the choice of
     * premultiplying the color channels or not.
     *
-    * png_set_alpha_mode and png_set_background interact because both use
+    * __kimtoy__png_set_alpha_mode and __kimtoy__png_set_background interact because both use
     * png_compose to do the work.  Calling both is only useful when
-    * png_set_alpha_mode is used to set the default mode - PNG_ALPHA_PNG - along
+    * __kimtoy__png_set_alpha_mode is used to set the default mode - PNG_ALPHA_PNG - along
     * with a default gamma value.  Otherwise PNG_COMPOSE must not be set.
     */
    switch (mode)
    {
       case PNG_ALPHA_PNG:        /* default: png standard */
-         /* No compose, but it may be set by png_set_background! */
+         /* No compose, but it may be set by __kimtoy__png_set_background! */
          png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
          png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
          break;
@@ -313,11 +313,11 @@ png_set_alpha_mode_fixed(png_structp png_ptr, int mode,
          break;
 
       default:
-         png_error(png_ptr, "invalid alpha mode");
+         __kimtoy__png_error(png_ptr, "invalid alpha mode");
    }
 
    /* Only set the default gamma if the file gamma has not been set (this has
-    * the side effect that the gamma in a second call to png_set_alpha_mode will
+    * the side effect that the gamma in a second call to __kimtoy__png_set_alpha_mode will
     * be ignored.)
     */
    if (png_ptr->gamma == 0)
@@ -338,7 +338,7 @@ png_set_alpha_mode_fixed(png_structp png_ptr, int mode,
       png_ptr->transformations &= ~PNG_BACKGROUND_EXPAND;
 
       if (png_ptr->transformations & PNG_COMPOSE)
-         png_error(png_ptr,
+         __kimtoy__png_error(png_ptr,
             "conflicting calls to set alpha mode and background");
 
       png_ptr->transformations |= PNG_COMPOSE;
@@ -350,9 +350,9 @@ png_set_alpha_mode_fixed(png_structp png_ptr, int mode,
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
-png_set_alpha_mode(png_structp png_ptr, int mode, double output_gamma)
+__kimtoy__png_set_alpha_mode(png_structp png_ptr, int mode, double output_gamma)
 {
-   png_set_alpha_mode_fixed(png_ptr, mode, convert_gamma_value(png_ptr,
+   __kimtoy__png_set_alpha_mode_fixed(png_ptr, mode, convert_gamma_value(png_ptr,
       output_gamma));
 }
 #  endif
@@ -378,11 +378,11 @@ typedef png_dsort FAR *       png_dsortp;
 typedef png_dsort FAR * FAR * png_dsortpp;
 
 void PNGAPI
-png_set_quantize(png_structp png_ptr, png_colorp palette,
+__kimtoy__png_set_quantize(png_structp png_ptr, png_colorp palette,
     int num_palette, int maximum_colors, png_const_uint_16p histogram,
     int full_quantize)
 {
-   png_debug(1, "in png_set_quantize");
+   png_debug(1, "in __kimtoy__png_set_quantize");
 
    if (png_ptr == NULL)
       return;
@@ -393,7 +393,7 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
    {
       int i;
 
-      png_ptr->quantize_index = (png_bytep)png_malloc(png_ptr,
+      png_ptr->quantize_index = (png_bytep)__kimtoy__png_malloc(png_ptr,
           (png_uint_32)(num_palette * png_sizeof(png_byte)));
       for (i = 0; i < num_palette; i++)
          png_ptr->quantize_index[i] = (png_byte)i;
@@ -410,7 +410,7 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
          int i;
 
          /* Initialize an array to sort colors */
-         png_ptr->quantize_sort = (png_bytep)png_malloc(png_ptr,
+         png_ptr->quantize_sort = (png_bytep)__kimtoy__png_malloc(png_ptr,
              (png_uint_32)(num_palette * png_sizeof(png_byte)));
 
          /* Initialize the quantize_sort array */
@@ -522,7 +522,7 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
                }
             }
          }
-         png_free(png_ptr, png_ptr->quantize_sort);
+         __kimtoy__png_free(png_ptr, png_ptr->quantize_sort);
          png_ptr->quantize_sort = NULL;
       }
       else
@@ -544,9 +544,9 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
          t = NULL;
 
          /* Initialize palette index arrays */
-         png_ptr->index_to_palette = (png_bytep)png_malloc(png_ptr,
+         png_ptr->index_to_palette = (png_bytep)__kimtoy__png_malloc(png_ptr,
              (png_uint_32)(num_palette * png_sizeof(png_byte)));
-         png_ptr->palette_to_index = (png_bytep)png_malloc(png_ptr,
+         png_ptr->palette_to_index = (png_bytep)__kimtoy__png_malloc(png_ptr,
              (png_uint_32)(num_palette * png_sizeof(png_byte)));
 
          /* Initialize the sort array */
@@ -556,7 +556,7 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
             png_ptr->palette_to_index[i] = (png_byte)i;
          }
 
-         hash = (png_dsortpp)png_calloc(png_ptr, (png_uint_32)(769 *
+         hash = (png_dsortpp)__kimtoy__png_calloc(png_ptr, (png_uint_32)(769 *
              png_sizeof(png_dsortp)));
 
          num_new_palette = num_palette;
@@ -586,7 +586,7 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
                   if (d <= max_d)
                   {
 
-                     t = (png_dsortp)png_malloc_warn(png_ptr,
+                     t = (png_dsortp)__kimtoy__png_malloc_warn(png_ptr,
                          (png_uint_32)(png_sizeof(png_dsort)));
 
                      if (t == NULL)
@@ -678,7 +678,7 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
                   while (p)
                   {
                      t = p->next;
-                     png_free(png_ptr, p);
+                     __kimtoy__png_free(png_ptr, p);
                      p = t;
                   }
                }
@@ -686,9 +686,9 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
             }
             max_d += 96;
          }
-         png_free(png_ptr, hash);
-         png_free(png_ptr, png_ptr->palette_to_index);
-         png_free(png_ptr, png_ptr->index_to_palette);
+         __kimtoy__png_free(png_ptr, hash);
+         __kimtoy__png_free(png_ptr, png_ptr->palette_to_index);
+         __kimtoy__png_free(png_ptr, png_ptr->index_to_palette);
          png_ptr->palette_to_index = NULL;
          png_ptr->index_to_palette = NULL;
       }
@@ -711,10 +711,10 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
       int num_blue = (1 << PNG_QUANTIZE_BLUE_BITS);
       png_size_t num_entries = ((png_size_t)1 << total_bits);
 
-      png_ptr->palette_lookup = (png_bytep)png_calloc(png_ptr,
+      png_ptr->palette_lookup = (png_bytep)__kimtoy__png_calloc(png_ptr,
           (png_uint_32)(num_entries * png_sizeof(png_byte)));
 
-      distance = (png_bytep)png_malloc(png_ptr, (png_uint_32)(num_entries *
+      distance = (png_bytep)__kimtoy__png_malloc(png_ptr, (png_uint_32)(num_entries *
           png_sizeof(png_byte)));
 
       png_memset(distance, 0xff, num_entries * png_sizeof(png_byte));
@@ -759,17 +759,17 @@ png_set_quantize(png_structp png_ptr, png_colorp palette,
          }
       }
 
-      png_free(png_ptr, distance);
+      __kimtoy__png_free(png_ptr, distance);
    }
 }
 #endif /* PNG_READ_QUANTIZE_SUPPORTED */
 
 #ifdef PNG_READ_GAMMA_SUPPORTED
 void PNGFAPI
-png_set_gamma_fixed(png_structp png_ptr, png_fixed_point scrn_gamma,
+__kimtoy__png_set_gamma_fixed(png_structp png_ptr, png_fixed_point scrn_gamma,
    png_fixed_point file_gamma)
 {
-   png_debug(1, "in png_set_gamma_fixed");
+   png_debug(1, "in __kimtoy__png_set_gamma_fixed");
 
    if (png_ptr == NULL)
       return;
@@ -783,21 +783,21 @@ png_set_gamma_fixed(png_structp png_ptr, png_fixed_point scrn_gamma,
     * premultiplied alpha support; this actually hides an undocumented feature
     * of the previous implementation which allowed gamma processing to be
     * disabled in background handling.  There is no evidence (so far) that this
-    * was being used; however, png_set_background itself accepted and must still
+    * was being used; however, __kimtoy__png_set_background itself accepted and must still
     * accept '0' for the gamma value it takes, because it isn't always used.
     *
     * Since this is an API change (albeit a very minor one that removes an
     * undocumented API feature) it will not be made until libpng-1.6.0.
     */
    if (file_gamma <= 0)
-      png_error(png_ptr, "invalid file gamma in png_set_gamma");
+      __kimtoy__png_error(png_ptr, "invalid file gamma in __kimtoy__png_set_gamma");
 
    if (scrn_gamma <= 0)
-      png_error(png_ptr, "invalid screen gamma in png_set_gamma");
+      __kimtoy__png_error(png_ptr, "invalid screen gamma in __kimtoy__png_set_gamma");
 #endif
 
    /* Set the gamma values unconditionally - this overrides the value in the PNG
-    * file if a gAMA chunk was present.  png_set_alpha_mode provides a
+    * file if a gAMA chunk was present.  __kimtoy__png_set_alpha_mode provides a
     * different, easier, way to default the file gamma.
     */
    png_ptr->gamma = file_gamma;
@@ -806,9 +806,9 @@ png_set_gamma_fixed(png_structp png_ptr, png_fixed_point scrn_gamma,
 
 #  ifdef PNG_FLOATING_POINT_SUPPORTED
 void PNGAPI
-png_set_gamma(png_structp png_ptr, double scrn_gamma, double file_gamma)
+__kimtoy__png_set_gamma(png_structp png_ptr, double scrn_gamma, double file_gamma)
 {
-   png_set_gamma_fixed(png_ptr, convert_gamma_value(png_ptr, scrn_gamma),
+   __kimtoy__png_set_gamma_fixed(png_ptr, convert_gamma_value(png_ptr, scrn_gamma),
       convert_gamma_value(png_ptr, file_gamma));
 }
 #  endif /* FLOATING_POINT_SUPPORTED */
@@ -820,9 +820,9 @@ png_set_gamma(png_structp png_ptr, double scrn_gamma, double file_gamma)
  * to alpha channels.
  */
 void PNGAPI
-png_set_expand(png_structp png_ptr)
+__kimtoy__png_set_expand(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_expand");
+   png_debug(1, "in __kimtoy__png_set_expand");
 
    if (png_ptr == NULL)
       return;
@@ -832,7 +832,7 @@ png_set_expand(png_structp png_ptr)
 }
 
 /* GRR 19990627:  the following three functions currently are identical
- *  to png_set_expand().  However, it is entirely reasonable that someone
+ *  to __kimtoy__png_set_expand().  However, it is entirely reasonable that someone
  *  might wish to expand an indexed image to RGB but *not* expand a single,
  *  fully transparent palette entry to a full alpha channel--perhaps instead
  *  convert tRNS to the grayscale/RGB format (16-bit RGB value), or replace
@@ -846,14 +846,14 @@ png_set_expand(png_structp png_ptr)
  *
  *  GRP 20060307: In libpng-1.2.9, png_set_gray_1_2_4_to_8() was modified
  *  to expand only the sample depth but not to expand the tRNS to alpha
- *  and its name was changed to png_set_expand_gray_1_2_4_to_8().
+ *  and its name was changed to __kimtoy__png_set_expand_gray_1_2_4_to_8().
  */
 
 /* Expand paletted images to RGB. */
 void PNGAPI
-png_set_palette_to_rgb(png_structp png_ptr)
+__kimtoy__png_set_palette_to_rgb(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_palette_to_rgb");
+   png_debug(1, "in __kimtoy__png_set_palette_to_rgb");
 
    if (png_ptr == NULL)
       return;
@@ -864,9 +864,9 @@ png_set_palette_to_rgb(png_structp png_ptr)
 
 /* Expand grayscale images of less than 8-bit depth to 8 bits. */
 void PNGAPI
-png_set_expand_gray_1_2_4_to_8(png_structp png_ptr)
+__kimtoy__png_set_expand_gray_1_2_4_to_8(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_expand_gray_1_2_4_to_8");
+   png_debug(1, "in __kimtoy__png_set_expand_gray_1_2_4_to_8");
 
    if (png_ptr == NULL)
       return;
@@ -879,9 +879,9 @@ png_set_expand_gray_1_2_4_to_8(png_structp png_ptr)
 
 /* Expand tRNS chunks to alpha channels. */
 void PNGAPI
-png_set_tRNS_to_alpha(png_structp png_ptr)
+__kimtoy__png_set_tRNS_to_alpha(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_tRNS_to_alpha");
+   png_debug(1, "in __kimtoy__png_set_tRNS_to_alpha");
 
    png_ptr->transformations |= (PNG_EXPAND | PNG_EXPAND_tRNS);
    png_ptr->flags &= ~PNG_FLAG_ROW_INIT;
@@ -893,9 +893,9 @@ png_set_tRNS_to_alpha(png_structp png_ptr)
  * it may not work correctly.)
  */
 void PNGAPI
-png_set_expand_16(png_structp png_ptr)
+__kimtoy__png_set_expand_16(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_expand_16");
+   png_debug(1, "in __kimtoy__png_set_expand_16");
 
    if (png_ptr == NULL)
       return;
@@ -910,14 +910,14 @@ png_set_expand_16(png_structp png_ptr)
 
 #ifdef PNG_READ_GRAY_TO_RGB_SUPPORTED
 void PNGAPI
-png_set_gray_to_rgb(png_structp png_ptr)
+__kimtoy__png_set_gray_to_rgb(png_structp png_ptr)
 {
-   png_debug(1, "in png_set_gray_to_rgb");
+   png_debug(1, "in __kimtoy__png_set_gray_to_rgb");
 
    if (png_ptr != NULL)
    {
       /* Because rgb must be 8 bits or more: */
-      png_set_expand_gray_1_2_4_to_8(png_ptr);
+      __kimtoy__png_set_expand_gray_1_2_4_to_8(png_ptr);
       png_ptr->transformations |= PNG_GRAY_TO_RGB;
       png_ptr->flags &= ~PNG_FLAG_ROW_INIT;
    }
@@ -926,10 +926,10 @@ png_set_gray_to_rgb(png_structp png_ptr)
 
 #ifdef PNG_READ_RGB_TO_GRAY_SUPPORTED
 void PNGFAPI
-png_set_rgb_to_gray_fixed(png_structp png_ptr, int error_action,
+__kimtoy__png_set_rgb_to_gray_fixed(png_structp png_ptr, int error_action,
     png_fixed_point red, png_fixed_point green)
 {
-   png_debug(1, "in png_set_rgb_to_gray");
+   png_debug(1, "in __kimtoy__png_set_rgb_to_gray");
 
    if (png_ptr == NULL)
       return;
@@ -949,7 +949,7 @@ png_set_rgb_to_gray_fixed(png_structp png_ptr, int error_action,
          break;
 
       default:
-         png_error(png_ptr, "invalid error action to rgb_to_gray");
+         __kimtoy__png_error(png_ptr, "invalid error action to rgb_to_gray");
          break;
    }
    if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
@@ -957,7 +957,7 @@ png_set_rgb_to_gray_fixed(png_structp png_ptr, int error_action,
       png_ptr->transformations |= PNG_EXPAND;
 #else
    {
-      png_warning(png_ptr,
+      __kimtoy__png_warning(png_ptr,
         "Cannot do RGB_TO_GRAY without EXPAND_SUPPORTED");
 
       png_ptr->transformations &= ~PNG_RGB_TO_GRAY;
@@ -984,12 +984,12 @@ png_set_rgb_to_gray_fixed(png_structp png_ptr, int error_action,
       else
       {
          if (red >= 0 && green >= 0)
-            png_warning(png_ptr,
+            __kimtoy__png_warning(png_ptr,
                "ignoring out of range rgb_to_gray coefficients");
 
          /* Use the defaults, from the cHRM chunk if set, else the historical
           * values which are close to the sRGB/HDTV/ITU-Rec 709 values.  See
-          * png_do_rgb_to_gray for more discussion of the values.  In this case
+          * __kimtoy__png_do_rgb_to_gray for more discussion of the values.  In this case
           * the coefficients are not marked as 'set' and are not overwritten if
           * something has already provided a default.
           */
@@ -1010,15 +1010,15 @@ png_set_rgb_to_gray_fixed(png_structp png_ptr, int error_action,
  */
 
 void PNGAPI
-png_set_rgb_to_gray(png_structp png_ptr, int error_action, double red,
+__kimtoy__png_set_rgb_to_gray(png_structp png_ptr, int error_action, double red,
    double green)
 {
    if (png_ptr == NULL)
       return;
 
-   png_set_rgb_to_gray_fixed(png_ptr, error_action,
-      png_fixed(png_ptr, red, "rgb to gray red coefficient"),
-      png_fixed(png_ptr, green, "rgb to gray green coefficient"));
+   __kimtoy__png_set_rgb_to_gray_fixed(png_ptr, error_action,
+      __kimtoy__png_fixed(png_ptr, red, "rgb to gray red coefficient"),
+      __kimtoy__png_fixed(png_ptr, green, "rgb to gray green coefficient"));
 }
 #endif /* FLOATING POINT */
 
@@ -1027,10 +1027,10 @@ png_set_rgb_to_gray(png_structp png_ptr, int error_action, double red,
 #if defined(PNG_READ_USER_TRANSFORM_SUPPORTED) || \
     defined(PNG_WRITE_USER_TRANSFORM_SUPPORTED)
 void PNGAPI
-png_set_read_user_transform_fn(png_structp png_ptr, png_user_transform_ptr
+__kimtoy__png_set_read_user_transform_fn(png_structp png_ptr, png_user_transform_ptr
     read_user_transform_fn)
 {
-   png_debug(1, "in png_set_read_user_transform_fn");
+   png_debug(1, "in __kimtoy__png_set_read_user_transform_fn");
 
    if (png_ptr == NULL)
       return;
@@ -1059,8 +1059,8 @@ png_gamma_threshold(png_fixed_point screen_gamma, png_fixed_point file_gamma)
     * turn on processing anyway.
     */
    png_fixed_point gtest;
-   return !png_muldiv(&gtest, screen_gamma, file_gamma, PNG_FP_1) ||
-       png_gamma_significant(gtest);
+   return !__kimtoy__png_muldiv(&gtest, screen_gamma, file_gamma, PNG_FP_1) ||
+       __kimtoy__png_gamma_significant(gtest);
 }
 #endif
 
@@ -1071,12 +1071,12 @@ png_gamma_threshold(png_fixed_point screen_gamma, png_fixed_point file_gamma)
 /*For the moment 'png_init_palette_transformations' and
  * 'png_init_rgb_transformations' only do some flag canceling optimizations.
  * The intent is that these two routines should have palette or rgb operations
- * extracted from 'png_init_read_transformations'.
+ * extracted from '__kimtoy__png_init_read_transformations'.
  */
 static void /* PRIVATE */
 png_init_palette_transformations(png_structp png_ptr)
 {
-   /* Called to handle the (input) palette case.  In png_do_read_transformations
+   /* Called to handle the (input) palette case.  In __kimtoy__png_do_read_transformations
     * the first step is to expand the palette if requested, so this code must
     * take care to only make changes that are invariant with respect to the
     * palette expansion, or only do them if there is no expansion.
@@ -1116,7 +1116,7 @@ png_init_palette_transformations(png_structp png_ptr)
    }
 
 #if defined(PNG_READ_EXPAND_SUPPORTED) && defined(PNG_READ_BACKGROUND_SUPPORTED)
-   /* png_set_background handling - deals with the complexity of whether the
+   /* __kimtoy__png_set_background handling - deals with the complexity of whether the
     * background color is in the file format or the screen format in the case
     * where an 'expand' will happen.
     */
@@ -1183,7 +1183,7 @@ png_init_rgb_transformations(png_structp png_ptr)
    }
 
 #if defined(PNG_READ_EXPAND_SUPPORTED) && defined(PNG_READ_BACKGROUND_SUPPORTED)
-   /* png_set_background handling - deals with the complexity of whether the
+   /* __kimtoy__png_set_background handling - deals with the complexity of whether the
     * background color is in the file format or the screen format in the case
     * where an 'expand' will happen.
     */
@@ -1242,11 +1242,11 @@ png_init_rgb_transformations(png_structp png_ptr)
 }
 
 void /* PRIVATE */
-png_init_read_transformations(png_structp png_ptr)
+__kimtoy__png_init_read_transformations(png_structp png_ptr)
 {
-   png_debug(1, "in png_init_read_transformations");
+   png_debug(1, "in __kimtoy__png_init_read_transformations");
 
-   /* This internal function is called from png_read_start_row in pngrutil.c
+   /* This internal function is called from __kimtoy__png_read_start_row in pngrutil.c
     * and it is called before the 'rowbytes' calculation is done, so the code
     * in here can change or update the transformations flags.
     *
@@ -1255,8 +1255,8 @@ png_init_read_transformations(png_structp png_ptr)
     */
 
 #ifdef PNG_READ_GAMMA_SUPPORTED
-   /* Prior to 1.5.4 these tests were performed from png_set_gamma, 1.5.4 adds
-    * png_set_alpha_mode and this is another source for a default file gamma so
+   /* Prior to 1.5.4 these tests were performed from __kimtoy__png_set_gamma, 1.5.4 adds
+    * __kimtoy__png_set_alpha_mode and this is another source for a default file gamma so
     * the test needs to be performed later - here.  In addition prior to 1.5.4
     * the tests were repeated for the PALETTE color type here - this is no
     * longer necessary (and doesn't seem to have been necessary before.)
@@ -1277,21 +1277,21 @@ png_init_read_transformations(png_structp png_ptr)
             /* Assume the output matches the input; a long time default behavior
              * of libpng, although the standard has nothing to say about this.
              */
-            png_ptr->screen_gamma = png_reciprocal(png_ptr->gamma);
+            png_ptr->screen_gamma = __kimtoy__png_reciprocal(png_ptr->gamma);
       }
 
       else if (png_ptr->screen_gamma != 0)
          /* The converse - assume the file matches the screen, note that this
           * perhaps undesireable default can (from 1.5.4) be changed by calling
-          * png_set_alpha_mode (even if the alpha handling mode isn't required
+          * __kimtoy__png_set_alpha_mode (even if the alpha handling mode isn't required
           * or isn't changed from the default.)
           */
-         png_ptr->gamma = png_reciprocal(png_ptr->screen_gamma);
+         png_ptr->gamma = __kimtoy__png_reciprocal(png_ptr->screen_gamma);
 
       else /* neither are set */
          /* Just in case the following prevents any processing - file and screen
           * are both assumed to be linear and there is no way to introduce a
-          * third gamma value other than png_set_background with 'UNIQUE', and,
+          * third gamma value other than __kimtoy__png_set_background with 'UNIQUE', and,
           * prior to 1.5.4
           */
          png_ptr->screen_gamma = png_ptr->gamma = PNG_FP_1;
@@ -1313,9 +1313,9 @@ png_init_read_transformations(png_structp png_ptr)
 #endif
 
    /* Certain transformations have the effect of preventing other
-    * transformations that happen afterward in png_do_read_transformations,
+    * transformations that happen afterward in __kimtoy__png_do_read_transformations,
     * resolve the interdependencies here.  From the code of
-    * png_do_read_transformations the order is:
+    * __kimtoy__png_do_read_transformations the order is:
     *
     *  1) PNG_EXPAND (including PNG_EXPAND_tRNS)
     *  2) PNG_STRIP_ALPHA (if no compose)
@@ -1369,7 +1369,7 @@ png_init_read_transformations(png_structp png_ptr)
    /* If the screen gamma is about 1.0 then the OPTIMIZE_ALPHA and ENCODE_ALPHA
     * settings will have no effect.
     */
-   if (!png_gamma_significant(png_ptr->screen_gamma))
+   if (!__kimtoy__png_gamma_significant(png_ptr->screen_gamma))
    {
       png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
       png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
@@ -1387,11 +1387,11 @@ png_init_read_transformations(png_structp png_ptr)
     * background color might actually be gray yet not be flagged as such.
     * This is not a problem for the current code, which uses
     * PNG_BACKGROUND_IS_GRAY only to decide when to do the
-    * png_do_gray_to_rgb() transformation.
+    * __kimtoy__png_do_gray_to_rgb() transformation.
     *
     * TODO: this code needs to be revised to avoid the complexity and
     * interdependencies.  The color type of the background should be recorded in
-    * png_set_background, along with the bit depth, then the code has a record
+    * __kimtoy__png_set_background, along with the bit depth, then the code has a record
     * of exactly what color space the background is currently in.
     */
    if (png_ptr->transformations & PNG_BACKGROUND_EXPAND)
@@ -1405,8 +1405,8 @@ png_init_read_transformations(png_structp png_ptr)
 
    else if (png_ptr->transformations & PNG_COMPOSE)
    {
-      /* PNG_COMPOSE: png_set_background was called with need_expand false,
-       * so the color is in the color space of the output or png_set_alpha_mode
+      /* PNG_COMPOSE: __kimtoy__png_set_background was called with need_expand false,
+       * so the color is in the color space of the output or __kimtoy__png_set_alpha_mode
        * was called and the color is black.  Ignore RGB_TO_GRAY because that
        * happens before GRAY_TO_RGB.
        */
@@ -1430,7 +1430,7 @@ png_init_read_transformations(png_structp png_ptr)
     *
     * NOTE: this is Not Yet Implemented, the code behaves as in 1.5.1 and
     * earlier and the palette stuff is actually handled on the first row.  This
-    * leads to the reported bug that the palette returned by png_get_PLTE is not
+    * leads to the reported bug that the palette returned by __kimtoy__png_get_PLTE is not
     * updated.
     */
    if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
@@ -1494,20 +1494,20 @@ png_init_read_transformations(png_structp png_ptr)
     */
    if ((png_ptr->transformations & PNG_GAMMA)
       || ((png_ptr->transformations & PNG_RGB_TO_GRAY)
-         && (png_gamma_significant(png_ptr->gamma) ||
-            png_gamma_significant(png_ptr->screen_gamma)))
+         && (__kimtoy__png_gamma_significant(png_ptr->gamma) ||
+            __kimtoy__png_gamma_significant(png_ptr->screen_gamma)))
       || ((png_ptr->transformations & PNG_COMPOSE)
-         && (png_gamma_significant(png_ptr->gamma)
-            || png_gamma_significant(png_ptr->screen_gamma)
+         && (__kimtoy__png_gamma_significant(png_ptr->gamma)
+            || __kimtoy__png_gamma_significant(png_ptr->screen_gamma)
 #  ifdef PNG_READ_BACKGROUND_SUPPORTED
             || (png_ptr->background_gamma_type == PNG_BACKGROUND_GAMMA_UNIQUE
-               && png_gamma_significant(png_ptr->background_gamma))
+               && __kimtoy__png_gamma_significant(png_ptr->background_gamma))
 #  endif
       )) || ((png_ptr->transformations & PNG_ENCODE_ALPHA)
-         && png_gamma_significant(png_ptr->screen_gamma))
+         && __kimtoy__png_gamma_significant(png_ptr->screen_gamma))
       )
    {
-      png_build_gamma_table(png_ptr, png_ptr->bit_depth);
+      __kimtoy__png_build_gamma_table(png_ptr, png_ptr->bit_depth);
 
 #ifdef PNG_READ_BACKGROUND_SUPPORTED
       if (png_ptr->transformations & PNG_COMPOSE)
@@ -1544,14 +1544,14 @@ png_init_read_transformations(png_structp png_ptr)
                      break;
 
                   case PNG_BACKGROUND_GAMMA_FILE:
-                     g = png_reciprocal(png_ptr->gamma);
-                     gs = png_reciprocal2(png_ptr->gamma,
+                     g = __kimtoy__png_reciprocal(png_ptr->gamma);
+                     gs = __kimtoy__png_reciprocal2(png_ptr->gamma,
                         png_ptr->screen_gamma);
                      break;
 
                   case PNG_BACKGROUND_GAMMA_UNIQUE:
-                     g = png_reciprocal(png_ptr->background_gamma);
-                     gs = png_reciprocal2(png_ptr->background_gamma,
+                     g = __kimtoy__png_reciprocal(png_ptr->background_gamma);
+                     gs = __kimtoy__png_reciprocal2(png_ptr->background_gamma,
                         png_ptr->screen_gamma);
                      break;
                   default:
@@ -1560,13 +1560,13 @@ png_init_read_transformations(png_structp png_ptr)
                      break;
                }
 
-               if (png_gamma_significant(gs))
+               if (__kimtoy__png_gamma_significant(gs))
                {
-                  back.red = png_gamma_8bit_correct(png_ptr->background.red,
+                  back.red = __kimtoy__png_gamma_8bit_correct(png_ptr->background.red,
                       gs);
-                  back.green = png_gamma_8bit_correct(png_ptr->background.green,
+                  back.green = __kimtoy__png_gamma_8bit_correct(png_ptr->background.green,
                       gs);
-                  back.blue = png_gamma_8bit_correct(png_ptr->background.blue,
+                  back.blue = __kimtoy__png_gamma_8bit_correct(png_ptr->background.blue,
                       gs);
                }
 
@@ -1577,13 +1577,13 @@ png_init_read_transformations(png_structp png_ptr)
                   back.blue  = (png_byte)png_ptr->background.blue;
                }
 
-               if (png_gamma_significant(g))
+               if (__kimtoy__png_gamma_significant(g))
                {
-                  back_1.red = png_gamma_8bit_correct(png_ptr->background.red,
+                  back_1.red = __kimtoy__png_gamma_8bit_correct(png_ptr->background.red,
                      g);
-                  back_1.green = png_gamma_8bit_correct(
+                  back_1.green = __kimtoy__png_gamma_8bit_correct(
                      png_ptr->background.green, g);
-                  back_1.blue = png_gamma_8bit_correct(png_ptr->background.blue,
+                  back_1.blue = __kimtoy__png_gamma_8bit_correct(png_ptr->background.blue,
                      g);
                }
 
@@ -1653,29 +1653,29 @@ png_init_read_transformations(png_structp png_ptr)
                   break;
 
                case PNG_BACKGROUND_GAMMA_FILE:
-                  g = png_reciprocal(png_ptr->gamma);
-                  gs = png_reciprocal2(png_ptr->gamma, png_ptr->screen_gamma);
+                  g = __kimtoy__png_reciprocal(png_ptr->gamma);
+                  gs = __kimtoy__png_reciprocal2(png_ptr->gamma, png_ptr->screen_gamma);
                   break;
 
                case PNG_BACKGROUND_GAMMA_UNIQUE:
-                  g = png_reciprocal(png_ptr->background_gamma);
-                  gs = png_reciprocal2(png_ptr->background_gamma,
+                  g = __kimtoy__png_reciprocal(png_ptr->background_gamma);
+                  gs = __kimtoy__png_reciprocal2(png_ptr->background_gamma,
                       png_ptr->screen_gamma);
                   break;
 
                default:
-                  png_error(png_ptr, "invalid background gamma type");
+                  __kimtoy__png_error(png_ptr, "invalid background gamma type");
             }
 
-            g_sig = png_gamma_significant(g);
-            gs_sig = png_gamma_significant(gs);
+            g_sig = __kimtoy__png_gamma_significant(g);
+            gs_sig = __kimtoy__png_gamma_significant(gs);
 
             if (g_sig)
-               png_ptr->background_1.gray = png_gamma_correct(png_ptr,
+               png_ptr->background_1.gray = __kimtoy__png_gamma_correct(png_ptr,
                    png_ptr->background.gray, g);
 
             if (gs_sig)
-               png_ptr->background.gray = png_gamma_correct(png_ptr,
+               png_ptr->background.gray = __kimtoy__png_gamma_correct(png_ptr,
                    png_ptr->background.gray, gs);
 
             if ((png_ptr->background.red != png_ptr->background.green) ||
@@ -1685,25 +1685,25 @@ png_init_read_transformations(png_structp png_ptr)
                /* RGB or RGBA with color background */
                if (g_sig)
                {
-                  png_ptr->background_1.red = png_gamma_correct(png_ptr,
+                  png_ptr->background_1.red = __kimtoy__png_gamma_correct(png_ptr,
                       png_ptr->background.red, g);
 
-                  png_ptr->background_1.green = png_gamma_correct(png_ptr,
+                  png_ptr->background_1.green = __kimtoy__png_gamma_correct(png_ptr,
                       png_ptr->background.green, g);
 
-                  png_ptr->background_1.blue = png_gamma_correct(png_ptr,
+                  png_ptr->background_1.blue = __kimtoy__png_gamma_correct(png_ptr,
                       png_ptr->background.blue, g);
                }
 
                if (gs_sig)
                {
-                  png_ptr->background.red = png_gamma_correct(png_ptr,
+                  png_ptr->background.red = __kimtoy__png_gamma_correct(png_ptr,
                       png_ptr->background.red, gs);
 
-                  png_ptr->background.green = png_gamma_correct(png_ptr,
+                  png_ptr->background.green = __kimtoy__png_gamma_correct(png_ptr,
                       png_ptr->background.green, gs);
 
-                  png_ptr->background.blue = png_gamma_correct(png_ptr,
+                  png_ptr->background.blue = __kimtoy__png_gamma_correct(png_ptr,
                       png_ptr->background.blue, gs);
                }
             }
@@ -1836,9 +1836,9 @@ png_init_read_transformations(png_structp png_ptr)
  * assuming the transformations result in valid PNG data.
  */
 void /* PRIVATE */
-png_read_transform_info(png_structp png_ptr, png_infop info_ptr)
+__kimtoy__png_read_transform_info(png_structp png_ptr, png_infop info_ptr)
 {
-   png_debug(1, "in png_read_transform_info");
+   png_debug(1, "in __kimtoy__png_read_transform_info");
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
    if (png_ptr->transformations & PNG_EXPAND)
@@ -1846,7 +1846,7 @@ png_read_transform_info(png_structp png_ptr, png_infop info_ptr)
       if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
       {
          /* This check must match what actually happens in
-          * png_do_expand_palette; if it ever checks the tRNS chunk to see if
+          * __kimtoy__png_do_expand_palette; if it ever checks the tRNS chunk to see if
           * it is all opaque we must do the same (at present it does not.)
           */
          if (png_ptr->num_trans > 0)
@@ -1884,8 +1884,8 @@ png_read_transform_info(png_structp png_ptr, png_infop info_ptr)
 
 #ifdef PNG_READ_GAMMA_SUPPORTED
    /* The following used to be conditional on PNG_GAMMA (prior to 1.5.4),
-    * however it seems that the code in png_init_read_transformations, which has
-    * been called before this from png_read_update_info->png_read_start_row
+    * however it seems that the code in __kimtoy__png_init_read_transformations, which has
+    * been called before this from __kimtoy__png_read_update_info->__kimtoy__png_read_start_row
     * sometimes does the gamma transform and cancels the flag.
     */
    info_ptr->gamma = png_ptr->gamma;
@@ -2019,7 +2019,7 @@ defined(PNG_READ_USER_TRANSFORM_SUPPORTED)
 
    /* Adding in 1.5.4: cache the above value in png_struct so that we can later
     * check in png_rowbytes that the user buffer won't get overwritten.  Note
-    * that the field is not always set - if png_read_update_info isn't called
+    * that the field is not always set - if __kimtoy__png_read_update_info isn't called
     * the application has to either not do any transforms or get the calculation
     * right itself.
     */
@@ -2036,9 +2036,9 @@ defined(PNG_READ_USER_TRANSFORM_SUPPORTED)
  * decide how it fits in with the other transformations here.
  */
 void /* PRIVATE */
-png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
+__kimtoy__png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
 {
-   png_debug(1, "in png_do_read_transformations");
+   png_debug(1, "in __kimtoy__png_do_read_transformations");
 
    if (png_ptr->row_buf == NULL)
    {
@@ -2046,7 +2046,7 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
        * error is incredibly rare and incredibly easy to debug without this
        * information.
        */
-      png_error(png_ptr, "NULL row buffer");
+      __kimtoy__png_error(png_ptr, "NULL row buffer");
    }
 
    /* The following is debugging; prior to 1.5.4 the code was never compiled in;
@@ -2058,10 +2058,10 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
       !(png_ptr->flags & PNG_FLAG_ROW_INIT))
    {
       /* Application has failed to call either png_read_start_image() or
-       * png_read_update_info() after setting transforms that expand pixels.
+       * __kimtoy__png_read_update_info() after setting transforms that expand pixels.
        * This check added to libpng-1.2.19 (but not enabled until 1.5.4).
        */
-      png_error(png_ptr, "Uninitialized row");
+      __kimtoy__png_error(png_ptr, "Uninitialized row");
    }
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
@@ -2069,7 +2069,7 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
    {
       if (row_info->color_type == PNG_COLOR_TYPE_PALETTE)
       {
-         png_do_expand_palette(row_info, png_ptr->row_buf + 1,
+         __kimtoy__png_do_expand_palette(row_info, png_ptr->row_buf + 1,
              png_ptr->palette, png_ptr->trans_alpha, png_ptr->num_trans);
       }
 
@@ -2077,11 +2077,11 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
       {
          if (png_ptr->num_trans &&
              (png_ptr->transformations & PNG_EXPAND_tRNS))
-            png_do_expand(row_info, png_ptr->row_buf + 1,
+            __kimtoy__png_do_expand(row_info, png_ptr->row_buf + 1,
                 &(png_ptr->trans_color));
 
          else
-            png_do_expand(row_info, png_ptr->row_buf + 1,
+            __kimtoy__png_do_expand(row_info, png_ptr->row_buf + 1,
                 NULL);
       }
    }
@@ -2092,7 +2092,7 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
       !(png_ptr->transformations & PNG_COMPOSE) &&
       (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA ||
       row_info->color_type == PNG_COLOR_TYPE_GRAY_ALPHA))
-      png_do_strip_channel(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_strip_channel(row_info, png_ptr->row_buf + 1,
          0 /* at_start == false, because SWAP_ALPHA happens later */);
 #endif
 
@@ -2100,7 +2100,7 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
    if (png_ptr->transformations & PNG_RGB_TO_GRAY)
    {
       int rgb_error =
-          png_do_rgb_to_gray(png_ptr, row_info,
+          __kimtoy__png_do_rgb_to_gray(png_ptr, row_info,
               png_ptr->row_buf + 1);
 
       if (rgb_error)
@@ -2108,11 +2108,11 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
          png_ptr->rgb_to_gray_status=1;
          if ((png_ptr->transformations & PNG_RGB_TO_GRAY) ==
              PNG_RGB_TO_GRAY_WARN)
-            png_warning(png_ptr, "png_do_rgb_to_gray found nongray pixel");
+            __kimtoy__png_warning(png_ptr, "__kimtoy__png_do_rgb_to_gray found nongray pixel");
 
          if ((png_ptr->transformations & PNG_RGB_TO_GRAY) ==
              PNG_RGB_TO_GRAY_ERR)
-            png_error(png_ptr, "png_do_rgb_to_gray found nongray pixel");
+            __kimtoy__png_error(png_ptr, "__kimtoy__png_do_rgb_to_gray found nongray pixel");
       }
    }
 #endif
@@ -2154,13 +2154,13 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
     */
    if ((png_ptr->transformations & PNG_GRAY_TO_RGB) &&
        !(png_ptr->mode & PNG_BACKGROUND_IS_GRAY))
-      png_do_gray_to_rgb(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_gray_to_rgb(row_info, png_ptr->row_buf + 1);
 #endif
 
 #if (defined PNG_READ_BACKGROUND_SUPPORTED) ||\
    (defined PNG_READ_ALPHA_MODE_SUPPORTED)
    if (png_ptr->transformations & PNG_COMPOSE)
-      png_do_compose(row_info, png_ptr->row_buf + 1, png_ptr);
+      __kimtoy__png_do_compose(row_info, png_ptr->row_buf + 1, png_ptr);
 #endif
 
 #ifdef PNG_READ_GAMMA_SUPPORTED
@@ -2172,7 +2172,7 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
        (png_ptr->color_type & PNG_COLOR_MASK_ALPHA))) &&
 #endif
        (png_ptr->color_type != PNG_COLOR_TYPE_PALETTE))
-      png_do_gamma(row_info, png_ptr->row_buf + 1, png_ptr);
+      __kimtoy__png_do_gamma(row_info, png_ptr->row_buf + 1, png_ptr);
 #endif
 
 #ifdef PNG_READ_STRIP_ALPHA_SUPPORTED
@@ -2180,19 +2180,19 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
       (png_ptr->transformations & PNG_COMPOSE) &&
       (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA ||
       row_info->color_type == PNG_COLOR_TYPE_GRAY_ALPHA))
-      png_do_strip_channel(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_strip_channel(row_info, png_ptr->row_buf + 1,
          0 /* at_start == false, because SWAP_ALPHA happens later */);
 #endif
 
 #ifdef PNG_READ_ALPHA_MODE_SUPPORTED
    if ((png_ptr->transformations & PNG_ENCODE_ALPHA) &&
       (row_info->color_type & PNG_COLOR_MASK_ALPHA))
-      png_do_encode_alpha(row_info, png_ptr->row_buf + 1, png_ptr);
+      __kimtoy__png_do_encode_alpha(row_info, png_ptr->row_buf + 1, png_ptr);
 #endif
 
 #ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED
    if (png_ptr->transformations & PNG_SCALE_16_TO_8)
-      png_do_scale_16_to_8(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_scale_16_to_8(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_STRIP_16_TO_8_SUPPORTED
@@ -2201,17 +2201,17 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
     * calling the API or in a TRANSFORM flag) this is what happens.
     */
    if (png_ptr->transformations & PNG_16_TO_8)
-      png_do_chop(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_chop(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_QUANTIZE_SUPPORTED
    if (png_ptr->transformations & PNG_QUANTIZE)
    {
-      png_do_quantize(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_quantize(row_info, png_ptr->row_buf + 1,
           png_ptr->palette_lookup, png_ptr->quantize_index);
 
       if (row_info->rowbytes == 0)
-         png_error(png_ptr, "png_do_quantize returned rowbytes=0");
+         __kimtoy__png_error(png_ptr, "__kimtoy__png_do_quantize returned rowbytes=0");
    }
 #endif /* PNG_READ_QUANTIZE_SUPPORTED */
 
@@ -2222,62 +2222,62 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
     * better accuracy results faster!)
     */
    if (png_ptr->transformations & PNG_EXPAND_16)
-      png_do_expand_16(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_expand_16(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_GRAY_TO_RGB_SUPPORTED
    /*NOTE: moved here in 1.5.4 (from much later in this list.) */
    if ((png_ptr->transformations & PNG_GRAY_TO_RGB) &&
        (png_ptr->mode & PNG_BACKGROUND_IS_GRAY))
-      png_do_gray_to_rgb(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_gray_to_rgb(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_INVERT_SUPPORTED
    if (png_ptr->transformations & PNG_INVERT_MONO)
-      png_do_invert(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_invert(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_SHIFT_SUPPORTED
    if (png_ptr->transformations & PNG_SHIFT)
-      png_do_unshift(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_unshift(row_info, png_ptr->row_buf + 1,
           &(png_ptr->shift));
 #endif
 
 #ifdef PNG_READ_PACK_SUPPORTED
    if (png_ptr->transformations & PNG_PACK)
-      png_do_unpack(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_unpack(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_BGR_SUPPORTED
    if (png_ptr->transformations & PNG_BGR)
-      png_do_bgr(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_bgr(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_PACKSWAP_SUPPORTED
    if (png_ptr->transformations & PNG_PACKSWAP)
-      png_do_packswap(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_packswap(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_FILLER_SUPPORTED
    if (png_ptr->transformations & PNG_FILLER)
-      png_do_read_filler(row_info, png_ptr->row_buf + 1,
+      __kimtoy__png_do_read_filler(row_info, png_ptr->row_buf + 1,
           (png_uint_32)png_ptr->filler, png_ptr->flags);
 #endif
 
 #ifdef PNG_READ_INVERT_ALPHA_SUPPORTED
    if (png_ptr->transformations & PNG_INVERT_ALPHA)
-      png_do_read_invert_alpha(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_read_invert_alpha(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_SWAP_ALPHA_SUPPORTED
    if (png_ptr->transformations & PNG_SWAP_ALPHA)
-      png_do_read_swap_alpha(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_read_swap_alpha(row_info, png_ptr->row_buf + 1);
 #endif
 
 #ifdef PNG_READ_16BIT_SUPPORTED
 #ifdef PNG_READ_SWAP_SUPPORTED
    if (png_ptr->transformations & PNG_SWAP_BYTES)
-      png_do_swap(row_info, png_ptr->row_buf + 1);
+      __kimtoy__png_do_swap(row_info, png_ptr->row_buf + 1);
 #endif
 #endif
 
@@ -2315,12 +2315,12 @@ png_do_read_transformations(png_structp png_ptr, png_row_infop row_info)
  * without changing the actual values.  Thus, if you had a row with
  * a bit depth of 1, you would end up with bytes that only contained
  * the numbers 0 or 1.  If you would rather they contain 0 and 255, use
- * png_do_shift() after this.
+ * __kimtoy__png_do_shift() after this.
  */
 void /* PRIVATE */
-png_do_unpack(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_unpack(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_unpack");
+   png_debug(1, "in __kimtoy__png_do_unpack");
 
    if (row_info->bit_depth < 8)
    {
@@ -2410,18 +2410,18 @@ png_do_unpack(png_row_infop row_info, png_bytep row)
 #endif
 
 #ifdef PNG_READ_SHIFT_SUPPORTED
-/* Reverse the effects of png_do_shift.  This routine merely shifts the
+/* Reverse the effects of __kimtoy__png_do_shift.  This routine merely shifts the
  * pixels back to their significant bits values.  Thus, if you have
  * a row of bit depth 8, but only 5 are significant, this will shift
  * the values back to 0 through 31.
  */
 void /* PRIVATE */
-png_do_unshift(png_row_infop row_info, png_bytep row,
+__kimtoy__png_do_unshift(png_row_infop row_info, png_bytep row,
     png_const_color_8p sig_bits)
 {
    int color_type;
 
-   png_debug(1, "in png_do_unshift");
+   png_debug(1, "in __kimtoy__png_do_unshift");
 
    /* The palette case has already been handled in the _init routine. */
    color_type = row_info->color_type;
@@ -2555,9 +2555,9 @@ png_do_unshift(png_row_infop row_info, png_bytep row,
 #ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED
 /* Scale rows of bit depth 16 down to 8 accurately */
 void /* PRIVATE */
-png_do_scale_16_to_8(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_scale_16_to_8(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_scale_16_to_8");
+   png_debug(1, "in __kimtoy__png_do_scale_16_to_8");
 
    if (row_info->bit_depth == 16)
    {
@@ -2616,9 +2616,9 @@ void /* PRIVATE */
 /* Simply discard the low byte.  This was the default behavior prior
  * to libpng-1.5.4.
  */
-png_do_chop(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_chop(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_chop");
+   png_debug(1, "in __kimtoy__png_do_chop");
 
    if (row_info->bit_depth == 16)
    {
@@ -2641,9 +2641,9 @@ png_do_chop(png_row_infop row_info, png_bytep row)
 
 #ifdef PNG_READ_SWAP_ALPHA_SUPPORTED
 void /* PRIVATE */
-png_do_read_swap_alpha(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_read_swap_alpha(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_read_swap_alpha");
+   png_debug(1, "in __kimtoy__png_do_read_swap_alpha");
 
    {
       png_uint_32 row_width = row_info->width;
@@ -2738,10 +2738,10 @@ png_do_read_swap_alpha(png_row_infop row_info, png_bytep row)
 
 #ifdef PNG_READ_INVERT_ALPHA_SUPPORTED
 void /* PRIVATE */
-png_do_read_invert_alpha(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_read_invert_alpha(png_row_infop row_info, png_bytep row)
 {
    png_uint_32 row_width;
-   png_debug(1, "in png_do_read_invert_alpha");
+   png_debug(1, "in __kimtoy__png_do_read_invert_alpha");
 
    row_width = row_info->width;
    if (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
@@ -2840,7 +2840,7 @@ png_do_read_invert_alpha(png_row_infop row_info, png_bytep row)
 #ifdef PNG_READ_FILLER_SUPPORTED
 /* Add filler channel if we have RGB color */
 void /* PRIVATE */
-png_do_read_filler(png_row_infop row_info, png_bytep row,
+__kimtoy__png_do_read_filler(png_row_infop row_info, png_bytep row,
     png_uint_32 filler, png_uint_32 flags)
 {
    png_uint_32 i;
@@ -2851,7 +2851,7 @@ png_do_read_filler(png_row_infop row_info, png_bytep row,
 #endif
    png_byte lo_filler = (png_byte)(filler & 0xff);
 
-   png_debug(1, "in png_do_read_filler");
+   png_debug(1, "in __kimtoy__png_do_read_filler");
 
    if (
        row_info->color_type == PNG_COLOR_TYPE_GRAY)
@@ -3027,12 +3027,12 @@ png_do_read_filler(png_row_infop row_info, png_bytep row,
 #ifdef PNG_READ_GRAY_TO_RGB_SUPPORTED
 /* Expand grayscale files to RGB, with or without alpha */
 void /* PRIVATE */
-png_do_gray_to_rgb(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_gray_to_rgb(png_row_infop row_info, png_bytep row)
 {
    png_uint_32 i;
    png_uint_32 row_width = row_info->width;
 
-   png_debug(1, "in png_do_gray_to_rgb");
+   png_debug(1, "in __kimtoy__png_do_gray_to_rgb");
 
    if (row_info->bit_depth >= 8 &&
        !(row_info->color_type & PNG_COLOR_MASK_COLOR))
@@ -3160,18 +3160,18 @@ png_do_gray_to_rgb(png_row_infop row_info, png_bytep row)
  *  values this results in an implicit assumption that the original PNG RGB
  *  values were linear.
  *
- *  Other integer coefficents can be used via png_set_rgb_to_gray().  Because
+ *  Other integer coefficents can be used via __kimtoy__png_set_rgb_to_gray().  Because
  *  the API takes just red and green coefficients the blue coefficient is
  *  calculated to make the sum 32768.  This will result in different rounding
  *  to that used above.
  */
 int /* PRIVATE */
-png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
 
 {
    int rgb_error = 0;
 
-   png_debug(1, "in png_do_rgb_to_gray");
+   png_debug(1, "in __kimtoy__png_do_rgb_to_gray");
 
    if (!(row_info->color_type & PNG_COLOR_MASK_PALETTE) &&
        (row_info->color_type & PNG_COLOR_MASK_COLOR))
@@ -3368,7 +3368,7 @@ png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
  * of code.  This API is not used internally.
  */
 void PNGAPI
-png_build_grayscale_palette(int bit_depth, png_colorp palette)
+__kimtoy__png_build_grayscale_palette(int bit_depth, png_colorp palette)
 {
    int num_palette;
    int color_inc;
@@ -3426,7 +3426,7 @@ png_build_grayscale_palette(int bit_depth, png_colorp palette)
  * at a gamma of 1.0.  Paletted files have already been taken care of.
  */
 void /* PRIVATE */
-png_do_compose(png_row_infop row_info, png_bytep row, png_structp png_ptr)
+__kimtoy__png_do_compose(png_row_infop row_info, png_bytep row, png_structp png_ptr)
 {
 #ifdef PNG_READ_GAMMA_SUPPORTED
    png_const_bytep gamma_table = png_ptr->gamma_table;
@@ -3444,7 +3444,7 @@ png_do_compose(png_row_infop row_info, png_bytep row, png_structp png_ptr)
    int optimize = (png_ptr->flags & PNG_FLAG_OPTIMIZE_ALPHA) != 0;
    int shift;
 
-   png_debug(1, "in png_do_compose");
+   png_debug(1, "in __kimtoy__png_do_compose");
 
    {
       switch (row_info->color_type)
@@ -4138,7 +4138,7 @@ png_do_compose(png_row_infop row_info, png_bytep row, png_structp png_ptr)
  * build_gamma_table().
  */
 void /* PRIVATE */
-png_do_gamma(png_row_infop row_info, png_bytep row, png_structp png_ptr)
+__kimtoy__png_do_gamma(png_row_infop row_info, png_bytep row, png_structp png_ptr)
 {
    png_const_bytep gamma_table = png_ptr->gamma_table;
    png_const_uint_16pp gamma_16_table = png_ptr->gamma_16_table;
@@ -4148,7 +4148,7 @@ png_do_gamma(png_row_infop row_info, png_bytep row, png_structp png_ptr)
    png_uint_32 i;
    png_uint_32 row_width=row_info->width;
 
-   png_debug(1, "in png_do_gamma");
+   png_debug(1, "in __kimtoy__png_do_gamma");
 
    if (((row_info->bit_depth <= 8 && gamma_table != NULL) ||
        (row_info->bit_depth == 16 && gamma_16_table != NULL)))
@@ -4339,11 +4339,11 @@ png_do_gamma(png_row_infop row_info, png_bytep row, png_structp png_ptr)
  * from_1 tables.
  */
 void /* PRIVATE */
-png_do_encode_alpha(png_row_infop row_info, png_bytep row, png_structp png_ptr)
+__kimtoy__png_do_encode_alpha(png_row_infop row_info, png_bytep row, png_structp png_ptr)
 {
    png_uint_32 row_width = row_info->width;
 
-   png_debug(1, "in png_do_encode_alpha");
+   png_debug(1, "in __kimtoy__png_do_encode_alpha");
 
    if (row_info->color_type & PNG_COLOR_MASK_ALPHA)
    {
@@ -4396,7 +4396,7 @@ png_do_encode_alpha(png_row_infop row_info, png_bytep row, png_structp png_ptr)
    /* Only get to here if called with a weird row_info; no harm has been done,
     * so just issue a warning.
     */
-   png_warning(png_ptr, "png_do_encode_alpha: unexpected call");
+   __kimtoy__png_warning(png_ptr, "__kimtoy__png_do_encode_alpha: unexpected call");
 }
 #endif
 
@@ -4405,7 +4405,7 @@ png_do_encode_alpha(png_row_infop row_info, png_bytep row, png_structp png_ptr)
  * upon whether you supply trans and num_trans.
  */
 void /* PRIVATE */
-png_do_expand_palette(png_row_infop row_info, png_bytep row,
+__kimtoy__png_do_expand_palette(png_row_infop row_info, png_bytep row,
    png_const_colorp palette, png_const_bytep trans_alpha, int num_trans)
 {
    int shift, value;
@@ -4413,7 +4413,7 @@ png_do_expand_palette(png_row_infop row_info, png_bytep row,
    png_uint_32 i;
    png_uint_32 row_width=row_info->width;
 
-   png_debug(1, "in png_do_expand_palette");
+   png_debug(1, "in __kimtoy__png_do_expand_palette");
 
    if (row_info->color_type == PNG_COLOR_TYPE_PALETTE)
    {
@@ -4558,7 +4558,7 @@ png_do_expand_palette(png_row_infop row_info, png_bytep row,
  * expanded transparency value is supplied, an alpha channel is built.
  */
 void /* PRIVATE */
-png_do_expand(png_row_infop row_info, png_bytep row,
+__kimtoy__png_do_expand(png_row_infop row_info, png_bytep row,
     png_const_color_16p trans_color)
 {
    int shift, value;
@@ -4566,7 +4566,7 @@ png_do_expand(png_row_infop row_info, png_bytep row,
    png_uint_32 i;
    png_uint_32 row_width=row_info->width;
 
-   png_debug(1, "in png_do_expand");
+   png_debug(1, "in __kimtoy__png_do_expand");
 
    {
       if (row_info->color_type == PNG_COLOR_TYPE_GRAY)
@@ -4788,7 +4788,7 @@ png_do_expand(png_row_infop row_info, png_bytep row,
  * whole row to 16 bits.  Has no effect otherwise.
  */
 void /* PRIVATE */
-png_do_expand_16(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_expand_16(png_row_infop row_info, png_bytep row)
 {
    if (row_info->bit_depth == 8 &&
       row_info->color_type != PNG_COLOR_TYPE_PALETTE)
@@ -4816,14 +4816,14 @@ png_do_expand_16(png_row_infop row_info, png_bytep row)
 
 #ifdef PNG_READ_QUANTIZE_SUPPORTED
 void /* PRIVATE */
-png_do_quantize(png_row_infop row_info, png_bytep row,
+__kimtoy__png_do_quantize(png_row_infop row_info, png_bytep row,
     png_const_bytep palette_lookup, png_const_bytep quantize_lookup)
 {
    png_bytep sp, dp;
    png_uint_32 i;
    png_uint_32 row_width=row_info->width;
 
-   png_debug(1, "in png_do_quantize");
+   png_debug(1, "in __kimtoy__png_do_quantize");
 
    if (row_info->bit_depth == 8)
    {
@@ -4912,9 +4912,9 @@ png_do_quantize(png_row_infop row_info, png_bytep row,
 #ifdef PNG_MNG_FEATURES_SUPPORTED
 /* Undoes intrapixel differencing  */
 void /* PRIVATE */
-png_do_read_intrapixel(png_row_infop row_info, png_bytep row)
+__kimtoy__png_do_read_intrapixel(png_row_infop row_info, png_bytep row)
 {
-   png_debug(1, "in png_do_read_intrapixel");
+   png_debug(1, "in __kimtoy__png_do_read_intrapixel");
 
    if (
        (row_info->color_type & PNG_COLOR_MASK_COLOR))
