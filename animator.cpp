@@ -21,6 +21,8 @@
 
 #include "animator.h"
 
+#include <QMovie>
+
 Animator* Animator::m_self = 0;
 
 Animator* Animator::self()
@@ -36,4 +38,30 @@ Animator::Animator()
 
 Animator::~Animator()
 {
+}
+
+void Animator::connectPreEditBarMovie(QMovie* movie)
+{
+    connect(movie, SIGNAL(frameChanged(int)), this, SIGNAL(animatePreEditBar()));
+    connect(this, SIGNAL(enabled()), movie, SLOT(start()));
+    connect(this, SIGNAL(disabled()), movie, SLOT(stop()));
+    movie->start();
+}
+
+void Animator::connectStatusBarMovie(QMovie* movie)
+{
+    connect(movie, SIGNAL(frameChanged(int)), this, SIGNAL(animateStatusBar()));
+    connect(this, SIGNAL(enabled()), movie, SLOT(start()));
+    connect(this, SIGNAL(disabled()), movie, SLOT(stop()));
+    movie->start();
+}
+
+void Animator::enable()
+{
+    emit enabled();
+}
+
+void Animator::disable()
+{
+    emit disabled();
 }

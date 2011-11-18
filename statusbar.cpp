@@ -146,10 +146,10 @@ StatusBar::StatusBar()
     QPoint pos = group.readEntry("XYPosition", QPoint(100, 0));
     move(pos);
 
-    loadSettings();
+    connect(Animator::self(), SIGNAL(animateStatusBar()), this, SLOT(update()));
+    connect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
 
-    Plasma::Theme* plasmaTheme = Plasma::Theme::defaultTheme();
-    connect(plasmaTheme, SIGNAL(themeChanged()), this, SLOT(loadSettings()));
+    loadSettings();
 
     IMPanelAgent::PanelCreated();
 }
@@ -219,7 +219,7 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
     QString objectPath, name, iconName, description;
     foreach(const QString& p, props) {
         extractProperty(p, objectPath, name, iconName, description);
-        kWarning() << objectPath << name << iconName << description;
+//         kWarning() << objectPath << name << iconName << description;
         int index = m_objectPaths.indexOf(objectPath);
         if (index == -1) {
             /// no such objectPath, register it
@@ -247,7 +247,7 @@ void StatusBar::slotUpdateProperty(const QString& prop)
 {
     QString objectPath, name, iconName, description;
     extractProperty(prop, objectPath, name, iconName, description);
-    kWarning() << objectPath << name << iconName << description;
+//     kWarning() << objectPath << name << iconName << description;
     int index = m_objectPaths.indexOf(objectPath);
     if (index == -1) {
         /// no such objectPath
@@ -342,12 +342,10 @@ void StatusBar::loadSettings()
     }
 
     if (KIMToySettings::self()->enableThemeAnimation()) {
-        connect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
-        connect(Animator::self(), SIGNAL(animateStatusBar()), this, SLOT(update()));
+        Animator::self()->enable();
     }
     else {
-        disconnect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
-        disconnect(Animator::self(), SIGNAL(animateStatusBar()), this, SLOT(update()));
+        Animator::self()->disable();
     }
 
     ThemerAgent::layoutStatusBar(m_layout);

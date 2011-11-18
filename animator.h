@@ -24,15 +24,23 @@
 
 #include <QObject>
 
+class QMovie;
+
 class Animator : public QObject
 {
     Q_OBJECT
 public:
     static Animator* self();
     virtual ~Animator();
+    void connectPreEditBarMovie(QMovie* movie);
+    void connectStatusBarMovie(QMovie* movie);
+    void enable();
+    void disable();
 Q_SIGNALS:
     void animatePreEditBar();
     void animateStatusBar();
+    void enabled();
+    void disabled();
 private:
     explicit Animator();
     static Animator* m_self;

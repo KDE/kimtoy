@@ -245,13 +245,13 @@ bool ThemerSogou::loadTheme()
                 h_zl = list.at(2).trimmed().toInt();
                 h_zr = list.at(3).trimmed().toInt();
             }
-            else if (key.startsWith("custom") && key.endsWith("_display")) {
+            else if (key.endsWith("_display")) {
                 QString name = key.left(key.length() - 8);
                 if (!h_overlays.contains(name)) {
                     h_overlays.insert(name, new OverlayPixmap);
                 }
             }
-            else if (key.startsWith("custom") && key.endsWith("_align")) {
+            else if (key.endsWith("_align")) {
                 QString name = key.left(key.length() - 6);
                 QStringList numbers = value.split(',');
                 if (!h_overlays.contains(name)) {
@@ -278,9 +278,7 @@ bool ThemerSogou::loadTheme()
                     op->setDevice(d);
                     op->setFormat(value.endsWith(".gif") ? "gif" : "apng");
                     d->setParent(op);
-                    QObject::connect(op, SIGNAL(frameChanged(int)),
-                                     Animator::self(), SIGNAL(animatePreEditBar()));
-                    op->start();
+                    Animator::self()->connectPreEditBarMovie(op);
                 }
             }
         }
@@ -324,13 +322,13 @@ bool ThemerSogou::loadTheme()
                 v_zl = list.at(2).trimmed().toInt();
                 v_zr = list.at(3).trimmed().toInt();
             }
-            else if (key.startsWith("custom") && key.endsWith("_display")) {
+            else if (key.endsWith("_display")) {
                 QString name = key.left(key.length() - 8);
                 if (!v_overlays.contains(name)) {
                     v_overlays.insert(name, new OverlayPixmap);
                 }
             }
-            else if (key.startsWith("custom") && key.endsWith("_align")) {
+            else if (key.endsWith("_align")) {
                 QString name = key.left(key.length() - 6);
                 QStringList numbers = value.split(',');
                 if (!v_overlays.contains(name)) {
@@ -357,9 +355,7 @@ bool ThemerSogou::loadTheme()
                     op->setDevice(d);
                     op->setFormat(value.endsWith(".gif") ? "gif" : "apng");
                     d->setParent(op);
-                    QObject::connect(op, SIGNAL(frameChanged(int)),
-                                     Animator::self(), SIGNAL(animatePreEditBar()));
-                    op->start();
+                    Animator::self()->connectPreEditBarMovie(op);
                 }
             }
         }
@@ -375,9 +371,7 @@ bool ThemerSogou::loadTheme()
                     m_statusBarSkin->setDevice(d);
                     m_statusBarSkin->setFormat(value.endsWith(".gif") ? "gif" : "apng");
                     d->setParent(m_statusBarSkin);
-                    QObject::connect(m_statusBarSkin, SIGNAL(frameChanged(int)),
-                                     Animator::self(), SIGNAL(animateStatusBar()));
-                    m_statusBarSkin->start();
+                    Animator::self()->connectStatusBarMovie(m_statusBarSkin);
                 }
             }
             else if (key.startsWith("custom") && key.endsWith("_display")) {
@@ -407,9 +401,7 @@ bool ThemerSogou::loadTheme()
                     op->setDevice(d);
                     op->setFormat(value.endsWith(".gif") ? "gif" : "apng");
                     d->setParent(op);
-                    QObject::connect(op, SIGNAL(frameChanged(int)),
-                                     Animator::self(), SIGNAL(animateStatusBar()));
-                    op->start();
+                    Animator::self()->connectStatusBarMovie(op);
                 }
             }
             else if (key.endsWith("_pos")) {
