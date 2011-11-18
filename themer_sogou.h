@@ -123,7 +123,7 @@ private:
     QMovie* m_statusBarSkin;
     QHash<QString, OverlayPixmap*> s_overlays;
 
-    QPoint m_pwpos[6];/// NOTE hardcode to 6
+    QList<QPoint> m_pwpos;
     QRegion m_preEditBarMask;
     QRegion m_statusBarMask;
 

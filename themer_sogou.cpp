@@ -148,7 +148,6 @@ bool ThemerSogou::loadTheme()
     QString pinyin_color, zhongwen_color;
     int h_hsl = 0, h_hsr = 0, h_vst = 0, h_vsb = 0, h_hstm = 0, h_vstm = 0;
     int v_hsl = 0, v_hsr = 0, v_vst = 0, v_vsb = 0, v_hstm = 0, v_vstm = 0;
-    int i = 0;
 
     foreach(OverlayPixmap* op, h_overlays) delete op;
     foreach(OverlayPixmap* op, v_overlays) delete op;
@@ -158,6 +157,7 @@ bool ThemerSogou::loadTheme()
     m_statusBarSkin = 0;
     foreach(OverlayPixmap* op, s_overlays) delete op;
     s_overlays.clear();
+    m_pwpos.clear();
     h_separatorColor = Qt::transparent;
     v_separatorColor = Qt::transparent;
     h_sepl = 0, h_sepr = 0;
@@ -408,9 +408,8 @@ bool ThemerSogou::loadTheme()
                 QStringList list = value.split(',');
                 int x = list.at(0).trimmed().toInt();
                 int y = list.at(1).trimmed().toInt();
-                if (x != 0 && y != 0 && i < 6) {
-                    m_pwpos[ i ] = QPoint(x, y);
-                    ++i;
+                if (x != 0 && y != 0) {
+                    m_pwpos.append(QPoint(x, y));
                 }
             }
         }
@@ -523,10 +522,21 @@ QSize ThemerSogou::sizeHintStatusBar(const StatusBar* widget) const
 
 void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
 {
-    int availableCount = qMin(layout->count(), 6);
+    int itemCount = layout->count();
+    int posCount = m_pwpos.count();
+    int availableCount = qMin(itemCount, posCount);
     for (int i = 0; i < availableCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
         item->setGeometry(QRect(m_pwpos[ i ], item->maximumSize()));
+    }
+
+    int remains = itemCount - posCount;
+    if (remains <= 0)
+        return;
+
+    for (int i = 0; i < remains; ++i) {
+        QLayoutItem* item = layout->m_items.at(posCount + i);
+        item->setGeometry(QRect(QPoint(i * 22, 0), item->maximumSize()));
     }
 }
 
