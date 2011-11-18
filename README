@@ -52,7 +52,3 @@ A because kimtoy has no way to know the actual actions for these icons. eg. the 
 
 Q why do some status bar icons positions have offset sometimes?
 A because the position count specified in the theme may be lesser than actual icon count, and kimtoy can not decide what should be shown and what should not.
-
-Q how to use the experimental ibus kconfig module?
-A add "--config=/usr/share/apps/kimtoy/kimtoy-ibus-kconfig" to ibus argument setting and restart kimtoy. the configuration information will be stored in ~/.kde4/share/config/ibusrc
-
