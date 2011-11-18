@@ -7,6 +7,7 @@ support the animation feature in sogou theme
 add option to enable/disable animation
 ship an internal libpng for systems without libpng-apng
 print feature summary when building
+fix the issue that properties are overlapped when positions are not enough using sogou theme
 
 2011-10-28 v1.2
 fix multi screen geometry
