@@ -30,6 +30,10 @@
 #include <KDE/KConfigGroup>
 #include "config.h"
 
+#ifndef DBUS_ERROR_FAILED
+#define DBUS_ERROR_FAILED "org.freedesktop.DBus.Error.Failed"
+#endif /* DBUS_ERROR_FAILED */
+
 #define KCONFIG_FILENAME "ibusrc"
 
 struct _IBusConfigKConfig {

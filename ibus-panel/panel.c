@@ -28,6 +28,10 @@
 #endif
 #include "panel.h"
 
+#ifndef DBUS_ERROR_FAILED
+#define DBUS_ERROR_FAILED "org.freedesktop.DBus.Error.Failed"
+#endif /* DBUS_ERROR_FAILED */
+
 typedef struct _IBusPanelImpanelClass IBusPanelImpanelClass;
 
 struct _IBusPanelImpanel {
