@@ -311,8 +311,6 @@ void ThemerFcitx::layoutStatusBar(StatusBarLayout* layout) const
 
 void ThemerFcitx::resizePreEditBar(const QSize& size)
 {
-    preEditBarSkin.resizePixmap(size);
-
     /// calculate mask if necessary
     if (KIMToySettings::self()->enableWindowMask()
             || KIMToySettings::self()->enableBackgroundBlur()
@@ -323,8 +321,6 @@ void ThemerFcitx::resizePreEditBar(const QSize& size)
 
 void ThemerFcitx::resizeStatusBar(const QSize& size)
 {
-    statusBarSkin.resizePixmap(size);
-
     /// calculate mask if necessary
     if (KIMToySettings::self()->enableWindowMask()
             || KIMToySettings::self()->enableBackgroundBlur()

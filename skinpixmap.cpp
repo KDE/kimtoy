@@ -22,6 +22,7 @@
 #include "skinpixmap.h"
 
 #include <QBitmap>
+#include <QMatrix>
 #include <QPainter>
 #include <QSize>
 
@@ -56,81 +57,16 @@ SkinPixmap::SkinPixmap(const QPixmap& skinpix, int hsl, int hsr, int vst, int vs
     o_bottomleft = skinpix.copy(0, vsb, hsl, m_skinh - vsb);
     o_bottom = skinpix.copy(hsl, vsb, hsr - hsl, m_skinh - vsb);
     o_bottomright = skinpix.copy(hsr, vsb, m_skinw - hsr, m_skinh - vsb);
-    m_topleft = o_topleft;
-    m_top = o_top;
-    m_topright = o_topright;
-    m_left = o_left;
-    m_center = o_center;
-    m_right = o_right;
-    m_bottomleft = o_bottomleft;
-    m_bottom = o_bottom;
-    m_bottomright = o_bottomright;
-    m_topleftRegion = m_topleft.mask();
-    m_topRegion = m_top.mask();
-    m_toprightRegion = m_topright.mask();
-    m_leftRegion = m_left.mask();
-    m_centerRegion = m_center.mask();
-    m_rightRegion = m_right.mask();
-    m_bottomleftRegion = m_bottomleft.mask();
-    m_bottomRegion = m_bottom.mask();
-    m_bottomrightRegion = m_bottomright.mask();
-}
 
-void SkinPixmap::resizePixmap(const QSize& size)
-{
-    const int leftrightheight = size.height() - m_topleft.height() - m_bottomleft.height();
-    const int topbottomwidth = size.width() - m_topleft.width() - m_topright.width();
-
-    /// corners
-
-    /// edges
-    if (m_hstm == 0) {
-        /// scale
-        if (m_top.width() != topbottomwidth) {
-            m_top = o_top.scaled(topbottomwidth, m_top.height());
-            m_bottom = o_bottom.scaled(topbottomwidth, m_bottom.height());
-            m_topRegion = m_top.mask();
-            m_bottomRegion = m_bottom.mask();
-        }
-    }
-    if (m_vstm == 0) {
-        /// scale
-        if (m_left.height() != leftrightheight) {
-            m_left = o_left.scaled(m_left.width(), leftrightheight);
-            m_right = o_right.scaled(m_right.width(), leftrightheight);
-            m_leftRegion = m_left.mask();
-            m_rightRegion = m_right.mask();
-        }
-    }
-
-    /// center
-    if (m_hstm == 0) {
-        /// scale
-        if (m_vstm == 0) {
-            /// scale
-            if (m_center.width() != topbottomwidth || m_center.height() != leftrightheight) {
-                m_center = o_center.scaled(topbottomwidth, leftrightheight);
-                m_centerRegion = m_center.mask();
-            }
-        }
-        else {
-            /// tilling
-            if (m_center.width() != topbottomwidth) {
-                m_center = o_center.scaled(topbottomwidth, m_center.height());
-                m_centerRegion = m_center.mask();
-            }
-        }
-    }
-    else {
-        /// tilling
-        if (m_vstm == 0) {
-            /// scale
-            if (m_center.height() != leftrightheight) {
-                m_center = o_center.scaled(m_center.width(), leftrightheight);
-                m_centerRegion = m_center.mask();
-            }
-        }
-    }
+    m_topleftRegion = o_topleft.mask();
+    m_topRegion = o_top.mask();
+    m_toprightRegion = o_topright.mask();
+    m_leftRegion = o_left.mask();
+    m_centerRegion = o_center.mask();
+    m_rightRegion = o_right.mask();
+    m_bottomleftRegion = o_bottomleft.mask();
+    m_bottomRegion = o_bottom.mask();
+    m_bottomrightRegion = o_bottomright.mask();
 }
 
 void SkinPixmap::resizeRegion(const QSize& size)
@@ -138,8 +74,11 @@ void SkinPixmap::resizeRegion(const QSize& size)
     const int middlepixh = m_vsb - m_vst;
     const int middlepixw = m_hsr - m_hsl;
 
-    const int leftrightheight = size.height() - m_topleft.height() - m_bottomleft.height();
-    const int topbottomwidth = size.width() - m_topleft.width() - m_topright.width();
+    const int leftrightheight = size.height() - o_topleft.height() - o_bottomleft.height();
+    const int topbottomwidth = size.width() - o_topleft.width() - o_topright.width();
+
+    qreal scaleX = m_hstm ? 1 : (qreal)topbottomwidth / (qreal)middlepixw;
+    qreal scaleY = m_vstm ? 1 : (qreal)leftrightheight / (qreal)middlepixh;
 
     /// corners
     QRegion topleft = m_topleftRegion;
@@ -160,7 +99,7 @@ void SkinPixmap::resizeRegion(const QSize& size)
     else {
         /// tilling
         top = QRegion(QRect(0, 0, topbottomwidth, m_vst));
-        bottom = QRegion(QRect(0, 0, topbottomwidth, m_bottom.height()));
+        bottom = QRegion(QRect(0, 0, topbottomwidth, o_bottom.height()));
         QRegion toppixRegion(m_topRegion);
         QRegion bottompixRegion(m_bottomRegion);
         QRegion tmpRegion = toppixRegion;
@@ -182,7 +121,7 @@ void SkinPixmap::resizeRegion(const QSize& size)
     else {
         /// tilling
         left = QRegion(QRect(0, 0, m_hsl, leftrightheight));
-        right = QRegion(QRect(0, 0, m_right.width(), leftrightheight));
+        right = QRegion(QRect(0, 0, o_right.width(), leftrightheight));
         QRegion leftpixRegion(m_leftRegion);
         QRegion rightpixRegion(m_rightRegion);
         QRegion tmpRegion = leftpixRegion;
@@ -196,6 +135,15 @@ void SkinPixmap::resizeRegion(const QSize& size)
         left &= leftpixRegion;
         right &= rightpixRegion;
     }
+    QMatrix scaleXMatrix;
+    scaleXMatrix.scale(scaleX, 1.0);
+    QMatrix scaleYMatrix;
+    scaleYMatrix.scale(1.0, scaleY);
+    top = top * scaleXMatrix;
+    bottom = bottom * scaleXMatrix;
+    left = left * scaleYMatrix;
+    right = right * scaleYMatrix;
+
     left.translate(0, m_vst);
     top.translate(m_hsl, 0);
     right.translate(m_hsl + topbottomwidth, m_vst);
@@ -203,6 +151,8 @@ void SkinPixmap::resizeRegion(const QSize& size)
 
     /// center
     QRegion center(QRect(0, 0, topbottomwidth, leftrightheight));
+    QMatrix scaleXYMatrix;
+    scaleXYMatrix.scale(scaleX, scaleY);
     if (m_hstm == 0) {
         /// scale
         if (m_vstm == 0) {
@@ -250,6 +200,7 @@ void SkinPixmap::resizeRegion(const QSize& size)
             center &= centerpixRegion;
         }
     }
+    center = center * scaleXYMatrix;
     center.translate(m_hsl, m_vst);
 
     m_currentRegion = topleft | top | topright | left | center | right | bottomleft | bottom | bottomright;
@@ -257,45 +208,93 @@ void SkinPixmap::resizeRegion(const QSize& size)
 
 void SkinPixmap::drawPixmap(QPainter* p, int width, int height) const
 {
-    const int leftrightheight = height - m_topleft.height() - m_bottomleft.height();
-    const int topbottomwidth = width - m_topleft.width() - m_topright.width();
+    const int middlepixh = m_vsb - m_vst;
+    const int middlepixw = m_hsr - m_hsl;
+
+    const int leftrightheight = height - o_topleft.height() - o_bottomleft.height();
+    const int topbottomwidth = width - o_topleft.width() - o_topright.width();
+
+    qreal scaleX = m_hstm ? 1 : (qreal)topbottomwidth / (qreal)middlepixw;
+    qreal scaleY = m_vstm ? 1 : (qreal)leftrightheight / (qreal)middlepixh;
 
     /// corners
-    p->drawPixmap(0, 0, m_topleft);
-    p->drawPixmap(m_hsl + topbottomwidth, 0, m_topright);
-    p->drawPixmap(0, m_vst + leftrightheight, m_bottomleft);
-    p->drawPixmap(m_hsl + topbottomwidth, m_vst + leftrightheight, m_bottomright);
+    p->drawPixmap(0, 0, o_topleft);
+    p->drawPixmap(m_hsl + topbottomwidth, 0, o_topright);
+    p->drawPixmap(0, m_vst + leftrightheight, o_bottomleft);
+    p->drawPixmap(m_hsl + topbottomwidth, m_vst + leftrightheight, o_bottomright);
 
     /// edges
     if (m_hstm == 0) {
         /// scale
-        p->drawPixmap(m_hsl, 0, m_top);
-        p->drawPixmap(m_hsl, m_vst + leftrightheight, m_bottom);
+        p->save();
+        p->translate(m_hsl, 0);
+        p->scale(scaleX, 1.0);
+        p->drawPixmap(0, 0, o_top);
+        p->restore();
+        p->save();
+        p->translate(m_hsl, m_vst + leftrightheight);
+        p->scale(scaleX, 1.0);
+        p->drawPixmap(0, 0, o_bottom);
+        p->restore();
     }
     else {
         /// tilling
-        p->drawTiledPixmap(m_hsl, 0, topbottomwidth, m_vst, m_top);
-        p->drawTiledPixmap(m_hsl, m_vst + leftrightheight, topbottomwidth, m_bottom.height(), m_bottom);
+        p->drawTiledPixmap(m_hsl, 0, topbottomwidth, m_vst, o_top);
+        p->drawTiledPixmap(m_hsl, m_vst + leftrightheight, topbottomwidth, o_bottom.height(), o_bottom);
     }
     if (m_vstm == 0) {
         /// scale
-        p->drawPixmap(0, m_vst, m_left);
-        p->drawPixmap(m_hsl + topbottomwidth, m_vst, m_right);
+        p->save();
+        p->translate(0, m_vst);
+        p->scale(1.0, scaleY);
+        p->drawPixmap(0, 0, o_left);
+        p->restore();
+        p->save();
+        p->translate(m_hsl + topbottomwidth, m_vst);
+        p->scale(1.0, scaleY);
+        p->drawPixmap(0, 0, o_right);
+        p->restore();
     }
     else {
         /// tilling
-        p->drawTiledPixmap(0, m_vst, m_hsl, leftrightheight, m_left);
-        p->drawTiledPixmap(m_hsl + topbottomwidth, m_vst, m_right.width(), leftrightheight, m_right);
+        p->drawTiledPixmap(0, m_vst, m_hsl, leftrightheight, o_left);
+        p->drawTiledPixmap(m_hsl + topbottomwidth, m_vst, o_right.width(), leftrightheight, o_right);
     }
 
     /// center
-    if (m_hstm == 0 && m_vstm == 0) {
+    if (m_hstm == 0) {
         /// scale
-        p->drawPixmap(m_hsl, m_vst, m_center);
+        if (m_vstm == 0) {
+            /// scale
+            p->save();
+            p->translate(m_hsl, m_vst);
+            p->scale(scaleX, scaleY);
+            p->drawPixmap(0, 0, o_center);
+            p->restore();
+        }
+        else {
+            /// tilling
+            QPixmap tmp(topbottomwidth, o_center.height());
+            QPainter ptmp(&tmp);
+            ptmp.scale(scaleX, 1.0);
+            ptmp.drawPixmap(0, 0, o_center);
+            p->drawTiledPixmap(m_hsl, m_vst, topbottomwidth, leftrightheight, tmp);
+        }
     }
     else {
         /// tilling
-        p->drawTiledPixmap(m_hsl, m_vst, topbottomwidth, leftrightheight, m_center);
+        if (m_vstm == 0) {
+            /// scale
+            QPixmap tmp(o_center.width(), leftrightheight);
+            QPainter ptmp(&tmp);
+            ptmp.scale(1.0, scaleY);
+            ptmp.drawPixmap(0, 0, o_center);
+            p->drawTiledPixmap(m_hsl, m_vst, topbottomwidth, leftrightheight, tmp);
+        }
+        else {
+            /// tilling
+            p->drawTiledPixmap(m_hsl, m_vst, topbottomwidth, leftrightheight, o_center);
+        }
     }
 }
 

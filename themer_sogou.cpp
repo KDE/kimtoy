@@ -542,13 +542,6 @@ void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
 
 void ThemerSogou::resizePreEditBar(const QSize& size)
 {
-    if (KIMToySettings::self()->verticalPreeditBar()) {
-        v_preEditBarSkin.resizePixmap(size);
-    }
-    else {
-        h_preEditBarSkin.resizePixmap(size);
-    }
-
     /// calculate mask if necessary
     if (KIMToySettings::self()->enableWindowMask()
             || KIMToySettings::self()->enableBackgroundBlur()

@@ -48,10 +48,7 @@ private:
     QPixmap o_topleft,    o_top,        o_topright;
     QPixmap o_left,       o_center,     o_right;
     QPixmap o_bottomleft, o_bottom,     o_bottomright;
-    /// scaled pixmaps
-    QPixmap m_topleft,    m_top,        m_topright;
-    QPixmap m_left,       m_center,     m_right;
-    QPixmap m_bottomleft, m_bottom,     m_bottomright;
+
     QRegion m_topleftRegion, m_topRegion, m_toprightRegion;
     QRegion m_leftRegion, m_centerRegion, m_rightRegion;
     QRegion m_bottomleftRegion, m_bottomRegion, m_bottomrightRegion;
