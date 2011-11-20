@@ -1,3 +1,7 @@
+2011-11-20 v1.3.1
+fix build issue using old gio
+add -r option to ibus-daemon parameter
+
 2011-11-19 v1.3
 add strigi analyzer for *.ssf and *.fskin files
 change the install destination of ibus/scim files
