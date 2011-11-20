@@ -273,6 +273,7 @@ void SkinPixmap::drawPixmap(QPainter* p, int width, int height) const
         else {
             /// tilling
             QPixmap tmp(topbottomwidth, o_center.height());
+            tmp.fill(Qt::transparent);
             QPainter ptmp(&tmp);
             ptmp.scale(scaleX, 1.0);
             ptmp.drawPixmap(0, 0, o_center);
@@ -284,6 +285,7 @@ void SkinPixmap::drawPixmap(QPainter* p, int width, int height) const
         if (m_vstm == 0) {
             /// scale
             QPixmap tmp(o_center.width(), leftrightheight);
+            tmp.fill(Qt::transparent);
             QPainter ptmp(&tmp);
             ptmp.scale(1.0, scaleY);
             ptmp.drawPixmap(0, 0, o_center);
