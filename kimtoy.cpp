@@ -22,9 +22,6 @@
 #include "kimtoy.h"
 
 #include <QTimer>
-#include <QDir>
-#include <QFile>
-#include <QTextStream>
 
 #include <KDebug>
 #include <KGlobal>

@@ -44,7 +44,6 @@
 #include <KStatusNotifierItem>
 #include <KToggleAction>
 #include <KWindowSystem>
-#include <Plasma/Theme>
 
 #include "animator.h"
 #include "impanelagent.h"
