@@ -93,8 +93,10 @@ void SkinPixmap::resizeRegion(const QSize& size)
     QRegion left, top, right, bottom;
     if (m_hstm == 0) {
         /// scale
-        top = m_topRegion;
-        bottom = m_bottomRegion;
+        QMatrix scaleXMatrix;
+        scaleXMatrix.scale(scaleX, 1.0);
+        top = m_topRegion * scaleXMatrix;
+        bottom = m_bottomRegion * scaleXMatrix;
     }
     else {
         /// tilling
@@ -115,8 +117,10 @@ void SkinPixmap::resizeRegion(const QSize& size)
     }
     if (m_vstm == 0) {
         /// scale
-        left = m_leftRegion;
-        right = m_rightRegion;
+        QMatrix scaleYMatrix;
+        scaleYMatrix.scale(1.0, scaleY);
+        left = m_leftRegion * scaleYMatrix;
+        right = m_rightRegion * scaleYMatrix;
     }
     else {
         /// tilling
@@ -135,15 +139,6 @@ void SkinPixmap::resizeRegion(const QSize& size)
         left &= leftpixRegion;
         right &= rightpixRegion;
     }
-    QMatrix scaleXMatrix;
-    scaleXMatrix.scale(scaleX, 1.0);
-    QMatrix scaleYMatrix;
-    scaleYMatrix.scale(1.0, scaleY);
-    top = top * scaleXMatrix;
-    bottom = bottom * scaleXMatrix;
-    left = left * scaleYMatrix;
-    right = right * scaleYMatrix;
-
     left.translate(0, m_vst);
     top.translate(m_hsl, 0);
     right.translate(m_hsl + topbottomwidth, m_vst);
@@ -151,17 +146,19 @@ void SkinPixmap::resizeRegion(const QSize& size)
 
     /// center
     QRegion center(QRect(0, 0, topbottomwidth, leftrightheight));
-    QMatrix scaleXYMatrix;
-    scaleXYMatrix.scale(scaleX, scaleY);
     if (m_hstm == 0) {
         /// scale
         if (m_vstm == 0) {
             /// scale
-            center = m_centerRegion;
+            QMatrix scaleXYMatrix;
+            scaleXYMatrix.scale(scaleX, scaleY);
+            center = m_centerRegion * scaleXYMatrix;
         }
         else {
             /// tilling
-            QRegion centerpixRegion(m_centerRegion);
+            QMatrix scaleXMatrix;
+            scaleXMatrix.scale(scaleX, 1.0);
+            QRegion centerpixRegion(m_centerRegion * scaleXMatrix);
             QRegion tmpRegion = centerpixRegion;
             int i;
             for (i = 0; i < leftrightheight; i += middlepixh) {
@@ -175,7 +172,9 @@ void SkinPixmap::resizeRegion(const QSize& size)
         /// tilling
         if (m_vstm == 0) {
             /// scale
-            QRegion centerpixRegion(m_centerRegion);
+            QMatrix scaleYMatrix;
+            scaleYMatrix.scale(1.0, scaleY);
+            QRegion centerpixRegion(m_centerRegion * scaleYMatrix);
             QRegion tmpRegion = centerpixRegion;
             int i;
             for (i = 0; i < topbottomwidth; i += middlepixw) {
@@ -200,7 +199,6 @@ void SkinPixmap::resizeRegion(const QSize& size)
             center &= centerpixRegion;
         }
     }
-    center = center * scaleXYMatrix;
     center.translate(m_hsl, m_vst);
 
     m_currentRegion = topleft | top | topright | left | center | right | bottomleft | bottom | bottomright;
