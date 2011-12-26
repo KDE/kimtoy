@@ -1,8 +1,6 @@
 
 if(SCIM_FOUND)
     include_directories(${SCIM_INCLUDE_DIR})
-    set(SCIM_LIBEXEC_DIR "${PC_SCIM_PREFIX}/lib/scim-1.0")
-    set(SCIM_ICON_DIR "${PC_SCIM_PREFIX}/share/scim/icons")
     configure_file(config-scim.h.cmake config-scim.h)
     set(scim_impanel_SRCS main.cpp)
     qt4_generate_moc(${scim_impanel_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/main.moc)

@@ -1,7 +1,6 @@
 
 if(SCIM_FOUND)
     include_directories(${SCIM_INCLUDE_DIR})
-    set(SCIM_MODULE_DIR "${PC_SCIM_PREFIX}/lib/scim-1.0/1.4.0")
     set(scim_kconfig_SRCS scim_kconfig_config.cpp)
     add_library(scim-kconfig MODULE ${scim_kconfig_SRCS})
     target_link_libraries(scim-kconfig ${KDE4_KDECORE_LIBS} ${SCIM_LIBRARIES})
