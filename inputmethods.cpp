@@ -134,13 +134,14 @@ IBusInputMethod::~IBusInputMethod()
 void IBusInputMethod::run()
 {
     KUrl iBusCmd = KIMToySettings::self()->iBusCmd();
-    if (isProcessRunning(iBusCmd)) {
-        return;
-    }
 
     QStringList args;
     if (!KIMToySettings::self()->iBusArgs().isEmpty())
         args = KIMToySettings::self()->iBusArgs().split(' ');
+
+    if (isProcessRunning(iBusCmd) && !args.contains("-r")) {
+        return;
+    }
 
     KProcess p;
     p.setProgram(iBusCmd.pathOrUrl(), args);
