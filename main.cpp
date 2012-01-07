@@ -1,6 +1,6 @@
 /*
  *  This file is part of KIMToy, an input method frontend for KDE
- *  Copyright (C) 2011 Ni Hui <shuizhuyuanluo@126.com>
+ *  Copyright (C) 2011-2012 Ni Hui <shuizhuyuanluo@126.com>
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 {
     KAboutData aboutData("kimtoy", 0, ki18n("KIMToy"),
                          "1.4", ki18n("The KDE input method toy"),
-                         KAboutData::License_GPL, ki18n("(c) 2011, Ni Hui"));
+                         KAboutData::License_GPL, ki18n("(c) 2011-2012, Ni Hui"));
     aboutData.addAuthor(ki18n("Ni Hui"), ki18n("Author"), "shuizhuyuanluo@126.com");
     aboutData.setProgramIconName("draw-freehand");
 

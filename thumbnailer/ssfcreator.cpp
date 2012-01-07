@@ -1,6 +1,6 @@
 /*
  *  This file is part of kde-thumbnailer-ssf
- *  Copyright (C) 2011 Ni Hui <shuizhuyuanluo@126.com>
+ *  Copyright (C) 2011-2012 Ni Hui <shuizhuyuanluo@126.com>
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
