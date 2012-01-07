@@ -258,7 +258,7 @@ _from_qvariant (GValue         *value,
                     return;
                 case 'B':
                     g_value_init (value, G_TYPE_BOOLEAN);
-                    g_value_set_boolean (value, lqv == "true" ? 1 : 0);
+                    g_value_set_boolean (value, lqv.toInt());
                     return;
                 case 'F':
                     g_value_init (value, G_TYPE_FLOAT);
@@ -370,7 +370,7 @@ _from_qvariant (const QVariant &qv)
                 case 'U':
                     return g_variant_new_int32 (lqv.toInt());
                 case 'B':
-                    return g_variant_new_boolean (lqv == "true" ? 1 : 0);
+                    return g_variant_new_boolean (lqv.toInt());
                 case 'F':
                 case 'D':
                     return g_variant_new_double (lqv.toDouble());
@@ -412,7 +412,7 @@ _from_qvariant (const QVariant &qv)
                     g_variant_builder_add (&builder, "d", cv.mid(1).toDouble());
                     break;
                 case 'B':
-                    g_variant_builder_add (&builder, "b", cv.mid(1) == "true" ? 1 : 0);
+                    g_variant_builder_add (&builder, "b", cv.mid(1).toInt());
                     break;
                 default:
                     g_assert_not_reached ();
