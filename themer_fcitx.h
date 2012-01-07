@@ -22,8 +22,11 @@
 #ifndef THEMER_FCITX_H
 #define THEMER_FCITX_H
 
+#include "propertywidget.h"
 #include "skinpixmap.h"
 #include "themer.h"
+
+#include <QHash>
 
 class ThemerFcitx : public Themer
 {
@@ -60,6 +63,8 @@ private:
     /// forward arrow
     QPixmap farrow;
     int xfa, yfa;
+
+    QHash<PropertyType, QPixmap> m_pwpix;
 
     explicit ThemerFcitx();
     static ThemerFcitx* m_self;

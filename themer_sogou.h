@@ -22,6 +22,7 @@
 #ifndef THEMER_SOGOU_H
 #define THEMER_SOGOU_H
 
+#include "propertywidget.h"
 #include "skinpixmap.h"
 #include "themer.h"
 
@@ -123,7 +124,10 @@ private:
     QMovie* m_statusBarSkin;
     QHash<QString, OverlayPixmap*> s_overlays;
 
-    QList<QPoint> m_pwpos;
+    QHash<PropertyType, QPoint> m_pwpos;
+    QHash<PropertyType, QPixmap> m_pwpix;
+    QList<QPoint> m_otherpos;
+
     QRegion m_preEditBarMask;
     QRegion m_statusBarMask;
 

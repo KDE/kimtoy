@@ -158,6 +158,8 @@ bool ThemerSogou::loadTheme()
     foreach(OverlayPixmap* op, s_overlays) delete op;
     s_overlays.clear();
     m_pwpos.clear();
+    m_pwpix.clear();
+    m_otherpos.clear();
     h_separatorColor = Qt::transparent;
     v_separatorColor = Qt::transparent;
     h_sepl = 0, h_sepr = 0;
@@ -374,6 +376,89 @@ bool ThemerSogou::loadTheme()
                     Animator::self()->connectStatusBarMovie(m_statusBarSkin);
                 }
             }
+#define LOAD_PWPIX_VALUE(p1, p2) \
+    do { \
+        QStringList pics = value.split(','); \
+        const KArchiveEntry* e0 = zip.directory()->entry(pics.at(0)); \
+        const KZipFileEntry* pix0 = static_cast<const KZipFileEntry*>(e0); \
+        if (pix0) { \
+            QPixmap& pix = m_pwpix[ p1 ]; \
+            pix.loadFromData(pix0->data()); \
+        } \
+        const KArchiveEntry* e1 = zip.directory()->entry(pics.at(1)); \
+        const KZipFileEntry* pix1 = static_cast<const KZipFileEntry*>(e1); \
+        if (pix1) { \
+            QPixmap& pix = m_pwpix[ p2 ]; \
+            pix.loadFromData(pix1->data()); \
+        } \
+    } while(0);
+            else if (key == "cn_en") {
+                LOAD_PWPIX_VALUE(IM_Chinese, IM_Direct)
+            }
+            else if (key == "quan_shuang") {
+                LOAD_PWPIX_VALUE(IM_Pinyin, IM_Shuangpin)
+            }
+            else if (key == "quan_ban") {
+                LOAD_PWPIX_VALUE(Letter_Full, Letter_Half)
+            }
+            else if (key == "biaodian") {
+                LOAD_PWPIX_VALUE(Punct_Full, Punct_Half)
+            }
+            else if (key == "fan_jian") {
+                LOAD_PWPIX_VALUE(Chinese_Simplified, Chinese_Traditional)
+            }
+            else if (key == "softkeyboard") {
+                const KArchiveEntry* e = zip.directory()->entry(value);
+                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                if (pix) {
+                    QPixmap& pwpix1 = m_pwpix[ SoftKeyboard_On ];
+                    pwpix1.loadFromData(pix->data());
+                    QPixmap& pwpix2 = m_pwpix[ SoftKeyboard_Off ];
+                    pwpix2.loadFromData(pix->data());
+                }
+            }
+            else if (key == "menu") {
+                const KArchiveEntry* e = zip.directory()->entry(value);
+                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                if (pix) {
+                    QPixmap& pwpix = m_pwpix[ Setup ];
+                    pwpix.loadFromData(pix->data());
+                }
+            }
+#undef LOAD_PWPIX_VALUE
+#define LOAD_PWPOS_VALUE(p1, p2) \
+    do { \
+        QStringList numbers = value.split(','); \
+        int x = numbers.at(0).toInt(); \
+        int y = numbers.at(1).toInt(); \
+        m_pwpos[ p1 ] = QPoint(x, y); \
+        m_pwpos[ p2 ] = QPoint(x, y); \
+    } while(0);
+            else if (key == "cn_en_pos") {
+                LOAD_PWPOS_VALUE(IM_Chinese, IM_Direct)
+            }
+            else if (key == "quan_shuang_pos") {
+                LOAD_PWPOS_VALUE(IM_Pinyin, IM_Shuangpin)
+            }
+            else if (key == "quan_ban_pos") {
+                LOAD_PWPOS_VALUE(Letter_Full, Letter_Half)
+            }
+            else if (key == "biaodian_pos") {
+                LOAD_PWPOS_VALUE(Punct_Full, Punct_Half)
+            }
+            else if (key == "fan_jian_pos") {
+                LOAD_PWPOS_VALUE(Chinese_Simplified, Chinese_Traditional)
+            }
+            else if (key == "softkeyboard_pos") {
+                LOAD_PWPOS_VALUE(SoftKeyboard_On, SoftKeyboard_Off)
+            }
+            else if (key == "menu_pos") {
+                QStringList numbers = value.split(',');
+                int top = numbers.at(0).toInt();
+                int left = numbers.at(1).toInt();
+                m_pwpos[ Setup ] = QPoint(left, top);
+            }
+#undef LOAD_PWPOS_VALUE
             else if (key.startsWith("custom") && key.endsWith("_display")) {
                 QString name = key.left(key.length() - 8);
                 if (!s_overlays.contains(name)) {
@@ -409,7 +494,7 @@ bool ThemerSogou::loadTheme()
                 int x = list.at(0).trimmed().toInt();
                 int y = list.at(1).trimmed().toInt();
                 if (x != 0 && y != 0) {
-                    m_pwpos.append(QPoint(x, y));
+                    m_otherpos.append(QPoint(x, y));
                 }
             }
         }
@@ -523,20 +608,21 @@ QSize ThemerSogou::sizeHintStatusBar(const StatusBar* widget) const
 void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
 {
     int itemCount = layout->count();
-    int posCount = m_pwpos.count();
-    int availableCount = qMin(itemCount, posCount);
-    for (int i = 0; i < availableCount; ++i) {
+    int otherPosCount = m_otherpos.count();
+    for (int i = 0, j = 0, k = 0; i < itemCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
-        item->setGeometry(QRect(m_pwpos[ i ], item->maximumSize()));
-    }
-
-    int remains = itemCount - posCount;
-    if (remains <= 0)
-        return;
-
-    for (int i = 0; i < remains; ++i) {
-        QLayoutItem* item = layout->m_items.at(posCount + i);
-        item->setGeometry(QRect(QPoint(i * 22, 0), item->maximumSize()));
+        PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
+        if (m_pwpos.contains(pw->type())) {
+            item->setGeometry(QRect(m_pwpos.value(pw->type()), item->maximumSize()));
+        }
+        else if (j < otherPosCount) {
+            item->setGeometry(QRect(m_otherpos.at(j), item->maximumSize()));
+            ++j;
+        }
+        else {
+            item->setGeometry(QRect(QPoint(k * 22, 0), item->maximumSize()));
+            ++k;
+        }
     }
 }
 
@@ -967,8 +1053,10 @@ void ThemerSogou::drawStatusBar(StatusBar* widget)
 void ThemerSogou::drawPropertyWidget(PropertyWidget* widget)
 {
     QPainter p(widget);
-    if (!widget->m_iconName.isEmpty())
-        p.drawPixmap(widget->rect(), MainBarIcon(widget->m_iconName));
+    if (m_pwpix.contains(widget->type()))
+        p.drawPixmap(0, 0, m_pwpix.value(widget->type()));
+    else if (!widget->m_iconName.isEmpty())
+        p.drawPixmap(0, 0, MainBarIcon(widget->m_iconName));
     else
-        p.drawText(widget->rect(), Qt::AlignCenter, widget->m_name);
+        p.drawText(0, 0, widget->m_name);
 }

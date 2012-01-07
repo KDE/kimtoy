@@ -28,22 +28,108 @@
 
 PropertyWidget::PropertyWidget()
 {
-    setFixedSize(QSize(22, 22));
+    m_type = Unknown;
 }
 
 PropertyWidget::~PropertyWidget()
 {
 }
 
-void PropertyWidget::setProperty(const QString& name,
+void PropertyWidget::setProperty(const QString& objectPath,
+                                 const QString& name,
                                  const QString& iconName,
                                  const QString& description)
 {
     m_name = name;
     m_iconName = iconName;
     m_description = description;
+    m_type = determineType(objectPath, iconName);
     setToolTip(description);
     update();
+}
+
+PropertyType PropertyWidget::type() const
+{
+    return m_type;
+}
+
+PropertyType PropertyWidget::determineType( const QString& objectPath, const QString& iconName )
+{
+    // fcitx property
+    if (objectPath == "/Fcitx/im") {
+        if (iconName == "fcitx-eng") return IM_Direct;
+        if (iconName == "fcitx-pinyin") return IM_Pinyin;
+        if (iconName == "fcitx-shuangpin") return IM_Shuangpin;
+    }
+    if (objectPath == "/Fcitx/fullwidth") {
+        if (iconName == "fcitx-fullwidth-active") return Letter_Full;
+        if (iconName == "fcitx-fullwidth-inactive") return Letter_Half;
+    }
+    if (objectPath == "/Fcitx/punc") {
+        if (iconName == "fcitx-punc-active") return Punct_Full;
+        if (iconName == "fcitx-punc-inactive") return Punct_Half;
+    }
+    if (objectPath == "/Fcitx/chttrans") {
+        if (iconName == "fcitx-chttrans-inactive") return Chinese_Simplified;
+        if (iconName == "fcitx-chttrans-active") return Chinese_Traditional;
+    }
+    if (objectPath == "/Fcitx/remind") {
+        if (iconName == "fcitx-remind-active") return Remind_On;
+        if (iconName == "fcitx-remind-inactive") return Remind_Off;
+    }
+    if (objectPath == "/Fcitx/vk") {
+        if (iconName == "fcitx-vk-inactive") return SoftKeyboard_Off;
+        if (iconName == "fcitx-vk-active") return SoftKeyboard_On;
+    }
+    if (objectPath == "/Fcitx/logo") {
+        if (iconName == "fcitx") return Logo;
+    }
+
+    // ibus property
+    if (objectPath == "/IBus/status") {
+        if (iconName == "eng.svg") return IM_Direct;
+        if (iconName == "english.svg") return IM_Direct;
+        if (iconName == "han.svg") return IM_Chinese;
+        if (iconName == "chinese.svg") return IM_Chinese;
+    }
+    if (objectPath == "/IBus/full_letter") {
+        if (iconName == "fullwidth.svg") return Letter_Full;
+        if (iconName == "full-letter.svg") return Letter_Full;
+        if (iconName == "halfwidth.svg") return Letter_Half;
+        if (iconName == "half-letter.svg") return Letter_Half;
+    }
+    if (objectPath == "/IBus/full_punct") {
+        if (iconName == "cnpunc.svg") return Punct_Full;
+        if (iconName == "full-punct.svg") return Punct_Full;
+        if (iconName == "enpunc.svg") return Punct_Half;
+        if (iconName == "half-punct.svg") return Punct_Half;
+    }
+    if (objectPath == "/IBus/_trad chinese") {
+        if (iconName == "simp-chinese.svg") return Chinese_Simplified;
+        if (iconName == "trad-chinese.svg") return Chinese_Traditional;
+    }
+    if (objectPath == "/IBus/Logo") {
+        if (iconName == "ibus") return Logo;
+    }
+    if (objectPath == "/IBus/setup") {
+        if (iconName == "setup.svg") return Setup;
+    }
+
+    // scim property
+    if (objectPath == "/IMEngine/Pinyin/Letter") {
+        if (iconName == "full-letter.png") return Letter_Full;
+        if (iconName == "half-letter.png") return Letter_Half;
+    }
+    if (objectPath == "/IMEngine/Pinyin/Punct") {
+        if (iconName == "full-punct.png") return Punct_Full;
+        if (iconName == "half-punct.png") return Punct_Half;
+    }
+    if (objectPath == "/Logo") {
+        if (iconName == "keyboard.png") return Logo;
+        if (iconName == "trademark.png") return Logo;
+    }
+
+    return Unknown;
 }
 
 bool PropertyWidget::operator==(const PropertyWidget& rhs)

@@ -30,15 +30,38 @@ class ThemerNone;
 class ThemerPlasma;
 class ThemerSogou;
 
+typedef enum {
+    Unknown,
+    IM_Direct,
+    IM_Chinese,
+    IM_Pinyin,
+    IM_Shuangpin,
+    Letter_Full,
+    Letter_Half,
+    Punct_Full,
+    Punct_Half,
+    Chinese_Simplified,
+    Chinese_Traditional,
+    Remind_On,
+    Remind_Off,
+    SoftKeyboard_On,
+    SoftKeyboard_Off,
+    Setup,
+    Logo
+} PropertyType;
+
 class PropertyWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit PropertyWidget();
     virtual ~PropertyWidget();
-    void setProperty(const QString& name,
+    void setProperty(const QString& objectPath,
+                     const QString& name,
                      const QString& iconName,
                      const QString& description);
+    PropertyType type() const;
+    static PropertyType determineType( const QString& objectPath, const QString& iconName );
     bool operator==(const PropertyWidget& rhs);
 Q_SIGNALS:
     void clicked();
@@ -54,6 +77,7 @@ private:
     QString m_name;
     QString m_iconName;
     QString m_description;
+    PropertyType m_type;
 };
 
 #endif // PROPERTYWIDGET_H

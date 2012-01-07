@@ -233,7 +233,7 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
 
         /// update property
         PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt(index)->widget());
-        w->setProperty(name, iconName, description);
+        w->setProperty(objectPath, name, iconName, description);
 
         if (index == m_objectPaths.count() - 1) {
             /// update if new property just registered
@@ -256,7 +256,7 @@ void StatusBar::slotUpdateProperty(const QString& prop)
 
     /// update property
     PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt(index)->widget());
-    w->setProperty(name, iconName, description);
+    w->setProperty(objectPath, name, iconName, description);
 }
 
 void StatusBar::slotRemoveProperty(const QString& prop)

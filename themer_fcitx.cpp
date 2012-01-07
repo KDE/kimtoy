@@ -110,6 +110,17 @@ bool ThemerFcitx::loadTheme()
     yen = 0, ych = 0;
     xba = 0, yba = 0;
     xfa = 0, yfa = 0;
+    m_pwpix.clear();
+
+#define LOAD_PWPIX(p, value) \
+    do { \
+        const KArchiveEntry* e = subdir->entry(value); \
+        const KArchiveFile* pix = static_cast<const KArchiveFile*>(e); \
+        if (pix) { \
+            QPixmap& pwpix = m_pwpix[ p ]; \
+            pwpix.loadFromData(pix->data()); \
+        } \
+    } while(0);
 
     QTextStream ss(data);
     QString line;
@@ -173,6 +184,15 @@ bool ThemerFcitx::loadTheme()
             else if (key == "MarginBottom") {
                 smb = value.toInt();
             }
+            else if (key == "Eng") {
+                LOAD_PWPIX(IM_Direct, value)
+            }
+            else if (key == "Active") {
+                LOAD_PWPIX(IM_Chinese, value)
+            }
+            else if (key == "Logo") {
+                LOAD_PWPIX(Logo, value)
+            }
         }
         else if (skininputbar) {
             if (key == "BackImg") {
@@ -233,6 +253,21 @@ bool ThemerFcitx::loadTheme()
     }
     while (!line.isNull());
 
+    LOAD_PWPIX(IM_Pinyin, "pinyin.png")
+    LOAD_PWPIX(IM_Shuangpin, "shuangpin.png")
+    LOAD_PWPIX(Letter_Full, "fullwidth_active.png")
+    LOAD_PWPIX(Letter_Half, "fullwidth_inactive.png")
+    LOAD_PWPIX(Punct_Full, "punc_active.png")
+    LOAD_PWPIX(Punct_Half, "punc_inactive.png")
+    LOAD_PWPIX(Chinese_Simplified, "chttrans_inactive.png")
+    LOAD_PWPIX(Chinese_Traditional, "chttrans_active.png")
+    LOAD_PWPIX(Remind_On, "remind_active.png")
+    LOAD_PWPIX(Remind_Off, "remind_inactive.png")
+    LOAD_PWPIX(SoftKeyboard_On, "vk_active.png")
+    LOAD_PWPIX(SoftKeyboard_Off, "vk_inactive.png")
+
+#undef LOAD_PWPIX
+
     preEditBarSkin = SkinPixmap(preEditBarPixmap, ml, preEditBarPixmap.width() - mr, mt, preEditBarPixmap.height() - mb, 0, 0);
     statusBarSkin = SkinPixmap(statusBarPixmap, sml, statusBarPixmap.width() - smr, smt, statusBarPixmap.height() - smb, 0, 0);
 
@@ -291,8 +326,21 @@ QSize ThemerFcitx::sizeHintPreEditBar(const PreEditBar* widget) const
 
 QSize ThemerFcitx::sizeHintStatusBar(const StatusBar* widget) const
 {
-    int w = widget->m_layout->count() * 22;
-    int h = 22;
+    int w = 0;
+    int h = 0;
+    int itemCount = widget->m_layout->count();
+    for (int i = 0; i < itemCount; ++i) {
+        QLayoutItem* item = widget->m_layout->m_items.at(i);
+        PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
+        if (m_pwpix.contains(pw->type())) {
+            w += m_pwpix.value(pw->type()).width();
+            h = qMax(h, m_pwpix.value(pw->type()).height());
+        }
+        else {
+            w += 22;
+            h = qMax(h, 22);
+        }
+    }
 
     w += sml + smr;
     h += smt + smb;
@@ -302,10 +350,20 @@ QSize ThemerFcitx::sizeHintStatusBar(const StatusBar* widget) const
 
 void ThemerFcitx::layoutStatusBar(StatusBarLayout* layout) const
 {
+    int x = sml;
+    int y = smt;
     int itemCount = layout->count();
     for (int i = 0; i < itemCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
-        item->setGeometry(QRect(QPoint(i * 22 + sml, smt), item->maximumSize()));
+        PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
+        if (m_pwpix.contains(pw->type())) {
+            item->setGeometry(QRect(QPoint(x, y), item->maximumSize()));
+            x += m_pwpix.value(pw->type()).width();
+        }
+        else {
+            item->setGeometry(QRect(QPoint(x, y), item->maximumSize()));
+            x += 22;
+        }
     }
 }
 
@@ -443,10 +501,12 @@ void ThemerFcitx::drawStatusBar(StatusBar* widget)
 void ThemerFcitx::drawPropertyWidget(PropertyWidget* widget)
 {
     QPainter p(widget);
-    if (!widget->m_iconName.isEmpty())
-        p.drawPixmap(widget->rect(), MainBarIcon(widget->m_iconName));
+    if (m_pwpix.contains(widget->type()))
+        p.drawPixmap(0, 0, m_pwpix.value(widget->type()));
+    else if (!widget->m_iconName.isEmpty())
+        p.drawPixmap(0, 0, MainBarIcon(widget->m_iconName));
     else {
         p.setPen(m_preEditColor);
-        p.drawText(widget->rect(), Qt::AlignCenter, widget->m_name);
+        p.drawText(0, 0, widget->m_name);
     }
 }
