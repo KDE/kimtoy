@@ -404,7 +404,7 @@ void ThemerFcitx::layoutStatusBar(StatusBarLayout* layout) const
             x += m_pwpix.value(pw->type()).width();
         }
         else {
-            item->setGeometry(QRect(QPoint(x, y), item->maximumSize()));
+            item->setGeometry(QRect(x, y, 22, 22));
             x += 22;
         }
     }

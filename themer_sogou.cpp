@@ -620,7 +620,7 @@ void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
             ++j;
         }
         else {
-            item->setGeometry(QRect(QPoint(k * 22, 0), item->maximumSize()));
+            item->setGeometry(QRect(k * 22, 0, 22, 22));
             ++k;
         }
     }

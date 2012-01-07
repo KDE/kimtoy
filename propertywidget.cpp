@@ -86,33 +86,35 @@ PropertyType PropertyWidget::determineType( const QString& objectPath, const QSt
     }
 
     // ibus property
-    if (objectPath == "/IBus/status") {
-        if (iconName == "eng.svg") return IM_Direct;
-        if (iconName == "english.svg") return IM_Direct;
-        if (iconName == "han.svg") return IM_Chinese;
-        if (iconName == "chinese.svg") return IM_Chinese;
+    if (objectPath == "/IBus/status" || objectPath == "/IBus/mode.chinese") {
+        if (iconName.endsWith("eng.svg")) return IM_Direct;
+        if (iconName.endsWith("english.svg")) return IM_Direct;
+        if (iconName.endsWith("han.svg")) return IM_Chinese;
+        if (iconName.endsWith("chinese.svg")) return IM_Chinese;
     }
-    if (objectPath == "/IBus/full_letter") {
-        if (iconName == "fullwidth.svg") return Letter_Full;
-        if (iconName == "full-letter.svg") return Letter_Full;
-        if (iconName == "halfwidth.svg") return Letter_Half;
-        if (iconName == "half-letter.svg") return Letter_Half;
+    if (objectPath == "/IBus/full_letter" || objectPath == "/IBus/mode.full") {
+        if (iconName.endsWith("full.svg")) return Letter_Full;
+        if (iconName.endsWith("fullwidth.svg")) return Letter_Full;
+        if (iconName.endsWith("full-letter.svg")) return Letter_Full;
+        if (iconName.endsWith("half.svg")) return Letter_Half;
+        if (iconName.endsWith("halfwidth.svg")) return Letter_Half;
+        if (iconName.endsWith("half-letter.svg")) return Letter_Half;
     }
-    if (objectPath == "/IBus/full_punct") {
-        if (iconName == "cnpunc.svg") return Punct_Full;
-        if (iconName == "full-punct.svg") return Punct_Full;
-        if (iconName == "enpunc.svg") return Punct_Half;
-        if (iconName == "half-punct.svg") return Punct_Half;
+    if (objectPath == "/IBus/full_punct" || objectPath == "/IBus/mode.full_punct") {
+        if (iconName.endsWith("cnpunc.svg")) return Punct_Full;
+        if (iconName.endsWith("full-punct.svg")) return Punct_Full;
+        if (iconName.endsWith("enpunc.svg")) return Punct_Half;
+        if (iconName.endsWith("half-punct.svg")) return Punct_Half;
     }
-    if (objectPath == "/IBus/_trad chinese") {
-        if (iconName == "simp-chinese.svg") return Chinese_Simplified;
-        if (iconName == "trad-chinese.svg") return Chinese_Traditional;
+    if (objectPath == "/IBus/_trad chinese" || objectPath == "/IBus/mode.simp") {
+        if (iconName.endsWith("simp-chinese.svg")) return Chinese_Simplified;
+        if (iconName.endsWith("trad-chinese.svg")) return Chinese_Traditional;
     }
     if (objectPath == "/IBus/Logo") {
         if (iconName == "ibus") return Logo;
     }
     if (objectPath == "/IBus/setup") {
-        if (iconName == "setup.svg") return Setup;
+        if (iconName.endsWith("setup.svg")) return Setup;
     }
 
     // scim property
