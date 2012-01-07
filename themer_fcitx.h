@@ -64,6 +64,7 @@ private:
     QPixmap farrow;
     int xfa, yfa;
 
+    QHash<PropertyType, QPoint> m_pwpos;
     QHash<PropertyType, QPixmap> m_pwpix;
 
     explicit ThemerFcitx();

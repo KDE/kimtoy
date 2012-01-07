@@ -110,6 +110,7 @@ bool ThemerFcitx::loadTheme()
     yen = 0, ych = 0;
     xba = 0, yba = 0;
     xfa = 0, yfa = 0;
+    m_pwpos.clear();
     m_pwpix.clear();
 
 #define LOAD_PWPIX(p, value) \
@@ -183,6 +184,41 @@ bool ThemerFcitx::loadTheme()
             }
             else if (key == "MarginBottom") {
                 smb = value.toInt();
+            }
+            else if (key == "Placement") {
+                QStringList pwplaces = value.split(';');
+#define LOAD_PWPOS(p, k) \
+    do { \
+        if (namekey == k) { \
+            m_pwpos[ p ] = QPoint(x, y); \
+        } \
+    } while(0);
+                int pwpcount = pwplaces.count();
+                for (int j = 0; j < pwpcount; ++j) {
+                    QStringList kv = pwplaces[j].split(':');
+                    if (kv.count() != 2) {
+                        continue;
+                    }
+                    QString namekey = kv.at(0);
+                    QStringList numbers = kv.at(1).split(',');
+                    int x = numbers.at(0).toInt();
+                    int y = numbers.at(1).toInt();
+                    LOAD_PWPOS(Logo, "logo")
+                    LOAD_PWPOS(IM_Direct, "im")
+                    LOAD_PWPOS(IM_Chinese, "im")
+                    LOAD_PWPOS(IM_Pinyin, "im")
+                    LOAD_PWPOS(IM_Shuangpin, "im")
+                    LOAD_PWPOS(SoftKeyboard_On, "vk")
+                    LOAD_PWPOS(SoftKeyboard_Off, "vk")
+                    LOAD_PWPOS(Chinese_Simplified, "chttrans")
+                    LOAD_PWPOS(Chinese_Traditional, "chttrans")
+                    LOAD_PWPOS(Punct_Full, "punc")
+                    LOAD_PWPOS(Punct_Half, "punc")
+                    LOAD_PWPOS(Letter_Full, "fullwidth")
+                    LOAD_PWPOS(Letter_Half, "fullwidth")
+//                     LOAD_PWPOS(Logo, "legend")
+                }
+#undef LOAD_PWPOS
             }
             else if (key == "Eng") {
                 LOAD_PWPIX(IM_Direct, value)
@@ -326,6 +362,10 @@ QSize ThemerFcitx::sizeHintPreEditBar(const PreEditBar* widget) const
 
 QSize ThemerFcitx::sizeHintStatusBar(const StatusBar* widget) const
 {
+    if (!m_pwpos.isEmpty()) {
+        return QSize(statusBarSkin.skinw(), statusBarSkin.skinh());
+    }
+
     int w = 0;
     int h = 0;
     int itemCount = widget->m_layout->count();
@@ -356,7 +396,10 @@ void ThemerFcitx::layoutStatusBar(StatusBarLayout* layout) const
     for (int i = 0; i < itemCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
         PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
-        if (m_pwpix.contains(pw->type())) {
+        if (m_pwpos.contains(pw->type())) {
+            item->setGeometry(QRect(m_pwpos.value(pw->type()), item->maximumSize()));
+        }
+        else if (m_pwpix.contains(pw->type())) {
             item->setGeometry(QRect(QPoint(x, y), item->maximumSize()));
             x += m_pwpix.value(pw->type()).width();
         }
