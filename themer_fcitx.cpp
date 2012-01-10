@@ -390,14 +390,31 @@ QSize ThemerFcitx::sizeHintStatusBar(const StatusBar* widget) const
 
 void ThemerFcitx::layoutStatusBar(StatusBarLayout* layout) const
 {
-    int x = sml;
-    int y = smt;
+    QList<QLayoutItem*> nopositems;
+    QList<QPoint> remainpos = m_pwpos.values();
     int itemCount = layout->count();
     for (int i = 0; i < itemCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
         PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
         if (m_pwpos.contains(pw->type())) {
             item->setGeometry(QRect(m_pwpos.value(pw->type()), item->maximumSize()));
+            remainpos.removeAll(m_pwpos.value(pw->type()));
+        }
+        else {
+            nopositems.append(item);
+        }
+    }
+
+    int x = sml;
+    int y = smt;
+    int nopositemCount = nopositems.count();
+    for (int i = 0, j = 0; i < nopositemCount; ++i) {
+        QLayoutItem* item = nopositems.at(i);
+        PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
+        if (j < remainpos.count()) {
+            item->setGeometry(QRect(remainpos.at(j), item->maximumSize()));
+            remainpos.removeAll(remainpos.at(j));
+            ++j;
         }
         else if (m_pwpix.contains(pw->type())) {
             item->setGeometry(QRect(QPoint(x, y), item->maximumSize()));

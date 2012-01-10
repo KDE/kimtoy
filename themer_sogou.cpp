@@ -159,7 +159,6 @@ bool ThemerSogou::loadTheme()
     s_overlays.clear();
     m_pwpos.clear();
     m_pwpix.clear();
-    m_otherpos.clear();
     h_separatorColor = Qt::transparent;
     v_separatorColor = Qt::transparent;
     h_sepl = 0, h_sepr = 0;
@@ -405,7 +404,7 @@ bool ThemerSogou::loadTheme()
                 LOAD_PWPIX_VALUE(Punct_Full, Punct_Half)
             }
             else if (key == "fan_jian") {
-                LOAD_PWPIX_VALUE(Chinese_Simplified, Chinese_Traditional)
+                LOAD_PWPIX_VALUE(Chinese_Traditional, Chinese_Simplified)
             }
             else if (key == "softkeyboard") {
                 const KArchiveEntry* e = zip.directory()->entry(value);
@@ -489,14 +488,14 @@ bool ThemerSogou::loadTheme()
                     Animator::self()->connectStatusBarMovie(op);
                 }
             }
-            else if (key.endsWith("_pos")) {
-                QStringList list = value.split(',');
-                int x = list.at(0).trimmed().toInt();
-                int y = list.at(1).trimmed().toInt();
-                if (x != 0 && y != 0) {
-                    m_otherpos.append(QPoint(x, y));
-                }
-            }
+//             else if (key.endsWith("_pos")) {
+//                 QStringList list = value.split(',');
+//                 int x = list.at(0).trimmed().toInt();
+//                 int y = list.at(1).trimmed().toInt();
+//                 if (x != 0 && y != 0) {
+//                     m_otherpos.append(QPoint(x, y));
+//                 }
+//             }
         }
     }
     while (!line.isNull());
@@ -607,16 +606,27 @@ QSize ThemerSogou::sizeHintStatusBar(const StatusBar* widget) const
 
 void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
 {
+    QList<QLayoutItem*> nopositems;
+    QList<QPoint> remainpos = m_pwpos.values();
     int itemCount = layout->count();
-    int otherPosCount = m_otherpos.count();
-    for (int i = 0, j = 0, k = 0; i < itemCount; ++i) {
+    for (int i = 0; i < itemCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
         PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
         if (m_pwpos.contains(pw->type())) {
             item->setGeometry(QRect(m_pwpos.value(pw->type()), item->maximumSize()));
+            remainpos.removeAll(m_pwpos.value(pw->type()));
         }
-        else if (j < otherPosCount) {
-            item->setGeometry(QRect(m_otherpos.at(j), item->maximumSize()));
+        else {
+            nopositems.append(item);
+        }
+    }
+
+    int nopositemCount = nopositems.count();
+    for (int i = 0, j = 0, k = 0; i < nopositemCount; ++i) {
+        QLayoutItem* item = nopositems.at(i);
+        if (j < remainpos.count()) {
+            item->setGeometry(QRect(remainpos.at(j), item->maximumSize()));
+            remainpos.removeAll(remainpos.at(j));
             ++j;
         }
         else {

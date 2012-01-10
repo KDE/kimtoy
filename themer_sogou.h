@@ -126,7 +126,6 @@ private:
 
     QHash<PropertyType, QPoint> m_pwpos;
     QHash<PropertyType, QPixmap> m_pwpix;
-    QList<QPoint> m_otherpos;
 
     QRegion m_preEditBarMask;
     QRegion m_statusBarMask;
