@@ -156,7 +156,7 @@ void ThemerPlasma::layoutStatusBar(StatusBarLayout* layout) const
     int itemCount = layout->count();
     for (int i = 0; i < itemCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
-        item->setGeometry(QRect(QPoint(i * 22 + left, top), item->maximumSize()));
+        item->setGeometry(QRect(i * 22 + left, top, 22, 22));
     }
 }
 

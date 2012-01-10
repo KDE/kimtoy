@@ -124,7 +124,7 @@ void ThemerNone::layoutStatusBar(StatusBarLayout* layout) const
     int itemCount = layout->count();
     for (int i = 0; i < itemCount; ++i) {
         QLayoutItem* item = layout->m_items.at(i);
-        item->setGeometry(QRect(QPoint(i * 22, 0), item->maximumSize()));
+        item->setGeometry(QRect(i * 22, 0, 22, 22));
     }
 }
 
