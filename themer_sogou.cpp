@@ -625,7 +625,7 @@ void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const
     for (int i = 0, j = 0, k = 0; i < nopositemCount; ++i) {
         QLayoutItem* item = nopositems.at(i);
         if (j < remainpos.count()) {
-            item->setGeometry(QRect(remainpos.at(j), item->maximumSize()));
+            item->setGeometry(QRect(remainpos.at(j), QSize(22, 22)));
             remainpos.removeAll(remainpos.at(j));
             ++j;
         }
@@ -1063,8 +1063,10 @@ void ThemerSogou::drawStatusBar(StatusBar* widget)
 void ThemerSogou::drawPropertyWidget(PropertyWidget* widget)
 {
     QPainter p(widget);
-    if (m_pwpix.contains(widget->type()))
+    if (m_pwpix.contains(widget->type())) {
         p.drawPixmap(0, 0, m_pwpix.value(widget->type()));
+        widget->setMask(m_pwpix.value(widget->type()).mask());
+    }
     else if (!widget->m_iconName.isEmpty())
         p.drawPixmap(0, 0, MainBarIcon(widget->m_iconName));
     else

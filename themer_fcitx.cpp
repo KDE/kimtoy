@@ -412,7 +412,7 @@ void ThemerFcitx::layoutStatusBar(StatusBarLayout* layout) const
         QLayoutItem* item = nopositems.at(i);
         PropertyWidget* pw = static_cast<PropertyWidget*>(item->widget());
         if (j < remainpos.count()) {
-            item->setGeometry(QRect(remainpos.at(j), item->maximumSize()));
+            item->setGeometry(QRect(remainpos.at(j), QSize(22, 22)));
             remainpos.removeAll(remainpos.at(j));
             ++j;
         }
@@ -561,8 +561,10 @@ void ThemerFcitx::drawStatusBar(StatusBar* widget)
 void ThemerFcitx::drawPropertyWidget(PropertyWidget* widget)
 {
     QPainter p(widget);
-    if (m_pwpix.contains(widget->type()))
+    if (m_pwpix.contains(widget->type())) {
         p.drawPixmap(0, 0, m_pwpix.value(widget->type()));
+        widget->setMask(m_pwpix.value(widget->type()).mask());
+    }
     else if (!widget->m_iconName.isEmpty())
         p.drawPixmap(0, 0, MainBarIcon(widget->m_iconName));
     else {
