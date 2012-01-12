@@ -130,7 +130,10 @@ bool ThemerSogou::loadTheme()
     const KZipFileEntry* skinini = static_cast<const KZipFileEntry*>(entry);
 
     if (!skinini) {
-        return false;
+        entry = zip.directory()->entry("Skin.ini");
+        skinini = static_cast<const KZipFileEntry*>(entry);
+        if (!skinini)
+            return false;
     }
 
     QByteArray data = skinini->data();
