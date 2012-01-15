@@ -71,8 +71,12 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
     const KArchiveEntry* entry = zip.directory()->entry("skin.ini");
     const KZipFileEntry* skinini = static_cast<const KZipFileEntry*>(entry);
 
-    if (!skinini)
-        return false;
+    if (!skinini) {
+        entry = zip.directory()->entry("Skin.ini");
+        skinini = static_cast<const KZipFileEntry*>(entry);
+        if (!skinini)
+            return false;
+    }
 
     QFont preEditFont;
     QFont candidateFont;
