@@ -1,3 +1,11 @@
+2012-01-15 v1.4
+optimize scaled pixmap drawing
+do not detect running ibus if option -r has been set
+remove hardcoded install path
+status property widget theme support
+fix boolean value reading in ibus-kconfig
+fix compability issue caused by letter case in sogou theme
+
 2011-11-20 v1.3.1
 fix build issue using old gio
 add -r option to ibus-daemon parameter
