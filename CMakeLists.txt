@@ -65,6 +65,14 @@ endif(${PNG_HAS_APNG_SUPPORT})
 
 macro_log_feature(PNG_HAS_APNG_SUPPORT "libpng-apng" "animated png support from system libpng" "http://libpng-apng.sf.net")
 
+###################### ibus arguments ######################
+### NOTE TODO remove following definition when ibus is able to run registered component
+if(IBUS_FOUND)
+    add_definitions(-DIBUS_LIBEXEC_DIR="\\\"${IBUS_LIBEXEC_DIR}\\\"")
+else(IBUS_FOUND)
+    add_definitions(-DIBUS_LIBEXEC_DIR="\\\"${CMAKE_INSTALL_PREFIX}/libexec\\\"")
+endif(IBUS_FOUND)
+
 ########################## kimtoy ##########################
 
 set(kimtoy_SRCS
