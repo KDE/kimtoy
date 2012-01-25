@@ -35,6 +35,7 @@ public:
     virtual void layoutStatusBar(StatusBarLayout* layout) const;
     virtual void maskPreEditBar(PreEditBar* widget);
     virtual void maskStatusBar(StatusBar* widget);
+    virtual void maskPropertyWidget(PropertyWidget* widget);
     virtual void drawPreEditBar(PreEditBar* widget);
     virtual void drawStatusBar(StatusBar* widget);
     virtual void drawPropertyWidget(PropertyWidget* widget);

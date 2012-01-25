@@ -28,6 +28,7 @@
 
 PropertyWidget::PropertyWidget()
 {
+    setAttribute(Qt::WA_TranslucentBackground, true);
     m_type = Unknown;
 }
 
@@ -45,6 +46,7 @@ void PropertyWidget::setProperty(const QString& objectPath,
     m_description = description;
     m_type = determineType(objectPath, iconName);
     setToolTip(description);
+    ThemerAgent::maskPropertyWidget(this);
     update();
 }
 

@@ -180,6 +180,14 @@ void ThemerPlasma::maskStatusBar(StatusBar* widget)
     widget->setMask(m_statusBarSvg.mask());
 }
 
+void ThemerPlasma::maskPropertyWidget(PropertyWidget* widget)
+{
+    if (!widget->m_iconName.isEmpty())
+        widget->setMask(MainBarIcon(widget->m_iconName).mask());
+    else
+        widget->clearMask();
+}
+
 void ThemerPlasma::blurPreEditBar(PreEditBar* widget)
 {
     Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_preeditBarSvg.mask());

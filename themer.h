@@ -51,6 +51,7 @@ public:
 
     virtual void maskPreEditBar(PreEditBar* widget) = 0;
     virtual void maskStatusBar(StatusBar* widget) = 0;
+    virtual void maskPropertyWidget(PropertyWidget* widget) = 0;
 
     virtual void blurPreEditBar(PreEditBar* widget);
     virtual void blurStatusBar(StatusBar* widget);

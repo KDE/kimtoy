@@ -104,6 +104,13 @@ void ThemerAgent::maskStatusBar(StatusBar* widget)
     m_themer->maskStatusBar(widget);
 }
 
+void ThemerAgent::maskPropertyWidget(PropertyWidget* widget)
+{
+    if (KIMToySettings::self()->noStatusBarTheme())
+        return ThemerNone::self()->maskPropertyWidget(widget);
+    m_themer->maskPropertyWidget(widget);
+}
+
 void ThemerAgent::blurPreEditBar(PreEditBar* widget)
 {
     m_themer->blurPreEditBar(widget);

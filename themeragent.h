@@ -41,6 +41,7 @@ void resizePreEditBar(const QSize& size);
 void resizeStatusBar(const QSize& size);
 void maskPreEditBar(PreEditBar* widget);
 void maskStatusBar(StatusBar* widget);
+void maskPropertyWidget(PropertyWidget* widget);
 void blurPreEditBar(PreEditBar* widget);
 void blurStatusBar(StatusBar* widget);
 void drawPreEditBar(PreEditBar* widget);

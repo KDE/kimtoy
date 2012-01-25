@@ -67,6 +67,7 @@ public:
     virtual void resizeStatusBar(const QSize& size);
     virtual void maskPreEditBar(PreEditBar* widget);
     virtual void maskStatusBar(StatusBar* widget);
+    virtual void maskPropertyWidget(PropertyWidget* widget);
     virtual void blurPreEditBar(PreEditBar* widget);
     virtual void blurStatusBar(StatusBar* widget);
     virtual void drawPreEditBar(PreEditBar* widget);

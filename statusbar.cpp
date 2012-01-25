@@ -117,9 +117,6 @@ StatusBar::StatusBar()
 //     m_hideButton->setIcon( KIcon( "arrow-down-double" ) );
 //     connect( m_hideButton, SIGNAL(clicked()),
 //              this, SLOT(hide()) );
-    bool enableTransparency = KIMToySettings::self()->backgroundTransparency();
-    setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
-    m_preeditBar->setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
@@ -324,12 +321,12 @@ void StatusBar::slotAboutActionTriggered()
 
 void StatusBar::loadSettings()
 {
-    ThemerAgent::loadSettings();
-    ThemerAgent::loadTheme();
-
     bool enableTransparency = KIMToySettings::self()->backgroundTransparency();
     setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
     m_preeditBar->setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
+
+    ThemerAgent::loadSettings();
+    ThemerAgent::loadTheme();
 
     if (KIMToySettings::self()->enableWindowMask()) {
         ThemerAgent::maskStatusBar(this);
@@ -347,12 +344,12 @@ void StatusBar::loadSettings()
         Animator::self()->disable();
     }
 
-    ThemerAgent::layoutStatusBar(m_layout);
     updateSize();
     m_preeditBar->resize(ThemerAgent::sizeHintPreEditBar(m_preeditBar));
 }
 
 void StatusBar::updateSize()
 {
+    ThemerAgent::layoutStatusBar(m_layout);
     resize(ThemerAgent::sizeHintStatusBar(this));
 }

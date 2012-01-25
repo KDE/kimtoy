@@ -21,6 +21,7 @@
 
 #include "themer_none.h"
 
+#include <QBitmap>
 #include <QPainter>
 
 #include <KIconLoader>
@@ -136,6 +137,14 @@ void ThemerNone::maskPreEditBar(PreEditBar* widget)
 void ThemerNone::maskStatusBar(StatusBar* widget)
 {
     widget->clearMask();
+}
+
+void ThemerNone::maskPropertyWidget(PropertyWidget* widget)
+{
+    if (!widget->m_iconName.isEmpty())
+        widget->setMask(MainBarIcon(widget->m_iconName).mask());
+    else
+        widget->clearMask();
 }
 
 void ThemerNone::drawPreEditBar(PreEditBar* widget)

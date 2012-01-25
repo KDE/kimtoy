@@ -809,6 +809,16 @@ void ThemerSogou::maskStatusBar(StatusBar* widget)
     widget->setMask(mask);
 }
 
+void ThemerSogou::maskPropertyWidget(PropertyWidget* widget)
+{
+    if (m_pwpix.contains(widget->type()))
+        widget->setMask(m_pwpix.value(widget->type()).mask());
+    else if (!widget->m_iconName.isEmpty())
+        widget->setMask(MainBarIcon(widget->m_iconName).mask());
+    else
+        widget->clearMask();
+}
+
 void ThemerSogou::blurPreEditBar(PreEditBar* widget)
 {
     Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_preEditBarMask);
@@ -1066,10 +1076,8 @@ void ThemerSogou::drawStatusBar(StatusBar* widget)
 void ThemerSogou::drawPropertyWidget(PropertyWidget* widget)
 {
     QPainter p(widget);
-    if (m_pwpix.contains(widget->type())) {
+    if (m_pwpix.contains(widget->type()))
         p.drawPixmap(0, 0, m_pwpix.value(widget->type()));
-        widget->setMask(m_pwpix.value(widget->type()).mask());
-    }
     else if (!widget->m_iconName.isEmpty())
         p.drawPixmap(0, 0, MainBarIcon(widget->m_iconName));
     else
