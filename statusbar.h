@@ -23,13 +23,14 @@
 #define STATUSBAR_H
 
 #include <QWidget>
-#include <QList>
+#include <QHash>
 
 class QPushButton;
 class QSignalMapper;
 class KStatusNotifierItem;
 
 class PreEditBar;
+class PropertyWidget;
 class StatusBarLayout;
 // class Themer;
 class ThemerFcitx;
@@ -73,7 +74,7 @@ private:
 //         QPushButton* m_hideButton;
     QPoint m_pointPos;
     bool m_moving;
-    QList<QString> m_objectPaths;
+    QHash<QString, PropertyWidget*> m_propertyWidgets;
     QSignalMapper* m_signalMapper;
     StatusBarLayout* m_layout;
 };

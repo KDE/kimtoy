@@ -216,23 +216,23 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
     foreach(const QString& p, props) {
         extractProperty(p, objectPath, name, iconName, description);
 //         kWarning() << objectPath << name << iconName << description;
-        int index = m_objectPaths.indexOf(objectPath);
-        if (index == -1) {
+        bool needUpdate = false;
+        if (!m_propertyWidgets.contains(objectPath)) {
             /// no such objectPath, register it
-            m_objectPaths << objectPath;
             PropertyWidget* pw = new PropertyWidget;
             pw->installEventFilter(this);
             connect(pw, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
             m_signalMapper->setMapping(pw, objectPath);
             m_layout->addWidget(pw);
-            index = m_objectPaths.count() - 1;
+            m_propertyWidgets.insert(objectPath, pw);
+            needUpdate = true;
         }
 
         /// update property
-        PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt(index)->widget());
+        PropertyWidget* w = m_propertyWidgets.value(objectPath);
         w->setProperty(objectPath, name, iconName, description);
 
-        if (index == m_objectPaths.count() - 1) {
+        if (needUpdate) {
             /// update if new property just registered
             updateSize();
         }
@@ -244,15 +244,14 @@ void StatusBar::slotUpdateProperty(const QString& prop)
     QString objectPath, name, iconName, description;
     extractProperty(prop, objectPath, name, iconName, description);
 //     kWarning() << objectPath << name << iconName << description;
-    int index = m_objectPaths.indexOf(objectPath);
-    if (index == -1) {
+    if (!m_propertyWidgets.contains(objectPath)) {
         /// no such objectPath
         kWarning() << "update property without register it! " << objectPath;
         return;
     }
 
     /// update property
-    PropertyWidget* w = static_cast<PropertyWidget*>(m_layout->itemAt(index)->widget());
+    PropertyWidget* w = m_propertyWidgets.value(objectPath);
     w->setProperty(objectPath, name, iconName, description);
 }
 
@@ -260,16 +259,16 @@ void StatusBar::slotRemoveProperty(const QString& prop)
 {
     QString objectPath, name, iconName, description;
     extractProperty(prop, objectPath, name, iconName, description);
-    int index = m_objectPaths.indexOf(objectPath);
-    if (index == -1) {
+    if (!m_propertyWidgets.contains(objectPath)) {
         /// no such objectPath
         kWarning() << "remove property without register it! " << objectPath;
         return;
     }
 
     /// remove property
-    m_objectPaths.removeAt(index);
-    delete m_layout->takeAt(index);
+    PropertyWidget* w = m_propertyWidgets.take(objectPath);
+    m_layout->removeWidget(w);
+    delete w;
 }
 
 void StatusBar::slotExecDialog(const QString& prop)
