@@ -238,6 +238,7 @@ ibus_property_args_to_propstr (const char *key,
                                char *propstr)
 {
     static const char pre[] = "/IBus/";
+    propstr[0] = '\0';
     strcat(propstr, pre);
     strcat(propstr, key);
     strcat(propstr, prop_sep);
@@ -252,11 +253,19 @@ static void
 ibus_property_to_propstr (IBusProperty *property,
                           char *propstr)
 {
+#if !IBUS_CHECK_VERSION(1,3,99)
     ibus_property_args_to_propstr(property->key,
                                   property->label->text,
                                   property->icon,
                                   property->tooltip->text,
                                   propstr);
+#else
+    ibus_property_args_to_propstr(ibus_property_get_key (property),
+                                  ibus_text_get_text (ibus_property_get_label (property)),
+                                  ibus_property_get_icon (property),
+                                  ibus_text_get_text (ibus_property_get_tooltip (property)),
+                                  propstr);
+#endif
 }
 
 static void
@@ -268,6 +277,7 @@ ibus_engine_desc_args_to_propstr (const char *name,
                                   char *propstr)
 {
     static const char pre[] = "/IBus/Engine/";
+    propstr[0] = '\0';
     strcat(propstr, pre);
     strcat(propstr, name);
     strcat(propstr, prop_sep);
@@ -488,48 +498,34 @@ ibus_panel_impanel_init (IBusPanelImpanel *impanel)
                                impanel, NULL);
 
     // some custom property
-    impanel->logo_prop = (IBusProperty *)malloc(sizeof(IBusProperty));
-    memset(impanel->logo_prop, 0, sizeof(IBusProperty));
-    impanel->logo_prop->key = strdup("Logo");
-    impanel->logo_prop->icon = strdup("ibus");
-    impanel->logo_prop->label = (IBusText *)malloc(sizeof(IBusText));
-    memset(impanel->logo_prop->label, 0, sizeof(IBusText));
-    impanel->logo_prop->label->text = strdup("IBus");
-    impanel->logo_prop->tooltip = (IBusText *)malloc(sizeof(IBusText));
-    memset(impanel->logo_prop->tooltip, 0, sizeof(IBusText));
-    impanel->logo_prop->tooltip->text = strdup("IBus input method");
-    impanel->about_prop = (IBusProperty *)malloc(sizeof(IBusProperty));
-    memset(impanel->about_prop, 0, sizeof(IBusProperty));
-    impanel->about_prop->key = strdup("About");
-    impanel->about_prop->icon = strdup("ibus-help");
-    impanel->about_prop->label = (IBusText *)malloc(sizeof(IBusText));
-    memset(impanel->about_prop->label, 0, sizeof(IBusText));
-    impanel->about_prop->label->text = strdup("IBus intelligent input bus");
-    impanel->about_prop->tooltip = (IBusText *)malloc(sizeof(IBusText));
-    memset(impanel->about_prop->tooltip, 0, sizeof(IBusText));
-    impanel->about_prop->tooltip->text = strdup("IBus is an intelligent input bus for Linux/Unix.\n\n"
-                                                "Huang Peng <shawn.p.huang@gmail.com>");
+    impanel->logo_prop = ibus_property_new ("Logo",
+                                            PROP_TYPE_NORMAL,
+                                            ibus_text_new_from_string ("IBus"),
+                                            "ibus",
+                                            ibus_text_new_from_string ("IBus input method"),
+                                            FALSE,
+                                            FALSE,
+                                            PROP_STATE_UNCHECKED,
+                                            NULL);
+
+    impanel->about_prop = ibus_property_new ("About",
+                                             PROP_TYPE_NORMAL,
+                                             ibus_text_new_from_string ("IBus intelligent input bus"),
+                                             "ibus-help",
+                                             ibus_text_new_from_string ("IBus is an intelligent input bus for Linux/Unix.\n\n"
+                                                                        "Huang Peng <shawn.p.huang@gmail.com>"),
+                                             FALSE,
+                                             FALSE,
+                                             PROP_STATE_UNCHECKED,
+                                             NULL);
 }
 
 static void
 ibus_panel_impanel_destroy (IBusPanelImpanel *impanel)
 {
-    // free custom property
-    free(impanel->logo_prop->key);
-    free(impanel->logo_prop->icon);
-    free(impanel->logo_prop->label->text);
-    free(impanel->logo_prop->label);
-    free(impanel->logo_prop->tooltip->text);
-    free(impanel->logo_prop->tooltip);
-    free(impanel->logo_prop);
+    g_object_unref (impanel->logo_prop);
     impanel->logo_prop = NULL;
-    free(impanel->about_prop->key);
-    free(impanel->about_prop->icon);
-    free(impanel->about_prop->label->text);
-    free(impanel->about_prop->label);
-    free(impanel->about_prop->tooltip->text);
-    free(impanel->about_prop->tooltip);
-    free(impanel->about_prop);
+    g_object_unref (impanel->about_prop);
     impanel->about_prop = NULL;
 
     g_bus_unown_name (owner_id);
@@ -569,8 +565,7 @@ ibus_panel_impanel_focus_in (IBusPanelService *panel,
 //     fprintf(stderr, "enable %d %s\n", enable, input_context_path);
 
     if (enable == 0) {
-        free(IBUS_PANEL_IMPANEL (panel)->logo_prop->icon);
-        IBUS_PANEL_IMPANEL (panel)->logo_prop->icon = strdup("ibus");
+        ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, "ibus");
     }
     else {
         IBusEngineDesc *engine_desc = ibus_input_context_get_engine(ic);
@@ -585,16 +580,14 @@ ibus_panel_impanel_focus_in (IBusPanelService *panel,
 #endif
         }
 
-        free(IBUS_PANEL_IMPANEL (panel)->logo_prop->icon);
 #if !IBUS_CHECK_VERSION(1,3,99)
-        IBUS_PANEL_IMPANEL (panel)->logo_prop->icon = strdup(engine_desc->icon);
+        ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, engine_desc->icon);
 #else
-        IBUS_PANEL_IMPANEL (panel)->logo_prop->icon = strdup(ibus_engine_desc_get_icon(engine_desc));
+        ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, ibus_engine_desc_get_icon (engine_desc));
 #endif
     }
 
     char propstr[512];
-    propstr[0] = '\0';
 
     ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
 
@@ -636,41 +629,28 @@ ibus_panel_impanel_register_properties (IBusPanelService *panel,
 {
     IBusProperty* property = NULL;
     guint i = 0;
-    char *logo_propstr;
-    char *about_propstr;
-    char *need_free[32] = {NULL};// WARNING enough large I think --- nihui
+    char propstr[512];
 
     GVariantBuilder builder;
     g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
 
-    logo_propstr = (char*)malloc(512 * sizeof(char));
-    logo_propstr[0] = '\0';
-    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, logo_propstr);
-    g_variant_builder_add (&builder, "s", logo_propstr);
+    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
+    g_variant_builder_add (&builder, "s", propstr);
 
     while ( ( property = ibus_prop_list_get( prop_list, i ) ) != NULL ) {
-        need_free[i] = (char*)malloc(512 * sizeof(char));
-        need_free[i][0] = '\0';
-        ibus_property_to_propstr(property, need_free[i]);
-        g_variant_builder_add (&builder, "s", need_free[i]);
+        ibus_property_to_propstr(property, propstr);
+        g_variant_builder_add (&builder, "s", propstr);
         ++i;
     }
 
-    about_propstr = (char*)malloc(512 * sizeof(char));
-    about_propstr[0] = '\0';
-    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, about_propstr);
-    g_variant_builder_add (&builder, "s", about_propstr);
+    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, propstr);
+    g_variant_builder_add (&builder, "s", propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
                                    g_variant_new ("(as)", &builder),
                                    NULL);
 
-    free(logo_propstr);
-    free(about_propstr);
-    for (i = 0; i < 32; ++i) {
-        free(need_free[i]);
-    }
 #if !IBUS_CHECK_VERSION(1,3,99)
     return TRUE;
 #endif
@@ -718,7 +698,11 @@ ibus_panel_impanel_update_auxiliary_text (IBusPanelService *panel,
                                           gboolean          visible)
 #endif
 {
-    gchar* t = text->text;
+#if !IBUS_CHECK_VERSION(1,3,99)
+    const gchar* t = text->text;
+#else
+    const gchar* t = ibus_text_get_text (text);
+#endif
     const gchar *attr = "";
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
@@ -771,7 +755,7 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
     guint i;
 
     gchar label[16][4];// WARNING large enough I think --- nihui
-    gchar *candidate;
+    const gchar *candidate;
 
     GVariantBuilder builder_labels;
     GVariantBuilder builder_candidates;
@@ -787,7 +771,11 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
 //         label = ibus_lookup_table_get_label(lookup_table, i)->text;
         g_variant_builder_add (&builder_labels, "s", label[i-start]);
 
-        candidate = ibus_lookup_table_get_candidate(lookup_table, i)->text;
+#if !IBUS_CHECK_VERSION(1,3,99)
+        candidate = ibus_lookup_table_get_candidate (lookup_table, i)->text;
+#else
+        candidate = ibus_text_get_text (ibus_lookup_table_get_candidate (lookup_table, i));
+#endif
         g_variant_builder_add (&builder_candidates, "s", candidate);
 
         g_variant_builder_add (&builder_attrs, "s", attr);
@@ -837,7 +825,11 @@ ibus_panel_impanel_update_preedit_text (IBusPanelService *panel,
                                         gboolean          visible)
 #endif
 {
-    gchar* t = text->text;
+#if !IBUS_CHECK_VERSION(1,3,99)
+    const gchar* t = text->text;
+#else
+    const gchar* t = ibus_text_get_text (text);
+#endif
     const gchar *attr = "";
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
@@ -879,7 +871,6 @@ ibus_panel_impanel_update_property (IBusPanelService *panel,
 #endif
 {
     char propstr[512];
-    propstr[0] = '\0';
 
     ibus_property_to_propstr(prop, propstr);
 
@@ -1136,8 +1127,7 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
     gboolean enable = ibus_input_context_is_enabled(IBUS_PANEL_IMPANEL (panel)->input_context);
 
     if (enable == 0) {
-        free(IBUS_PANEL_IMPANEL (panel)->logo_prop->icon);
-        IBUS_PANEL_IMPANEL (panel)->logo_prop->icon = strdup("ibus");
+        ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, "ibus");
     }
     else {
         IBusEngineDesc *engine_desc = ibus_input_context_get_engine(IBUS_PANEL_IMPANEL (panel)->input_context);
@@ -1152,16 +1142,14 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
 #endif
         }
 
-        free(IBUS_PANEL_IMPANEL (panel)->logo_prop->icon);
 #if !IBUS_CHECK_VERSION(1,3,99)
-        IBUS_PANEL_IMPANEL (panel)->logo_prop->icon = strdup(engine_desc->icon);
+        ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, engine_desc->icon);
 #else
-        IBUS_PANEL_IMPANEL (panel)->logo_prop->icon = strdup(ibus_engine_desc_get_icon(engine_desc));
+        ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, ibus_engine_desc_get_icon (engine_desc));
 #endif
     }
 
     char propstr[512];
-    propstr[0] = '\0';
 
     ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
 
@@ -1183,7 +1171,6 @@ static void
 ibus_panel_impanel_exec_dialog (IBusPanelService *panel)
 {
     char propstr[512];
-    propstr[0] = '\0';
 
     ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, propstr);
 
@@ -1196,9 +1183,7 @@ ibus_panel_impanel_exec_dialog (IBusPanelService *panel)
 static void
 ibus_panel_impanel_exec_menu (IBusPanelService *panel)
 {
-    guint i = 0;
-    char *disable_propstr;
-    char *need_free[64] = {NULL};// WARNING enough large I think --- nihui
+    char propstr[512];
 
     GVariantBuilder builder;
     g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
@@ -1210,32 +1195,23 @@ ibus_panel_impanel_exec_menu (IBusPanelService *panel)
         engine_desc = (IBusEngineDesc *)(node->data);
         node = g_list_next (node);
 
-        need_free[i] = (char*)malloc(512 * sizeof(char));
-        need_free[i][0] = '\0';
-        ibus_engine_desc_to_propstr(engine_desc, need_free[i]);
-        g_variant_builder_add (&builder, "s", need_free[i]);
-        ++i;
+        ibus_engine_desc_to_propstr(engine_desc, propstr);
+        g_variant_builder_add (&builder, "s", propstr);
     }
 
-    disable_propstr = (char*)malloc(512 * sizeof(char));
-    disable_propstr[0] = '\0';
     ibus_engine_desc_args_to_propstr("None",
                                      NULL,
                                      "Disable",
                                      "ibus",
                                      "",
-                                     disable_propstr);
+                                     propstr);
 
-    g_variant_builder_add (&builder, "s", disable_propstr);
+    g_variant_builder_add (&builder, "s", propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
                                    g_variant_new ("(as)", &builder),
                                    NULL);
-
-    for (i = 0; i < 64; ++i) {
-        free(need_free[i]);
-    }
 }
 
 IBusPanelImpanel *
