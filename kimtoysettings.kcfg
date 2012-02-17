@@ -42,7 +42,7 @@
         </entry>
         <entry name="IBusArgs" type="String">
             <default code="true">
-                QString("-r -p "IBUS_LIBEXEC_DIR"/ibus-ui-impanel -c "IBUS_LIBEXEC_DIR"/ibus-kconfig")
+                QString("-r -x -p "IBUS_LIBEXEC_DIR"/ibus-ui-impanel -c "IBUS_LIBEXEC_DIR"/ibus-kconfig")
             </default>
         </entry>
         <entry name="IBusXIM" type="String">
