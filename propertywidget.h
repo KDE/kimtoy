@@ -24,12 +24,6 @@
 
 #include <QWidget>
 
-// class Themer;
-class ThemerFcitx;
-class ThemerNone;
-class ThemerPlasma;
-class ThemerSogou;
-
 typedef enum {
     Unknown,
     IM_Direct,
@@ -60,6 +54,9 @@ public:
                      const QString& name,
                      const QString& iconName,
                      const QString& description);
+    QString name() const;
+    QString iconName() const;
+    QString description() const;
     PropertyType type() const;
     static PropertyType determineType( const QString& objectPath, const QString& iconName );
     bool operator==(const PropertyWidget& rhs);
@@ -69,11 +66,6 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent* event);
     virtual void paintEvent(QPaintEvent* event);
 private:
-//         friend class Themer;
-    friend class ThemerFcitx;
-    friend class ThemerNone;
-    friend class ThemerPlasma;
-    friend class ThemerSogou;
     QString m_name;
     QString m_iconName;
     QString m_description;

@@ -46,6 +46,7 @@
 #include <KWindowSystem>
 
 #include "animator.h"
+#include "filtermenu.h"
 #include "impanelagent.h"
 #include "propertywidget.h"
 #include "preeditbar.h"
@@ -122,6 +123,7 @@ StatusBar::StatusBar()
 
     installEventFilter(this);
 
+    m_rmbdown = false;
     m_moving = false;
 
     QDBusConnection connection = QDBusConnection::sessionBus();
@@ -142,6 +144,8 @@ StatusBar::StatusBar()
     QPoint pos = group.readEntry("XYPosition", QPoint(100, 0));
     move(pos);
 
+    m_filters = group.readEntry("Filters", QStringList());
+
     connect(Animator::self(), SIGNAL(animateStatusBar()), this, SLOT(update()));
     connect(Animator::self(), SIGNAL(animatePreEditBar()), m_preeditBar, SLOT(update()));
 
@@ -154,6 +158,7 @@ StatusBar::~StatusBar()
 {
     KConfigGroup group(KGlobal::config(), "General");
     group.writeEntry("XYPosition", pos());
+    group.writeEntry("Filters", m_filters);
     delete m_preeditBar;
     IMPanelAgent::Exit();
 }
@@ -168,16 +173,33 @@ bool StatusBar::eventFilter(QObject* object, QEvent* event)
                 m_pointPos = mouseEvent->pos();
             else
                 m_pointPos = w->mapToParent(mouseEvent->pos());
-            m_moving = true;
+            m_rmbdown = true;
             return true;
         }
-        m_moving = false;
         return QObject::eventFilter(object, event);
     }
-    if (event->type() == QEvent::MouseMove && m_moving) {
+    if (event->type() == QEvent::MouseMove && m_rmbdown) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         move(mouseEvent->globalPos() - m_pointPos);
+        m_moving = true;
         return true;
+    }
+    if (event->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        if (mouseEvent->button() == Qt::RightButton) {
+            if (!m_moving) {
+                QWidget* w = static_cast<QWidget*>(object);
+                if (w == this)
+                    m_pointPos = mouseEvent->pos();
+                else
+                    m_pointPos = w->mapToParent(mouseEvent->pos());
+                showFilterMenu();
+            }
+            m_rmbdown = false;
+            m_moving = false;
+            return true;
+        }
+        return QObject::eventFilter(object, event);
     }
     return QObject::eventFilter(object, event);
 }
@@ -216,24 +238,24 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
     foreach(const QString& p, props) {
         extractProperty(p, objectPath, name, iconName, description);
 //         kWarning() << objectPath << name << iconName << description;
+        PropertyWidget* pw = m_propertyWidgets.value(objectPath);
         bool needUpdate = false;
-        if (!m_propertyWidgets.contains(objectPath)) {
+        if (!pw) {
             /// no such objectPath, register it
-            PropertyWidget* pw = new PropertyWidget;
+            pw = new PropertyWidget;
             pw->installEventFilter(this);
             connect(pw, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
             m_signalMapper->setMapping(pw, objectPath);
-            m_layout->addWidget(pw);
             m_propertyWidgets.insert(objectPath, pw);
             needUpdate = true;
         }
 
         /// update property
-        PropertyWidget* w = m_propertyWidgets.value(objectPath);
-        w->setProperty(objectPath, name, iconName, description);
+        pw->setProperty(objectPath, name, iconName, description);
 
-        if (needUpdate) {
-            /// update if new property just registered
+        if (needUpdate && !m_filters.contains(objectPath)) {
+            /// add to layout if just registered and not filtered
+            m_layout->addWidget(pw);
             updateSize();
         }
     }
@@ -244,31 +266,34 @@ void StatusBar::slotUpdateProperty(const QString& prop)
     QString objectPath, name, iconName, description;
     extractProperty(prop, objectPath, name, iconName, description);
 //     kWarning() << objectPath << name << iconName << description;
-    if (!m_propertyWidgets.contains(objectPath)) {
+    PropertyWidget* pw = m_propertyWidgets.value(objectPath);
+    if (!pw) {
         /// no such objectPath
         kWarning() << "update property without register it! " << objectPath;
         return;
     }
 
     /// update property
-    PropertyWidget* w = m_propertyWidgets.value(objectPath);
-    w->setProperty(objectPath, name, iconName, description);
+    pw->setProperty(objectPath, name, iconName, description);
 }
 
 void StatusBar::slotRemoveProperty(const QString& prop)
 {
     QString objectPath, name, iconName, description;
     extractProperty(prop, objectPath, name, iconName, description);
-    if (!m_propertyWidgets.contains(objectPath)) {
+    PropertyWidget* pw = m_propertyWidgets.take(objectPath);
+    if (!pw) {
         /// no such objectPath
         kWarning() << "remove property without register it! " << objectPath;
         return;
     }
 
-    /// remove property
-    PropertyWidget* w = m_propertyWidgets.take(objectPath);
-    m_layout->removeWidget(w);
-    delete w;
+    if (!m_filters.contains(objectPath)) {
+        /// remove from layout if not filtered
+        m_layout->removeWidget(pw);
+        updateSize();
+    }
+    delete pw;
 }
 
 void StatusBar::slotExecDialog(const QString& prop)
@@ -343,12 +368,53 @@ void StatusBar::loadSettings()
         Animator::self()->disable();
     }
 
+    foreach (PropertyWidget* pw, m_propertyWidgets) {
+        ThemerAgent::maskPropertyWidget(pw);
+    }
+
     updateSize();
     m_preeditBar->resize(ThemerAgent::sizeHintPreEditBar(m_preeditBar));
 }
 
+void StatusBar::slotFilterChanged(const QString& objectPath, bool checked)
+{
+    PropertyWidget* pw = m_propertyWidgets.value(objectPath);
+
+    if (checked) {
+        m_layout->addWidget(pw);
+        pw->show();
+        m_filters.removeAll(objectPath);
+    }
+    else {
+        m_layout->removeWidget(pw);
+        pw->hide();
+        m_filters.append(objectPath);
+    }
+    updateSize();
+}
+
 void StatusBar::updateSize()
 {
-    ThemerAgent::layoutStatusBar(m_layout);
     resize(ThemerAgent::sizeHintStatusBar(this));
+}
+
+void StatusBar::showFilterMenu()
+{
+    FilterMenu* menu = new FilterMenu;
+
+    QHash<QString, PropertyWidget*>::ConstIterator it = m_propertyWidgets.constBegin();
+    QHash<QString, PropertyWidget*>::ConstIterator end = m_propertyWidgets.constEnd();
+    while (it != end) {
+        const QString& objectPath = it.key();
+        PropertyWidget* pw = it.value();
+        bool visible = (m_layout->indexOf(pw) != -1);
+        menu->addEntry(objectPath, pw, visible);
+        ++it;
+    }
+
+    connect(menu, SIGNAL(filterChanged(const QString&,bool)),
+            this, SLOT(slotFilterChanged(const QString&,bool)));
+
+    menu->move(mapToGlobal(m_pointPos));
+    menu->show();
 }

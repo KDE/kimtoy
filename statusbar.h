@@ -61,8 +61,10 @@ private Q_SLOTS:
     void preferences();
     void slotAboutActionTriggered();
     void loadSettings();
+    void slotFilterChanged(const QString& objectPath, bool checked);
 private:
     void updateSize();
+    void showFilterMenu();
 private:
 //         friend class Themer;
     friend class ThemerFcitx;
@@ -73,10 +75,12 @@ private:
     KStatusNotifierItem* m_tray;
 //         QPushButton* m_hideButton;
     QPoint m_pointPos;
+    bool m_rmbdown;
     bool m_moving;
     QHash<QString, PropertyWidget*> m_propertyWidgets;
     QSignalMapper* m_signalMapper;
     StatusBarLayout* m_layout;
+    QStringList m_filters;
 };
 
 #endif // STATUSBAR_H

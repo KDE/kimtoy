@@ -50,6 +50,21 @@ void PropertyWidget::setProperty(const QString& objectPath,
     update();
 }
 
+QString PropertyWidget::name() const
+{
+    return m_name;
+}
+
+QString PropertyWidget::iconName() const
+{
+    return m_iconName;
+}
+
+QString PropertyWidget::description() const
+{
+    return m_description;
+}
+
 PropertyType PropertyWidget::type() const
 {
     return m_type;

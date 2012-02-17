@@ -141,8 +141,8 @@ void ThemerNone::maskStatusBar(StatusBar* widget)
 
 void ThemerNone::maskPropertyWidget(PropertyWidget* widget)
 {
-    if (!widget->m_iconName.isEmpty())
-        widget->setMask(MainBarIcon(widget->m_iconName).mask());
+    if (!widget->iconName().isEmpty())
+        widget->setMask(MainBarIcon(widget->iconName()).mask());
     else
         widget->clearMask();
 }
@@ -224,8 +224,8 @@ void ThemerNone::drawStatusBar(StatusBar* widget)
 void ThemerNone::drawPropertyWidget(PropertyWidget* widget)
 {
     QPainter p(widget);
-    if (!widget->m_iconName.isEmpty())
-        p.drawPixmap(widget->rect(), MainBarIcon(widget->m_iconName));
+    if (!widget->iconName().isEmpty())
+        p.drawPixmap(widget->rect(), MainBarIcon(widget->iconName()));
     else
-        p.drawText(widget->rect(), Qt::AlignCenter, widget->m_name);
+        p.drawText(widget->rect(), Qt::AlignCenter, widget->name());
 }

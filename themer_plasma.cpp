@@ -182,8 +182,8 @@ void ThemerPlasma::maskStatusBar(StatusBar* widget)
 
 void ThemerPlasma::maskPropertyWidget(PropertyWidget* widget)
 {
-    if (!widget->m_iconName.isEmpty())
-        widget->setMask(MainBarIcon(widget->m_iconName).mask());
+    if (!widget->iconName().isEmpty())
+        widget->setMask(MainBarIcon(widget->iconName()).mask());
     else
         widget->clearMask();
 }
@@ -288,10 +288,10 @@ void ThemerPlasma::drawStatusBar(StatusBar* widget)
 void ThemerPlasma::drawPropertyWidget(PropertyWidget* widget)
 {
     QPainter p(widget);
-    if (!widget->m_iconName.isEmpty())
-        p.drawPixmap(widget->rect(), MainBarIcon(widget->m_iconName));
+    if (!widget->iconName().isEmpty())
+        p.drawPixmap(widget->rect(), MainBarIcon(widget->iconName()));
     else {
         p.setPen(m_preEditColor);
-        p.drawText(widget->rect(), Qt::AlignCenter, widget->m_name);
+        p.drawText(widget->rect(), Qt::AlignCenter, widget->name());
     }
 }

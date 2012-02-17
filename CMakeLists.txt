@@ -78,6 +78,7 @@ endif(IBUS_FOUND)
 set(kimtoy_SRCS
     animator.cpp
     envsettings.cpp
+    filtermenu.cpp
     impanel.cpp
     impanelagent.cpp
     impanelagent_p.cpp
