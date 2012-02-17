@@ -69,7 +69,6 @@ KIMToy::~KIMToy()
     }
 
     KIMToySettings::self()->writeConfig();
-    kWarning() << "KIMToy::~KIMToy()";
 }
 
 void KIMToy::init()
