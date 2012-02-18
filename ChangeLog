@@ -1,3 +1,9 @@
+2012-02-18 v1.5
+ability to filter property widget on statusbar
+fix broken rendering issue on property when applying theme changes
+fix build issue using ibus-1.4.1
+enable ibus xim server by default
+
 2012-01-15 v1.4
 optimize scaled pixmap drawing
 do not detect running ibus if option -r has been set
