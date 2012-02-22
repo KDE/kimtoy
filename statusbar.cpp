@@ -74,8 +74,8 @@ static void extractProperty(const QString& str,
 
 StatusBar::StatusBar()
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
-    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::StaysOnTop);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
     KWindowSystem::setType(winId(), NET::PopupMenu);
 
     ThemerAgent::loadSettings();
@@ -160,6 +160,8 @@ StatusBar::~StatusBar()
     group.writeEntry("XYPosition", pos());
     group.writeEntry("Filters", m_filters);
     delete m_preeditBar;
+    qDeleteAll(m_propertyWidgets);
+    m_propertyWidgets.clear();
     IMPanelAgent::Exit();
 }
 

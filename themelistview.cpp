@@ -42,7 +42,7 @@ ThemeListView::ThemeListView(QWidget* parent)
     setAlternatingRowColors(true);
 
     ThemeListModel* tm = new ThemeListModel(this);
-    ThemeListDelegate* td = new ThemeListDelegate;
+    ThemeListDelegate* td = new ThemeListDelegate(this);
     setModel(tm);
     setItemDelegate(td);
     connect(tm, SIGNAL(relayoutNeeded()), this, SLOT(relayout()));
