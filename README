@@ -47,8 +47,5 @@ A the env set in kimtoy will overwrite the system ones.
 Q why does the text in preedit bar differ from the one specified in the theme?
 A since the font specified int the theme is missing in your system, kimtoy will fallback to the default font, which is usually sans serif. you can set custom font to replace the font specified in the theme.
 
-Q why do the status bar icons not themed?
-A because kimtoy has no way to know the actual actions for these icons. eg. the key of the button switching punct full/half is different among different input method backends, so it is impossible to find the corresponding theme icon according to the key.
-
 Q why do some status bar icons positions have offset sometimes?
 A because the position count specified in the theme may be lesser than actual icon count, and kimtoy can not decide what should be shown and what should not.

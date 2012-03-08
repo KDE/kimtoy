@@ -105,8 +105,8 @@ StatusBar::StatusBar()
     m_tray->contextMenu()->addAction(aboutAction);
 
     m_signalMapper = new QSignalMapper(this);
-    connect(m_signalMapper, SIGNAL(mapped(const QString&)),
-            this, SLOT(slotTriggerProperty(const QString&)));
+    connect(m_signalMapper, SIGNAL(mapped(QString)),
+            this, SLOT(slotTriggerProperty(QString)));
 
     m_layout = new StatusBarLayout;
     setLayout(m_layout);
@@ -334,7 +334,7 @@ void StatusBar::preferences()
     dialog->addPage(new AppearanceWidget, i18n("Appearance"), "preferences-desktop-color");
     dialog->addPage(new ThemeWidget, i18n("Theme"), "tools-wizard");
     dialog->addPage(new PerformanceWidget, i18n("Performance"), "preferences-system-performance");
-    connect(dialog, SIGNAL(settingsChanged(const QString&)),
+    connect(dialog, SIGNAL(settingsChanged(QString)),
             this, SLOT(loadSettings()));
     dialog->show();
 }
@@ -414,8 +414,8 @@ void StatusBar::showFilterMenu()
         ++it;
     }
 
-    connect(menu, SIGNAL(filterChanged(const QString&,bool)),
-            this, SLOT(slotFilterChanged(const QString&,bool)));
+    connect(menu, SIGNAL(filterChanged(QString,bool)),
+            this, SLOT(slotFilterChanged(QString,bool)));
 
     menu->move(mapToGlobal(m_pointPos));
     menu->show();

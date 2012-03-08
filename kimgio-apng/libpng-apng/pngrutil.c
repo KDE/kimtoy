@@ -1,8 +1,8 @@
 
 /* pngrutil.c - utilities to read a PNG file
  *
- * Last changed in libpng 1.5.6 [November 3, 2011]
- * Copyright (c) 1998-2011 Glenn Randers-Pehrson
+ * Last changed in libpng 1.5.9 [February 18, 2012]
+ * Copyright (c) 1998-2012 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
  *
@@ -432,15 +432,18 @@ __kimtoy__png_decompress_chunk(png_structp png_ptr, int comp_type,
       /* Now check the limits on this chunk - if the limit fails the
        * compressed data will be removed, the prefix will remain.
        */
+      if (prefix_size >= (~(png_size_t)0) - 1 ||
+         expanded_size >= (~(png_size_t)0) - 1 - prefix_size
 #ifdef PNG_SET_CHUNK_MALLOC_LIMIT_SUPPORTED
-      if (png_ptr->user_chunk_malloc_max &&
+         || (png_ptr->user_chunk_malloc_max &&
           (prefix_size + expanded_size >= png_ptr->user_chunk_malloc_max - 1))
 #else
 #  ifdef PNG_USER_CHUNK_MALLOC_MAX
-      if ((PNG_USER_CHUNK_MALLOC_MAX > 0) &&
+         || ((PNG_USER_CHUNK_MALLOC_MAX > 0) &&
           prefix_size + expanded_size >= PNG_USER_CHUNK_MALLOC_MAX - 1)
 #  endif
 #endif
+         )
          __kimtoy__png_warning(png_ptr, "Exceeded size limit while expanding chunk");
 
       /* If the size is zero either there was an error and a message
@@ -448,12 +451,7 @@ __kimtoy__png_decompress_chunk(png_structp png_ptr, int comp_type,
        * and we have nothing to do - the code will exit through the
        * error case below.
        */
-#if defined(PNG_SET_CHUNK_MALLOC_LIMIT_SUPPORTED) || \
-    defined(PNG_USER_CHUNK_MALLOC_MAX)
       else if (expanded_size > 0)
-#else
-      if (expanded_size > 0)
-#endif
       {
          /* Success (maybe) - really uncompress the chunk. */
          png_size_t new_size = 0;
@@ -490,7 +488,7 @@ __kimtoy__png_decompress_chunk(png_structp png_ptr, int comp_type,
    {
       PNG_WARNING_PARAMETERS(p)
       __kimtoy__png_warning_parameter_signed(p, 1, PNG_NUMBER_FORMAT_d, comp_type);
-      __kimtoy__png_formatted_warning(png_ptr, p, "Unknown zTXt compression type @1");
+      __kimtoy__png_formatted_warning(png_ptr, p, "Unknown compression type @1");
 
       /* The recovery is to simply drop the data. */
    }
@@ -1284,7 +1282,7 @@ __kimtoy__png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
 
    __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = (png_charp)__kimtoy__png_malloc(png_ptr, length + 1);
-   slength = (png_size_t)length;
+   slength = length;
    __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
    if (__kimtoy__png_crc_finish(png_ptr, skip))
@@ -1434,7 +1432,7 @@ __kimtoy__png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
     * that the PNG_MAX_MALLOC_64K test is enabled in this case, but this is a
     * potential breakage point if the types in pngconf.h aren't exactly right.
     */
-   slength = (png_size_t)length;
+   slength = length;
    __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
    if (__kimtoy__png_crc_finish(png_ptr, skip))
@@ -1961,7 +1959,7 @@ __kimtoy__png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
       return;
    }
 
-   slength = (png_size_t)length;
+   slength = length;
    __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
    if (__kimtoy__png_crc_finish(png_ptr, 0))
@@ -2110,7 +2108,7 @@ __kimtoy__png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
       return;
    }
 
-   slength = (png_size_t)length;
+   slength = length;
    __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
    png_ptr->chunkdata[slength] = 0x00; /* Null terminate the last string */
 
@@ -2270,7 +2268,7 @@ __kimtoy__png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
      return;
    }
 
-   slength = (png_size_t)length;
+   slength = length;
    __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
    if (__kimtoy__png_crc_finish(png_ptr, skip))
@@ -2378,7 +2376,7 @@ __kimtoy__png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
       return;
    }
 
-   slength = (png_size_t)length;
+   slength = length;
    __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
    if (__kimtoy__png_crc_finish(png_ptr, 0))
@@ -2509,7 +2507,7 @@ __kimtoy__png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
       return;
    }
 
-   slength = (png_size_t)length;
+   slength = length;
    __kimtoy__png_crc_read(png_ptr, (png_bytep)png_ptr->chunkdata, slength);
 
    if (__kimtoy__png_crc_finish(png_ptr, 0))
@@ -2543,6 +2541,14 @@ __kimtoy__png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 l
    {
       comp_flag = *lang++;
       comp_type = *lang++;
+   }
+
+   if (comp_type || (comp_flag && comp_flag != PNG_TEXT_COMPRESSION_zTXt))
+   {
+      __kimtoy__png_warning(png_ptr, "Unknown iTXt compression type or method");
+      __kimtoy__png_free(png_ptr, png_ptr->chunkdata);
+      png_ptr->chunkdata = NULL;
+      return;
    }
 
    for (lang_key = lang; *lang_key; lang_key++)
@@ -2938,18 +2944,13 @@ __kimtoy__png_check_chunk_name(png_structp png_ptr, png_uint_32 chunk_name)
    }
 }
 
-/* Combines the row recently read in with the existing pixels in the
- * row.  This routine takes care of alpha and transparency if requested.
- * This routine also handles the two methods of progressive display
- * of interlaced images, depending on the mask value.
- * The mask value describes which pixels are to be combined with
- * the row.  The pattern always repeats every 8 pixels, so just 8
- * bits are needed.  A one indicates the pixel is to be combined,
- * a zero indicates the pixel is to be skipped.  This is in addition
- * to any alpha or transparency value associated with the pixel.  If
- * you want all pixels to be combined, pass 0xff (255) in mask.
+/* Combines the row recently read in with the existing pixels in the row.  This
+ * routine takes care of alpha and transparency if requested.  This routine also
+ * handles the two methods of progressive display of interlaced images,
+ * depending on the 'display' value; if 'display' is true then the whole row
+ * (dp) is filled from the start by replicating the available pixels.  If
+ * 'display' is false only those pixels present in the pass are filled in.
  */
-
 void /* PRIVATE */
 __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
 {
@@ -3021,7 +3022,7 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
 
       if (pixel_depth < 8)
       {
-         /* For pixel depths up to 4-bpp the 8-pixel mask can be expanded to fit
+         /* For pixel depths up to 4 bpp the 8-pixel mask can be expanded to fit
           * into 32 bits, then a single loop over the bytes using the four byte
           * values in the 32-bit mask can be used.  For the 'display' option the
           * expanded mask may also not require any masking within a byte.  To
@@ -3030,7 +3031,7 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
           *
           * The 'regular' case requires a mask for each of the first 6 passes,
           * the 'display' case does a copy for the even passes in the range
-          * 0..6.  This has already been handled in the tst above.
+          * 0..6.  This has already been handled in the test above.
           *
           * The masks are arranged as four bytes with the first byte to use in
           * the lowest bits (little-endian) regardless of the order (PACKSWAP or
@@ -3038,7 +3039,7 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
           *
           * NOTE: the whole of this logic depends on the caller of this function
           * only calling it on rows appropriate to the pass.  This function only
-          * understands the 'x' logic, the 'y' logic is handled by the caller.
+          * understands the 'x' logic; the 'y' logic is handled by the caller.
           *
           * The following defines allow generation of compile time constant bit
           * masks for each pixel depth and each possibility of swapped or not
@@ -3056,7 +3057,7 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
           * the compiler even though it isn't used.  Microsoft Visual C (various
           * versions) and the Intel C compiler are known to do this.  To avoid
           * this the following macros are used in 1.5.6.  This is a temporary
-          * solution to avoid destablizing the code during the release process.
+          * solution to avoid destabilizing the code during the release process.
           */
 #        if PNG_USE_COMPILE_TIME_MASKS
 #           define PNG_LSR(x,s) ((x)>>((s) & 0x1f))
@@ -3101,7 +3102,7 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
 #if PNG_USE_COMPILE_TIME_MASKS
          /* Utility macros to construct all the masks for a depth/swap
           * combination.  The 's' parameter says whether the format is PNG
-          * (big endian bytes) or not.  Only the three odd numbered passes are
+          * (big endian bytes) or not.  Only the three odd-numbered passes are
           * required for the display/block algorithm.
           */
 #        define S_MASKS(d,s) { S_MASK(0,d,s), S_MASK(1,d,s), S_MASK(2,d,s),\
@@ -3114,7 +3115,8 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
          /* Hence the pre-compiled masks indexed by PACKSWAP (or not), depth and
           * then pass:
           */
-         static PNG_CONST png_uint_32 row_mask[2/*PACKSWAP*/][3/*depth*/][6] = {
+         static PNG_CONST png_uint_32 row_mask[2/*PACKSWAP*/][3/*depth*/][6] =
+         {
             /* Little-endian byte masks for PACKSWAP */
             { S_MASKS(1,0), S_MASKS(2,0), S_MASKS(4,0) },
             /* Normal (big-endian byte) masks - PNG format */
@@ -3124,7 +3126,8 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
          /* display_mask has only three entries for the odd passes, so index by
           * pass>>1.
           */
-         static PNG_CONST png_uint_32 display_mask[2][3][3] = {
+         static PNG_CONST png_uint_32 display_mask[2][3][3] =
+         {
             /* Little-endian byte masks for PACKSWAP */
             { B_MASKS(1,0), B_MASKS(2,0), B_MASKS(4,0) },
             /* Normal (big-endian byte) masks - PNG format */
@@ -3300,7 +3303,7 @@ __kimtoy__png_combine_row(png_structp png_ptr, png_bytep dp, int display)
                /* Check for double byte alignment and, if possible, use a
                 * 16-bit copy.  Don't attempt this for narrow images - ones that
                 * are less than an interlace panel wide.  Don't attempt it for
-                * wide bytes-to-copy either - use the png_memcpy there.
+                * wide bytes_to_copy either - use the png_memcpy there.
                 */
                if (bytes_to_copy < 16 /*else use png_memcpy*/ &&
                   png_isaligned(dp, png_uint_16) &&
@@ -3669,132 +3672,252 @@ __kimtoy__png_do_read_interlace(png_row_infop row_info, png_bytep row, int pass,
 }
 #endif /* PNG_READ_INTERLACING_SUPPORTED */
 
-/* 1.5.6: Changed to just take a png_row_info (not png_ptr) and to ignore bad
- * adaptive filter bytes.
- */
-void /* PRIVATE */
-__kimtoy__png_read_filter_row(png_row_infop row_info, png_bytep row,
-   png_const_bytep prev_row, int filter)
+static void
+__kimtoy__png_read_filter_row_sub(png_row_infop row_info, png_bytep row,
+   png_const_bytep prev_row)
 {
-   switch (filter)
+   png_size_t i;
+   png_size_t istop = row_info->rowbytes;
+   unsigned int bpp = (row_info->pixel_depth + 7) >> 3;
+   png_bytep rp = row + bpp;
+
+   PNG_UNUSED(prev_row)
+
+   for (i = bpp; i < istop; i++)
    {
-      case PNG_FILTER_VALUE_NONE:
-         break;
+      *rp = (png_byte)(((int)(*rp) + (int)(*(rp-bpp))) & 0xff);
+      rp++;
+   }
+}
 
-      case PNG_FILTER_VALUE_SUB:
+static void
+__kimtoy__png_read_filter_row_up(png_row_infop row_info, png_bytep row,
+   png_const_bytep prev_row)
+{
+   png_size_t i;
+   png_size_t istop = row_info->rowbytes;
+   png_bytep rp = row;
+   png_const_bytep pp = prev_row;
+
+   for (i = 0; i < istop; i++)
+   {
+      *rp = (png_byte)(((int)(*rp) + (int)(*pp++)) & 0xff);
+      rp++;
+   }
+}
+
+static void
+__kimtoy__png_read_filter_row_avg(png_row_infop row_info, png_bytep row,
+   png_const_bytep prev_row)
+{
+   png_size_t i;
+   png_bytep rp = row;
+   png_const_bytep pp = prev_row;
+   unsigned int bpp = (row_info->pixel_depth + 7) >> 3;
+   png_size_t istop = row_info->rowbytes - bpp;
+
+   for (i = 0; i < bpp; i++)
+   {
+      *rp = (png_byte)(((int)(*rp) +
+         ((int)(*pp++) / 2 )) & 0xff);
+
+      rp++;
+   }
+
+   for (i = 0; i < istop; i++)
+   {
+      *rp = (png_byte)(((int)(*rp) +
+         (int)(*pp++ + *(rp-bpp)) / 2 ) & 0xff);
+
+      rp++;
+   }
+}
+
+static void
+__kimtoy__png_read_filter_row_paeth_1byte_pixel(png_row_infop row_info, png_bytep row,
+   png_const_bytep prev_row)
+{
+   png_bytep rp_end = row + row_info->rowbytes;
+   int a, c;
+
+   /* First pixel/byte */
+   c = *prev_row++;
+   a = *row + c;
+   *row++ = (png_byte)a;
+
+   /* Remainder */
+   while (row < rp_end)
+   {
+      int b, pa, pb, pc, p;
+
+      a &= 0xff; /* From previous iteration or start */
+      b = *prev_row++;
+
+      p = b - c;
+      pc = a - c;
+
+#     ifdef PNG_USE_ABS
+         pa = abs(p);
+         pb = abs(pc);
+         pc = abs(p + pc);
+#     else
+         pa = p < 0 ? -p : p;
+         pb = pc < 0 ? -pc : pc;
+         pc = (p + pc) < 0 ? -(p + pc) : p + pc;
+#     endif
+
+      /* Find the best predictor, the least of pa, pb, pc favoring the earlier
+       * ones in the case of a tie.
+       */
+      if (pb < pa) pa = pb, a = b;
+      if (pc < pa) a = c;
+
+      /* Calculate the current pixel in a, and move the previous row pixel to c
+       * for the next time round the loop
+       */
+      c = b;
+      a += *row;
+      *row++ = (png_byte)a;
+   }
+}
+
+static void
+__kimtoy__png_read_filter_row_paeth_multibyte_pixel(png_row_infop row_info, png_bytep row,
+   png_const_bytep prev_row)
+{
+   int bpp = (row_info->pixel_depth + 7) >> 3;
+   png_bytep rp_end = row + bpp;
+
+   /* Process the first pixel in the row completely (this is the same as 'up'
+    * because there is only one candidate predictor for the first row).
+    */
+   while (row < rp_end)
+   {
+      int a = *row + *prev_row++;
+      *row++ = (png_byte)a;
+   }
+
+   /* Remainder */
+   rp_end += row_info->rowbytes - bpp;
+
+   while (row < rp_end)
+   {
+      int a, b, c, pa, pb, pc, p;
+
+      c = *(prev_row - bpp);
+      a = *(row - bpp);
+      b = *prev_row++;
+
+      p = b - c;
+      pc = a - c;
+
+#     ifdef PNG_USE_ABS
+         pa = abs(p);
+         pb = abs(pc);
+         pc = abs(p + pc);
+#     else
+         pa = p < 0 ? -p : p;
+         pb = pc < 0 ? -pc : pc;
+         pc = (p + pc) < 0 ? -(p + pc) : p + pc;
+#     endif
+
+      if (pb < pa) pa = pb, a = b;
+      if (pc < pa) a = c;
+
+      c = b;
+      a += *row;
+      *row++ = (png_byte)a;
+   }
+}
+
+#ifdef PNG_ARM_NEON
+
+#ifdef __linux__
+#include <stdio.h>
+#include <elf.h>
+#include <asm/hwcap.h>
+
+static int png_have_hwcap(unsigned cap)
+{
+   FILE *f = fopen("/proc/self/auxv", "r");
+   Elf32_auxv_t aux;
+   int have_cap = 0;
+
+   if (!f)
+      return 0;
+
+   while (fread(&aux, sizeof(aux), 1, f) > 0)
+   {
+      if (aux.a_type == AT_HWCAP &&
+          aux.a_un.a_val & cap)
       {
-         png_size_t i;
-         png_size_t istop = row_info->rowbytes;
-         unsigned int bpp = (row_info->pixel_depth + 7) >> 3;
-         png_bytep rp = row + bpp;
-         png_bytep lp = row;
-
-         for (i = bpp; i < istop; i++)
-         {
-            *rp = (png_byte)(((int)(*rp) + (int)(*lp++)) & 0xff);
-            rp++;
-         }
+         have_cap = 1;
          break;
       }
-      case PNG_FILTER_VALUE_UP:
-      {
-         png_size_t i;
-         png_size_t istop = row_info->rowbytes;
-         png_bytep rp = row;
-         png_const_bytep pp = prev_row;
+   }
 
-         for (i = 0; i < istop; i++)
-         {
-            *rp = (png_byte)(((int)(*rp) + (int)(*pp++)) & 0xff);
-            rp++;
-         }
-         break;
-      }
-      case PNG_FILTER_VALUE_AVG:
-      {
-         png_size_t i;
-         png_bytep rp = row;
-         png_const_bytep pp = prev_row;
-         png_bytep lp = row;
-         unsigned int bpp = (row_info->pixel_depth + 7) >> 3;
-         png_size_t istop = row_info->rowbytes - bpp;
+   fclose(f);
 
-         for (i = 0; i < bpp; i++)
-         {
-            *rp = (png_byte)(((int)(*rp) +
-                ((int)(*pp++) / 2 )) & 0xff);
+   return have_cap;
+}
+#endif /* __linux__ */
 
-            rp++;
-         }
-
-         for (i = 0; i < istop; i++)
-         {
-            *rp = (png_byte)(((int)(*rp) +
-                (int)(*pp++ + *lp++) / 2 ) & 0xff);
-
-            rp++;
-         }
-         break;
-      }
-      case PNG_FILTER_VALUE_PAETH:
-      {
-         png_size_t i;
-         png_bytep rp = row;
-         png_const_bytep pp = prev_row;
-         png_bytep lp = row;
-         png_const_bytep cp = prev_row;
-         unsigned int bpp = (row_info->pixel_depth + 7) >> 3;
-         png_size_t istop=row_info->rowbytes - bpp;
-
-         for (i = 0; i < bpp; i++)
-         {
-            *rp = (png_byte)(((int)(*rp) + (int)(*pp++)) & 0xff);
-            rp++;
-         }
-
-         for (i = 0; i < istop; i++)   /* Use leftover rp,pp */
-         {
-            int a, b, c, pa, pb, pc, p;
-
-            a = *lp++;
-            b = *pp++;
-            c = *cp++;
-
-            p = b - c;
-            pc = a - c;
-
-#ifdef PNG_USE_ABS
-            pa = abs(p);
-            pb = abs(pc);
-            pc = abs(p + pc);
-#else
-            pa = p < 0 ? -p : p;
-            pb = pc < 0 ? -pc : pc;
-            pc = (p + pc) < 0 ? -(p + pc) : p + pc;
+static void
+png_init_filter_functions_neon(png_structp pp, unsigned int bpp)
+{
+#ifdef __linux__
+   if (!png_have_hwcap(HWCAP_NEON))
+      return;
 #endif
 
-            /*
-               if (pa <= pb && pa <= pc)
-                  p = a;
+   pp->read_filter[PNG_FILTER_VALUE_UP-1] = png_read_filter_row_up_neon;
 
-               else if (pb <= pc)
-                  p = b;
-
-               else
-                  p = c;
-             */
-
-            p = (pa <= pb && pa <= pc) ? a : (pb <= pc) ? b : c;
-
-            *rp = (png_byte)(((int)(*rp) + p) & 0xff);
-            rp++;
-         }
-         break;
-      }
-      default:
-         /* NOT REACHED */
-         break;
+   if (bpp == 3)
+   {
+      pp->read_filter[PNG_FILTER_VALUE_SUB-1] = png_read_filter_row_sub3_neon;
+      pp->read_filter[PNG_FILTER_VALUE_AVG-1] = png_read_filter_row_avg3_neon;
+      pp->read_filter[PNG_FILTER_VALUE_PAETH-1] = 
+         png_read_filter_row_paeth3_neon;
    }
+
+   else if (bpp == 4)
+   {
+      pp->read_filter[PNG_FILTER_VALUE_SUB-1] = png_read_filter_row_sub4_neon;
+      pp->read_filter[PNG_FILTER_VALUE_AVG-1] = png_read_filter_row_avg4_neon;
+      pp->read_filter[PNG_FILTER_VALUE_PAETH-1] =
+          png_read_filter_row_paeth4_neon;
+   }
+}
+#endif /* PNG_ARM_NEON */
+
+static void
+png_init_filter_functions(png_structp pp)
+{
+   unsigned int bpp = (pp->pixel_depth + 7) >> 3;
+
+   pp->read_filter[PNG_FILTER_VALUE_SUB-1] = __kimtoy__png_read_filter_row_sub;
+   pp->read_filter[PNG_FILTER_VALUE_UP-1] = __kimtoy__png_read_filter_row_up;
+   pp->read_filter[PNG_FILTER_VALUE_AVG-1] = __kimtoy__png_read_filter_row_avg;
+   if (bpp == 1)
+      pp->read_filter[PNG_FILTER_VALUE_PAETH-1] =
+         __kimtoy__png_read_filter_row_paeth_1byte_pixel;
+   else
+      pp->read_filter[PNG_FILTER_VALUE_PAETH-1] =
+         __kimtoy__png_read_filter_row_paeth_multibyte_pixel;
+
+#ifdef PNG_ARM_NEON
+   png_init_filter_functions_neon(pp, bpp);
+#endif
+}
+
+void /* PRIVATE */
+__kimtoy__png_read_filter_row(png_structp pp, png_row_infop row_info, png_bytep row,
+   png_const_bytep prev_row, int filter)
+{
+   if (pp->read_filter[0] == NULL)
+      png_init_filter_functions(pp);
+   if (filter > PNG_FILTER_VALUE_NONE && filter < PNG_FILTER_VALUE_LAST)
+      pp->read_filter[filter-1](row_info, row, prev_row);
 }
 
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
@@ -3982,6 +4105,16 @@ __kimtoy__png_read_start_row(png_structp png_ptr)
 
    max_pixel_depth = png_ptr->pixel_depth;
 
+   /* WARNING: * __kimtoy__png_read_transform_info (pngrtran.c) performs a simpliar set of
+    * calculations to calculate the final pixel depth, then
+    * png_do_read_transforms actually does the transforms.  This means that the
+    * code which effectively calculates this value is actually repeated in three
+    * separate places.  They must all match.  Innocent changes to the order of
+    * transformations can and will break libpng in a way that causes memory
+    * overwrites.
+    *
+    * TODO: fix this.
+    */
 #ifdef PNG_READ_PACK_SUPPORTED
    if ((png_ptr->transformations & PNG_PACK) && png_ptr->bit_depth < 8)
       max_pixel_depth = 8;
@@ -4040,10 +4173,7 @@ __kimtoy__png_read_start_row(png_structp png_ptr)
 #ifdef PNG_READ_FILLER_SUPPORTED
    if (png_ptr->transformations & (PNG_FILLER))
    {
-      if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
-         max_pixel_depth = 32;
-
-      else if (png_ptr->color_type == PNG_COLOR_TYPE_GRAY)
+      if (png_ptr->color_type == PNG_COLOR_TYPE_GRAY)
       {
          if (max_pixel_depth <= 8)
             max_pixel_depth = 16;
@@ -4052,7 +4182,8 @@ __kimtoy__png_read_start_row(png_structp png_ptr)
             max_pixel_depth = 32;
       }
 
-      else if (png_ptr->color_type == PNG_COLOR_TYPE_RGB)
+      else if (png_ptr->color_type == PNG_COLOR_TYPE_RGB ||
+         png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
       {
          if (max_pixel_depth <= 32)
             max_pixel_depth = 32;

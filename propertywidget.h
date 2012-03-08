@@ -59,7 +59,7 @@ public:
     QString description() const;
     PropertyType type() const;
     static PropertyType determineType( const QString& objectPath, const QString& iconName );
-    bool operator==(const PropertyWidget& rhs);
+    bool operator==(const PropertyWidget& rhs) const;
 Q_SIGNALS:
     void clicked();
 protected:

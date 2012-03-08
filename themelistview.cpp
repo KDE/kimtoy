@@ -47,8 +47,8 @@ ThemeListView::ThemeListView(QWidget* parent)
     setItemDelegate(td);
     connect(tm, SIGNAL(relayoutNeeded()), this, SLOT(relayout()));
 
-    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)),
-            this, SLOT(slotCurrentChanged(const QModelIndex&, const QModelIndex&)));
+    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
 
     m_themeUri = KIMToySettings::self()->themeUri();
 

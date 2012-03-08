@@ -291,10 +291,10 @@ void ThemeListModel::generatePreviews()
 //     m_previewJob->setScaleType(KIO::PreviewJob::Unscaled);
 
     connect(m_previewJob, SIGNAL(finished(KJob*)), this, SIGNAL(relayoutNeeded()));
-    connect(m_previewJob, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)),
-            this, SLOT(addPreview(const KFileItem&, const QPixmap&)));
-    connect(m_previewJob, SIGNAL(failed(const KFileItem&)),
-            this, SLOT(failed(const KFileItem&)));
+    connect(m_previewJob, SIGNAL(gotPreview(KFileItem,QPixmap)),
+            this, SLOT(addPreview(KFileItem,QPixmap)));
+    connect(m_previewJob, SIGNAL(failed(KFileItem)),
+            this, SLOT(failed(KFileItem)));
 }
 
 void ThemeListModel::addPreview(const KFileItem& item, const QPixmap& preview)

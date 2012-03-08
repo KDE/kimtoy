@@ -151,7 +151,7 @@ PropertyType PropertyWidget::determineType( const QString& objectPath, const QSt
     return Unknown;
 }
 
-bool PropertyWidget::operator==(const PropertyWidget& rhs)
+bool PropertyWidget::operator==(const PropertyWidget& rhs) const
 {
     return m_name == rhs.m_name
            && m_iconName == rhs.m_iconName

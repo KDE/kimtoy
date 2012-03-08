@@ -1,5 +1,5 @@
 # This file is generated as follows
-# objdump -t libpng15.so.15.6.0 > tmp
+# objdump -t libpng15.so.15.9.0 > tmp
 # edit tmp to remove non-well formatted lines
 # cat tmp | grep png                                        all png lines
 #   | sed -e 's/^.*\s\s*\(.*\)$/\1/g'                       only symbol names
@@ -53,6 +53,7 @@ s/\<png_destroy_read_struct\>/__kimtoy__png_destroy_read_struct/g
 s/\<png_destroy_struct\>/__kimtoy__png_destroy_struct/g
 s/\<png_destroy_struct_2\>/__kimtoy__png_destroy_struct_2/g
 s/\<png_destroy_write_struct\>/__kimtoy__png_destroy_write_struct/g
+s/\<png_digit\>/__kimtoy__png_digit/g
 s/\<png_do_bgr\>/__kimtoy__png_do_bgr/g
 s/\<png_do_chop\>/__kimtoy__png_do_chop/g
 s/\<png_do_compose\>/__kimtoy__png_do_compose/g
@@ -260,6 +261,11 @@ s/\<png_read_data\>/__kimtoy__png_read_data/g
 s/\<png_read_destroy\>/__kimtoy__png_read_destroy/g
 s/\<png_read_end\>/__kimtoy__png_read_end/g
 s/\<png_read_filter_row\>/__kimtoy__png_read_filter_row/g
+s/\<png_read_filter_row_avg\>/__kimtoy__png_read_filter_row_avg/g
+s/\<png_read_filter_row_paeth_1byte_pixel\>/__kimtoy__png_read_filter_row_paeth_1byte_pixel/g
+s/\<png_read_filter_row_paeth_multibyte_pixel\>/__kimtoy__png_read_filter_row_paeth_multibyte_pixel/g
+s/\<png_read_filter_row_sub\>/__kimtoy__png_read_filter_row_sub/g
+s/\<png_read_filter_row_up\>/__kimtoy__png_read_filter_row_up/g
 s/\<png_read_finish_row\>/__kimtoy__png_read_finish_row/g
 s/\<png_read_frame_head\>/__kimtoy__png_read_frame_head/g
 s/\<png_read_image\>/__kimtoy__png_read_image/g

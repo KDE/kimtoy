@@ -53,7 +53,7 @@ PreEditBar::PreEditBar()
 
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateSpotLocation",
-                       this, SLOT(slotUpdateSpotLocation(int, int)));
+                       this, SLOT(slotUpdateSpotLocation(int,int)));
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowPreedit",
                        this, SLOT(slotShowPreedit(bool)));
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ShowAux",
@@ -63,17 +63,11 @@ PreEditBar::PreEditBar()
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditCaret",
                        this, SLOT(slotUpdatePreeditCaret(int)));
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditText",
-                       this, SLOT(slotUpdatePreeditText(const QString&,
-                                                        const QString&)));
+                       this, SLOT(slotUpdatePreeditText(QString,QString)));
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateAux",
-                       this, SLOT(slotUpdateAux(const QString&,
-                                                const QString&)));
+                       this, SLOT(slotUpdateAux(QString,QString)));
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTable",
-                       this, SLOT(slotUpdateLookupTable(const QStringList&,
-                                                        const QStringList&,
-                                                        const QStringList&,
-                                                        bool,
-                                                        bool)));
+                       this, SLOT(slotUpdateLookupTable(QStringList,QStringList,QStringList,bool,bool)));
 
     updateSize();
 }
