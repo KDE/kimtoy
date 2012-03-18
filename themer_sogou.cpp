@@ -152,13 +152,13 @@ bool ThemerSogou::loadTheme()
     int h_hsl = 0, h_hsr = 0, h_vst = 0, h_vsb = 0, h_hstm = 0, h_vstm = 0;
     int v_hsl = 0, v_hsr = 0, v_vst = 0, v_vsb = 0, v_hstm = 0, v_vstm = 0;
 
-    foreach(OverlayPixmap* op, h_overlays) delete op;
-    foreach(OverlayPixmap* op, v_overlays) delete op;
+    qDeleteAll(h_overlays);
+    qDeleteAll(v_overlays);
     h_overlays.clear();
     v_overlays.clear();
     delete m_statusBarSkin;
     m_statusBarSkin = 0;
-    foreach(OverlayPixmap* op, s_overlays) delete op;
+    qDeleteAll(s_overlays);
     s_overlays.clear();
     m_pwpos.clear();
     m_pwpix.clear();
