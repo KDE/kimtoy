@@ -27,25 +27,27 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-#define scim_module_init kconfig_LTX_scim_module_init
-#define scim_module_exit kconfig_LTX_scim_module_exit
-#define scim_config_module_init kconfig_LTX_scim_config_module_init
-#define scim_config_module_create_config kconfig_LTX_scim_config_module_create_config
+#define scim_module_init kconfig4_LTX_scim_module_init
+#define scim_module_exit kconfig4_LTX_scim_module_exit
+#define scim_config_module_init kconfig4_LTX_scim_config_module_init
+#define scim_config_module_create_config kconfig4_LTX_scim_config_module_create_config
+
+#define MODULE_EXPORT __attribute__((visibility("default")))
 
 extern "C" {
-    void scim_module_init()
+    MODULE_EXPORT void scim_module_init()
     {
         SCIM_DEBUG_CONFIG(1) << "Initializing KConfig Config module...\n";
     }
-    void scim_module_exit()
+    MODULE_EXPORT void scim_module_exit()
     {
         SCIM_DEBUG_CONFIG(1) << "Exiting KConfig Config module...\n";
     }
-    void scim_config_module_init()
+    MODULE_EXPORT void scim_config_module_init()
     {
         SCIM_DEBUG_CONFIG(1) << "Initializing KConfig Config module (more)...\n";
     }
-    ConfigPointer scim_config_module_create_config()
+    MODULE_EXPORT ConfigPointer scim_config_module_create_config()
     {
         SCIM_DEBUG_CONFIG(1) << "Creating a KConfig Config instance...\n";
         return new KConfigConfig;
@@ -71,7 +73,7 @@ bool KConfigConfig::valid() const
 
 String KConfigConfig::get_name() const
 {
-    return "kconfig";
+    return "kconfig4";
 }
 
 bool KConfigConfig::read(const String& key, String *ret) const
