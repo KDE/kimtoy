@@ -223,6 +223,11 @@ void StatusBar::paintEvent(QPaintEvent* event)
     ThemerAgent::drawStatusBar(this);
 }
 
+void StatusBar::showEvent(QShowEvent* event)
+{
+    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
+}
+
 void StatusBar::slotEnable(bool enable)
 {
     setVisible(enable);

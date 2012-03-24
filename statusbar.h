@@ -48,6 +48,7 @@ protected:
     virtual bool eventFilter(QObject* object, QEvent* event);
     virtual void resizeEvent(QResizeEvent* event);
     virtual void paintEvent(QPaintEvent* event);
+    virtual void showEvent(QShowEvent* event);
 private Q_SLOTS:
     void slotEnable(bool enable);
     void slotTriggerProperty(const QString& objectPath);
