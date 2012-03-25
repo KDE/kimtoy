@@ -119,6 +119,7 @@ StatusBar::StatusBar()
 //     connect( m_hideButton, SIGNAL(clicked()),
 //              this, SLOT(hide()) );
 
+    setAttribute(Qt::WA_X11DoNotAcceptFocus, true);
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
     installEventFilter(this);
