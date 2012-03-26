@@ -136,12 +136,12 @@ PropertyType PropertyWidget::determineType( const QString& objectPath, const QSt
 
     // scim property
     if (objectPath == "/IMEngine/Pinyin/Letter") {
-        if (iconName == "full-letter.png") return Letter_Full;
-        if (iconName == "half-letter.png") return Letter_Half;
+        if (iconName.endsWith("full-letter.png")) return Letter_Full;
+        if (iconName.endsWith("half-letter.png")) return Letter_Half;
     }
     if (objectPath == "/IMEngine/Pinyin/Punct") {
-        if (iconName == "full-punct.png") return Punct_Full;
-        if (iconName == "half-punct.png") return Punct_Half;
+        if (iconName.endsWith("full-punct.png")) return Punct_Full;
+        if (iconName.endsWith("half-punct.png")) return Punct_Half;
     }
     if (objectPath == "/Logo") {
         if (iconName == "keyboard.png") return Logo;

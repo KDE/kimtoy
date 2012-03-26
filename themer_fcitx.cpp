@@ -577,6 +577,6 @@ void ThemerFcitx::drawPropertyWidget(PropertyWidget* widget)
         p.drawPixmap(0, 0, MainBarIcon(widget->iconName()));
     else {
         p.setPen(m_preEditColor);
-        p.drawText(0, 0, widget->name());
+        p.drawText(widget->rect(), Qt::AlignCenter, widget->name());
     }
 }

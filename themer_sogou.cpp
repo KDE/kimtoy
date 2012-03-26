@@ -1081,5 +1081,5 @@ void ThemerSogou::drawPropertyWidget(PropertyWidget* widget)
     else if (!widget->iconName().isEmpty())
         p.drawPixmap(0, 0, MainBarIcon(widget->iconName()));
     else
-        p.drawText(0, 0, widget->name());
+        p.drawText(widget->rect(), Qt::AlignCenter, widget->name());
 }
