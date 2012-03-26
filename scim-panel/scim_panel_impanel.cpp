@@ -293,6 +293,12 @@ static void* panel_agent_run(void* data)
 {
     panel_agent->run();
 
+    delete panel_agent;
+    panel_agent = 0;
+
+    // quit dbus loop
+    dispatcher.leave();
+
     pthread_detach(pthread_self());
 
     return NULL;
@@ -577,8 +583,9 @@ void niam(int sig)
     dispatcher.leave();
     delete panel;
 
-    if (panel_agent) panel_agent->stop();
-    delete panel_agent;
+    // quit panel agent loop
+    if (panel_agent)
+        panel_agent->stop();
 }
 
 int main(int argc, char* argv[])
@@ -691,6 +698,8 @@ int main(int argc, char* argv[])
     panel = new Panel(conn);
 
     dispatcher.enter();
+
+    delete panel;
 
     return 0;
 }
