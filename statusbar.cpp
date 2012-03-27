@@ -398,6 +398,7 @@ void StatusBar::slotAutostartToggled(bool enable)
 void StatusBar::slotTrayiconModeToggled(bool enable)
 {
     KIMToySettings::self()->setTrayiconMode(enable);
+    setVisible(!enable);
     if (enable) {
         // construct tray widgets from property widgets
         QHash<QString, PropertyWidget*>::ConstIterator it = m_propertyWidgets.constBegin();
