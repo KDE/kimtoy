@@ -57,6 +57,7 @@ ibus_panel_impanel_set_bus (IBusPanelImpanel *impanel,
 static GDBusNodeInfo *introspection_data = NULL;
 
 static guint owner_id;
+static guint watcher_id;
 
 static const gchar introspection_xml[] =
     "<node>"
@@ -415,6 +416,36 @@ on_name_lost (GDBusConnection *connection,
     exit (1);
 }
 
+static void
+on_name_appeared (GDBusConnection *connection,
+                  const gchar     *name,
+                  const gchar     *name_owner,
+                  gpointer         user_data)
+{
+    char propstr[512];
+
+    GVariantBuilder builder;
+    g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
+
+    ibus_property_to_propstr(((IBusPanelImpanel *)user_data)->logo_prop, propstr);
+    g_variant_builder_add (&builder, "s", propstr);
+
+    ibus_property_to_propstr(((IBusPanelImpanel *)user_data)->about_prop, propstr);
+    g_variant_builder_add (&builder, "s", propstr);
+
+    g_dbus_connection_emit_signal (((IBusPanelImpanel *)user_data)->conn,
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
+                                   g_variant_new ("(as)", &builder),
+                                   NULL);
+}
+
+static void
+on_name_vanished (GDBusConnection *connection,
+                  const gchar     *name,
+                  gpointer         user_data)
+{
+}
+
 #if !IBUS_CHECK_VERSION(1,3,99)
 GType
 ibus_panel_impanel_get_type (void)
@@ -497,6 +528,13 @@ ibus_panel_impanel_init (IBusPanelImpanel *impanel)
                                on_name_lost,
                                impanel, NULL);
 
+    watcher_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
+                                   "org.kde.impanel",
+                                   G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                   on_name_appeared,
+                                   on_name_vanished,
+                                   impanel, NULL);
+
     // some custom property
     impanel->logo_prop = ibus_property_new ("Logo",
                                             PROP_TYPE_NORMAL,
@@ -528,6 +566,7 @@ ibus_panel_impanel_destroy (IBusPanelImpanel *impanel)
     g_object_unref (impanel->about_prop);
     impanel->about_prop = NULL;
 
+    g_bus_unwatch_name (watcher_id);
     g_bus_unown_name (owner_id);
     g_dbus_node_info_unref (introspection_data);
 
