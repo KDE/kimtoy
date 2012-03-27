@@ -135,5 +135,7 @@ void ThemerAgent::drawStatusBar(StatusBar* widget)
 
 void ThemerAgent::drawPropertyWidget(PropertyWidget* widget)
 {
+    if (KIMToySettings::self()->noStatusBarTheme())
+        return ThemerNone::self()->drawPropertyWidget(widget);
     m_themer->drawPropertyWidget(widget);
 }
