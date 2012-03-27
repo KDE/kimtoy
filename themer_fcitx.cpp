@@ -138,8 +138,11 @@ bool ThemerFcitx::loadTheme()
             continue;
         }
 
-        QString key = line.split('=').at(0);
-        QString value = line.split('=').at(1);
+        if (!line.contains('='))
+            continue;
+
+        key = line.split('=').at(0);
+        value = line.split('=').at(1);
 
         if (value.isEmpty())
             continue;

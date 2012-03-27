@@ -184,6 +184,9 @@ bool ThemerSogou::loadTheme()
             continue;
         }
 
+        if (!line.contains('='))
+            continue;
+
         key = line.split('=').at(0);
         value = line.split('=').at(1);
 
