@@ -42,7 +42,6 @@ KIMToy::KIMToy() : KUniqueApplication()
     QApplication::setQuitOnLastWindowClosed(false);
 
     m_statusBar = new StatusBar;
-    m_statusBar->show();
 
     QTimer::singleShot(0, this, SLOT(init()));
 }

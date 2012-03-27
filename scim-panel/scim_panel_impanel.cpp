@@ -371,7 +371,7 @@ static void slot_update_factory_info(const PanelFactoryInfo& info)
 
 static void slot_show_help(const String& help)
 {
-    panel->ExecDialog(help);
+    panel->ExecDialog(Property2String(Property("/Help", "Help", "", help)));
 }
 
 static void slot_show_factory_menu(const std::vector<PanelFactoryInfo>& factories)

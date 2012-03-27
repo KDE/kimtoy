@@ -59,6 +59,7 @@ private Q_SLOTS:
     void slotExecMenu(const QStringList& actions);
 private Q_SLOTS:
     void slotAutostartToggled(bool enable);
+    void slotTrayiconModeToggled(bool enable);
     void preferences();
     void slotAboutActionTriggered();
     void loadSettings();
@@ -74,11 +75,11 @@ private:
     friend class ThemerSogou;
     PreEditBar* m_preeditBar;
     KStatusNotifierItem* m_tray;
-//         QPushButton* m_hideButton;
     QPoint m_pointPos;
     bool m_rmbdown;
     bool m_moving;
     QHash<QString, PropertyWidget*> m_propertyWidgets;
+    QHash<QString, KStatusNotifierItem*> m_trayWidgets;
     QSignalMapper* m_signalMapper;
     StatusBarLayout* m_layout;
     QStringList m_filters;

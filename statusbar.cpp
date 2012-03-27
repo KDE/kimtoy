@@ -25,6 +25,7 @@
 #include <QDBusConnection>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QSignalMapper>
 
 #include <KAboutApplicationDialog>
@@ -97,6 +98,11 @@ StatusBar::StatusBar()
     connect(autostartAction, SIGNAL(toggled(bool)), this, SLOT(slotAutostartToggled(bool)));
     m_tray->contextMenu()->addAction(autostartAction);
 
+    KToggleAction* trayiconModeAction = new KToggleAction(i18n("&Trayicon mode"), this);
+    trayiconModeAction->setChecked(KIMToySettings::self()->trayiconMode());
+    connect(trayiconModeAction, SIGNAL(toggled(bool)), this, SLOT(slotTrayiconModeToggled(bool)));
+    m_tray->contextMenu()->addAction(trayiconModeAction);
+
     KAction* prefAction = KStandardAction::preferences(this, SLOT(preferences()), 0);
     m_tray->contextMenu()->addAction(prefAction);
 
@@ -110,14 +116,6 @@ StatusBar::StatusBar()
 
     m_layout = new StatusBarLayout;
     setLayout(m_layout);
-
-//     m_hideButton = new QPushButton;
-//     m_hideButton->installEventFilter( this );
-//     m_hideButton->setFlat( true );
-//     m_hideButton->setFixedSize( QSize( 22, 22 ) );
-//     m_hideButton->setIcon( KIcon( "arrow-down-double" ) );
-//     connect( m_hideButton, SIGNAL(clicked()),
-//              this, SLOT(hide()) );
 
     setAttribute(Qt::WA_X11DoNotAcceptFocus, true);
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
@@ -153,6 +151,8 @@ StatusBar::StatusBar()
     loadSettings();
 
     IMPanelAgent::PanelCreated();
+
+    setVisible(!KIMToySettings::self()->trayiconMode());
 }
 
 StatusBar::~StatusBar()
@@ -163,6 +163,8 @@ StatusBar::~StatusBar()
     delete m_preeditBar;
     qDeleteAll(m_propertyWidgets);
     m_propertyWidgets.clear();
+    qDeleteAll(m_trayWidgets);
+    m_trayWidgets.clear();
     IMPanelAgent::Exit();
 }
 
@@ -231,7 +233,8 @@ void StatusBar::showEvent(QShowEvent* event)
 
 void StatusBar::slotEnable(bool enable)
 {
-    setVisible(enable);
+    if (!KIMToySettings::self()->trayiconMode())
+        setVisible(enable);
 }
 
 void StatusBar::slotTriggerProperty(const QString& objectPath)
@@ -266,6 +269,34 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
             m_layout->addWidget(pw);
             updateSize();
         }
+
+        if (KIMToySettings::self()->trayiconMode()) {
+            KStatusNotifierItem* tw = m_trayWidgets.value(objectPath);
+            if (!tw) {
+                /// no such objectPath, register it
+                tw = new KStatusNotifierItem;
+                connect(tw, SIGNAL(activateRequested(bool,QPoint)), m_signalMapper, SLOT(map()));
+                m_signalMapper->setMapping(tw, objectPath);
+                m_trayWidgets.insert(objectPath, tw);
+            }
+            /// update property
+            tw->setTitle(name);
+            tw->setToolTipTitle(name);
+            tw->setToolTipSubTitle(description);
+            if (!iconName.isEmpty()) {
+                tw->setIconByName(iconName);
+                tw->setToolTipIconByName(iconName);
+            }
+            else {
+                // draw an icon from name text
+                QPixmap iconpix(22, 22);
+                iconpix.fill(Qt::white);
+                QPainter p(&iconpix);
+                p.drawText(0, 0, 22, 22, Qt::AlignCenter, name);
+                tw->setIconByPixmap(iconpix);
+                tw->setToolTipIconByPixmap(iconpix);
+            }
+        }
     }
 }
 
@@ -283,6 +314,31 @@ void StatusBar::slotUpdateProperty(const QString& prop)
 
     /// update property
     pw->setProperty(objectPath, name, iconName, description);
+
+    if (KIMToySettings::self()->trayiconMode()) {
+        KStatusNotifierItem* tw = m_trayWidgets.value(objectPath);
+        if (!tw) {
+            kWarning() << "update property without register it! " << objectPath;
+            return;
+        }
+        /// update property
+        tw->setTitle(name);
+        tw->setToolTipTitle(name);
+        tw->setToolTipSubTitle(description);
+        if (!iconName.isEmpty()) {
+            tw->setIconByName(iconName);
+            tw->setToolTipIconByName(iconName);
+        }
+        else {
+            // draw an icon from name text
+            QPixmap iconpix(22, 22);
+            iconpix.fill(Qt::white);
+            QPainter p(&iconpix);
+            p.drawText(0, 0, 22, 22, Qt::AlignCenter, name);
+            tw->setIconByPixmap(iconpix);
+            tw->setToolTipIconByPixmap(iconpix);
+        }
+    }
 }
 
 void StatusBar::slotRemoveProperty(const QString& prop)
@@ -302,6 +358,15 @@ void StatusBar::slotRemoveProperty(const QString& prop)
         updateSize();
     }
     delete pw;
+
+    if (KIMToySettings::self()->trayiconMode()) {
+        KStatusNotifierItem* tw = m_trayWidgets.take(objectPath);
+        if (!tw) {
+            kWarning() << "remove property without register it! " << objectPath;
+            return;
+        }
+        delete tw;
+    }
 }
 
 void StatusBar::slotExecDialog(const QString& prop)
@@ -328,6 +393,50 @@ void StatusBar::slotExecMenu(const QStringList& actions)
 void StatusBar::slotAutostartToggled(bool enable)
 {
     KIMToySettings::self()->setAutostartKIMToy(enable);
+}
+
+void StatusBar::slotTrayiconModeToggled(bool enable)
+{
+    KIMToySettings::self()->setTrayiconMode(enable);
+    if (enable) {
+        // construct tray widgets from property widgets
+        QHash<QString, PropertyWidget*>::ConstIterator it = m_propertyWidgets.constBegin();
+        QHash<QString, PropertyWidget*>::ConstIterator end = m_propertyWidgets.constEnd();
+        while (it != end) {
+            const QString& objectPath = it.key();
+            PropertyWidget* pw = it.value();
+            KStatusNotifierItem* tw = m_trayWidgets.value(objectPath);
+            if (!tw) {
+                /// no such objectPath, register it
+                tw = new KStatusNotifierItem;
+                connect(tw, SIGNAL(activateRequested(bool,QPoint)), m_signalMapper, SLOT(map()));
+                m_signalMapper->setMapping(tw, objectPath);
+                m_trayWidgets.insert(objectPath, tw);
+            }
+            /// update property
+            tw->setTitle(pw->name());
+            tw->setToolTipTitle(pw->name());
+            tw->setToolTipSubTitle(pw->description());
+            if (!pw->iconName().isEmpty()) {
+                tw->setIconByName(pw->iconName());
+                tw->setToolTipIconByName(pw->iconName());
+            }
+            else {
+                // draw an icon from name text
+                QPixmap iconpix(22, 22);
+                iconpix.fill(Qt::white);
+                QPainter p(&iconpix);
+                p.drawText(0, 0, 22, 22, Qt::AlignCenter, pw->name());
+                tw->setIconByPixmap(iconpix);
+                tw->setToolTipIconByPixmap(iconpix);
+            }
+            ++it;
+        }
+    }
+    else {
+        qDeleteAll(m_trayWidgets);
+        m_trayWidgets.clear();
+    }
 }
 
 void StatusBar::preferences()
