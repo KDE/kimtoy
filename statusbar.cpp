@@ -276,6 +276,7 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
                 /// no such objectPath, register it
                 tw = new KStatusNotifierItem;
                 connect(tw, SIGNAL(activateRequested(bool,QPoint)), m_signalMapper, SLOT(map()));
+                connect(tw, SIGNAL(secondaryActivateRequested(QPoint)), m_signalMapper, SLOT(map()));
                 m_signalMapper->setMapping(tw, objectPath);
                 m_trayWidgets.insert(objectPath, tw);
             }
@@ -411,6 +412,7 @@ void StatusBar::slotTrayiconModeToggled(bool enable)
                 /// no such objectPath, register it
                 tw = new KStatusNotifierItem;
                 connect(tw, SIGNAL(activateRequested(bool,QPoint)), m_signalMapper, SLOT(map()));
+                connect(tw, SIGNAL(secondaryActivateRequested(QPoint)), m_signalMapper, SLOT(map()));
                 m_signalMapper->setMapping(tw, objectPath);
                 m_trayWidgets.insert(objectPath, tw);
             }
