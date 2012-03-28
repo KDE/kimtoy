@@ -1,3 +1,13 @@
+2012-03-28 v1.6
+statusbar will not overlap fullscreen application
+fix scim-kconfig symbol name so to be loaded correctly
+rewrite scim-panel using dbus-c++
+fix the issue that scim panel freezes after quit
+add trayicon bar mode
+disable statusbar theme and property widget meanwhile
+fix a rare crash in loading theme
+update libpng-apng copy to 1.5.9
+
 2012-02-18 v1.5
 ability to filter property widget on statusbar
 fix broken rendering issue on property when applying theme changes
