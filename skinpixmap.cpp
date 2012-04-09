@@ -48,15 +48,24 @@ SkinPixmap::SkinPixmap(const QPixmap& skinpix, int hsl, int hsr, int vst, int vs
     m_hsl = hsl, m_hsr = hsr;
     m_vst = vst, m_vsb = vsb;
     m_hstm = hstm, m_vstm = vstm;
-    o_topleft = skinpix.copy(0, 0, hsl, vst);
-    o_top = skinpix.copy(hsl, 0, hsr - hsl, vst);
-    o_topright = skinpix.copy(hsr, 0, m_skinw - hsr, vst);
-    o_left = skinpix.copy(0, vst, hsl, vsb - vst);
-    o_center = skinpix.copy(hsl, vst, hsr - hsl, vsb - vst);
-    o_right = skinpix.copy(hsr, vst, m_skinw - hsr, vsb - vst);
-    o_bottomleft = skinpix.copy(0, vsb, hsl, m_skinh - vsb);
-    o_bottom = skinpix.copy(hsl, vsb, hsr - hsl, m_skinh - vsb);
-    o_bottomright = skinpix.copy(hsr, vsb, m_skinw - hsr, m_skinh - vsb);
+    if (hsl != 0 && vst != 0)
+        o_topleft = skinpix.copy(0, 0, hsl, vst);
+    if (hsr - hsl != 0 && vst != 0)
+        o_top = skinpix.copy(hsl, 0, hsr - hsl, vst);
+    if (m_skinw - hsr != 0 && vst != 0)
+        o_topright = skinpix.copy(hsr, 0, m_skinw - hsr, vst);
+    if (hsl != 0 && vsb - vst != 0)
+        o_left = skinpix.copy(0, vst, hsl, vsb - vst);
+    if (hsr - hsl != 0 && vsb - vst != 0)
+        o_center = skinpix.copy(hsl, vst, hsr - hsl, vsb - vst);
+    if (m_skinw - hsr != 0 && vsb - vst != 0)
+        o_right = skinpix.copy(hsr, vst, m_skinw - hsr, vsb - vst);
+    if (hsl != 0 && m_skinh - vsb != 0)
+        o_bottomleft = skinpix.copy(0, vsb, hsl, m_skinh - vsb);
+    if (hsr - hsl != 0 && m_skinh - vsb != 0)
+        o_bottom = skinpix.copy(hsl, vsb, hsr - hsl, m_skinh - vsb);
+    if (m_skinw - hsr != 0 && m_skinh - vsb != 0)
+        o_bottomright = skinpix.copy(hsr, vsb, m_skinw - hsr, m_skinh - vsb);
 
     m_topleftRegion = o_topleft.mask();
     m_topRegion = o_top.mask();
@@ -74,8 +83,8 @@ void SkinPixmap::resizeRegion(const QSize& size)
     const int middlepixh = m_vsb - m_vst;
     const int middlepixw = m_hsr - m_hsl;
 
-    const int leftrightheight = size.height() - o_topleft.height() - o_bottomleft.height();
-    const int topbottomwidth = size.width() - o_topleft.width() - o_topright.width();
+    const int leftrightheight = size.height() - m_vst - (m_skinh - m_vsb);
+    const int topbottomwidth = size.width() - m_hsl - (m_skinw - m_hsr);
 
     qreal scaleX = m_hstm ? 1 : (qreal)topbottomwidth / (qreal)middlepixw;
     qreal scaleY = m_vstm ? 1 : (qreal)leftrightheight / (qreal)middlepixh;
@@ -209,8 +218,8 @@ void SkinPixmap::drawPixmap(QPainter* p, int width, int height) const
     const int middlepixh = m_vsb - m_vst;
     const int middlepixw = m_hsr - m_hsl;
 
-    const int leftrightheight = height - o_topleft.height() - o_bottomleft.height();
-    const int topbottomwidth = width - o_topleft.width() - o_topright.width();
+    const int leftrightheight = height - m_vst - (m_skinh - m_vsb);
+    const int topbottomwidth = width - m_hsl - (m_skinw - m_hsr);
 
     qreal scaleX = m_hstm ? 1 : (qreal)topbottomwidth / (qreal)middlepixw;
     qreal scaleY = m_vstm ? 1 : (qreal)leftrightheight / (qreal)middlepixh;
