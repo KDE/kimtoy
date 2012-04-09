@@ -39,9 +39,9 @@
 
 PreEditBar::PreEditBar()
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
-    KWindowSystem::setType(winId(), NET::PopupMenu);
+    KWindowSystem::setType(winId(), NET::Tooltip);
 
     installEventFilter(this);
 
