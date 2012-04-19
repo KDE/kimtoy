@@ -692,7 +692,7 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
                 break;
             case 2:
                 if (op->alignHMode == 0) {
-                    opRegion.translate((size.width() + opl - opr + pixmap.width()) / 2, 0);
+                    opRegion.translate((size.width() + opl - opr - pixmap.width()) / 2, 0);
                     opRegion.translate(0, -op->mb);
                 }
                 else if (op->alignHMode == 1) {
@@ -710,7 +710,7 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
                 break;
             case 4:
                 if (op->alignVMode == 0) {
-                    opRegion.translate(0, (size.height() - opb + opt + pixmap.height()) / 2);
+                    opRegion.translate(0, (size.height() - opb + opt - pixmap.height()) / 2);
                     opRegion.translate(-op->mr, 0);
                 }
                 else if (op->alignVMode == 1) {
@@ -724,7 +724,7 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
                 break;
             case 5:
                 if (op->alignHMode == 0) {
-                    opRegion.translate((size.width() + opl - opr + pixmap.width()) / 2, 0);
+                    opRegion.translate((size.width() + opl - opr - pixmap.width()) / 2, 0);
                 }
                 else if (op->alignHMode == 1) {
                     opRegion.translate(opl, 0);
@@ -735,7 +735,7 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
                     opRegion.translate(-op->mr, 0);
                 }
                 if (op->alignVMode == 0) {
-                    opRegion.translate(0, (size.height() - opb + opt + pixmap.height()) / 2);
+                    opRegion.translate(0, (size.height() - opb + opt - pixmap.height()) / 2);
                 }
                 else if (op->alignVMode == 1) {
                     opRegion.translate(0, opt);
@@ -748,7 +748,7 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
                 break;
             case 6:
                 if (op->alignVMode == 0) {
-                    opRegion.translate(size.width() - opr, (size.height() - opb + opt + pixmap.height()) / 2);
+                    opRegion.translate(size.width() - opr, (size.height() - opb + opt - pixmap.height()) / 2);
                     opRegion.translate(op->ml, 0);
                 }
                 else if (op->alignVMode == 1) {
@@ -766,7 +766,7 @@ void ThemerSogou::updatePreEditBarMask(const QSize& size)
                 break;
             case 8:
                 if (op->alignHMode == 0) {
-                    opRegion.translate((size.width() + opl - opr + pixmap.width()) / 2, size.height() - opb);
+                    opRegion.translate((size.width() + opl - opr - pixmap.width()) / 2, size.height() - opb);
                     opRegion.translate(0, op->mt);
                 }
                 else if (op->alignHMode == 1) {
@@ -880,7 +880,7 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                 break;
             case 2:
                 if (op->alignHMode == 0) {
-                    p.translate((widget->width() + opl - opr + pixmap.width()) / 2, 0);
+                    p.translate((widget->width() + opl - opr - pixmap.width()) / 2, 0);
                     p.translate(0, -op->mb);
                 }
                 else if (op->alignHMode == 1) {
@@ -898,7 +898,7 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                 break;
             case 4:
                 if (op->alignVMode == 0) {
-                    p.translate(0, (widget->height() - opb + opt + pixmap.height()) / 2);
+                    p.translate(0, (widget->height() - opb + opt - pixmap.height()) / 2);
                     p.translate(-op->mr, 0);
                 }
                 else if (op->alignVMode == 1) {
@@ -912,7 +912,7 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                 break;
             case 5:
                 if (op->alignHMode == 0) {
-                    p.translate((widget->width() + opl - opr + pixmap.width()) / 2, 0);
+                    p.translate((widget->width() + opl - opr - pixmap.width()) / 2, 0);
                 }
                 else if (op->alignHMode == 1) {
                     p.translate(opl, 0);
@@ -923,7 +923,7 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                     p.translate(-op->mr, 0);
                 }
                 if (op->alignVMode == 0) {
-                    p.translate(0, (widget->height() - opb + opt + pixmap.height()) / 2);
+                    p.translate(0, (widget->height() - opb + opt - pixmap.height()) / 2);
                 }
                 else if (op->alignVMode == 1) {
                     p.translate(0, opt);
@@ -936,7 +936,7 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                 break;
             case 6:
                 if (op->alignVMode == 0) {
-                    p.translate(widget->width() - opr, (widget->height() - opb + opt + pixmap.height()) / 2);
+                    p.translate(widget->width() - opr, (widget->height() - opb + opt - pixmap.height()) / 2);
                     p.translate(op->ml, 0);
                 }
                 else if (op->alignVMode == 1) {
@@ -954,7 +954,7 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                 break;
             case 8:
                 if (op->alignHMode == 0) {
-                    p.translate((widget->width() + opl - opr + pixmap.width()) / 2, widget->height() - opb);
+                    p.translate((widget->width() + opl - opr - pixmap.width()) / 2, widget->height() - opb);
                     p.translate(0, op->mt);
                 }
                 else if (op->alignHMode == 1) {
