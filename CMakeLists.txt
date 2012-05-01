@@ -9,6 +9,7 @@ include(MacroLogFeature)
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories(${QT_INCLUDES} ${KDE4_INCLUDES})
+include_directories(${X11_X11_INCLUDE_PATH})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions(-Wall -Wextra)
@@ -129,6 +130,7 @@ target_link_libraries(kimtoy
     ${KDE4_KIO_LIBS}
     ${KDE4_PLASMA_LIBS}
     ${KDE4_KNEWSTUFF3_LIBS}
+    ${X11_X11_LIB}
 )
 
 install(TARGETS kimtoy ${INSTALL_TARGETS_DEFAULT_ARGS})

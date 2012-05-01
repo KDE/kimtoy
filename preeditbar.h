@@ -39,6 +39,7 @@ public:
 protected:
     virtual bool eventFilter(QObject* object, QEvent* event);
     virtual void resizeEvent(QResizeEvent* event);
+    virtual void showEvent(QShowEvent* event);
     virtual void paintEvent(QPaintEvent* event);
 private Q_SLOTS:
     void slotUpdateSpotLocation(int x, int y);

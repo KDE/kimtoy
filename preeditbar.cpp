@@ -37,6 +37,9 @@
 
 #include "kimtoysettings.h"
 
+#include <QX11Info>
+#include <X11/Xlib.h>
+
 PreEditBar::PreEditBar()
 {
     setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
@@ -106,6 +109,14 @@ void PreEditBar::resizeEvent(QResizeEvent* event)
     if (KIMToySettings::self()->enableBackgroundBlur()) {
         ThemerAgent::blurPreEditBar(this);
     }
+}
+
+void PreEditBar::showEvent(QShowEvent* event)
+{
+//     Plasma::WindowEffects::overrideShadow(winId(), true);
+    Display *dpy = QX11Info::display();
+    Atom atom = XInternAtom( dpy, "_KDE_NET_WM_SHADOW", False );
+    XDeleteProperty(dpy, winId(), atom);
 }
 
 void PreEditBar::paintEvent(QPaintEvent* event)
