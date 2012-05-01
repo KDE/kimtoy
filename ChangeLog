@@ -1,3 +1,9 @@
+2012-05-01 v1.7
+tray icon can be manipulated separately
+fix overlay pixmap vcenter/hcenter layout position
+fix render issue when background pixmap has zero margins
+preedit bar always stays on top
+
 2012-03-28 v1.6
 statusbar will not overlap fullscreen application
 fix scim-kconfig symbol name so to be loaded correctly
