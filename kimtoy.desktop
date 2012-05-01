@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KIMToy
 Name[cs]=KIMToy
+Name[da]=KIMToy
 Name[de]=KIMToy
 Name[es]=KIMToy
 Name[et]=KIMToy
@@ -16,6 +17,7 @@ Name[uk]=KIMToy
 Name[x-test]=xxKIMToyxx
 Name[zh_CN]=KIMToy
 GenericName=Input Method Frontend
+GenericName[da]=Brugerflade til inputmetode
 GenericName[es]=Interfaz de método de entrada
 GenericName[et]=Sisestusviisi kasutajaliides
 GenericName[fr]=Interface de méthode de saisie
