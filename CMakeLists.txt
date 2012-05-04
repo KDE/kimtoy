@@ -29,6 +29,9 @@ macro_log_feature(GOBJECT_FOUND "gobject" "ibus support" "http://www.gtk.org")
 macro_optional_find_package(IBus)
 macro_log_feature(IBUS_FOUND "ibus" "ibus support" "http://code.google.com/p/ibus")
 
+macro_optional_find_package(Pthread)
+macro_log_feature(PTHREAD_LIB_FOUND "pthread" "scim support" "")
+
 macro_optional_find_package(DBusCXX)
 macro_log_feature(DBUSCXX_FOUND "dbus-c++" "scim support" "http://dbus-cplusplus.sourceforge.net")
 
