@@ -524,10 +524,8 @@ bool ThemerSogou::loadTheme()
 
     m_preEditFont.setFamily(font_en);
     m_preEditFont.setPixelSize(fontPixelSize);
-    m_preEditFont.setBold(true);
     m_candidateFont.setFamily(font_ch);
     m_candidateFont.setPixelSize(fontPixelSize);
-    m_candidateFont.setBold(true);
     m_labelFont = m_candidateFont;
 
     m_preEditFontHeight = QFontMetrics(m_preEditFont).height();

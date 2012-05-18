@@ -310,8 +310,6 @@ bool ThemerFcitx::loadTheme()
     preEditBarSkin = SkinPixmap(preEditBarPixmap, ml, preEditBarPixmap.width() - mr, mt, preEditBarPixmap.height() - mb, 0, 0);
     statusBarSkin = SkinPixmap(statusBarPixmap, sml, statusBarPixmap.width() - smr, smt, statusBarPixmap.height() - smb, 0, 0);
 
-    font.setBold(true);
-
     m_preEditFont = font;
     m_candidateFont = font;
     m_labelFont = font;

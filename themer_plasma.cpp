@@ -99,6 +99,9 @@ QSize ThemerPlasma::sizeHintPreEditBar(const PreEditBar* widget) const
     w = qMax(pinyinauxw, w);
     h += m_preEditFontHeight;
 
+    /// spacing between preedit and lookuptable
+    h += 4;
+
     /// lookuptable
     if (KIMToySettings::self()->verticalPreeditBar()) {
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
@@ -214,22 +217,27 @@ void ThemerPlasma::drawPreEditBar(PreEditBar* widget)
     m_preeditBarSvg.getMargins(left, top, right, bottom);
     p.translate(left, top);
 
+    int x = 0;
+    int y = 0;
+
     if (widget->preeditVisible || widget->auxVisible) {
         /// draw preedit / aux text
         p.setFont(m_preEditFont);
         p.setPen(m_preEditColor);
 
-        p.drawText(0, 0, widget->width(), m_preEditFontHeight, Qt::AlignLeft, widget->m_text + widget->m_auxText);
+        p.drawText(x, y, widget->width(), m_preEditFontHeight, Qt::AlignLeft, widget->m_text + widget->m_auxText);
         if (widget->preeditVisible) {
             int pixelsWide = QFontMetrics(m_preEditFont).width(widget->m_text.left(widget->m_cursorPos));
             p.drawLine(pixelsWide, 0, pixelsWide, m_preEditFontHeight);
         }
+        y += m_preEditFontHeight;
+
+        /// spacing between preedit and lookuptable
+        y += 4;
     }
 
     if (widget->lookuptableVisible) {
         /// draw lookup table
-        int x = 0;
-        int y = m_preEditFontHeight;
         int w = 0;
         int h = qMax(m_labelFontHeight, m_candidateFontHeight);
 
