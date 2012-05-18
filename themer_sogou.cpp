@@ -577,10 +577,10 @@ QSize ThemerSogou::sizeHintPreEditBar(const PreEditBar* widget) const
         widgetsh += m_preEditFontHeight;
 
         /// lookuptable
-        QString tmp = widget->m_labels.join(QString());
+        QString tmp;
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
         for (int i = 0; i < count; ++i) {
-            tmp += widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed();
+            tmp += widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed() + ' ';
         }
         int lookuptablew = QFontMetrics(m_candidateFont).width(tmp);
         w = qMax(lookuptablew + h_zl + h_zr + h_opl + h_opr, w);
@@ -1021,8 +1021,8 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
                 x = zl;
-                w = p.fontMetrics().width(widget->m_labels.at(i));
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i));
+                w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);
@@ -1037,8 +1037,8 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
-                w = p.fontMetrics().width(widget->m_labels.at(i));
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i));
+                w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);

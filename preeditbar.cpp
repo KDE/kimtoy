@@ -50,6 +50,9 @@ PreEditBar::PreEditBar()
 
     m_moving = false;
 
+    spotX = 0;
+    spotY = 0;
+
     preeditVisible = false;
     auxVisible = false;
     lookuptableVisible = false;
@@ -105,7 +108,7 @@ void PreEditBar::resizeEvent(QResizeEvent* event)
     if (KIMToySettings::self()->enableWindowMask()) {
         ThemerAgent::maskPreEditBar(this);
     }
-    slotUpdateSpotLocation(x(), y());
+    slotUpdateSpotLocation(spotX, spotY);
     if (KIMToySettings::self()->enableBackgroundBlur()) {
         ThemerAgent::blurPreEditBar(this);
     }
@@ -127,6 +130,9 @@ void PreEditBar::paintEvent(QPaintEvent* event)
 
 void PreEditBar::slotUpdateSpotLocation(int x, int y)
 {
+    spotX = x;
+    spotY = y;
+
     QRect screenRect = QApplication::desktop()->screenGeometry(QPoint(x, y));
     x = qMin(x, screenRect.x() + screenRect.width() - width());
     if (y > screenRect.y() + screenRect.height()) {
@@ -143,20 +149,29 @@ void PreEditBar::slotUpdateSpotLocation(int x, int y)
 
 void PreEditBar::slotShowPreedit(bool show)
 {
+//     kWarning() << show;
     preeditVisible = show;
     updateVisible();
+    updateSize();
+    update();
 }
 
 void PreEditBar::slotShowAux(bool show)
 {
+//     kWarning() << show;
     auxVisible = show;
     updateVisible();
+    updateSize();
+    update();
 }
 
 void PreEditBar::slotShowLookupTable(bool show)
 {
+//     kWarning() << show;
     lookuptableVisible = show;
     updateVisible();
+    updateSize();
+    update();
 }
 
 void PreEditBar::slotUpdatePreeditCaret(int pos)
@@ -203,7 +218,6 @@ void PreEditBar::updateVisible()
     bool visible = preeditVisible || auxVisible || lookuptableVisible;
     if (isVisible() != visible) {
         setVisible(visible);
-        updateSize();
     }
 }
 

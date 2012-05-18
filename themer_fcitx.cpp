@@ -341,10 +341,10 @@ QSize ThemerFcitx::sizeHintPreEditBar(const PreEditBar* widget) const
         }
     }
     else {
-        QString tmp = widget->m_labels.join(QString());
+        QString tmp;
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
         for (int i = 0; i < count; ++i) {
-            tmp += widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed();
+            tmp += widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed() + ' ';
         }
         int lookuptablew = QFontMetrics(m_candidateFont).width(tmp);
         w = qMax(lookuptablew + ml + mr, w);
@@ -526,8 +526,8 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
                 x = ml;
-                w = p.fontMetrics().width(widget->m_labels.at(i));
-                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(i));
+                w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
+                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);
@@ -542,8 +542,8 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
-                w = p.fontMetrics().width(widget->m_labels.at(i));
-                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(i));
+                w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
+                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);

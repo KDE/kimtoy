@@ -72,36 +72,34 @@ QSize ThemerNone::sizeHintPreEditBar(const PreEditBar* widget) const
     int w = 0;
     int h = 0;
 
-//     if ( widget->preeditVisible || widget->auxVisible ) {
-    /// preedit and aux
-    int pinyinauxw = QFontMetrics(m_preEditFont).width(widget->m_text + widget->m_auxText);
-    w = qMax(pinyinauxw, w);
-    h += m_preEditFontHeight;
-//     }
+    if (widget->preeditVisible || widget->auxVisible) {
+        /// preedit and aux
+        int pinyinauxw = QFontMetrics(m_preEditFont).width(widget->m_text + widget->m_auxText);
+        w = qMax(pinyinauxw, w);
+        h += m_preEditFontHeight;
+    }
 
-    if (KIMToySettings::self()->verticalPreeditBar()) {
-//         if ( widget->lookuptableVisible ) {
-        /// lookuptable
-        int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
-        for (int i = 0; i < count; ++i) {
-            QString tmp = widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed();
-            w = qMax(QFontMetrics(m_candidateFont).width(tmp), w);
+    if (widget->lookuptableVisible) {
+        if (KIMToySettings::self()->verticalPreeditBar()) {
+            /// lookuptable
+            int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
+            for (int i = 0; i < count; ++i) {
+                QString tmp = widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed();
+                w = qMax(QFontMetrics(m_candidateFont).width(tmp), w);
+                h += m_candidateFontHeight;
+            }
+        }
+        else {
+            /// lookuptable
+            QString tmp;
+            int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
+            for (int i = 0; i < count; ++i) {
+                tmp += widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed() + ' ';
+            }
+            int lookuptablew = QFontMetrics(m_candidateFont).width(tmp);
+            w = qMax(lookuptablew, w);
             h += m_candidateFontHeight;
         }
-//         }
-    }
-    else {
-//         if ( widget->lookuptableVisible ) {
-        /// lookuptable
-        QString tmp = widget->m_labels.join(QString());
-        int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
-        for (int i = 0; i < count; ++i) {
-            tmp += widget->m_labels.at(i).trimmed() + widget->m_candidates.at(i).trimmed();
-        }
-        int lookuptablew = QFontMetrics(m_candidateFont).width(tmp);
-        w = qMax(lookuptablew, w);
-        h += m_candidateFontHeight;
-//         }
     }
 
     if (!KIMToySettings::self()->enablePreeditResizing()) {
@@ -155,22 +153,24 @@ void ThemerNone::drawPreEditBar(PreEditBar* widget)
         p.fillRect(widget->rect(), KIMToySettings::self()->preeditBarColorize());
     }
 
+    int x = 0;
+    int y = 0;
+
     if (widget->preeditVisible || widget->auxVisible) {
         /// draw preedit / aux text
         p.setFont(m_preEditFont);
         p.setPen(m_preEditColor);
 
-        p.drawText(0, 0, widget->width(), m_preEditFontHeight, Qt::AlignLeft, widget->m_text + widget->m_auxText);
+        p.drawText(x, y, widget->width(), m_preEditFontHeight, Qt::AlignLeft, widget->m_text + widget->m_auxText);
         if (widget->preeditVisible) {
             int pixelsWide = QFontMetrics(m_preEditFont).width(widget->m_text.left(widget->m_cursorPos));
             p.drawLine(pixelsWide, 0, pixelsWide, m_preEditFontHeight);
         }
+        y += m_preEditFontHeight;
     }
 
     if (widget->lookuptableVisible) {
         /// draw lookup table
-        int x = 0;
-        int y = m_preEditFontHeight;
         int w = 0;
         int h = qMax(m_labelFontHeight, m_candidateFontHeight);
 
@@ -183,8 +183,8 @@ void ThemerNone::drawPreEditBar(PreEditBar* widget)
                 x = 0;
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
-                w = p.fontMetrics().width(widget->m_labels.at(i));
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i));
+                w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);
@@ -199,8 +199,8 @@ void ThemerNone::drawPreEditBar(PreEditBar* widget)
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
-                w = p.fontMetrics().width(widget->m_labels.at(i));
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i));
+                w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);

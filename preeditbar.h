@@ -63,6 +63,9 @@ private:
     QPoint m_pointPos;
     bool m_moving;
 
+    int spotX;
+    int spotY;
+
     bool preeditVisible;
     bool auxVisible;
     bool lookuptableVisible;
