@@ -25,6 +25,7 @@
 #include <QColor>
 #include <QFile>
 #include <QFontMetrics>
+#include <QImage>
 #include <QPainter>
 #include <QPixmap>
 #include <QString>
@@ -44,6 +45,49 @@
 #include "propertywidget.h"
 
 #include "kimtoysettings.h"
+
+static int calculateAnchor(const QPixmap& skinpix, const QHash<QString, OverlayPixmap*>& overlays, int& /*opt*/, int& /*opb*/, int& opl, int& opr)
+{
+    /// draw topleft region sample
+    QImage sample(skinpix.size(), QImage::Format_ARGB32_Premultiplied);
+    sample.fill(Qt::transparent);
+
+    QPainter p(&sample);
+    p.drawPixmap(0, 0, skinpix, 0, 0, skinpix.width() / 3, skinpix.height());
+
+    QHash<QString, OverlayPixmap*>::ConstIterator it = overlays.constBegin();
+    QHash<QString, OverlayPixmap*>::ConstIterator end = overlays.constEnd();
+    while (it != end) {
+        const OverlayPixmap* op = it.value();
+        const QPixmap& pixmap = op->currentPixmap();
+        if (op->alignArea == 1) {
+            p.drawPixmap(-op->mr, -op->mb, pixmap);
+        }
+        else if (op->alignArea == 2) {
+            if (op->alignHMode == 0) {
+                p.drawPixmap((sample.width() + opl - opr - pixmap.width()) / 2, -op->mb, pixmap);
+            }
+            else if (op->alignHMode == 1) {
+                p.drawPixmap(opl + op->mr, -op->mb, pixmap);
+            }
+        }
+        ++it;
+    }
+
+    /// first non-transparent line
+    for (int y = 0; y < sample.height(); ++y) {
+        const uchar* line = sample.scanLine(y);
+        const QRgb* rgbs = (const QRgb*)line;
+        for (int x = 0; x < sample.bytesPerLine() / 4; ++x) {
+            if (qAlpha(rgbs[x]) != 0x00) {
+                return y;
+            }
+        }
+    }
+
+    /// should never arrive here
+    return 0;
+}
 
 static void calculateOverlaySurrounding(const QHash<QString, OverlayPixmap*>& overlays, int& opt, int& opb, int& opl, int& opr)
 {
@@ -522,6 +566,10 @@ bool ThemerSogou::loadTheme()
     calculateOverlaySurrounding(h_overlays, h_opt, h_opb, h_opl, h_opr);
     calculateOverlaySurrounding(v_overlays, v_opt, v_opb, v_opl, v_opr);
 
+    h_anchorY = calculateAnchor(h1skin, h_overlays, h_opt, h_opb, h_opl, h_opr);
+    v_anchorY = calculateAnchor(v1skin, v_overlays, v_opt, v_opb, v_opl, v_opr);
+    kWarning() << h_anchorY << v_anchorY;
+
     m_preEditFont.setFamily(font_en);
     m_preEditFont.setPixelSize(fontPixelSize);
     m_candidateFont.setFamily(font_ch);
@@ -606,6 +654,14 @@ QSize ThemerSogou::sizeHintStatusBar(const StatusBar* widget) const
     if (m_statusBarSkin)
         return m_statusBarSkin->currentPixmap().size();
     return QSize(0, 0);
+}
+
+QPoint ThemerSogou::anchorPos() const
+{
+    if (KIMToySettings::self()->verticalPreeditBar())
+        return QPoint(v_pl, v_anchorY);
+    else
+        return QPoint(h_pl, h_anchorY);
 }
 
 void ThemerSogou::layoutStatusBar(StatusBarLayout* layout) const

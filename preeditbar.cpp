@@ -117,8 +117,8 @@ void PreEditBar::resizeEvent(QResizeEvent* event)
 void PreEditBar::showEvent(QShowEvent* event)
 {
 //     Plasma::WindowEffects::overrideShadow(winId(), true);
-    Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom( dpy, "_KDE_NET_WM_SHADOW", False );
+    Display* dpy = QX11Info::display();
+    Atom atom = XInternAtom(dpy, "_KDE_NET_WM_SHADOW", False);
     XDeleteProperty(dpy, winId(), atom);
 }
 
@@ -135,21 +135,23 @@ void PreEditBar::slotUpdateSpotLocation(int x, int y)
 
     QRect screenRect = QApplication::desktop()->screenGeometry(QPoint(x, y));
     x = qMin(x, screenRect.x() + screenRect.width() - width());
-    if (y > screenRect.y() + screenRect.height()) {
-        y = screenRect.height();
-    }
+    y = qMin(y, screenRect.y() + screenRect.height());
+
+    QPoint anchorPos = ThemerAgent::anchorPos();
+    x -= anchorPos.x();
+    y -= anchorPos.y();
 
     if (y + height() > screenRect.y() + screenRect.height()) {
         /// minus 20 to make preedit bar never overlap the input context
-        y -= height() + 20;
+        y -= height() - anchorPos.y() + 20;
     }
-    if (QPoint(x, y) != pos())
+    if (QPoint(x, y) != pos()) {
         move(x, y);
+    }
 }
 
 void PreEditBar::slotShowPreedit(bool show)
 {
-//     kWarning() << show;
     preeditVisible = show;
     updateVisible();
     updateSize();
@@ -158,7 +160,6 @@ void PreEditBar::slotShowPreedit(bool show)
 
 void PreEditBar::slotShowAux(bool show)
 {
-//     kWarning() << show;
     auxVisible = show;
     updateVisible();
     updateSize();
@@ -167,7 +168,6 @@ void PreEditBar::slotShowAux(bool show)
 
 void PreEditBar::slotShowLookupTable(bool show)
 {
-//     kWarning() << show;
     lookuptableVisible = show;
     updateVisible();
     updateSize();

@@ -54,6 +54,11 @@ void Themer::loadSettings()
     }
 }
 
+QPoint Themer::anchorPos() const
+{
+    return QPoint(0, 0);
+}
+
 void Themer::resizePreEditBar(const QSize& size)
 {
     Q_UNUSED(size);

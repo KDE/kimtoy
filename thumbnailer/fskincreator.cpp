@@ -206,8 +206,6 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
     }
     while (!line.isNull());
 
-    font.setBold(true);
-
     int fontHeight = QFontMetrics(font).height();
     int pinyinw = QFontMetrics(font).width("ABC pinyin");
     int zhongwenw = QFontMetrics(font).width("1candidate");

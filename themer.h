@@ -44,6 +44,8 @@ public:
     virtual QSize sizeHintPreEditBar(const PreEditBar* widget) const = 0;
     virtual QSize sizeHintStatusBar(const StatusBar* widget) const = 0;
 
+    virtual QPoint anchorPos() const;
+
     virtual void layoutStatusBar(StatusBarLayout* layout) const = 0;
 
     virtual void resizePreEditBar(const QSize& size);

@@ -75,6 +75,11 @@ QSize ThemerAgent::sizeHintStatusBar(const StatusBar* widget)
     return m_themer->sizeHintStatusBar(widget);
 }
 
+QPoint ThemerAgent::anchorPos()
+{
+    return m_themer->anchorPos();
+}
+
 void ThemerAgent::layoutStatusBar(StatusBarLayout* layout)
 {
     if (KIMToySettings::self()->noStatusBarTheme())

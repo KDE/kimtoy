@@ -22,6 +22,7 @@
 #ifndef THEMERAGENT_H
 #define THEMERAGENT_H
 
+#include <QPoint>
 #include <QSize>
 
 class PreEditBar;
@@ -36,6 +37,7 @@ void loadSettings();
 void loadTheme();
 QSize sizeHintPreEditBar(const PreEditBar* widget);
 QSize sizeHintStatusBar(const StatusBar* widget);
+QPoint anchorPos();
 void layoutStatusBar(StatusBarLayout* layout);
 void resizePreEditBar(const QSize& size);
 void resizeStatusBar(const QSize& size);

@@ -62,6 +62,7 @@ public:
     virtual bool loadTheme();
     virtual QSize sizeHintPreEditBar(const PreEditBar* widget) const;
     virtual QSize sizeHintStatusBar(const StatusBar* widget) const;
+    virtual QPoint anchorPos() const;
     virtual void layoutStatusBar(StatusBarLayout* layout) const;
     virtual void resizePreEditBar(const QSize& size);
     virtual void resizeStatusBar(const QSize& size);
@@ -96,6 +97,9 @@ private:
     int v_pt, v_pb, v_pl, v_pr;
     int h_zt, h_zb, h_zl, h_zr;
     int v_zt, v_zb, v_zl, v_zr;
+
+    int h_anchorY;
+    int v_anchorY;
 
     /// optional
     QHash<QString, OverlayPixmap*> h_overlays;// horizontal overlay pixmap

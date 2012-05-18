@@ -89,8 +89,6 @@ bool ThemerPlasma::loadTheme()
 
 QSize ThemerPlasma::sizeHintPreEditBar(const PreEditBar* widget) const
 {
-//     kWarning() << widget->preeditVisible << widget->auxVisible << widget->lookuptableVisible;
-//     kWarning() << widget->m_text << widget->m_auxText;
     int w = 0;
     int h = 0;
 
@@ -153,6 +151,14 @@ QSize ThemerPlasma::sizeHintStatusBar(const StatusBar* widget) const
     h += top + bottom;
 
     return QSize(w, h);
+}
+
+QPoint ThemerPlasma::anchorPos() const
+{
+    qreal left, top, right, bottom;
+    m_preeditBarSvg.getMargins(left, top, right, bottom);
+
+    return QPoint(left, 0);
 }
 
 void ThemerPlasma::layoutStatusBar(StatusBarLayout* layout) const

@@ -389,6 +389,11 @@ QSize ThemerFcitx::sizeHintStatusBar(const StatusBar* widget) const
     return QSize(w, h);
 }
 
+QPoint ThemerFcitx::anchorPos() const
+{
+    return QPoint(ml, 0);
+}
+
 void ThemerFcitx::layoutStatusBar(StatusBarLayout* layout) const
 {
     QList<QLayoutItem*> nopositems;

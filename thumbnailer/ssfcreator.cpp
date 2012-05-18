@@ -245,10 +245,8 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
 
     preEditFont.setFamily(font_en);
     preEditFont.setPixelSize(fontPixelSize);
-    preEditFont.setBold(true);
     candidateFont.setFamily(font_ch);
     candidateFont.setPixelSize(fontPixelSize);
-    candidateFont.setBold(true);
 
     color_en = color_en.leftJustified(8, '0').replace("0x", "#");
     color_ch = color_ch.leftJustified(8, '0').replace("0x", "#");
