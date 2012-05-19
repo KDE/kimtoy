@@ -74,6 +74,7 @@ PropertyType PropertyWidget::determineType( const QString& objectPath, const QSt
 {
     // fcitx property
     if (objectPath == "/Fcitx/im") {
+        if (iconName == "fcitx-kbd") return IM_Direct;
         if (iconName == "fcitx-eng") return IM_Direct;
         if (iconName == "fcitx-pinyin") return IM_Pinyin;
         if (iconName == "fcitx-shuangpin") return IM_Shuangpin;
