@@ -80,7 +80,7 @@ static int calculateAnchor(const QPixmap& skinpix, const QHash<QString, OverlayP
         const QRgb* rgbs = (const QRgb*)line;
         for (int x = 0; x < sample.bytesPerLine() / 4; ++x) {
             if (qAlpha(rgbs[x]) != 0x00) {
-                return y;
+                return y > 2 ? y - 2 : 0;
             }
         }
     }
