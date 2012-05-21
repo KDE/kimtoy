@@ -30,10 +30,14 @@
 #include <QByteArray>
 #include <QDate>
 #include <QDateTime>
-// #include <QDebug>
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
+
+const std::string typeFieldName("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+const std::string fullnameFieldName("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname");
+const std::string contactClassName("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#Contact");
+const std::string emailAddressClassName("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#EmailAddress");
 
 SsfEndAnalyzer::SsfEndAnalyzer(const SsfEndAnalyzerFactory* f)
         : StreamEndAnalyzer(),factory(f)
@@ -54,6 +58,8 @@ signed char SsfEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
         return -1;
     }
 
+    idx.addValue(factory->typeField, emailAddressClassName);
+
     while (s) {
         // check if done
         int64_t max = idx.config().maximalStreamReadLength(idx);
@@ -64,7 +70,8 @@ signed char SsfEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
         if (!idx.config().indexMore()) {
             return 0;
         }
-        if (zip.entryInfo().filename == "skin.ini") {
+        if (zip.entryInfo().filename == "skin.ini"
+            || zip.entryInfo().filename == "Skin.ini") {
             const char* buf;
             int64_t size = zip.entryInfo().size;
             int32_t nread = s->read(buf, size, size);
@@ -92,8 +99,6 @@ signed char SsfEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
                 if (value.isEmpty())
                     continue;
 
-//                 qWarning() << key << value;
-
                 if (key == "skin_id") {
                     idx.addValue(factory->idField, value.toUtf8().constData());
                 }
@@ -104,7 +109,10 @@ signed char SsfEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
                     idx.addValue(factory->versionField, value.toUtf8().constData());
                 }
                 else if (key == "skin_author") {
-                    idx.addValue(factory->authorField, value.toUtf8().constData());
+                    std::string skinAuthorUri = idx.newAnonymousUri();
+                    idx.addValue(factory->authorField, skinAuthorUri);
+                    idx.addTriplet(skinAuthorUri, typeFieldName, contactClassName);
+                    idx.addTriplet(skinAuthorUri, fullnameFieldName, value.toUtf8().constData());
                 }
                 else if (key == "skin_email") {
                     idx.addValue(factory->emailField, value.toUtf8().constData());
@@ -150,7 +158,7 @@ void SsfEndAnalyzerFactory::registerFields(FieldRegister& reg)
     idField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#identifier");
     nameField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title");
     versionField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version");
-    authorField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname");
+    authorField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator");
     emailField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#emailAddress");
     timeField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated");
     infoField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description");

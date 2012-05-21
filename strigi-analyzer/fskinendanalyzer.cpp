@@ -29,10 +29,13 @@
 #include <strigi/tarinputstream.h>
 
 #include <QByteArray>
-// #include <QDebug>
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
+
+const std::string typeFieldName("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+const std::string fullnameFieldName("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname");
+const std::string contactClassName("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#Contact");
 
 FskinEndAnalyzer::FskinEndAnalyzer(const FskinEndAnalyzerFactory* f)
         : StreamEndAnalyzer(),factory(f)
@@ -94,8 +97,6 @@ signed char FskinEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
                 if (value.isEmpty())
                     continue;
 
-//                 qWarning() << key << value;
-
                 if (key == "Name") {
                     idx.addValue(factory->nameField, value.toUtf8().constData());
                 }
@@ -103,7 +104,10 @@ signed char FskinEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
                     idx.addValue(factory->versionField, value.toUtf8().constData());
                 }
                 else if (key == "Author") {
-                    idx.addValue(factory->authorField, value.toUtf8().constData());
+                    std::string authorUri = idx.newAnonymousUri();
+                    idx.addValue(factory->authorField, authorUri);
+                    idx.addTriplet(authorUri, typeFieldName, contactClassName);
+                    idx.addTriplet(authorUri, fullnameFieldName, value.toUtf8().constData());
                 }
                 else if (key == "Desc") {
                     idx.addValue(factory->descField, value.toUtf8().constData());
@@ -141,7 +145,7 @@ void FskinEndAnalyzerFactory::registerFields(FieldRegister& reg)
 {
     nameField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title");
     versionField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#version");
-    authorField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname");
+    authorField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator");
     descField = reg.registerField("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description");
     typeField = reg.typeField;
 
