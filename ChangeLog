@@ -1,3 +1,13 @@
+2012-05-22 v1.8
+fix build issue with newer glibc
+fix preedit bar shadow issue with oxygen-transparent
+fix unexpected position changes after typing too long preedit string
+automatic preedit bar anchor position
+fcitx-kbd is now recognized as direct input mode
+fix missing domain of nco elements in strigi analyzer
+try to show candidate only if no preedit text exists
+do not enable bold font using sogou surface and fcitx surface
+
 2012-05-01 v1.7
 tray icon can be manipulated separately
 fix overlay pixmap vcenter/hcenter layout position
