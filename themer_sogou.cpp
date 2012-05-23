@@ -192,7 +192,7 @@ bool ThemerSogou::loadTheme()
     QPixmap v1skin;
     int fontPixelSize = 12;
     QString font_ch, font_en;
-    QString pinyin_color, zhongwen_color;
+    unsigned int pinyin_color, zhongwen_color;
     int h_hsl = 0, h_hsr = 0, h_vst = 0, h_vsb = 0, h_hstm = 0, h_vstm = 0;
     int v_hsl = 0, v_hsr = 0, v_vst = 0, v_vsb = 0, v_hstm = 0, v_vstm = 0;
 
@@ -248,9 +248,9 @@ bool ThemerSogou::loadTheme()
             else if (key == "font_en")
                 font_en = value;
             else if (key == "pinyin_color")
-                pinyin_color = value;
+                pinyin_color = value.toUInt(0, 0);
             else if (key == "zhongwen_color")
-                zhongwen_color = value;
+                zhongwen_color = value.toUInt(0, 0);
         }
         else if (scheme_h1) {
             if (key == "pic") {
@@ -580,10 +580,9 @@ bool ThemerSogou::loadTheme()
     m_labelFontHeight = QFontMetrics(m_labelFont).height();
     m_candidateFontHeight = QFontMetrics(m_candidateFont).height();
 
-    pinyin_color = pinyin_color.leftJustified(8, '0').replace("0x", "#");
-    zhongwen_color = zhongwen_color.leftJustified(8, '0').replace("0x", "#");
-    m_preEditColor = QColor(pinyin_color);
-    m_candidateColor = QColor(zhongwen_color);
+    /// swap from bgr to rgb
+    m_preEditColor = QColor(qBlue(pinyin_color), qGreen(pinyin_color), qRed(pinyin_color));
+    m_candidateColor = QColor(qBlue(zhongwen_color), qGreen(zhongwen_color), qRed(zhongwen_color));
     m_labelColor = m_candidateColor;
 
     return true;

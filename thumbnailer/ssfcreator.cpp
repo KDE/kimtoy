@@ -97,7 +97,7 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
     int sl = 0, sr = 0;
     int fontPixelSize = 12;
     QString font_ch, font_en;
-    QString color_ch, color_en;
+    unsigned int color_ch, color_en;
     QHash<QString, OverlayPixmap> overlays;
     int opt = 0, opb = 0, opl = 0, opr = 0;
     QColor separatorColor = Qt::transparent;
@@ -134,9 +134,9 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
             else if (key == "font_en")
                 font_en = value;
             else if (key == "pinyin_color")
-                color_en = value;
+                color_en = value.toUInt(0, 0);
             else if (key == "zhongwen_color")
-                color_ch = value;
+                color_ch = value.toUInt(0, 0);
         }
         else if (scheme_h1) {
             if (key == "pic") {
@@ -248,10 +248,9 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
     candidateFont.setFamily(font_ch);
     candidateFont.setPixelSize(fontPixelSize);
 
-    color_en = color_en.leftJustified(8, '0').replace("0x", "#");
-    color_ch = color_ch.leftJustified(8, '0').replace("0x", "#");
-    preEditColor = QColor(color_en);
-    candidateColor = QColor(color_ch);
+    /// swap from bgr to rgb
+    preEditColor = QColor(qBlue(color_en), qGreen(color_en), qRed(color_en));
+    candidateColor = QColor(qBlue(color_ch), qGreen(color_ch), qRed(color_ch));
     labelColor = candidateColor;
 
     int pinyinh = QFontMetrics(preEditFont).height();
