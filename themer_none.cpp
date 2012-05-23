@@ -64,6 +64,7 @@ bool ThemerNone::loadTheme()
     m_preEditColor = KIMToySettings::self()->preeditColor();
     m_labelColor = KIMToySettings::self()->labelColor();
     m_candidateColor = KIMToySettings::self()->candidateColor();
+    m_firstCandidateColor = KIMToySettings::self()->firstCandidateColor();
     return true;
 }
 
@@ -178,7 +179,22 @@ void ThemerNone::drawPreEditBar(PreEditBar* widget)
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
 
         if (KIMToySettings::self()->verticalPreeditBar()) {
-            for (int i = 0; i < count; ++i) {
+            if (count > 0) {
+                /// draw first label
+                x = 0;
+                p.setFont(m_labelFont);
+                p.setPen(m_firstCandidateColor);
+                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
+                x += w;
+                /// draw first candidate
+                p.setFont(m_candidateFont);
+                p.setPen(m_firstCandidateColor);
+                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed());
+                y += h;
+            }
+            for (int i = 1; i < count; ++i) {
                 /// draw label
                 x = 0;
                 p.setFont(m_labelFont);
@@ -195,7 +211,21 @@ void ThemerNone::drawPreEditBar(PreEditBar* widget)
             }
         }
         else {
-            for (int i = 0; i < count; ++i) {
+            if (count > 0) {
+                /// draw first label
+                p.setFont(m_labelFont);
+                p.setPen(m_firstCandidateColor);
+                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
+                x += w;
+                /// draw first candidate
+                p.setFont(m_candidateFont);
+                p.setPen(m_firstCandidateColor);
+                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed() + ' ');
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed() + ' ');
+                x += w;
+            }
+            for (int i = 1; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);

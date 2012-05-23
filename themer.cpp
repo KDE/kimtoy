@@ -51,6 +51,7 @@ void Themer::loadSettings()
         m_preEditColor = KIMToySettings::self()->preeditColor();
         m_labelColor = KIMToySettings::self()->labelColor();
         m_candidateColor = KIMToySettings::self()->candidateColor();
+        m_firstCandidateColor = KIMToySettings::self()->firstCandidateColor();
     }
 }
 

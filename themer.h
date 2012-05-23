@@ -72,6 +72,7 @@ protected:
     QColor m_preEditColor;
     QColor m_labelColor;
     QColor m_candidateColor;
+    QColor m_firstCandidateColor;
 };
 
 #endif // THEMER_H

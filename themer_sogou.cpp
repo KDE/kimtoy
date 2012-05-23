@@ -192,7 +192,7 @@ bool ThemerSogou::loadTheme()
     QPixmap v1skin;
     int fontPixelSize = 12;
     QString font_ch, font_en;
-    unsigned int pinyin_color, zhongwen_color;
+    unsigned int pinyin_color, zhongwen_color, zhongwen_first_color;
     int h_hsl = 0, h_hsr = 0, h_vst = 0, h_vsb = 0, h_hstm = 0, h_vstm = 0;
     int v_hsl = 0, v_hsr = 0, v_vst = 0, v_vsb = 0, v_hstm = 0, v_vstm = 0;
 
@@ -251,6 +251,8 @@ bool ThemerSogou::loadTheme()
                 pinyin_color = value.toUInt(0, 0);
             else if (key == "zhongwen_color")
                 zhongwen_color = value.toUInt(0, 0);
+            else if (key == "zhongwen_first_color")
+                zhongwen_first_color = value.toUInt(0, 0);
         }
         else if (scheme_h1) {
             if (key == "pic") {
@@ -583,6 +585,7 @@ bool ThemerSogou::loadTheme()
     /// swap from bgr to rgb
     m_preEditColor = QColor(qBlue(pinyin_color), qGreen(pinyin_color), qRed(pinyin_color));
     m_candidateColor = QColor(qBlue(zhongwen_color), qGreen(zhongwen_color), qRed(zhongwen_color));
+    m_firstCandidateColor = QColor(qBlue(zhongwen_first_color), qGreen(zhongwen_first_color), qRed(zhongwen_first_color));
     m_labelColor = m_candidateColor;
 
     return true;
@@ -1071,7 +1074,22 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
 
         if (KIMToySettings::self()->verticalPreeditBar()) {
-            for (int i = 0; i < count; ++i) {
+            if (count > 0) {
+                /// draw first label
+                p.setFont(m_labelFont);
+                p.setPen(m_firstCandidateColor);
+                x = zl;
+                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
+                x += w;
+                /// draw first candidate
+                p.setFont(m_candidateFont);
+                p.setPen(m_firstCandidateColor);
+                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed());
+                y += h;
+            }
+            for (int i = 1; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
@@ -1088,7 +1106,21 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
             }
         }
         else {
-            for (int i = 0; i < count; ++i) {
+            if (count > 0) {
+                /// draw first label
+                p.setFont(m_labelFont);
+                p.setPen(m_firstCandidateColor);
+                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
+                x += w;
+                /// draw first candidate
+                p.setFont(m_candidateFont);
+                p.setPen(m_firstCandidateColor);
+                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed() + ' ');
+                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed() + ' ');
+                x += w;
+            }
+            for (int i = 1; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
