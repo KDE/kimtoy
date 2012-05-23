@@ -229,73 +229,52 @@ static void         ibus_panel_impanel_exec_menu                (IBusPanelServic
 static IBusPanelServiceClass *parent_class = NULL;
 #endif
 
-static const char prop_sep[] = ":";
-
-static void
-ibus_property_args_to_propstr (const char *key,
-                               const char *label,
-                               const char *icon,
-                               const char *tooltip,
-                               char *propstr)
+static inline void
+ibus_property_args_to_propstr (const gchar *key,
+                               const gchar *label,
+                               const gchar *icon,
+                               const gchar *tooltip,
+                               gchar *propstr, gulong n)
 {
-    static const char pre[] = "/IBus/";
-    propstr[0] = '\0';
-    strcat(propstr, pre);
-    strcat(propstr, key);
-    strcat(propstr, prop_sep);
-    strcat(propstr, label);
-    strcat(propstr, prop_sep);
-    strcat(propstr, icon);
-    strcat(propstr, prop_sep);
-    strcat(propstr, tooltip);
+    g_snprintf(propstr, n, "/IBus/%s:%s:%s:%s", key, label, icon, tooltip);
 }
 
 static void
 ibus_property_to_propstr (IBusProperty *property,
-                          char *propstr)
+                          gchar *propstr, gulong n)
 {
 #if !IBUS_CHECK_VERSION(1,3,99)
     ibus_property_args_to_propstr(property->key,
                                   property->label->text,
                                   property->icon,
                                   property->tooltip->text,
-                                  propstr);
+                                  propstr, n);
 #else
     ibus_property_args_to_propstr(ibus_property_get_key (property),
                                   ibus_text_get_text (ibus_property_get_label (property)),
                                   ibus_property_get_icon (property),
                                   ibus_text_get_text (ibus_property_get_tooltip (property)),
-                                  propstr);
+                                  propstr, n);
 #endif
 }
 
-static void
-ibus_engine_desc_args_to_propstr (const char *name,
-                                  const char *language,
-                                  const char *longname,
-                                  const char *icon,
-                                  const char *description,
-                                  char *propstr)
+static inline void
+ibus_engine_desc_args_to_propstr (const gchar *name,
+                                  const gchar *language,
+                                  const gchar *longname,
+                                  const gchar *icon,
+                                  const gchar *description,
+                                  gchar *propstr, gulong n)
 {
-    static const char pre[] = "/IBus/Engine/";
-    propstr[0] = '\0';
-    strcat(propstr, pre);
-    strcat(propstr, name);
-    strcat(propstr, prop_sep);
-    if (language) {
-        strcat(propstr, language);
-        strcat(propstr, " - ");
-    }
-    strcat(propstr, longname);
-    strcat(propstr, prop_sep);
-    strcat(propstr, icon);
-    strcat(propstr, prop_sep);
-    strcat(propstr, description);
+    if (language)
+        g_snprintf(propstr, n, "/IBus/Engine/%s:%s - %s:%s:%s", name, language, longname, icon, description);
+    else
+        g_snprintf(propstr, n, "/IBus/Engine/%s:%s:%s:%s", name, longname, icon, description);
 }
 
 static void
 ibus_engine_desc_to_propstr (IBusEngineDesc *engine_desc,
-                             char *propstr)
+                             gchar *propstr, gulong n)
 {
 #if !IBUS_CHECK_VERSION(1,3,99)
     ibus_engine_desc_args_to_propstr(engine_desc->name,
@@ -303,15 +282,59 @@ ibus_engine_desc_to_propstr (IBusEngineDesc *engine_desc,
                                      engine_desc->longname,
                                      engine_desc->icon,
                                      engine_desc->description,
-                                     propstr);
+                                     propstr, n);
 #else
-    ibus_engine_desc_args_to_propstr(ibus_engine_desc_get_name(engine_desc),
-                                     ibus_engine_desc_get_language(engine_desc),
-                                     ibus_engine_desc_get_longname(engine_desc),
-                                     ibus_engine_desc_get_icon(engine_desc),
-                                     ibus_engine_desc_get_description(engine_desc),
-                                     propstr);
+    ibus_engine_desc_args_to_propstr(ibus_engine_desc_get_name (engine_desc),
+                                     ibus_engine_desc_get_language (engine_desc),
+                                     ibus_engine_desc_get_longname (engine_desc),
+                                     ibus_engine_desc_get_icon (engine_desc),
+                                     ibus_engine_desc_get_description (engine_desc),
+                                     propstr, n);
 #endif
+}
+
+static inline void
+ibus_attribute_args_to_propstr (guint type,
+                                guint value,
+                                guint start,
+                                guint end,
+                                gchar *attrstr, gulong n)
+{
+    g_snprintf(attrstr, n, "%u:%u:%u:%u;", type, start, end - start, value);
+}
+
+static void
+ibus_attribute_to_attrstr (IBusAttribute *attibute,
+                           gchar *attrstr, gulong n)
+{
+#if !IBUS_CHECK_VERSION(1,3,99)
+    ibus_attribute_args_to_propstr(attibute->type,
+                                   attibute->value,
+                                   attibute->start_index,
+                                   attibute->end_index,
+                                   attrstr, n);
+#else
+    ibus_attribute_args_to_propstr(ibus_attribute_get_attr_type (attibute),
+                                   ibus_attribute_get_value (attibute),
+                                   ibus_attribute_get_start_index (attibute),
+                                   ibus_attribute_get_end_index (attibute),
+                                   attrstr, n);
+#endif
+}
+
+static void
+ibus_attribute_list_to_attrliststr (IBusAttrList *attrs,
+                                    gchar *attrliststr, gulong n)
+{
+    attrliststr[0] = '\0';
+    IBusAttribute *attr;
+    guint j = 0;
+    gchar attrstr[32];// WARNING large enough I think --- nihui
+    while ((attr = ibus_attr_list_get (attrs, j)) != NULL) {
+        ibus_attribute_to_attrstr(attr, attrstr, 32);
+        strcat(attrliststr, attrstr);
+        ++j;
+    }
 }
 
 static void
@@ -422,15 +445,15 @@ on_name_appeared (GDBusConnection *connection,
                   const gchar     *name_owner,
                   gpointer         user_data)
 {
-    char propstr[512];
+    gchar propstr[512];
 
     GVariantBuilder builder;
     g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
 
-    ibus_property_to_propstr(((IBusPanelImpanel *)user_data)->logo_prop, propstr);
+    ibus_property_to_propstr(((IBusPanelImpanel *)user_data)->logo_prop, propstr, 512);
     g_variant_builder_add (&builder, "s", propstr);
 
-    ibus_property_to_propstr(((IBusPanelImpanel *)user_data)->about_prop, propstr);
+    ibus_property_to_propstr(((IBusPanelImpanel *)user_data)->about_prop, propstr, 512);
     g_variant_builder_add (&builder, "s", propstr);
 
     g_dbus_connection_emit_signal (((IBusPanelImpanel *)user_data)->conn,
@@ -626,9 +649,9 @@ ibus_panel_impanel_focus_in (IBusPanelService *panel,
 #endif
     }
 
-    char propstr[512];
+    gchar propstr[512];
 
-    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
+    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr, 512);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
@@ -668,21 +691,21 @@ ibus_panel_impanel_register_properties (IBusPanelService *panel,
 {
     IBusProperty* property = NULL;
     guint i = 0;
-    char propstr[512];
+    gchar propstr[512];
 
     GVariantBuilder builder;
     g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
 
-    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
+    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr, 512);
     g_variant_builder_add (&builder, "s", propstr);
 
     while ( ( property = ibus_prop_list_get( prop_list, i ) ) != NULL ) {
-        ibus_property_to_propstr(property, propstr);
+        ibus_property_to_propstr(property, propstr, 512);
         g_variant_builder_add (&builder, "s", propstr);
         ++i;
     }
 
-    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, propstr);
+    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, propstr, 512);
     g_variant_builder_add (&builder, "s", propstr);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
@@ -742,11 +765,19 @@ ibus_panel_impanel_update_auxiliary_text (IBusPanelService *panel,
 #else
     const gchar* t = ibus_text_get_text (text);
 #endif
-    const gchar *attr = "";
+
+#if !IBUS_CHECK_VERSION(1,3,99)
+    IBusAttrList *attrs = text->attrs;
+#else
+    IBusAttrList *attrs = ibus_text_get_attributes (text);
+#endif
+
+    gchar attrliststr[128];// WARNING large enough I think --- nihui
+    ibus_attribute_list_to_attrliststr (attrs, attrliststr, 128);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateAux",
-                                   g_variant_new ("(ss)", t, attr),
+                                   g_variant_new ("(ss)", t, attrliststr),
                                    NULL);
 
     if (visible == 0)
@@ -795,6 +826,8 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
 
     gchar label[16][4];// WARNING large enough I think --- nihui
     const gchar *candidate;
+    IBusAttrList *attrs;
+    gchar attrliststr[128];// WARNING large enough I think --- nihui
 
     GVariantBuilder builder_labels;
     GVariantBuilder builder_candidates;
@@ -803,7 +836,6 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
     g_variant_builder_init (&builder_candidates, G_VARIANT_TYPE ("as"));
     g_variant_builder_init (&builder_attrs, G_VARIANT_TYPE ("as"));
 
-    const gchar *attr = "";
     for (i = start; i < end; i++) {
         g_snprintf (label[i-start], 4, "%d", (i-start+1) % 10);
         // NOTE ibus always return NULL for ibus_lookup_table_get_label
@@ -817,7 +849,15 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
 #endif
         g_variant_builder_add (&builder_candidates, "s", candidate);
 
-        g_variant_builder_add (&builder_attrs, "s", attr);
+#if !IBUS_CHECK_VERSION(1,3,99)
+        attrs = ibus_lookup_table_get_candidate (lookup_table, i)->attrs;
+#else
+        attrs = ibus_text_get_attributes (ibus_lookup_table_get_candidate (lookup_table, i));
+#endif
+
+        ibus_attribute_list_to_attrliststr (attrs, attrliststr, 128);
+
+        g_variant_builder_add (&builder_attrs, "s", attrliststr);
     }
 
     gboolean has_prev = 1;
@@ -869,11 +909,19 @@ ibus_panel_impanel_update_preedit_text (IBusPanelService *panel,
 #else
     const gchar* t = ibus_text_get_text (text);
 #endif
-    const gchar *attr = "";
+
+#if !IBUS_CHECK_VERSION(1,3,99)
+    IBusAttrList *attrs = text->attrs;
+#else
+    IBusAttrList *attrs = ibus_text_get_attributes (text);
+#endif
+
+    gchar attrliststr[128];// WARNING large enough I think --- nihui
+    ibus_attribute_list_to_attrliststr (attrs, attrliststr, 128);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdatePreeditText",
-                                   g_variant_new ("(ss)", t, attr),
+                                   g_variant_new ("(ss)", t, attrliststr),
                                    NULL);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
@@ -909,9 +957,9 @@ ibus_panel_impanel_update_property (IBusPanelService *panel,
                                     IBusProperty     *prop)
 #endif
 {
-    char propstr[512];
+    gchar propstr[512];
 
-    ibus_property_to_propstr(prop, propstr);
+    ibus_property_to_propstr(prop, propstr, 512);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
@@ -1188,9 +1236,9 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
 #endif
     }
 
-    char propstr[512];
+    gchar propstr[512];
 
-    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr);
+    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->logo_prop, propstr, 512);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
@@ -1209,9 +1257,9 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
 static void
 ibus_panel_impanel_exec_dialog (IBusPanelService *panel)
 {
-    char propstr[512];
+    gchar propstr[512];
 
-    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, propstr);
+    ibus_property_to_propstr(IBUS_PANEL_IMPANEL (panel)->about_prop, propstr, 512);
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
@@ -1222,7 +1270,7 @@ ibus_panel_impanel_exec_dialog (IBusPanelService *panel)
 static void
 ibus_panel_impanel_exec_menu (IBusPanelService *panel)
 {
-    char propstr[512];
+    gchar propstr[512];
 
     GVariantBuilder builder;
     g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
@@ -1234,7 +1282,7 @@ ibus_panel_impanel_exec_menu (IBusPanelService *panel)
         engine_desc = (IBusEngineDesc *)(node->data);
         node = g_list_next (node);
 
-        ibus_engine_desc_to_propstr(engine_desc, propstr);
+        ibus_engine_desc_to_propstr(engine_desc, propstr, 512);
         g_variant_builder_add (&builder, "s", propstr);
     }
 
@@ -1243,7 +1291,7 @@ ibus_panel_impanel_exec_menu (IBusPanelService *panel)
                                      "Disable",
                                      "ibus",
                                      "",
-                                     propstr);
+                                     propstr, 512);
 
     g_variant_builder_add (&builder, "s", propstr);
 
