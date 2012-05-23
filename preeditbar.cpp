@@ -183,8 +183,8 @@ void PreEditBar::slotUpdatePreeditCaret(int pos)
 void PreEditBar::slotUpdatePreeditText(const QString& text,
                                        const QString& attrs)
 {
-    Q_UNUSED(attrs);
     m_text = text;
+    m_attrs = attrs;
     updateSize();
     update();
 }
@@ -192,8 +192,8 @@ void PreEditBar::slotUpdatePreeditText(const QString& text,
 void PreEditBar::slotUpdateAux(const QString& text,
                                const QString& attrs)
 {
-    Q_UNUSED(attrs);
     m_auxText = text;
+    m_auxAttrs = attrs;
     updateSize();
     update();
 }
@@ -204,9 +204,10 @@ void PreEditBar::slotUpdateLookupTable(const QStringList& labels,
                                        bool hasPrev,
                                        bool hasNext)
 {
-    Q_UNUSED(attrs);
+    kWarning() << attrs;
     m_labels = labels;
     m_candidates = candidates;
+    m_candidateAttrs = attrs;
     m_hasPrev = hasPrev;
     m_hasNext = hasNext;
     updateSize();

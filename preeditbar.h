@@ -76,10 +76,13 @@ private:
     friend class ThemerPlasma;
     friend class ThemerSogou;
     QString m_text;
+    QString m_attrs;
     int m_cursorPos;
     QString m_auxText;
+    QString m_auxAttrs;
     QStringList m_labels;
     QStringList m_candidates;
+    QStringList m_candidateAttrs;
     bool m_hasPrev;
     bool m_hasNext;
 };
