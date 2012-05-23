@@ -294,7 +294,7 @@ ibus_engine_desc_to_propstr (IBusEngineDesc *engine_desc,
 }
 
 static inline void
-ibus_attribute_args_to_propstr (guint type,
+ibus_attribute_args_to_attrstr (guint type,
                                 guint value,
                                 guint start,
                                 guint end,
@@ -308,13 +308,13 @@ ibus_attribute_to_attrstr (IBusAttribute *attibute,
                            gchar *attrstr, gulong n)
 {
 #if !IBUS_CHECK_VERSION(1,3,99)
-    ibus_attribute_args_to_propstr(attibute->type,
+    ibus_attribute_args_to_attrstr(attibute->type,
                                    attibute->value,
                                    attibute->start_index,
                                    attibute->end_index,
                                    attrstr, n);
 #else
-    ibus_attribute_args_to_propstr(ibus_attribute_get_attr_type (attibute),
+    ibus_attribute_args_to_attrstr(ibus_attribute_get_attr_type (attibute),
                                    ibus_attribute_get_value (attibute),
                                    ibus_attribute_get_start_index (attibute),
                                    ibus_attribute_get_end_index (attibute),
@@ -810,17 +810,17 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
                                         gboolean          visible)
 #endif
 {
+    guint num = ibus_lookup_table_get_number_of_candidates(lookup_table);
     guint page_size = ibus_lookup_table_get_page_size(lookup_table);
     guint cursor_pos = ibus_lookup_table_get_cursor_pos(lookup_table);
+
     guint page = cursor_pos / page_size;
     guint start = page * page_size;
     guint end = start + page_size;
-    guint num = ibus_lookup_table_get_number_of_candidates(lookup_table);
+
     if (end > num) {
         end = num;
     }
-
-//     fprintf(stderr, "%d ~ %d pgsize %d num %d\n", start, end, page_size, num);
 
     guint i;
 
@@ -849,19 +849,25 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
 #endif
         g_variant_builder_add (&builder_candidates, "s", candidate);
 
-#if !IBUS_CHECK_VERSION(1,3,99)
-        attrs = ibus_lookup_table_get_candidate (lookup_table, i)->attrs;
-#else
-        attrs = ibus_text_get_attributes (ibus_lookup_table_get_candidate (lookup_table, i));
-#endif
-
-        ibus_attribute_list_to_attrliststr (attrs, attrliststr, 128);
+// #if !IBUS_CHECK_VERSION(1,3,99)
+//         attrs = ibus_lookup_table_get_candidate (lookup_table, i)->attrs;
+// #else
+//         attrs = ibus_text_get_attributes (ibus_lookup_table_get_candidate (lookup_table, i));
+// #endif
+// 
+//         ibus_attribute_list_to_attrliststr (attrs, attrliststr, 128);
+        if (i == cursor_pos) {
+            ibus_attribute_args_to_attrstr(1, 1, 0, 0, attrliststr, 128);
+        }
+        else {
+            attrliststr[0] = '\0';
+        }
 
         g_variant_builder_add (&builder_attrs, "s", attrliststr);
     }
 
-    gboolean has_prev = 1;
-    gboolean has_next = 1;
+    gboolean has_prev = start > 0;
+    gboolean has_next = num > end;
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTable",
