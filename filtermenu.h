@@ -36,6 +36,8 @@ public:
     void addEntry(const QString& objectPath, const PropertyWidget* pw, bool checked);
 Q_SIGNALS:
     void filterChanged(const QString& objectPath, bool checked);
+protected:
+    virtual void showEvent(QShowEvent* event);
 private Q_SLOTS:
     void slotToggled(bool checked);
 private:

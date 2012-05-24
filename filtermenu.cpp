@@ -22,6 +22,8 @@
 #include "filtermenu.h"
 
 #include <QAction>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QMenu>
 #include <QVBoxLayout>
 #include <KIcon>
@@ -54,6 +56,19 @@ void FilterMenu::addEntry(const QString& objectPath, const PropertyWidget* pw, b
     act->setData(objectPath);
     connect(act, SIGNAL(toggled(bool)), this, SLOT(slotToggled(bool)));
     m_menu->addAction(act);
+}
+
+void FilterMenu::showEvent(QShowEvent* /*event*/)
+{
+    /// always popup inside screen
+    const QRect sg = QApplication::desktop()->screenGeometry(this);
+    int nx = x();
+    int ny = y();
+    if (nx + width() > sg.x() + sg.width())
+        nx -= width();
+    if (ny + height() > sg.y() + sg.height())
+        ny -= height();
+    move(nx, ny);
 }
 
 void FilterMenu::slotToggled(bool checked)
