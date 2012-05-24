@@ -528,7 +528,7 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
             for (int i = 0; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
-                p.setPen(m_labelColor);
+                p.setPen(i == widget->m_candidateCursor ? m_candidateCursorColor : m_labelColor);
                 x = ml;
                 w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
                 p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
@@ -545,7 +545,7 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
             for (int i = 0; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
-                p.setPen(m_labelColor);
+                p.setPen(i == widget->m_candidateCursor ? m_candidateCursorColor : m_labelColor);
                 w = p.fontMetrics().width(widget->m_labels.at(i).trimmed());
                 p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(i).trimmed());
                 x += w;
