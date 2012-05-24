@@ -101,12 +101,12 @@
           <widget class="KColorButton" name="kcfg_LabelColor"/>
          </item>
          <item row="6" column="1">
-          <widget class="KColorButton" name="kcfg_FirstCandidateColor"/>
+          <widget class="KColorButton" name="kcfg_CandidateCursorColor"/>
          </item>
          <item row="6" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>First candidate: </string>
+            <string>Candidate cursor: </string>
            </property>
           </widget>
          </item>

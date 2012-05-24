@@ -51,6 +51,7 @@ private Q_SLOTS:
                                const QString& attrs);
     void slotUpdateAux(const QString& text,
                        const QString& attrs);
+    void slotUpdateLookupTableCursor(int pos);
     void slotUpdateLookupTable(const QStringList& labels,
                                const QStringList& candidates,
                                const QStringList& attrs,
@@ -76,13 +77,11 @@ private:
     friend class ThemerPlasma;
     friend class ThemerSogou;
     QString m_text;
-    QString m_attrs;
     int m_cursorPos;
     QString m_auxText;
-    QString m_auxAttrs;
+    int m_candidateCursor;
     QStringList m_labels;
     QStringList m_candidates;
-    QStringList m_candidateAttrs;
     bool m_hasPrev;
     bool m_hasNext;
 };

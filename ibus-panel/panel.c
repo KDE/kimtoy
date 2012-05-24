@@ -87,6 +87,9 @@ static const gchar introspection_xml[] =
     "      <arg type='s' name='text'/>"
     "      <arg type='s' name='attr'/>"
     "    </signal>"
+    "    <signal name='UpdateLookupTableCursor'>"
+    "      <arg type='i' name='pos'/>"
+    "    </signal>"
     "    <signal name='UpdateLookupTable'>"
     "      <arg type='as' name='labels'/>"
     "      <arg type='as' name='candidates'/>"
@@ -849,19 +852,13 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
 #endif
         g_variant_builder_add (&builder_candidates, "s", candidate);
 
-// #if !IBUS_CHECK_VERSION(1,3,99)
-//         attrs = ibus_lookup_table_get_candidate (lookup_table, i)->attrs;
-// #else
-//         attrs = ibus_text_get_attributes (ibus_lookup_table_get_candidate (lookup_table, i));
-// #endif
-// 
-//         ibus_attribute_list_to_attrliststr (attrs, attrliststr, 128);
-        if (i == cursor_pos) {
-            ibus_attribute_args_to_attrstr(1, 1, 0, 0, attrliststr, 128);
-        }
-        else {
-            attrliststr[0] = '\0';
-        }
+#if !IBUS_CHECK_VERSION(1,3,99)
+        attrs = ibus_lookup_table_get_candidate (lookup_table, i)->attrs;
+#else
+        attrs = ibus_text_get_attributes (ibus_lookup_table_get_candidate (lookup_table, i));
+#endif
+
+        ibus_attribute_list_to_attrliststr (attrs, attrliststr, 128);
 
         g_variant_builder_add (&builder_attrs, "s", attrliststr);
     }
@@ -876,6 +873,13 @@ ibus_panel_impanel_update_lookup_table (IBusPanelService *panel,
                                                   &builder_candidates,
                                                   &builder_attrs,
                                                   has_prev, has_next),
+                                   NULL);
+
+    guint cursor_pos_in_page = cursor_pos % page_size;
+
+    g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
+                                   NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTableCursor",
+                                   g_variant_new ("(i)", cursor_pos_in_page),
                                    NULL);
 
     if (visible == 0)

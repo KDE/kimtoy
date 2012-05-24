@@ -72,6 +72,8 @@ PreEditBar::PreEditBar()
                        this, SLOT(slotUpdatePreeditText(QString,QString)));
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateAux",
                        this, SLOT(slotUpdateAux(QString,QString)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTableCursor",
+                       this, SLOT(slotUpdateLookupTableCursor(int)));
     connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateLookupTable",
                        this, SLOT(slotUpdateLookupTable(QStringList,QStringList,QStringList,bool,bool)));
 
@@ -183,8 +185,8 @@ void PreEditBar::slotUpdatePreeditCaret(int pos)
 void PreEditBar::slotUpdatePreeditText(const QString& text,
                                        const QString& attrs)
 {
+    Q_UNUSED(attrs)
     m_text = text;
-    m_attrs = attrs;
     updateSize();
     update();
 }
@@ -192,9 +194,15 @@ void PreEditBar::slotUpdatePreeditText(const QString& text,
 void PreEditBar::slotUpdateAux(const QString& text,
                                const QString& attrs)
 {
+    Q_UNUSED(attrs)
     m_auxText = text;
-    m_auxAttrs = attrs;
     updateSize();
+    update();
+}
+
+void PreEditBar::slotUpdateLookupTableCursor(int pos)
+{
+    m_candidateCursor = pos;
     update();
 }
 
@@ -204,10 +212,9 @@ void PreEditBar::slotUpdateLookupTable(const QStringList& labels,
                                        bool hasPrev,
                                        bool hasNext)
 {
-    kWarning() << attrs;
+    Q_UNUSED(attrs)
     m_labels = labels;
     m_candidates = candidates;
-    m_candidateAttrs = attrs;
     m_hasPrev = hasPrev;
     m_hasNext = hasNext;
     updateSize();

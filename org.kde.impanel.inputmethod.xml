@@ -26,6 +26,9 @@
       <arg type='s' name='text'/>
       <arg type='s' name='attr'/>
     </signal>
+    <signal name='UpdateLookupTableCursor'>
+      <arg type='i' name='pos'/>
+    </signal>
     <signal name='UpdateLookupTable'>
       <arg type='as' name='labels'/>
       <arg type='as' name='candidates'/>

@@ -104,8 +104,8 @@
         <entry name="CandidateColor" type="Color">
             <default code="true">Qt::black</default>
         </entry>
-        <entry name="FirstCandidateColor" type="Color">
-            <default code="true">Qt::black</default>
+        <entry name="CandidateCursorColor" type="Color">
+            <default code="true">Qt::blue</default>
         </entry>
         <entry name="VerticalPreeditBar" type="Bool">
             <default>false</default>

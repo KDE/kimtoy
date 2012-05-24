@@ -158,7 +158,7 @@ bool ThemerFcitx::loadTheme()
                 m_labelColor = value2color(value);
             }
             else if (key == "FirstCandColor") {
-                m_firstCandidateColor = value2color(value);
+                m_candidateCursorColor = value2color(value);
             }
             else if (key == "UserPhraseColor") {
                 /// NOTE implement this
@@ -525,22 +525,7 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
 
         if (KIMToySettings::self()->verticalPreeditBar()) {
-            if (count > 0) {
-                /// draw first label
-                p.setFont(m_labelFont);
-                p.setPen(m_firstCandidateColor);
-                x = ml;
-                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
-                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
-                x += w;
-                /// draw first candidate
-                p.setFont(m_candidateFont);
-                p.setPen(m_firstCandidateColor);
-                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed());
-                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed());
-                zhongweny += h;
-            }
-            for (int i = 1; i < count; ++i) {
+            for (int i = 0; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
@@ -550,28 +535,14 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);
-                p.setPen(m_candidateColor);
+                p.setPen(i == widget->m_candidateCursor ? m_candidateCursorColor : m_candidateColor);
                 w = p.fontMetrics().width(widget->m_candidates.at(i).trimmed());
                 p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_candidates.at(i).trimmed());
                 zhongweny += h;
             }
         }
         else {
-            if (count > 0) {
-                /// draw first label
-                p.setFont(m_labelFont);
-                p.setPen(m_firstCandidateColor);
-                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
-                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
-                x += w;
-                /// draw first candidate
-                p.setFont(m_candidateFont);
-                p.setPen(m_firstCandidateColor);
-                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed() + ' ');
-                p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed() + ' ');
-                x += w;
-            }
-            for (int i = 1; i < count; ++i) {
+            for (int i = 0; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
@@ -580,7 +551,7 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);
-                p.setPen(m_candidateColor);
+                p.setPen(i == widget->m_candidateCursor ? m_candidateCursorColor : m_candidateColor);
                 w = p.fontMetrics().width(widget->m_candidates.at(i).trimmed() + ' ');
                 p.drawText(x, zhongweny, w, h, Qt::AlignCenter, widget->m_candidates.at(i).trimmed() + ' ');
                 x += w;

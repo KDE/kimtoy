@@ -83,7 +83,7 @@ bool ThemerPlasma::loadTheme()
     m_preEditColor = plasmaTheme.color(Plasma::Theme::TextColor);
     m_labelColor = plasmaTheme.color(Plasma::Theme::HighlightColor);
     m_candidateColor = plasmaTheme.color(Plasma::Theme::TextColor);
-    m_firstCandidateColor = plasmaTheme.color(Plasma::Theme::HighlightColor);
+    m_candidateCursorColor = plasmaTheme.color(Plasma::Theme::HighlightColor);
 
     return true;
 }
@@ -256,22 +256,7 @@ void ThemerPlasma::drawPreEditBar(PreEditBar* widget)
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
 
         if (KIMToySettings::self()->verticalPreeditBar()) {
-            if (count > 0) {
-                /// draw first label
-                x = 0;
-                p.setFont(m_labelFont);
-                p.setPen(m_firstCandidateColor);
-                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
-                x += w;
-                /// draw first candidate
-                p.setFont(m_candidateFont);
-                p.setPen(m_firstCandidateColor);
-                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed());
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed());
-                y += h;
-            }
-            for (int i = 1; i < count; ++i) {
+            for (int i = 0; i < count; ++i) {
                 /// draw label
                 x = 0;
                 p.setFont(m_labelFont);
@@ -281,28 +266,14 @@ void ThemerPlasma::drawPreEditBar(PreEditBar* widget)
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);
-                p.setPen(m_candidateColor);
+                p.setPen(i == widget->m_candidateCursor ? m_candidateCursorColor : m_candidateColor);
                 w = p.fontMetrics().width(widget->m_candidates.at(i).trimmed());
                 p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(i).trimmed());
                 y += h;
             }
         }
         else {
-            if (count > 0) {
-                /// draw first label
-                p.setFont(m_labelFont);
-                p.setPen(m_firstCandidateColor);
-                w = p.fontMetrics().width(widget->m_labels.at(0).trimmed());
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_labels.at(0).trimmed());
-                x += w;
-                /// draw first candidate
-                p.setFont(m_candidateFont);
-                p.setPen(m_firstCandidateColor);
-                w = p.fontMetrics().width(widget->m_candidates.at(0).trimmed() + ' ');
-                p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(0).trimmed() + ' ');
-                x += w;
-            }
-            for (int i = 1; i < count; ++i) {
+            for (int i = 0; i < count; ++i) {
                 /// draw label
                 p.setFont(m_labelFont);
                 p.setPen(m_labelColor);
@@ -311,7 +282,7 @@ void ThemerPlasma::drawPreEditBar(PreEditBar* widget)
                 x += w;
                 /// draw candidate
                 p.setFont(m_candidateFont);
-                p.setPen(m_candidateColor);
+                p.setPen(i == widget->m_candidateCursor ? m_candidateCursorColor : m_candidateColor);
                 w = p.fontMetrics().width(widget->m_candidates.at(i).trimmed() + ' ');
                 p.drawText(x, y, w, h, Qt::AlignCenter, widget->m_candidates.at(i).trimmed() + ' ');
                 x += w;

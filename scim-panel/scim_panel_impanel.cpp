@@ -450,6 +450,9 @@ static void slot_update_lookup_table(const LookupTable& table)
     bool hasprev = table.get_current_page_start();
     bool hasnext = table.get_current_page_start() + current_page_size < table.number_of_candidates();
     panel->UpdateLookupTable(labels, candidates, attrs, hasprev, hasnext);
+
+    int cursor_pos = table.get_cursor_pos_in_current_page();
+    panel->UpdateLookupTableCursor(cursor_pos);
 }
 
 static void slot_register_properties(const PropertyList& props)
