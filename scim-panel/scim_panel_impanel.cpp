@@ -85,7 +85,7 @@ static String Property2String(const Property& prop)
 static String PanelFactoryInfo2String(const PanelFactoryInfo& info)
 {
     std::stringstream ss;
-    ss << "/Factory/" << info.uuid << ':';
+    ss << factory_prop_prefix << info.uuid << ':';
     ss << info.name << ':';
     ss << info.icon << ':';
     ss << info.lang;
@@ -699,6 +699,24 @@ int main(int argc, char* argv[])
     conn.request_name("org.kde.impanel.inputmethod");
 
     panel = new Panel(conn);
+
+    /// add initial helper as helper property
+    PropertyList props;
+    std::vector<HelperInfo>::const_iterator it = _helper_list.begin();
+    std::vector<HelperInfo>::const_iterator end = _helper_list.end();
+    while (it != end) {
+        if ((it->option & SCIM_HELPER_STAND_ALONE)
+            && !(it->option & SCIM_HELPER_AUTO_START)) {
+            props.push_back(Property(String(helper_prop_prefix) + it->uuid,
+                                     it->name,
+                                     it->icon,
+                                     it->description));
+        }
+        ++it;
+    }
+    if (props.size()) {
+        helper_props_map[0] = props;
+    }
 
     dispatcher.enter();
 
