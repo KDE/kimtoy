@@ -379,16 +379,19 @@ void StatusBar::slotExecDialog(const QString& prop)
 
 void StatusBar::slotExecMenu(const QStringList& actions)
 {
-    QMenu menu;
+    QMenu* menu = new QMenu;
+    menu->setWindowFlags(Qt::ToolTip);
+    menu->setAttribute(Qt::WA_DeleteOnClose);
     QString objectPath, name, iconName, description;
     foreach(const QString& a, actions) {
         extractProperty(a, objectPath, name, iconName, description);
-        QAction* action = new QAction(KIcon(iconName), name, &menu);
+        QAction* action = new QAction(KIcon(iconName), name, menu);
         connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
         m_signalMapper->setMapping(action, objectPath);
-        menu.addAction(action);
+        connect(action, SIGNAL(triggered()), menu, SLOT(close()));
+        menu->addAction(action);
     }
-    menu.exec(QCursor::pos());
+    menu->exec(QCursor::pos());
 }
 
 void StatusBar::slotAutostartToggled(bool enable)
