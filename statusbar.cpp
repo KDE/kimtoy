@@ -391,7 +391,8 @@ void StatusBar::slotExecMenu(const QStringList& actions)
         connect(action, SIGNAL(triggered()), menu, SLOT(close()));
         menu->addAction(action);
     }
-    menu->exec(QCursor::pos());
+    menu->popup(QCursor::pos());
+    menu->grabMouse();
 }
 
 void StatusBar::slotAutostartToggled(bool enable)
