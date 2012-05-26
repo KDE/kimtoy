@@ -103,6 +103,10 @@ StatusBar::StatusBar()
     connect(trayiconModeAction, SIGNAL(toggled(bool)), this, SLOT(slotTrayiconModeToggled(bool)));
     m_tray->contextMenu()->addAction(trayiconModeAction);
 
+    KAction* configureIMAction = new KAction(KIcon("preferences-desktop-keyboard"), i18n("C&onfigure input method..."), this);
+    connect(configureIMAction, SIGNAL(triggered()), this, SLOT(slotConfigureIMTriggered()));
+    m_tray->contextMenu()->addAction(configureIMAction);
+
     KAction* prefAction = KStandardAction::preferences(this, SLOT(preferences()), 0);
     m_tray->contextMenu()->addAction(prefAction);
 
@@ -444,6 +448,11 @@ void StatusBar::slotTrayiconModeToggled(bool enable)
         qDeleteAll(m_trayWidgets);
         m_trayWidgets.clear();
     }
+}
+
+void StatusBar::slotConfigureIMTriggered()
+{
+    IMPanelAgent::Configure();
 }
 
 void StatusBar::preferences()

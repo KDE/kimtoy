@@ -60,6 +60,7 @@ private Q_SLOTS:
 private Q_SLOTS:
     void slotAutostartToggled(bool enable);
     void slotTrayiconModeToggled(bool enable);
+    void slotConfigureIMTriggered();
     void preferences();
     void slotAboutActionTriggered();
     void loadSettings();
