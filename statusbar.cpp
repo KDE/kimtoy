@@ -249,6 +249,8 @@ void StatusBar::slotTriggerProperty(const QString& objectPath)
 
 void StatusBar::slotRegisterProperties(const QStringList& props)
 {
+    QList<QString> toRemove = m_propertyWidgets.keys();
+
     QString objectPath, name, iconName, description;
     foreach(const QString& p, props) {
         extractProperty(p, objectPath, name, iconName, description);
@@ -263,6 +265,9 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
             m_signalMapper->setMapping(pw, objectPath);
             m_propertyWidgets.insert(objectPath, pw);
             needUpdate = true;
+        }
+        else {
+            toRemove.removeAll(objectPath);
         }
 
         /// update property
@@ -301,6 +306,21 @@ void StatusBar::slotRegisterProperties(const QStringList& props)
                 tw->setIconByPixmap(iconpix);
                 tw->setToolTipIconByPixmap(iconpix);
             }
+        }
+    }
+
+    // remove old ones
+    foreach (const QString& r, toRemove) {
+        PropertyWidget* pw = m_propertyWidgets.take(r);
+        if (pw && !m_filters.contains(r)) {
+            /// remove from layout if not filtered
+            m_layout->removeWidget(pw);
+            updateSize();
+        }
+        delete pw;
+
+        if (KIMToySettings::self()->trayiconMode()) {
+            delete m_trayWidgets.take(r);
         }
     }
 }
