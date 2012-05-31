@@ -1,3 +1,13 @@
+2012-05-30 v1.9
+highlight candidate cursor
+statusbar filter menu do not popup out of screen
+scim-panel register helper property on startup
+ibus-panel provide additional attr field
+add configure input method system tray context menu entry
+fix issue that input method can not be changed when used in gtk app
+fix wrong color parse logic in sogou theme
+fix dangling property after switching to other input method
+
 2012-05-22 v1.8
 fix build issue with newer glibc
 fix preedit bar shadow issue with oxygen-transparent
