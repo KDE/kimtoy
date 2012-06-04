@@ -77,7 +77,7 @@ StatusBar::StatusBar()
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
     KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
-    KWindowSystem::setType(winId(), NET::PopupMenu);
+    KWindowSystem::setType(winId(), NET::Utility);
 
     ThemerAgent::loadSettings();
 
