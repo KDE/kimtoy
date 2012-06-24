@@ -75,9 +75,9 @@ static void extractProperty(const QString& str,
 
 StatusBar::StatusBar()
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
-    KWindowSystem::setType(winId(), NET::Utility);
+    KWindowSystem::setType(winId(), NET::Dock);
 
     ThemerAgent::loadSettings();
 
