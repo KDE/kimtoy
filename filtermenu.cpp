@@ -25,6 +25,9 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QMenu>
+#include <QPainter>
+#include <QStyle>
+#include <QStyleOptionMenuItem>
 #include <QVBoxLayout>
 #include <KIcon>
 
@@ -34,6 +37,7 @@ FilterMenu::FilterMenu()
 {
     setWindowFlags(Qt::Popup);
     setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_TranslucentBackground, true);
 
     QVBoxLayout* layout = new QVBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
@@ -56,6 +60,19 @@ void FilterMenu::addEntry(const QString& objectPath, const PropertyWidget* pw, b
     act->setData(objectPath);
     connect(act, SIGNAL(toggled(bool)), this, SLOT(slotToggled(bool)));
     m_menu->addAction(act);
+}
+
+void FilterMenu::paintEvent(QPaintEvent* event)
+{
+    QPainter p(this);
+
+    QStyleOptionMenuItem menuOpt;
+    menuOpt.initFrom(this);
+    menuOpt.state = QStyle::State_None;
+    menuOpt.checkType = QStyleOptionMenuItem::NotCheckable;
+    menuOpt.maxIconWidth = 0;
+    menuOpt.tabWidth = 0;
+    style()->drawPrimitive(QStyle::PE_PanelMenu, &menuOpt, &p, this);
 }
 
 void FilterMenu::showEvent(QShowEvent* /*event*/)

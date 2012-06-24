@@ -37,6 +37,7 @@ public:
 Q_SIGNALS:
     void filterChanged(const QString& objectPath, bool checked);
 protected:
+    virtual void paintEvent(QPaintEvent* event);
     virtual void showEvent(QShowEvent* event);
 private Q_SLOTS:
     void slotToggled(bool checked);
