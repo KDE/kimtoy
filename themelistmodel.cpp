@@ -111,10 +111,12 @@ void ThemeListModel::reloadThemes()
         m_previewJob = 0;
     }
 
-    beginRemoveRows(QModelIndex(), 0, m_themes.count() - 1);
-    m_themes.clear();
-    m_previews.clear();
-    endRemoveRows();
+    if (!m_themes.isEmpty()) {
+        beginRemoveRows(QModelIndex(), 0, m_themes.count() - 1);
+        m_themes.clear();
+        m_previews.clear();
+        endRemoveRows();
+    }
 
     loadNoneTheme();
     loadPlasmaThemes();
