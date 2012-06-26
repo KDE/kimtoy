@@ -233,6 +233,7 @@ void StatusBar::paintEvent(QPaintEvent* event)
 void StatusBar::showEvent(QShowEvent* event)
 {
     KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
+    KWindowSystem::setType(winId(), NET::Dock);
 }
 
 void StatusBar::slotEnable(bool enable)
