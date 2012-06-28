@@ -29,7 +29,7 @@
 int main(int argc, char** argv)
 {
     KAboutData aboutData("kimtoy", 0, ki18n("KIMToy"),
-                         "1.9.1", ki18n("The KDE input method toy"),
+                         "1.9.2", ki18n("The KDE input method toy"),
                          KAboutData::License_GPL, ki18n("(c) 2011-2012, Ni Hui"));
     aboutData.addAuthor(ki18n("Ni Hui"), ki18n("Author"), "shuizhuyuanluo@126.com");
     aboutData.setProgramIconName("draw-freehand");
