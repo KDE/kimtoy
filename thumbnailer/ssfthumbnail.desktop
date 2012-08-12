@@ -1,21 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=Sogou Surface File
-Name[da]=Sogou Surface-fil
-Name[es]=Archivo de superficie de Sogou
-Name[et]=Sogou pinnafail
-Name[fr]=Fichier de surface Sogou
-Name[ga]=Comhad Dhromchla Sagou
-Name[hu]=Sogou felületfájl
-Name[km]=ឯកសារ​ផ្ទៃ​ខាងក្រៅ Sogou
-Name[nl]=Sogou Surface-bestand
-Name[pl]=Plik powierzchni Sogou
-Name[pt]=Ficheiro de Superfície do Sogou
-Name[pt_BR]=Arquivo de superfície do Sogou
-Name[sv]=Sogou-ytfil
-Name[uk]=Файл поверхні Sogou
-Name[x-test]=xxSogou Surface Filexx
-Name[zh_CN]=搜狗皮肤文件
 X-KDE-ServiceTypes=ThumbCreator
 MimeType=application/x-ssf;
 CacheThumbnail=false
