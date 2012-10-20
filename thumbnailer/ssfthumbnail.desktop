@@ -19,6 +19,7 @@ Name[sv]=Sogou-ytfil
 Name[uk]=Файл поверхні Sogou
 Name[x-test]=xxSogou Surface Filexx
 Name[zh_CN]=搜狗皮肤文件
+Name[zh_TW]=Sogou 外觀檔
 X-KDE-ServiceTypes=ThumbCreator
 MimeType=application/x-ssf;
 CacheThumbnail=false
