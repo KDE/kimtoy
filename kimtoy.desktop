@@ -28,6 +28,7 @@ Name[zh_TW]=KIMToy
 GenericName=Input Method Frontend
 GenericName[bs]=Program za unosne metode
 GenericName[da]=Brugerflade til inputmetode
+GenericName[de]=Vordergrundprogramm für Eingabemethoden
 GenericName[el]=Διεπαφή μεθόδου εισόδου
 GenericName[es]=Interfaz de método de entrada
 GenericName[et]=Sisestusviisi kasutajaliides
