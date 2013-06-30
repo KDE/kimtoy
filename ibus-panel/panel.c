@@ -28,9 +28,11 @@
 #endif
 #include "panel.h"
 
+#if !IBUS_CHECK_VERSION(1,3,99)
 #ifndef DBUS_ERROR_FAILED
 #define DBUS_ERROR_FAILED "org.freedesktop.DBus.Error.Failed"
 #endif /* DBUS_ERROR_FAILED */
+#endif
 
 typedef struct _IBusPanelImpanelClass IBusPanelImpanelClass;
 
@@ -269,10 +271,19 @@ ibus_engine_desc_args_to_propstr (const gchar *name,
                                   const gchar *description,
                                   gchar *propstr, gulong n)
 {
+/// WARNING replace : to ！
+    gchar* sname = g_strdup(name);
+    gchar* tmp = sname;
+    while (*tmp) {
+        if (*tmp == ':')
+            *tmp = '!';
+        tmp++;
+    }
     if (language)
-        g_snprintf(propstr, n, "/IBus/Engine/%s:%s - %s:%s:%s", name, language, longname, icon, description);
+        g_snprintf(propstr, n, "/IBus/Engine/%s:%s - %s:%s:%s", sname, language, longname, icon, description);
     else
-        g_snprintf(propstr, n, "/IBus/Engine/%s:%s:%s:%s", name, longname, icon, description);
+        g_snprintf(propstr, n, "/IBus/Engine/%s:%s:%s:%s", sname, longname, icon, description);
+    g_free(sname);
 }
 
 static void
@@ -359,10 +370,23 @@ impanel_trigger_property_callback (GDBusConnection *connection,
         ibus_panel_impanel_exec_dialog((IBusPanelService *)user_data);
     else if (g_ascii_strncasecmp (prop_key, "Engine/", 7) == 0) {
         prop_key += 7;// +7 to skip "Engine/"
+#if !IBUS_CHECK_VERSION(1,4,99)
         if (g_ascii_strncasecmp (prop_key, "None", 4) == 0)
             ibus_input_context_disable(((IBusPanelImpanel *)user_data)->input_context);
         else
             ibus_input_context_set_engine(((IBusPanelImpanel *)user_data)->input_context, prop_key);
+#else
+        /// WARNING replace ! to :
+        gchar* sprop_key = g_strdup(prop_key);
+        gchar* tmp = sprop_key;
+        while (*tmp) {
+            if (*tmp == '!')
+                *tmp = ':';
+            tmp++;
+        }
+        ibus_bus_set_global_engine(((IBusPanelImpanel *)user_data)->bus, sprop_key);
+        g_free(sprop_key);
+#endif
     }
     else
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -614,6 +638,7 @@ ibus_panel_impanel_focus_in (IBusPanelService *panel,
                              const gchar      *input_context_path)
 #endif
 {
+#if !IBUS_CHECK_VERSION(1,4,99)
 #if !IBUS_CHECK_VERSION(1,3,99)
     IBusConnection *ibusconn;
 #else
@@ -634,6 +659,9 @@ ibus_panel_impanel_focus_in (IBusPanelService *panel,
     }
     else {
         IBusEngineDesc *engine_desc = ibus_input_context_get_engine(ic);
+#else
+    IBusEngineDesc *engine_desc = ibus_bus_get_global_engine(IBUS_PANEL_IMPANEL (panel)->bus);
+#endif
         if (!engine_desc) {
 #if !IBUS_CHECK_VERSION(1,3,99)
 //             if (error) {
@@ -650,7 +678,9 @@ ibus_panel_impanel_focus_in (IBusPanelService *panel,
 #else
         ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, ibus_engine_desc_get_icon (engine_desc));
 #endif
+#if !IBUS_CHECK_VERSION(1,4,99)
     }
+#endif
 
     gchar propstr[512];
 
@@ -1221,6 +1251,7 @@ static void
 ibus_panel_impanel_state_changed (IBusPanelService *panel)
 #endif
 {
+#if !IBUS_CHECK_VERSION(1,4,99)
     gboolean enable = ibus_input_context_is_enabled(IBUS_PANEL_IMPANEL (panel)->input_context);
 
     if (enable == 0) {
@@ -1228,6 +1259,9 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
     }
     else {
         IBusEngineDesc *engine_desc = ibus_input_context_get_engine(IBUS_PANEL_IMPANEL (panel)->input_context);
+#else
+    IBusEngineDesc *engine_desc = ibus_bus_get_global_engine(IBUS_PANEL_IMPANEL (panel)->bus);
+#endif
         if (!engine_desc) {
 #if !IBUS_CHECK_VERSION(1,3,99)
 //             if (error) {
@@ -1244,7 +1278,9 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
 #else
         ibus_property_set_icon (IBUS_PANEL_IMPANEL (panel)->logo_prop, ibus_engine_desc_get_icon (engine_desc));
 #endif
+#if !IBUS_CHECK_VERSION(1,4,99)
     }
+#endif
 
     gchar propstr[512];
 
@@ -1255,10 +1291,12 @@ ibus_panel_impanel_state_changed (IBusPanelService *panel)
                                    g_variant_new ("(s)", propstr),
                                    NULL);
 
+#if !IBUS_CHECK_VERSION(1,4,99)
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
                                    g_variant_new ("(b)", enable),
                                    NULL);
+#endif
 #if !IBUS_CHECK_VERSION(1,3,99)
     return TRUE;
 #endif
@@ -1285,6 +1323,7 @@ ibus_panel_impanel_exec_menu (IBusPanelService *panel)
     GVariantBuilder builder;
     g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
 
+#if !IBUS_CHECK_VERSION(1,4,99)
     GList *engines = ibus_bus_list_active_engines (IBUS_PANEL_IMPANEL (panel)->bus);
     IBusEngineDesc *engine_desc = NULL;
     GList *node = g_list_first (engines);
@@ -1304,6 +1343,39 @@ ibus_panel_impanel_exec_menu (IBusPanelService *panel)
                                      propstr, 512);
 
     g_variant_builder_add (&builder, "s", propstr);
+#else
+    IBusConfig *config = ibus_bus_get_config (IBUS_PANEL_IMPANEL (panel)->bus);
+    GVariant *engines = ibus_config_get_value (config, "general", "preload_engines");
+
+    const gchar *names[64] = {0};
+    int i = 0;
+
+    GVariantIter iter;
+    GVariant *child;
+    g_variant_iter_init (&iter, engines);
+    while ((child = g_variant_iter_next_value (&iter)) != NULL) {
+        const gchar *engine_name = g_variant_get_string (child, NULL);
+// g_print("%s\n",engine_name);
+        names[i] = engine_name;
+        i++;
+        g_variant_unref (child);
+    }
+    names[i] = "xkb:us::eng";
+
+    IBusEngineDesc ** enginedescs = ibus_bus_get_engines_by_names (IBUS_PANEL_IMPANEL (panel)->bus, names);
+    IBusEngineDesc *engine_desc = enginedescs[0];
+    i = 0;
+    while (engine_desc) {
+        ibus_engine_desc_to_propstr(engine_desc, propstr, 512);
+// g_print("%s\n",propstr);
+        g_variant_builder_add (&builder, "s", propstr);
+//         g_object_unref (engine_desc);
+        i++;
+        engine_desc = enginedescs[i];
+    }
+//     g_object_unref (enginedescs);
+
+#endif
 
     g_dbus_connection_emit_signal (IBUS_PANEL_IMPANEL (panel)->conn,
                                    NULL, "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",

@@ -30,9 +30,11 @@
 #include <KDE/KConfigGroup>
 #include "config.h"
 
+#if !IBUS_CHECK_VERSION(1,3,99)
 #ifndef DBUS_ERROR_FAILED
 #define DBUS_ERROR_FAILED "org.freedesktop.DBus.Error.Failed"
 #endif /* DBUS_ERROR_FAILED */
+#endif
 
 #define KCONFIG_FILENAME "ibusrc"
 
@@ -74,6 +76,9 @@ static gboolean     ibus_config_kconfig_set_value       (IBusConfigService      
 static GVariant    *ibus_config_kconfig_get_value       (IBusConfigService        *config,
                                                          const gchar              *section,
                                                          const gchar              *name,
+                                                         GError                  **error);
+static GVariant    *ibus_config_kconfig_get_values      (IBusConfigService        *config,
+                                                         const gchar              *section,
                                                          GError                  **error);
 static gboolean     ibus_config_kconfig_unset_value     (IBusConfigService        *config,
                                                          const gchar              *section,
@@ -138,6 +143,7 @@ ibus_config_kconfig_class_init (IBusConfigKConfigClass *_class)
 #if !IBUS_CHECK_VERSION(1,3,99)
     IBUS_CONFIG_SERVICE_CLASS (object_class)->unset       = ibus_config_kconfig_unset;
 #else
+    IBUS_CONFIG_SERVICE_CLASS (object_class)->get_values  = ibus_config_kconfig_get_values;
     IBUS_CONFIG_SERVICE_CLASS (object_class)->unset_value = ibus_config_kconfig_unset_value;
 #endif
 }
@@ -513,6 +519,41 @@ ibus_config_kconfig_get_value (IBusConfigService      *config,
     GVariant *variant = _from_qvariant (qv);
     return variant;
 #endif
+}
+
+static GVariant *
+ibus_config_kconfig_get_values (IBusConfigService      *config,
+                                const gchar            *section,
+                                GError                **error)
+{
+    fprintf(stderr,"get values %s\n",section);
+    KConfigGroup group = ((IBusConfigKConfig *)config)->kconfig->group (section);
+    QStringList names = group.keyList();
+
+    if (names.isEmpty()) {
+        *error = g_error_new (G_DBUS_ERROR, G_DBUS_ERROR_FAILED,
+                        "Config values [%s] does not exist.", section);
+        return NULL;
+    }
+
+    GVariantBuilder *builder = g_variant_builder_new (G_VARIANT_TYPE ("a{sv}"));
+    foreach (const QString& name, names) {
+        /// FIXME dirty workaround to determine list and string
+        QVariant qv;
+        QString qvs = group.readEntry (name, QString());
+        if (!qvs.isEmpty()) {
+            if (qvs.startsWith("@@"))
+                qv = qvs.mid(2);
+            else
+                qv = group.readEntry (name, QVariantList());
+        }
+        if (!qv.isNull()) {
+            GVariant *variant = _from_qvariant (qv);
+            g_variant_builder_add (builder, "{sv}", name.toUtf8().data(), variant);
+        }
+    }
+
+    return g_variant_builder_end (builder);
 }
 
 #if !IBUS_CHECK_VERSION(1,3,99)
