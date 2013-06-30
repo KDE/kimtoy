@@ -230,8 +230,6 @@ void SCIMInputMethod::run()
 void SCIMInputMethod::kill()
 {
     killProcess(KIMToySettings::self()->sCIMCmd());
-//     /// NOTE: workaround here for kimtoy-scim-panel
-//     KProcess::startDetached( "killall", QStringList() << "-9" << "kimtoy-scim-panel" );
 }
 
 void SCIMInputMethod::saveEnvSettings() const
