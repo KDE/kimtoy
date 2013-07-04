@@ -405,11 +405,8 @@ impanel_configure_callback (GDBusConnection *connection,
                             GVariant        *parameters,
                             gpointer         user_data)
 {
-    pid_t pid = fork();
-    if (pid == 0) {
-        execlp ("ibus-setup", "ibus-setup", (char *)0);
-        exit (0);
-    }
+    gchar *argv[] = {"ibus-setup", 0};
+    g_spawn_async (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
 }
 
 static void
