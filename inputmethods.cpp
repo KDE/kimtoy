@@ -34,7 +34,7 @@
 
 static bool isProcessRunning(const KUrl& cmdPath)
 {
-    return KProcess::execute("pidof", QStringList() << cmdPath.fileName()) == 0;
+    return KProcess::execute("ps", QStringList() << "-C" << cmdPath.fileName()) == 0;
 }
 
 static void killProcess(const KUrl& cmdPath)
