@@ -32,6 +32,11 @@
 
 #include "kimtoysettings.h"
 
+static bool isProgramExists(const KUrl& cmdPath)
+{
+    return KProcess::execute("which", QStringList() << cmdPath.fileName()) == 0;
+}
+
 static bool isProcessRunning(const KUrl& cmdPath)
 {
     return KProcess::execute("ps", QStringList() << "-C" << cmdPath.fileName()) == 0;
@@ -93,10 +98,15 @@ void FcitxInputMethod::saveEnvSettings() const
 
 bool FcitxInputMethod::getVersion(QString& version) const
 {
+    KUrl fcitxCmd = KIMToySettings::self()->fcitxCmd();
+    if (!isProgramExists(fcitxCmd)) {
+        return false;
+    }
+
     KProcess p;
     p.setReadChannel(QProcess::StandardOutput);
     p.setOutputChannelMode(KProcess::SeparateChannels);
-    p.setProgram(KIMToySettings::self()->fcitxCmd().pathOrUrl(), QStringList() << "-v");
+    p.setProgram(fcitxCmd.pathOrUrl(), QStringList() << "-v");
     p.start();
     p.waitForFinished();
     QByteArray data = p.readAllStandardOutput();
@@ -165,10 +175,15 @@ void IBusInputMethod::saveEnvSettings() const
 
 bool IBusInputMethod::getVersion(QString& version) const
 {
+    KUrl iBusCmd = KIMToySettings::self()->iBusCmd();
+    if (!isProgramExists(iBusCmd)) {
+        return false;
+    }
+
     KProcess p;
     p.setReadChannel(QProcess::StandardOutput);
     p.setOutputChannelMode(KProcess::SeparateChannels);
-    p.setProgram(KIMToySettings::self()->iBusCmd().pathOrUrl(), QStringList() << "-V");
+    p.setProgram(iBusCmd.pathOrUrl(), QStringList() << "-V");
     p.start();
     p.waitForFinished();
     QByteArray data = p.readAllStandardOutput();
@@ -244,10 +259,15 @@ void SCIMInputMethod::saveEnvSettings() const
 
 bool SCIMInputMethod::getVersion(QString& version) const
 {
+    KUrl sCIMCmd = KIMToySettings::self()->sCIMCmd();
+    if (!isProgramExists(sCIMCmd)) {
+        return false;
+    }
+
     KProcess p;
     p.setReadChannel(QProcess::StandardOutput);
     p.setOutputChannelMode(KProcess::SeparateChannels);
-    p.setProgram(KIMToySettings::self()->sCIMCmd().pathOrUrl(), QStringList() << "-v");
+    p.setProgram(sCIMCmd.pathOrUrl(), QStringList() << "-v");
     p.start();
     p.waitForFinished();
     QByteArray data = p.readAllStandardOutput();
