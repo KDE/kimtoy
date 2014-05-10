@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KIMToy
 Name[bs]=KIMToy
+Name[ca]=KIMToy
 Name[cs]=KIMToy
 Name[da]=KIMToy
 Name[de]=KIMToy
@@ -34,6 +35,7 @@ Name[zh_CN]=KIMToy
 Name[zh_TW]=KIMToy
 GenericName=Input Method Frontend
 GenericName[bs]=Program za unosne metode
+GenericName[ca]=Frontal del mètode d'entrada
 GenericName[da]=Brugerflade til inputmetode
 GenericName[de]=Vordergrundprogramm für Eingabemethoden
 GenericName[el]=Διεπαφή μεθόδου εισόδου
