@@ -1,3 +1,7 @@
+2015-03-25 v1.9.3
+fix compability with ibus 1.5.x but ctrl+space is the only supported hotkey
+fix zombie process issue when opening setting dialog
+
 2012-06-28 v1.9.2
 try to fix ghost taskbar entry, second try
 
