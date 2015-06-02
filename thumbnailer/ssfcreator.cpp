@@ -28,9 +28,9 @@
 #include <QFile>
 #include <QString>
 #include <QTextStream>
-#include <KZip>
-#include <KZipFileEntry>
 #include <kdemacros.h>
+
+#include "../kssf.h"
 
 extern "C"
 {
@@ -64,16 +64,16 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
     if (!QFile::exists(path))
         return false;
 
-    KZip zip(path);
-    if (!zip.open(QIODevice::ReadOnly))
+    KSsf ssf(path);
+    if (!ssf.open(QIODevice::ReadOnly))
         return false;
 
-    const KArchiveEntry* entry = zip.directory()->entry("skin.ini");
-    const KZipFileEntry* skinini = static_cast<const KZipFileEntry*>(entry);
+    const KArchiveEntry* entry = ssf.directory()->entry("skin.ini");
+    const KArchiveFile* skinini = static_cast<const KArchiveFile*>(entry);
 
     if (!skinini) {
-        entry = zip.directory()->entry("Skin.ini");
-        skinini = static_cast<const KZipFileEntry*>(entry);
+        entry = ssf.directory()->entry("Skin.ini");
+        skinini = static_cast<const KArchiveFile*>(entry);
         if (!skinini)
             return false;
     }
@@ -140,8 +140,8 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
         }
         else if (scheme_h1) {
             if (key == "pic") {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     skin.loadFromData(pix->data());
             }
@@ -190,8 +190,8 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
                 op.alignTarget = numbers.at(9).toInt();
             }
             else if (overlays.contains(key)) {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     overlays[ key ].pixmap.loadFromData(pix->data());
             }

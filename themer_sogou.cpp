@@ -33,11 +33,10 @@
 
 #include <KDebug>
 #include <KIconLoader>
-#include <KZip>
-#include <KZipFileEntry>
 #include <Plasma/WindowEffects>
 
 #include "animator.h"
+#include "kssf.h"
 
 #include "preeditbar.h"
 #include "statusbar.h"
@@ -165,17 +164,17 @@ bool ThemerSogou::loadTheme()
     if (!QFile::exists(file))
         return false;
 
-    KZip zip(file);
-    if (!zip.open(QIODevice::ReadOnly)) {
+    KSsf ssf(file);
+    if (!ssf.open(QIODevice::ReadOnly)) {
         return false;
     }
 
-    const KArchiveEntry* entry = zip.directory()->entry("skin.ini");
-    const KZipFileEntry* skinini = static_cast<const KZipFileEntry*>(entry);
+    const KArchiveEntry* entry = ssf.directory()->entry("skin.ini");
+    const KArchiveFile* skinini = static_cast<const KArchiveFile*>(entry);
 
     if (!skinini) {
-        entry = zip.directory()->entry("Skin.ini");
-        skinini = static_cast<const KZipFileEntry*>(entry);
+        entry = ssf.directory()->entry("Skin.ini");
+        skinini = static_cast<const KArchiveFile*>(entry);
         if (!skinini)
             return false;
     }
@@ -256,8 +255,8 @@ bool ThemerSogou::loadTheme()
         }
         else if (scheme_h1) {
             if (key == "pic") {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     h1skin.loadFromData(pix->data());
             }
@@ -321,8 +320,8 @@ bool ThemerSogou::loadTheme()
                 op->alignTarget = numbers.at(9).toInt();
             }
             else if (h_overlays.contains(key)) {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix) {
 //                     h_overlays[ key ]->pixmap.loadFromData(pix->data());
                     OverlayPixmap* op = h_overlays[ key ];
@@ -337,8 +336,8 @@ bool ThemerSogou::loadTheme()
         }
         else if (scheme_v1) {
             if (key == "pic") {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     v1skin.loadFromData(pix->data());
             }
@@ -398,8 +397,8 @@ bool ThemerSogou::loadTheme()
                 op->alignTarget = numbers.at(9).toInt();
             }
             else if (v_overlays.contains(key)) {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix) {
 //                     v_overlays[ key ]->pixmap.loadFromData(pix->data());
                     OverlayPixmap* op = v_overlays[ key ];
@@ -414,8 +413,8 @@ bool ThemerSogou::loadTheme()
         }
         else if (statusbar) {
             if (key == "pic") {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix) {
                     m_statusBarSkin = new QMovie;
 //                     m_statusBarSkin.loadFromData(pix->data());
@@ -430,14 +429,14 @@ bool ThemerSogou::loadTheme()
 #define LOAD_PWPIX_VALUE(p1, p2) \
     do { \
         QStringList pics = value.split(','); \
-        const KArchiveEntry* e0 = zip.directory()->entry(pics.at(0)); \
-        const KZipFileEntry* pix0 = static_cast<const KZipFileEntry*>(e0); \
+        const KArchiveEntry* e0 = ssf.directory()->entry(pics.at(0)); \
+        const KArchiveFile* pix0 = static_cast<const KArchiveFile*>(e0); \
         if (pix0) { \
             QPixmap& pix = m_pwpix[ p1 ]; \
             pix.loadFromData(pix0->data()); \
         } \
-        const KArchiveEntry* e1 = zip.directory()->entry(pics.at(1)); \
-        const KZipFileEntry* pix1 = static_cast<const KZipFileEntry*>(e1); \
+        const KArchiveEntry* e1 = ssf.directory()->entry(pics.at(1)); \
+        const KArchiveFile* pix1 = static_cast<const KArchiveFile*>(e1); \
         if (pix1) { \
             QPixmap& pix = m_pwpix[ p2 ]; \
             pix.loadFromData(pix1->data()); \
@@ -459,8 +458,8 @@ bool ThemerSogou::loadTheme()
                 LOAD_PWPIX_VALUE(Chinese_Traditional, Chinese_Simplified)
             }
             else if (key == "softkeyboard") {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix) {
                     QPixmap& pwpix1 = m_pwpix[ SoftKeyboard_On ];
                     pwpix1.loadFromData(pix->data());
@@ -469,8 +468,8 @@ bool ThemerSogou::loadTheme()
                 }
             }
             else if (key == "menu") {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix) {
                     QPixmap& pwpix = m_pwpix[ Setup ];
                     pwpix.loadFromData(pix->data());
@@ -527,8 +526,8 @@ bool ThemerSogou::loadTheme()
                 op->ml = numbers.at(0).toInt();
             }
             else if (s_overlays.contains(key)) {
-                const KArchiveEntry* e = zip.directory()->entry(value);
-                const KZipFileEntry* pix = static_cast<const KZipFileEntry*>(e);
+                const KArchiveEntry* e = ssf.directory()->entry(value);
+                const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix) {
 //                     s_overlays[ key ]->pixmap.loadFromData(pix->data());
                     OverlayPixmap* op = s_overlays[ key ];

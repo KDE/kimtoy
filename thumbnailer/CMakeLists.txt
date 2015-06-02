@@ -1,10 +1,11 @@
 
 ########## ssf thumbnailer ##########
-set(ssfthumbnail_SRCS ssfcreator.cpp)
+set(ssfthumbnail_SRCS ssfcreator.cpp ../kssf.cpp)
 
 kde4_add_plugin(ssfthumbnail ${ssfthumbnail_SRCS})
 target_link_libraries(ssfthumbnail
     ${KDE4_KIO_LIBS}
+    ${QCA2_LIBRARIES}
 )
 
 install(TARGETS ssfthumbnail DESTINATION ${PLUGIN_INSTALL_DIR})
