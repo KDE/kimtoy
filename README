@@ -9,7 +9,7 @@ Homepage
     http://kde-apps.org/content/show.php?content=140967
 
 Version Control
-    https://projects.kde.org/projects/playground/utils/kimtoy
+    https://projects.kde.org/projects/extragear/utils/kimtoy
 
 Authors
     Ni Hui <shuizhuyuanluo@126.com>
@@ -24,6 +24,7 @@ Build requirements (Development packages)
     cmake   >= 2.6
     qt      >= 4.6
     kdelibs >= 4.5
+    qca2
     gettext
     ibus    >= 1.3.0 (build ibus support)
     scim    >= 1.4.9 (build scim support)
