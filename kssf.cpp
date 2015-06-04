@@ -26,7 +26,8 @@
 #include <QDebug>
 #include <QFile>
 
-#include <QtCrypto>
+// ase decrypt
+#include <openssl/aes.h>
 
 #include <KArchive>
 #include <KZip>
@@ -123,30 +124,28 @@ bool KSsf::openArchive(QIODevice::OpenMode mode)
     if (isZip)
         return KZip::openArchive(mode);
 
-    QCA::Initializer init;
-
     // decrypt aes-cbc
-    if (!QCA::isSupported("aes256-cbc")) {
-        qWarning() << "AES256-CBC not supported";
-        return false;
-    }
+    AES_KEY dec_key;
 
-    QByteArray aeskey = QByteArray::fromHex("5236461AD38503669045162879033623DDBE6F03FF04E3CAD57FFCA350E49ED9");
-    QByteArray aesiv = QByteArray::fromHex("E07AAD35E090AA038A51FD05DF8C5D0F");
+    static const unsigned char aeskey[] =
+    {
+        0x52,0x36,0x46,0x1A,0xD3,0x85,0x03,0x66,
+        0x90,0x45,0x16,0x28,0x79,0x03,0x36,0x23,
+        0xDD,0xBE,0x6F,0x03,0xFF,0x04,0xE3,0xCA,
+        0xD5,0x7F,0xFC,0xA3,0x50,0xE4,0x9E,0xD9
+    };
 
-    QCA::SymmetricKey key(aeskey);
-    QCA::InitializationVector iv(aesiv);
+    AES_set_decrypt_key(aeskey, 256, &dec_key);
 
-    QCA::Cipher cipher("aes256", QCA::Cipher::CBC);
-    cipher.setup(QCA::Decode, key, iv);
+    unsigned char iv[AES_BLOCK_SIZE] =
+    {
+        0xE0,0x7A,0xAD,0x35,0xE0,0x90,0xAA,0x03,
+        0x8A,0x51,0xFD,0x05,0xDF,0x8C,0x5D,0x0F
+    };
 
     QByteArray encdata = dev->readAll();
-    QByteArray decdata = cipher.process(encdata).toByteArray();
-
-    if (!cipher.ok()) {
-        qWarning() << "decrypt failed";
-        return false;
-    }
+    QByteArray decdata = encdata;
+    AES_cbc_encrypt((const unsigned char*)encdata.constData(), (unsigned char*)decdata.data(), encdata.size(), &dec_key, iv, AES_DECRYPT);
 
     qWarning() << "decrypt success";
 

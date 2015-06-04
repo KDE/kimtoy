@@ -271,6 +271,8 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
     int candidatew = p.fontMetrics().width("candidate");
     p.drawText(ml + labelw, ych, candidatew, fontHeight, Qt::AlignCenter, "candidate");
 
+    p.end();
+
     if (targetWidth < width || targetHeight < height) {
         pixmap = pixmap.scaled(targetWidth, targetHeight, Qt::KeepAspectRatio);
     }

@@ -41,8 +41,8 @@ macro_log_feature(SCIM_FOUND "scim" "scim support" "http://www.scim-im.org")
 macro_optional_find_package(Strigi)
 macro_log_feature(STRIGI_FOUND "strigi" "strigi analyzer" "http://www.vandenoever.info/software/strigi")
 
-find_package(QCA2 REQUIRED)
-include_directories(${QCA2_INCLUDE_DIR})
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
 
 ############# check if libpng has apng support #############
 
@@ -137,7 +137,7 @@ target_link_libraries(kimtoy
     ${KDE4_KIO_LIBS}
     ${KDE4_PLASMA_LIBS}
     ${KDE4_KNEWSTUFF3_LIBS}
-    ${QCA2_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
     ${X11_X11_LIB}
 )
 

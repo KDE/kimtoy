@@ -432,6 +432,8 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
     x += w;
     p.restore();
 
+    p.end();
+
     if (targetWidth < width || targetHeight < height) {
         pixmap = pixmap.scaled(targetWidth, targetHeight, Qt::KeepAspectRatio);
     }

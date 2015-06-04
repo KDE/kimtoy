@@ -112,10 +112,10 @@ void ThemeListModel::reloadThemes()
     }
 
     if (!m_themes.isEmpty()) {
-        beginRemoveRows(QModelIndex(), 0, m_themes.count() - 1);
+        beginResetModel();
         m_themes.clear();
         m_previews.clear();
-        endRemoveRows();
+        endResetModel();
     }
 
     loadNoneTheme();
@@ -302,7 +302,7 @@ void ThemeListModel::generatePreviews()
 void ThemeListModel::addPreview(const KFileItem& item, const QPixmap& preview)
 {
 // qWarning() << "addPreview" << item.localPath();
-    m_previews[ item.localPath()] = preview;
+    m_previews[ item.localPath() ] = preview;
 }
 
 void ThemeListModel::failed(const KFileItem& item)
