@@ -91,7 +91,7 @@ StatusBar::StatusBar()
     m_tray->setToolTipTitle(i18n("KIMToy"));
     m_tray->setToolTipSubTitle(i18n("Input method toy"));
     m_tray->setCategory(KStatusNotifierItem::ApplicationStatus);
-    m_tray->setStatus(KStatusNotifierItem::Passive);
+    m_tray->setStatus(KStatusNotifierItem::Active);
 
     KToggleAction* autostartAction = new KToggleAction(i18n("A&utostart"), this);
     autostartAction->setChecked(KIMToySettings::self()->autostartKIMToy());
