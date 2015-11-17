@@ -22,10 +22,7 @@
 #include "envsettings.h"
 
 #include <QFile>
-
-#include <KComponentData>
-#include <KGlobal>
-#include <KStandardDirs>
+#include <QStandardPaths>
 
 class EnvSettingsPrivate
 {
@@ -64,8 +61,7 @@ EnvSettingsPrivate::~EnvSettingsPrivate()
 
 void EnvSettingsPrivate::load()
 {
-    // .config/plasma-workspace/env/kimtoy-env.sh
-    QFile script(KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
+    QFile script(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/plasma-workspace/env/kimtoy-env.sh");
     if (!script.exists()) {
         // try to get system defaults
         XIM = qgetenv("XIM");
@@ -97,8 +93,7 @@ void EnvSettingsPrivate::load()
 
 void EnvSettingsPrivate::save()
 {
-    QFile script(KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
-    qWarning() << KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh";
+    QFile script(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/plasma-workspace/env/kimtoy-env.sh");
     if (!script.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
 
@@ -113,7 +108,7 @@ void EnvSettingsPrivate::save()
 
 void EnvSettingsPrivate::unset()
 {
-    QFile script(KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
+    QFile script(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/plasma-workspace/env/kimtoy-env.sh");
     script.remove();
 }
 
