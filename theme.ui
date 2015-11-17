@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>274</width>
+    <width>291</width>
     <height>276</height>
    </rect>
   </property>
@@ -35,21 +35,21 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="KPushButton" name="refreshButton">
+      <widget class="QPushButton" name="refreshButton">
        <property name="text">
         <string>Reload</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="installButton">
+      <widget class="QPushButton" name="installButton">
        <property name="text">
         <string>Install...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="downloadButton">
+      <widget class="QPushButton" name="downloadButton">
        <property name="text">
         <string>Download...</string>
        </property>
@@ -61,13 +61,8 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>KUrlRequester</class>
-   <extends>QFrame</extends>
+   <extends>QWidget</extends>
    <header>kurlrequester.h</header>
   </customwidget>
   <customwidget>

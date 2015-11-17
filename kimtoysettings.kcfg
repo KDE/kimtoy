@@ -4,10 +4,10 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile name="kimtoyrc"/>
-    <include>QFont</include>
     <include>QColor</include>
-    <include>KGlobalSettings</include>
-    <include>KStandardDirs</include>
+    <include>QFont</include>
+    <include>QFontDatabase</include>
+    <include>QStandardPaths</include>
     <include>Plasma/Theme</include>
     <group name="inputmethod">
         <entry name="RunFcitx" type="Bool">
@@ -46,7 +46,7 @@
         </entry>
         <entry name="IBusArgs" type="String">
             <default code="true">
-                QString("-r -x -p "IBUS_LIBEXEC_DIR"/ibus-ui-impanel -c "IBUS_LIBEXEC_DIR"/ibus-kconfig")
+                QString("-r -x -p " IBUS_LIBEXEC_DIR "/ibus-ui-impanel -c " IBUS_LIBEXEC_DIR "/ibus-kconfig")
             </default>
         </entry>
         <entry name="IBusXIM" type="String">
@@ -93,19 +93,19 @@
     </group>
     <group name="appearance">
         <entry name="PreeditFont" type="Font">
-            <default code="true">KGlobalSettings::fixedFont()</default>
+            <default code="true">QFontDatabase::systemFont(QFontDatabase::FixedFont)</default>
         </entry>
         <entry name="PreeditColor" type="Color">
             <default code="true">Qt::black</default>
         </entry>
         <entry name="LabelFont" type="Font">
-            <default code="true">KGlobalSettings::generalFont()</default>
+            <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
         </entry>
         <entry name="LabelColor" type="Color">
             <default code="true">Qt::red</default>
         </entry>
         <entry name="CandidateFont" type="Font">
-            <default code="true">KGlobalSettings::generalFont()</default>
+            <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
         </entry>
         <entry name="CandidateColor" type="Color">
             <default code="true">Qt::black</default>
@@ -141,7 +141,7 @@
     <group name="theme">
         <entry name="ThemeFolder" type="Url">
             <default code="true">
-                QUrl::fromLocalFile(KStandardDirs::locateLocal("appdata", "themes/"))
+                QUrl::fromLocalFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/themes/")
             </default>
         </entry>
         <entry name="ThemeUri" type="String">
