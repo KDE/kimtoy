@@ -24,8 +24,8 @@
 
 #include "ui_theme.h"
 
+#include <QIcon>
 #include <QTimer>
-#include <KIcon>
 
 #include "themelistview.h"
 
@@ -35,9 +35,9 @@ class ThemeWidget : public QWidget, public Ui::Theme
 public:
     explicit ThemeWidget() {
         setupUi(this);
-        refreshButton->setIcon(KIcon("view-refresh"));
-        installButton->setIcon(KIcon("utilities-file-archiver"));
-        downloadButton->setIcon(KIcon("get-hot-new-stuff"));
+        refreshButton->setIcon(QIcon::fromTheme("view-refresh"));
+        installButton->setIcon(QIcon::fromTheme("utilities-file-archiver"));
+        downloadButton->setIcon(QIcon::fromTheme("get-hot-new-stuff"));
         connect(refreshButton, SIGNAL(clicked()), kcfg_ThemeUri, SLOT(reload()));
         connect(installButton, SIGNAL(clicked()), this, SLOT(installTheme()));
         connect(downloadButton, SIGNAL(clicked()), this, SLOT(downloadTheme()));

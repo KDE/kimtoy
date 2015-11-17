@@ -23,7 +23,6 @@
 
 #include <QMouseEvent>
 #include <QPainter>
-#include <KIcon>
 
 #include "themeragent.h"
 

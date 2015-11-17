@@ -23,21 +23,19 @@
 
 #include <QAction>
 #include <QDBusConnection>
+#include <QIcon>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QSignalMapper>
 
 #include <KAboutApplicationDialog>
-#include <KAction>
-#include <KActionCollection>
 #include <KApplication>
 #include <KConfig>
 #include <KConfigDialog>
 #include <KConfigGroup>
 #include <KDebug>
 #include <KGlobal>
-#include <KIcon>
 #include <KLocale>
 #include <KMenu>
 #include <KMessageBox>
@@ -108,14 +106,14 @@ StatusBar::StatusBar()
     connect(trayiconModeAction, SIGNAL(toggled(bool)), this, SLOT(slotTrayiconModeToggled(bool)));
     m_tray->contextMenu()->addAction(trayiconModeAction);
 
-    KAction* configureIMAction = new KAction(KIcon("preferences-desktop-keyboard"), i18n("C&onfigure input method..."), this);
+    QAction* configureIMAction = new QAction(QIcon::fromTheme("preferences-desktop-keyboard"), i18n("C&onfigure input method..."), this);
     connect(configureIMAction, SIGNAL(triggered()), this, SLOT(slotConfigureIMTriggered()));
     m_tray->contextMenu()->addAction(configureIMAction);
 
     QAction* prefAction = KStandardAction::preferences(this, SLOT(preferences()), 0);
     m_tray->contextMenu()->addAction(prefAction);
 
-    KAction* aboutAction = new KAction(KIcon("draw-freehand"), i18n("&About KIMToy..."), this);
+    QAction* aboutAction = new QAction(QIcon::fromTheme("draw-freehand"), i18n("&About KIMToy..."), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(slotAboutActionTriggered()));
     m_tray->contextMenu()->addAction(aboutAction);
 
@@ -416,7 +414,7 @@ void StatusBar::slotExecMenu(const QStringList& actions)
     QString objectPath, name, iconName, description;
     foreach(const QString& a, actions) {
         extractProperty(a, objectPath, name, iconName, description);
-        QAction* action = new QAction(KIcon(iconName), name, menu);
+        QAction* action = new QAction(QIcon::fromTheme(iconName), name, menu);
         connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
         m_signalMapper->setMapping(action, objectPath);
         connect(action, SIGNAL(triggered()), menu, SLOT(close()));
