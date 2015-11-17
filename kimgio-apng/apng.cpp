@@ -604,19 +604,6 @@ bool QAPngHandler::supportsOption(ImageOption option) const
         || option == Size;
 }
 
-class QAPngPlugin : public QImageIOPlugin
-{
-public:
-    virtual QStringList keys() const;
-    virtual Capabilities capabilities(QIODevice* device, const QByteArray& format) const;
-    virtual QImageIOHandler* create(QIODevice* device, const QByteArray& format = QByteArray()) const;
-};
-
-QStringList QAPngPlugin::keys() const
-{
-    return QStringList() << "apng";
-}
-
 QImageIOPlugin::Capabilities QAPngPlugin::capabilities(QIODevice* device, const QByteArray& format) const
 {
     if (!device)
@@ -638,5 +625,5 @@ QImageIOHandler* QAPngPlugin::create(QIODevice* device, const QByteArray& format
     return handler;
 }
 
-Q_EXPORT_STATIC_PLUGIN(QAPngPlugin)
-Q_EXPORT_PLUGIN2(qapng, QAPngPlugin)
+// Q_EXPORT_STATIC_PLUGIN(QAPngPlugin)
+// Q_EXPORT_PLUGIN2(qapng, QAPngPlugin)

@@ -25,7 +25,7 @@
 #include <KIO/CopyJob>
 #include <KLocale>
 #include <KMessageBox>
-#include <knewstuff3/downloaddialog.h>
+#include <KNS3/DownloadDialog>
 
 #include "kimtoysettings.h"
 
@@ -41,14 +41,14 @@ void ThemeWidget::installTheme()
         return;
     }
 
-    KUrl destUrl = KIMToySettings::self()->themeFolder();
+    QUrl destUrl = KIMToySettings::self()->themeFolder();
 
     if (filePath.startsWith(destUrl.path())) {
         KMessageBox::error(this, i18n("This theme has already been installed."));
         return;
     }
 
-    KJob* job = KIO::copy(KUrl(filePath), destUrl, KIO::HideProgressInfo);
+    KJob* job = KIO::copy(QUrl::fromUserInput(filePath, QDir::currentPath(), QUrl::AssumeLocalFile), destUrl, KIO::HideProgressInfo);
     connect(job, SIGNAL(finished(KJob*)), kcfg_ThemeUri, SLOT(reload()));
 }
 

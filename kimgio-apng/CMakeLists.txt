@@ -35,8 +35,8 @@ if(NOT PNG_HAS_APNG_SUPPORT)
     set(kimg_apng_LIB_SRCS ${kimg_apng_LIB_SRCS} ${libpng_sources})
 endif(NOT PNG_HAS_APNG_SUPPORT)
 
-kde4_add_plugin(kimg_apng ${kimg_apng_LIB_SRCS})
-target_link_libraries(kimg_apng ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+add_library(kimg_apng MODULE ${kimg_apng_LIB_SRCS})
+target_link_libraries(kimg_apng Qt5::Gui)
 
 if(PNG_HAS_APNG_SUPPORT)
     target_link_libraries(kimg_apng ${PNG_LIBRARY})
@@ -44,8 +44,9 @@ else(PNG_HAS_APNG_SUPPORT)
     target_link_libraries(kimg_apng ${ZLIB_LIBRARY})
 endif(PNG_HAS_APNG_SUPPORT)
 
-install(TARGETS kimg_apng DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/)
-install(FILES apng.desktop DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins/)
+message("KDE_INSTALL_QTPLUGINDIR = ${KDE_INSTALL_QTPLUGINDIR}")
+install(TARGETS kimg_apng DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/imageformats/)
+
 install(FILES apng.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 
 update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})

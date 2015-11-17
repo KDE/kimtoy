@@ -134,8 +134,21 @@ void ThemeListModel::loadNoneTheme()
 
 void ThemeListModel::loadPlasmaThemes()
 {
-    KStandardDirs dirs;
-    const QStringList themes = dirs.findAllResources("data", "desktoptheme/*/metadata.desktop", KStandardDirs::NoDuplicates);
+//     KStandardDirs dirs;
+    QStringList themes;// = dirs.findAllResources("data", "desktoptheme/*/metadata.desktop", KStandardDirs::NoDuplicates);
+
+    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "plasma/desktoptheme", QStandardPaths::LocateDirectory);
+    qWarning() << dirs;
+    Q_FOREACH (const QString& dir, dirs) {
+        const QStringList entries = QDir(dir).entryList(QDir::Dirs);
+        Q_FOREACH (const QString& d, entries) {
+            if (QFile::exists(dir + '/' + d + "/metadata.desktop")) {
+                // ...
+                qWarning() << d;
+                themes.append(d);
+            }
+        }
+    }
 
     foreach(const QString& theme, themes) {
         QString themeRoot = theme.left(theme.lastIndexOf('/', -1));
@@ -156,7 +169,8 @@ void ThemeListModel::loadFileThemes()
     QFileInfoList es = dir.entryInfoList(QStringList() << "*.fskin" << "*.ssf");
 
     // load downloaded themes
-    QString knsFolder = KStandardDirs::locateLocal("appdata", "themes/");
+    QString knsFolder = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/themes/";
+//     QString knsFolder = KStandardDirs::locateLocal("appdata", "themes/");
 //     kWarning() << knsFolder;
     if (knsFolder != themeFolder) {
         QDir knsThemeDir(knsFolder);
@@ -226,13 +240,12 @@ void ThemeListModel::generatePreviews()
             m_previews[ e ] = preview;
         }
         else if (e.startsWith("__plasma__")) {
-            Plasma::Theme plasmaTheme;
-            plasmaTheme.setThemeName(e.mid(10));
+            Plasma::Theme plasmaTheme(e.mid(10));
 
             const QString imagePath = plasmaTheme.imagePath("widgets/background");
-            QFont preEditFont = plasmaTheme.font(Plasma::Theme::DefaultFont);
-            QFont labelFont = plasmaTheme.font(Plasma::Theme::DesktopFont);
-            QFont candidateFont = plasmaTheme.font(Plasma::Theme::DefaultFont);
+            QFont preEditFont = QApplication::font();//plasmaTheme.font(Plasma::Theme::DefaultFont);
+            QFont labelFont = QApplication::font();//plasmaTheme.font(Plasma::Theme::DesktopFont);
+            QFont candidateFont = QApplication::font();//plasmaTheme.font(Plasma::Theme::DefaultFont);
             int preEditFontHeight = QFontMetrics(preEditFont).height();
             int labelFontHeight = QFontMetrics(labelFont).height();
             int candidateFontHeight = QFontMetrics(candidateFont).height();
@@ -301,13 +314,13 @@ void ThemeListModel::generatePreviews()
 
 void ThemeListModel::addPreview(const KFileItem& item, const QPixmap& preview)
 {
-// qWarning() << "addPreview" << item.localPath();
+qWarning() << "addPreview" << item.localPath();
     m_previews[ item.localPath() ] = preview;
 }
 
 void ThemeListModel::failed(const KFileItem& item)
 {
-// qWarning() << "failed" << item.localPath() << m_previewJob->errorString();
+qWarning() << "failed" << item.localPath() << m_previewJob->errorString();
 //     QPixmap preview( m_previewWidth, 40 );
 //     m_previews[ item.localPath() ] = preview;
 }

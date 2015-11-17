@@ -19,7 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <KAboutData>
+#include <K4AboutData>
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KLocale>
@@ -28,9 +28,9 @@
 
 int main(int argc, char** argv)
 {
-    KAboutData aboutData("kimtoy", 0, ki18n("KIMToy"),
-                         "1.10.1", ki18n("The KDE input method toy"),
-                         KAboutData::License_GPL, ki18n("(c) 2011-2015, Ni Hui"));
+    K4AboutData aboutData("kimtoy", 0, ki18n("KIMToy"),
+                         "1.90", ki18n("The KDE input method toy"),
+                         K4AboutData::License_GPL, ki18n("(c) 2011-2015, Ni Hui"));
     aboutData.addAuthor(ki18n("Ni Hui"), ki18n("Author"), "shuizhuyuanluo@126.com");
     aboutData.setProgramIconName("draw-freehand");
 

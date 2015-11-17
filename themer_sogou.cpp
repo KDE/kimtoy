@@ -33,7 +33,7 @@
 
 #include <KDebug>
 #include <KIconLoader>
-#include <Plasma/WindowEffects>
+#include <KWindowEffects>
 
 #include "animator.h"
 #include "kssf.h"
@@ -879,12 +879,12 @@ void ThemerSogou::maskPropertyWidget(PropertyWidget* widget)
 
 void ThemerSogou::blurPreEditBar(PreEditBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_preEditBarMask);
+    KWindowEffects::enableBlurBehind(widget->winId(), true, m_preEditBarMask);
 }
 
 void ThemerSogou::blurStatusBar(StatusBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_statusBarMask);
+    KWindowEffects::enableBlurBehind(widget->winId(), true, m_statusBarMask);
 }
 
 void ThemerSogou::drawPreEditBar(PreEditBar* widget)

@@ -21,6 +21,7 @@
 
 #include "themer_plasma.h"
 
+#include <QApplication>
 #include <QBitmap>
 #include <QPainter>
 #include <QPainterPath>
@@ -28,7 +29,7 @@
 
 #include <KIconLoader>
 #include <Plasma/Theme>
-#include <Plasma/WindowEffects>
+#include <KWindowEffects>
 
 #include "preeditbar.h"
 #include "propertywidget.h"
@@ -61,9 +62,8 @@ bool ThemerPlasma::loadTheme()
 {
     QString themeUri = KIMToySettings::self()->themeUri();
 
-    Plasma::Theme plasmaTheme;
     // "__plasma__" + themeName
-    plasmaTheme.setThemeName(themeUri.mid(10));
+    Plasma::Theme plasmaTheme(themeUri.mid(10));
 
     const QString imagePath = plasmaTheme.imagePath("widgets/background");
     m_statusBarSvg.setImagePath(imagePath);
@@ -72,9 +72,9 @@ bool ThemerPlasma::loadTheme()
     m_preeditBarSvg.setImagePath(imagePath);
     m_preeditBarSvg.setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
-    m_preEditFont = plasmaTheme.font(Plasma::Theme::DefaultFont);
-    m_labelFont = plasmaTheme.font(Plasma::Theme::DesktopFont);
-    m_candidateFont = plasmaTheme.font(Plasma::Theme::DefaultFont);
+    m_preEditFont = QApplication::font();//plasmaTheme.font(Plasma::Theme::DefaultFont);
+    m_labelFont = QApplication::font();//plasmaTheme.font(Plasma::Theme::DesktopFont);
+    m_candidateFont = QApplication::font();//plasmaTheme.font(Plasma::Theme::DefaultFont);
 
     m_preEditFontHeight = QFontMetrics(m_preEditFont).height();
     m_labelFontHeight = QFontMetrics(m_labelFont).height();
@@ -204,12 +204,12 @@ void ThemerPlasma::maskPropertyWidget(PropertyWidget* widget)
 
 void ThemerPlasma::blurPreEditBar(PreEditBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_preeditBarSvg.mask());
+    KWindowEffects::enableBlurBehind(widget->winId(), true, m_preeditBarSvg.mask());
 }
 
 void ThemerPlasma::blurStatusBar(StatusBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, m_statusBarSvg.mask());
+    KWindowEffects::enableBlurBehind(widget->winId(), true, m_statusBarSvg.mask());
 }
 
 void ThemerPlasma::drawPreEditBar(PreEditBar* widget)

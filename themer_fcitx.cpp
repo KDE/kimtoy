@@ -33,7 +33,7 @@
 #include <KDebug>
 #include <KIconLoader>
 #include <KTar>
-#include <Plasma/WindowEffects>
+#include <KWindowEffects>
 
 #include "preeditbar.h"
 #include "statusbar.h"
@@ -478,12 +478,12 @@ void ThemerFcitx::maskPropertyWidget(PropertyWidget* widget)
 
 void ThemerFcitx::blurPreEditBar(PreEditBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, preEditBarSkin.currentRegion());
+    KWindowEffects::enableBlurBehind(widget->winId(), true, preEditBarSkin.currentRegion());
 }
 
 void ThemerFcitx::blurStatusBar(StatusBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, statusBarSkin.currentRegion());
+    KWindowEffects::enableBlurBehind(widget->winId(), true, statusBarSkin.currentRegion());
 }
 
 void ThemerFcitx::drawPreEditBar(PreEditBar* widget)

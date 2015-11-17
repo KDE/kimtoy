@@ -75,13 +75,18 @@ static void extractProperty(const QString& str,
 
 StatusBar::StatusBar()
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
-    KWindowSystem::setType(winId(), NET::Dock);
-
     ThemerAgent::loadSettings();
 
+    bool enableTransparency = KIMToySettings::self()->backgroundTransparency();
+    setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
+
+    setAttribute(Qt::WA_AlwaysShowToolTips, true);
+
     m_preeditBar = new PreEditBar;
+
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
+    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
+    KWindowSystem::setType(winId(), NET::Dock);
 
     m_tray = new KStatusNotifierItem(this);
     m_tray->setAssociatedWidget(m_tray->contextMenu());
@@ -107,7 +112,7 @@ StatusBar::StatusBar()
     connect(configureIMAction, SIGNAL(triggered()), this, SLOT(slotConfigureIMTriggered()));
     m_tray->contextMenu()->addAction(configureIMAction);
 
-    KAction* prefAction = KStandardAction::preferences(this, SLOT(preferences()), 0);
+    QAction* prefAction = KStandardAction::preferences(this, SLOT(preferences()), 0);
     m_tray->contextMenu()->addAction(prefAction);
 
     KAction* aboutAction = new KAction(KIcon("draw-freehand"), i18n("&About KIMToy..."), this);
@@ -120,11 +125,6 @@ StatusBar::StatusBar()
 
     m_layout = new StatusBarLayout;
     setLayout(m_layout);
-
-    setAttribute(Qt::WA_X11DoNotAcceptFocus, true);
-    setAttribute(Qt::WA_AlwaysShowToolTips, true);
-
-    installEventFilter(this);
 
     m_rmbdown = false;
     m_moving = false;
@@ -227,6 +227,12 @@ void StatusBar::resizeEvent(QResizeEvent* event)
 void StatusBar::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
+
+    QPainter p(this);
+    p.setCompositionMode(QPainter::CompositionMode_Clear);
+    p.fillRect(rect(), Qt::transparent);
+    p.end();
+
     ThemerAgent::drawStatusBar(this);
 }
 
@@ -405,7 +411,7 @@ void StatusBar::slotExecDialog(const QString& prop)
 void StatusBar::slotExecMenu(const QStringList& actions)
 {
     QMenu* menu = new QMenu;
-    menu->setWindowFlags(Qt::ToolTip);
+    menu->setWindowFlags(Qt::ToolTip | Qt::WindowDoesNotAcceptFocus);
     menu->setAttribute(Qt::WA_DeleteOnClose);
     QString objectPath, name, iconName, description;
     foreach(const QString& a, actions) {
@@ -493,16 +499,12 @@ void StatusBar::preferences()
 
 void StatusBar::slotAboutActionTriggered()
 {
-    KAboutApplicationDialog dlg(KGlobal::mainComponent().aboutData());
+    KAboutApplicationDialog dlg(KAboutData(KGlobal::mainComponent()));
     dlg.exec();
 }
 
 void StatusBar::loadSettings()
 {
-    bool enableTransparency = KIMToySettings::self()->backgroundTransparency();
-    setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
-    m_preeditBar->setAttribute(Qt::WA_TranslucentBackground, enableTransparency);
-
     ThemerAgent::loadSettings();
     ThemerAgent::loadTheme();
 

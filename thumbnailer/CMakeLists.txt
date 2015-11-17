@@ -2,7 +2,7 @@
 ########## ssf thumbnailer ##########
 set(ssfthumbnail_SRCS ssfcreator.cpp ../kssf.cpp)
 
-kde4_add_plugin(ssfthumbnail ${ssfthumbnail_SRCS})
+add_library(ssfthumbnail MODULE ${ssfthumbnail_SRCS})
 target_link_libraries(ssfthumbnail
     ${KDE4_KIO_LIBS}
     ${OPENSSL_LIBRARIES}
@@ -15,7 +15,7 @@ install(FILES ssf.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 ########## fskin thumbnailer ##########
 set(fskinthumbnail_SRCS fskincreator.cpp)
 
-kde4_add_plugin(fskinthumbnail ${fskinthumbnail_SRCS})
+add_library(fskinthumbnail MODULE ${fskinthumbnail_SRCS})
 target_link_libraries(fskinthumbnail
     ${KDE4_KIO_LIBS}
 )

@@ -14,7 +14,9 @@
             <default>false</default>
         </entry>
         <entry name="FcitxCmd" type="Url">
-            <default>fcitx</default>
+            <default code="true">
+                QUrl::fromLocalFile("/usr/bin/fcitx")
+            </default>
         </entry>
         <entry name="FcitxArgs" type="String">
             <default>-u fcitx-kimpanel-ui</default>
@@ -38,7 +40,9 @@
             <default>false</default>
         </entry>
         <entry name="IBusCmd" type="Url">
-            <default>ibus-daemon</default>
+            <default code="true">
+                QUrl::fromLocalFile("ibus-daemon")
+            </default>
         </entry>
         <entry name="IBusArgs" type="String">
             <default code="true">
@@ -64,7 +68,9 @@
             <default>false</default>
         </entry>
         <entry name="SCIMCmd" type="Url">
-            <default>scim</default>
+            <default code="true">
+                QUrl::fromLocalFile("scim")
+            </default>
         </entry>
         <entry name="SCIMArgs" type="String">
             <default>-c kconfig4</default>
@@ -135,12 +141,12 @@
     <group name="theme">
         <entry name="ThemeFolder" type="Url">
             <default code="true">
-                KStandardDirs::locateLocal("appdata", "themes/")
+                QUrl::fromLocalFile(KStandardDirs::locateLocal("appdata", "themes/"))
             </default>
         </entry>
         <entry name="ThemeUri" type="String">
             <default code="true">
-                QString("__plasma__") + Plasma::Theme::defaultTheme()->themeName()
+                QString("__plasma__") + Plasma::Theme().themeName()
             </default>
         </entry>
     </group>

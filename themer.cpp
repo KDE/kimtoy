@@ -21,7 +21,7 @@
 
 #include "themer.h"
 
-#include <Plasma/WindowEffects>
+#include <KWindowEffects>
 
 #include "preeditbar.h"
 #include "statusbar.h"
@@ -72,10 +72,10 @@ void Themer::resizeStatusBar(const QSize& size)
 
 void Themer::blurPreEditBar(PreEditBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, widget->mask());
+    KWindowEffects::enableBlurBehind(widget->winId(), true, widget->mask());
 }
 
 void Themer::blurStatusBar(StatusBar* widget)
 {
-    Plasma::WindowEffects::enableBlurBehind(widget->winId(), true, widget->mask());
+    KWindowEffects::enableBlurBehind(widget->winId(), true, widget->mask());
 }

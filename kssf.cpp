@@ -220,8 +220,8 @@ bool KSsf::openArchive(QIODevice::OpenMode mode)
         quint32 contentoffset = ds.device()->pos();
 
         int mode = 644;
-        int date = 0;
-        KArchiveEntry* entry = new KArchiveFile(this, filename, mode, date,
+//         int date = 0;
+        KArchiveEntry* entry = new KArchiveFile(this, filename, mode, QDateTime::currentDateTime(),
                                                 /*uid*/ QString(), /*gid*/ QString(), /*symlink*/ QString(),
                                                 contentoffset, contentlen);
         rootDir()->addEntry(entry);

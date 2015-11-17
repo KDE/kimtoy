@@ -22,7 +22,8 @@
 #ifndef QAPNGHANDLER_H
 #define QAPNGHANDLER_H
 
-#include <qimageiohandler.h>
+#include <QImageIOHandler>
+#include <QImageIOPlugin>
 
 class QAPngHandlerPrivate;
 class QAPngHandler : public QImageIOHandler
@@ -43,6 +44,15 @@ public:
     virtual bool supportsOption(ImageOption option) const;
 private:
     QAPngHandlerPrivate* const d;
+};
+
+class QAPngPlugin : public QImageIOPlugin
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QImageIOHandlerFactoryInterface" FILE "apng.json")
+public:
+    virtual Capabilities capabilities(QIODevice* device, const QByteArray& format) const;
+    virtual QImageIOHandler* create(QIODevice* device, const QByteArray& format = QByteArray()) const;
 };
 
 #endif // QAPNGHANDLER_H

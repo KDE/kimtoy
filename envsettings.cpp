@@ -64,7 +64,8 @@ EnvSettingsPrivate::~EnvSettingsPrivate()
 
 void EnvSettingsPrivate::load()
 {
-    QFile script(KGlobal::mainComponent().dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
+    // .config/plasma-workspace/env/kimtoy-env.sh
+    QFile script(KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
     if (!script.exists()) {
         // try to get system defaults
         XIM = qgetenv("XIM");
@@ -96,7 +97,8 @@ void EnvSettingsPrivate::load()
 
 void EnvSettingsPrivate::save()
 {
-    QFile script(KGlobal::mainComponent().dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
+    QFile script(KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
+    qWarning() << KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh";
     if (!script.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
 
@@ -111,7 +113,7 @@ void EnvSettingsPrivate::save()
 
 void EnvSettingsPrivate::unset()
 {
-    QFile script(KGlobal::mainComponent().dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
+    QFile script(KGlobal::dirs()->localkdedir() + "env/" + "kimtoy-env.sh");
     script.remove();
 }
 
