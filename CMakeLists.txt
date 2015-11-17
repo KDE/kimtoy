@@ -202,7 +202,7 @@ install(PROGRAMS kimtoy.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})
 install(FILES kimtoy.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 # install(FILES org.kde.impanel.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
-# add_subdirectory(thumbnailer)
+add_subdirectory(thumbnailer)
 # add_subdirectory(strigi-analyzer)
 # add_subdirectory(po)
 

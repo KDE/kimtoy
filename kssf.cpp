@@ -31,7 +31,6 @@
 
 #include <KArchive>
 #include <KZip>
-#include <KTemporaryFile>
 
 KSsf::KSsf(const QString& filename)
         : KZip(filename)
