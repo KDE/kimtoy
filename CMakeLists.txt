@@ -25,6 +25,7 @@ find_package(KF5 5.2.0 REQUIRED
     Archive
     ConfigWidgets
     CoreAddons
+    DBusAddons
     I18n
     KIO
     NewStuff
@@ -182,6 +183,7 @@ target_link_libraries(kimtoy
     KF5::Archive
     KF5::ConfigWidgets
     KF5::CoreAddons
+    KF5::DBusAddons
     KF5::NewStuff
     KF5::Plasma
     KF5::WidgetsAddons

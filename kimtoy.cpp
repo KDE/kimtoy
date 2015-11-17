@@ -23,9 +23,6 @@
 
 #include <QTimer>
 
-#include <KDebug>
-#include <KLocale>
-
 #include "envsettings.h"
 #include "inputmethods.h"
 #include "statusbar.h"
@@ -33,16 +30,12 @@
 
 #include "kimtoysettings.h"
 
-KIMToy::KIMToy() : KUniqueApplication()
+KIMToy::KIMToy(int& argc, char** argv) : QApplication(argc, argv)
 {
-//     disableSessionManagement();
-
 //     QApplication::setAttribute( Qt::AA_DontCreateNativeWidgetSiblings );
     QApplication::setQuitOnLastWindowClosed(false);
 
-    m_statusBar = new StatusBar;
-
-    QTimer::singleShot(0, this, SLOT(init()));
+    m_statusBar = 0;
 }
 
 KIMToy::~KIMToy()
@@ -67,6 +60,14 @@ KIMToy::~KIMToy()
     }
 
     KIMToySettings::self()->writeConfig();
+}
+
+void KIMToy::newInstance()
+{
+    if (!m_statusBar) {
+        m_statusBar = new StatusBar;
+        QTimer::singleShot(0, this, SLOT(init()));
+    }
 }
 
 void KIMToy::init()

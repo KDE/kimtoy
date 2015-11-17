@@ -22,16 +22,17 @@
 #ifndef KIMTOY_H
 #define KIMTOY_H
 
-#include <KUniqueApplication>
+#include <QApplication>
 
 class StatusBar;
 
-class KIMToy : public KUniqueApplication
+class KIMToy : public QApplication
 {
     Q_OBJECT
 public:
-    explicit KIMToy();
+    explicit KIMToy(int& argc, char** argv);
     virtual ~KIMToy();
+    void newInstance();
 private Q_SLOTS:
     void init();
 private:

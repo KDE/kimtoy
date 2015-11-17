@@ -19,31 +19,47 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <K4AboutData>
-#include <KCmdLineArgs>
-#include <KDebug>
-#include <KLocale>
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QDebug>
+#include <QIcon>
+#include <KAboutData>
+#include <KDBusService>
+#include <KLocalizedString>
 
 #include "kimtoy.h"
 
 int main(int argc, char** argv)
 {
-    K4AboutData aboutData("kimtoy", 0, ki18n("KIMToy"),
-                         "1.90", ki18n("The KDE input method toy"),
-                         K4AboutData::License_GPL, ki18n("(c) 2011-2015, Ni Hui"));
-    aboutData.addAuthor(ki18n("Ni Hui"), ki18n("Author"), "shuizhuyuanluo@126.com");
-    aboutData.setProgramIconName("draw-freehand");
+    KIMToy app(argc, argv);
 
-    KCmdLineArgs::init(argc, argv, &aboutData);
+    KLocalizedString::setApplicationDomain("kimtoy");
 
-    if (!KIMToy::start()) {
-        kWarning() << "kimtoy is already running!";
-        return 1;
-    }
+    KAboutData aboutData("kimtoy", i18n("KIMToy"),
+                         "1.90", i18n("The KDE input method toy"),
+                         KAboutLicense::GPL, i18n("(c) 2011-2015, Ni Hui"));
+    aboutData.addAuthor(i18n("Ni Hui"), i18n("Author"), "shuizhuyuanluo@126.com");
+    aboutData.setOrganizationDomain(QByteArray("kde.org"));
+    aboutData.setProductName(QByteArray("kimtoy"));
 
-    KIMToy* kimtoy = new KIMToy;
-    int ret = kimtoy->exec();
-    delete kimtoy;
-    kWarning() << ret;
-    return ret;
+    KAboutData::setApplicationData(aboutData);
+
+    app.setApplicationName(aboutData.componentName());
+    app.setOrganizationDomain(aboutData.organizationDomain());
+    app.setApplicationVersion(aboutData.version());
+    app.setApplicationDisplayName(aboutData.displayName());
+    app.setWindowIcon(QIcon::fromTheme("draw-freehand"));
+
+    KDBusService dbusService(KDBusService::Unique);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+    app.newInstance();
+
+    return app.exec();
 }
