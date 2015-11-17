@@ -22,9 +22,9 @@
 #ifndef KSSF_H
 #define KSSF_H
 
+#include <QTemporaryFile>
 #include <KArchive>
 #include <KZip>
-#include <KTemporaryFile>
 
 class KSsf : public KZip
 {
@@ -37,18 +37,18 @@ public:
 
 protected:
     /// Reimplemented from KArchive
-    virtual bool doWriteSymLink(const QString &name, const QString &target,
-                                const QString &user, const QString &group,
-                                mode_t perm, time_t atime, time_t mtime, time_t ctime);
+    virtual bool doWriteSymLink(const QString& name, const QString& target,
+                                const QString& user, const QString& group,
+                                mode_t perm, const QDateTime& atime, const QDateTime& mtime, const QDateTime& ctime);
 
     /// Reimplemented from KArchive
     virtual bool doWriteDir(const QString& name, const QString& user, const QString& group,
-                            mode_t perm, time_t atime, time_t mtime, time_t ctime);
+                            mode_t perm, const QDateTime& atime, const QDateTime& mtime, const QDateTime& ctime);
 
     /// Reimplemented from KArchive
     virtual bool doPrepareWriting(const QString& name, const QString& user,
                                   const QString& group, qint64 size, mode_t perm,
-                                  time_t atime, time_t mtime, time_t ctime);
+                                  const QDateTime& atime, const QDateTime& mtime, const QDateTime& ctime);
 
     /// Reimplemented from KArchive
     virtual bool doFinishWriting(qint64 size);
@@ -60,7 +60,7 @@ protected:
     virtual void virtual_hook(int id, void* data);
 private:
     bool isZip;
-    KTemporaryFile* tmpFile;
+    QTemporaryFile* tmpFile;
 };
 
 #endif // KSSF_H

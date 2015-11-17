@@ -57,7 +57,7 @@ KSsf::~KSsf()
 
 bool KSsf::doWriteSymLink(const QString &name, const QString &target,
                           const QString &user, const QString &group,
-                          mode_t perm, time_t atime, time_t mtime, time_t ctime)
+                          mode_t perm, const QDateTime& atime, const QDateTime& mtime, const QDateTime& ctime)
 {
     Q_UNUSED(name)
     Q_UNUSED(target)
@@ -71,7 +71,7 @@ bool KSsf::doWriteSymLink(const QString &name, const QString &target,
 }
 
 bool KSsf::doWriteDir(const QString& name, const QString& user, const QString& group,
-                      mode_t perm, time_t atime, time_t mtime, time_t ctime)
+                      mode_t perm, const QDateTime& atime, const QDateTime& mtime, const QDateTime& ctime)
 {
     Q_UNUSED(name)
     Q_UNUSED(user)
@@ -85,7 +85,7 @@ bool KSsf::doWriteDir(const QString& name, const QString& user, const QString& g
 
 bool KSsf::doPrepareWriting(const QString& name, const QString& user,
                             const QString& group, qint64 size, mode_t perm,
-                            time_t atime, time_t mtime, time_t ctime)
+                            const QDateTime& atime, const QDateTime& mtime, const QDateTime& ctime)
 {
     Q_UNUSED(name)
     Q_UNUSED(user)
@@ -169,9 +169,7 @@ bool KSsf::openArchive(QIODevice::OpenMode mode)
     qWarning() << "uncompress success";
 
     // create plain temp file
-    tmpFile = new KTemporaryFile();
-    tmpFile->setPrefix("kssf-");
-    tmpFile->setSuffix(".plain");
+    tmpFile = new QTemporaryFile();
     tmpFile->open();
 
     tmpFile->write(plaindata);
