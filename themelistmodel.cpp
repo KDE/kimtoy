@@ -31,7 +31,6 @@
 
 #include <KDebug>
 #include <KFileItem>
-#include <KUrl>
 #include <KIO/PreviewJob>
 #include <KStandardDirs>
 
@@ -179,7 +178,7 @@ void ThemeListModel::loadFileThemes()
 
     KFileItemList items;
     foreach(const QFileInfo& e, es) {
-        KFileItem item(KFileItem::Unknown, KFileItem::Unknown, KUrl(e.absoluteFilePath()));
+        KFileItem item(QUrl::fromLocalFile(e.absoluteFilePath()));
 
         beginInsertRows(QModelIndex(), m_themes.count(), m_themes.count());
         m_themes << item.localPath();
@@ -292,7 +291,7 @@ void ThemeListModel::generatePreviews()
             m_previews[ e ] = preview;
         }
         else {
-            KFileItem item(KFileItem::Unknown, KFileItem::Unknown, KUrl(e));
+            KFileItem item(QUrl::fromLocalFile(e));
             items << item;
         }
     }
@@ -300,10 +299,9 @@ void ThemeListModel::generatePreviews()
 
     QStringList enabledPlugins;
     enabledPlugins << "fskinthumbnail" << "ssfthumbnail";
-//     m_previewJob = KIO::filePreview(items, QSize(m_previewWidth, 400), &enabledPlugins);
-    m_previewJob = KIO::filePreview(items, m_previewWidth, 400, 0, 70, false, false, &enabledPlugins);
+    m_previewJob = KIO::filePreview(items, QSize(m_previewWidth, 400), &enabledPlugins);
     m_previewJob->setAutoDelete(false);
-//     m_previewJob->setScaleType(KIO::PreviewJob::Unscaled);
+    m_previewJob->setScaleType(KIO::PreviewJob::Unscaled);
 
     connect(m_previewJob, SIGNAL(finished(KJob*)), this, SIGNAL(relayoutNeeded()));
     connect(m_previewJob, SIGNAL(gotPreview(KFileItem,QPixmap)),
