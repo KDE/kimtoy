@@ -51,7 +51,7 @@
           <widget class="KUrlRequester" name="kcfg_FcitxCmd"/>
          </item>
          <item row="2" column="1">
-          <widget class="KLineEdit" name="kcfg_FcitxArgs">
+          <widget class="QLineEdit" name="kcfg_FcitxArgs">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -68,7 +68,7 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="KLineEdit" name="kcfg_FcitxXIM">
+          <widget class="QLineEdit" name="kcfg_FcitxXIM">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -82,7 +82,7 @@
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="KLineEdit" name="kcfg_FcitxXIM_PROGRAM">
+          <widget class="QLineEdit" name="kcfg_FcitxXIM_PROGRAM">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -96,7 +96,7 @@
           </widget>
          </item>
          <item row="5" column="1">
-          <widget class="KLineEdit" name="kcfg_FcitxXMODIFIERS">
+          <widget class="QLineEdit" name="kcfg_FcitxXMODIFIERS">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -110,7 +110,7 @@
           </widget>
          </item>
          <item row="6" column="1">
-          <widget class="KLineEdit" name="kcfg_FcitxGTK_IM_MODULE">
+          <widget class="QLineEdit" name="kcfg_FcitxGTK_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -124,7 +124,7 @@
           </widget>
          </item>
          <item row="7" column="1">
-          <widget class="KLineEdit" name="kcfg_FcitxQT_IM_MODULE">
+          <widget class="QLineEdit" name="kcfg_FcitxQT_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -172,7 +172,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="KLineEdit" name="kcfg_IBusArgs">
+          <widget class="QLineEdit" name="kcfg_IBusArgs">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -186,7 +186,7 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="KLineEdit" name="kcfg_IBusXIM">
+          <widget class="QLineEdit" name="kcfg_IBusXIM">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -200,7 +200,7 @@
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="KLineEdit" name="kcfg_IBusXIM_PROGRAM">
+          <widget class="QLineEdit" name="kcfg_IBusXIM_PROGRAM">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -214,7 +214,7 @@
           </widget>
          </item>
          <item row="5" column="1">
-          <widget class="KLineEdit" name="kcfg_IBusXMODIFIERS">
+          <widget class="QLineEdit" name="kcfg_IBusXMODIFIERS">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -228,7 +228,7 @@
           </widget>
          </item>
          <item row="6" column="1">
-          <widget class="KLineEdit" name="kcfg_IBusGTK_IM_MODULE">
+          <widget class="QLineEdit" name="kcfg_IBusGTK_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -242,7 +242,7 @@
           </widget>
          </item>
          <item row="7" column="1">
-          <widget class="KLineEdit" name="kcfg_IBusQT_IM_MODULE">
+          <widget class="QLineEdit" name="kcfg_IBusQT_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -287,7 +287,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="KLineEdit" name="kcfg_SCIMArgs">
+          <widget class="QLineEdit" name="kcfg_SCIMArgs">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -301,7 +301,7 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="KLineEdit" name="kcfg_SCIMXIM">
+          <widget class="QLineEdit" name="kcfg_SCIMXIM">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -315,7 +315,7 @@
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="KLineEdit" name="kcfg_SCIMXIM_PROGRAM">
+          <widget class="QLineEdit" name="kcfg_SCIMXIM_PROGRAM">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -329,7 +329,7 @@
           </widget>
          </item>
          <item row="5" column="1">
-          <widget class="KLineEdit" name="kcfg_SCIMXMODIFIERS">
+          <widget class="QLineEdit" name="kcfg_SCIMXMODIFIERS">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -343,7 +343,7 @@
           </widget>
          </item>
          <item row="6" column="1">
-          <widget class="KLineEdit" name="kcfg_SCIMGTK_IM_MODULE">
+          <widget class="QLineEdit" name="kcfg_SCIMGTK_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -357,7 +357,7 @@
           </widget>
          </item>
          <item row="7" column="1">
-          <widget class="KLineEdit" name="kcfg_SCIMQT_IM_MODULE">
+          <widget class="QLineEdit" name="kcfg_SCIMQT_IM_MODULE">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -375,11 +375,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
   <customwidget>
    <class>KTitleWidget</class>
    <extends>QWidget</extends>

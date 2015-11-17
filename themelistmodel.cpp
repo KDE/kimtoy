@@ -29,10 +29,8 @@
 #include <QPainter>
 #include <QStyle>
 
-#include <KDebug>
 #include <KFileItem>
 #include <KIO/PreviewJob>
-#include <KStandardDirs>
 
 #include <Plasma/FrameSvg>
 #include <Plasma/Theme>

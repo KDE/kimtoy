@@ -23,6 +23,7 @@
 
 #include <QApplication>
 #include <QDBusConnection>
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QMouseEvent>
 #include <QPainter>
@@ -30,8 +31,6 @@
 #include <QSizePolicy>
 #include <QVBoxLayout>
 
-#include <KDebug>
-#include <KLocale>
 #include <KWindowSystem>
 
 #include "themeragent.h"

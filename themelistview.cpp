@@ -24,7 +24,6 @@
 #include <QScrollBar>
 
 #include <KConfigDialogManager>
-#include <KDebug>
 
 #include "themelistmodel.h"
 

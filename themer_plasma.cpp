@@ -38,8 +38,6 @@
 
 #include "kimtoysettings.h"
 
-#include <KDebug>
-
 ThemerPlasma* ThemerPlasma::m_self = 0;
 
 ThemerPlasma* ThemerPlasma::self()

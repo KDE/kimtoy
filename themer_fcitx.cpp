@@ -30,7 +30,6 @@
 #include <QString>
 #include <QTextStream>
 
-#include <KDebug>
 #include <KIconLoader>
 #include <KTar>
 #include <KWindowEffects>

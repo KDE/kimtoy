@@ -27,22 +27,15 @@ find_package(KF5 5.2.0 REQUIRED
     CoreAddons
     DBusAddons
     I18n
+    IconThemes
     KIO
     NewStuff
+    Notifications
     Plasma
     WidgetsAddons
     WindowSystem
-
-    KDELibs4Support
 )
 
-# find_package(KDE4 REQUIRED 4.5)
-# include(KDE4Defaults)
-# include(MacroLibrary)
-# include(MacroLogFeature)
-
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-include_directories(${QT_INCLUDES} ${KDE4_INCLUDES})
 include_directories(${X11_X11_INCLUDE_PATH})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -184,12 +177,17 @@ target_link_libraries(kimtoy
     KF5::ConfigWidgets
     KF5::CoreAddons
     KF5::DBusAddons
+    KF5::I18n
+    KF5::IconThemes
+    KF5::KIOCore
+    KF5::KIOFileWidgets
+    KF5::KIOWidgets
+    KF5::KIONTLM
     KF5::NewStuff
+    KF5::Notifications
     KF5::Plasma
     KF5::WidgetsAddons
     KF5::WindowSystem
-
-    KF5::KDELibs4Support
 
     ${OPENSSL_LIBRARIES}
     ${X11_X11_LIB}

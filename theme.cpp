@@ -21,9 +21,8 @@
 
 #include "theme.h"
 
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KIO/CopyJob>
-#include <KLocale>
 #include <KMessageBox>
 #include <KNS3/DownloadDialog>
 
@@ -31,7 +30,7 @@
 
 void ThemeWidget::installTheme()
 {
-    QString filePath = KFileDialog::getOpenFileName();
+    QString filePath = QFileDialog::getOpenFileName();
 
     if (filePath.isEmpty())
         return;

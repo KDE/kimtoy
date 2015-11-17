@@ -23,6 +23,7 @@
 
 #include <QAction>
 #include <QDBusConnection>
+#include <QDebug>
 #include <QIcon>
 #include <QMenu>
 #include <QMouseEvent>
@@ -30,13 +31,11 @@
 #include <QSignalMapper>
 
 #include <KAboutApplicationDialog>
-#include <KApplication>
+#include <KAboutData>
 #include <KConfig>
 #include <KConfigDialog>
 #include <KConfigGroup>
-#include <KDebug>
-#include <KLocale>
-#include <KMenu>
+// #include <KMenu>
 #include <KMessageBox>
 #include <KStandardAction>
 #include <KStatusNotifierItem>
@@ -337,7 +336,7 @@ void StatusBar::slotUpdateProperty(const QString& prop)
     PropertyWidget* pw = m_propertyWidgets.value(objectPath);
     if (!pw) {
         /// no such objectPath
-        kWarning() << "update property without register it! " << objectPath;
+        qWarning() << "update property without register it! " << objectPath;
         return;
     }
 
@@ -347,7 +346,7 @@ void StatusBar::slotUpdateProperty(const QString& prop)
     if (KIMToySettings::self()->trayiconMode()) {
         KStatusNotifierItem* tw = m_trayWidgets.value(objectPath);
         if (!tw) {
-            kWarning() << "update property without register it! " << objectPath;
+            qWarning() << "update property without register it! " << objectPath;
             return;
         }
         /// update property
@@ -377,7 +376,7 @@ void StatusBar::slotRemoveProperty(const QString& prop)
     PropertyWidget* pw = m_propertyWidgets.take(objectPath);
     if (!pw) {
         /// no such objectPath
-        kWarning() << "remove property without register it! " << objectPath;
+        qWarning() << "remove property without register it! " << objectPath;
         return;
     }
 
@@ -391,7 +390,7 @@ void StatusBar::slotRemoveProperty(const QString& prop)
     if (KIMToySettings::self()->trayiconMode()) {
         KStatusNotifierItem* tw = m_trayWidgets.take(objectPath);
         if (!tw) {
-            kWarning() << "remove property without register it! " << objectPath;
+            qWarning() << "remove property without register it! " << objectPath;
             return;
         }
         delete tw;

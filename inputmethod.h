@@ -25,7 +25,6 @@
 #include "ui_inputmethod.h"
 
 #include <KIconLoader>
-#include <KLocale>
 
 #include "inputmethods.h"
 

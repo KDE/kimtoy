@@ -31,7 +31,6 @@
 #include <QString>
 #include <QTextStream>
 
-#include <KDebug>
 #include <KIconLoader>
 #include <KWindowEffects>
 
@@ -569,7 +568,7 @@ bool ThemerSogou::loadTheme()
 
     h_anchorY = calculateAnchor(h1skin, h_overlays, h_opt, h_opb, h_opl, h_opr);
     v_anchorY = calculateAnchor(v1skin, v_overlays, v_opt, v_opb, v_opl, v_opr);
-    kWarning() << h_anchorY << v_anchorY;
+    qWarning() << h_anchorY << v_anchorY;
 
     m_preEditFont.setFamily(font_en);
     m_preEditFont.setPixelSize(fontPixelSize);

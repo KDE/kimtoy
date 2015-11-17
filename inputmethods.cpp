@@ -22,10 +22,10 @@
 #include "inputmethods.h"
 
 #include <QByteArray>
+#include <QDebug>
 #include <QString>
 #include <QStringList>
 
-#include <KDebug>
 #include <KProcess>
 
 #include "envsettings.h"
