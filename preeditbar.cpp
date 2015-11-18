@@ -131,12 +131,6 @@ void PreEditBar::showEvent(QShowEvent* event)
 void PreEditBar::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-
-    QPainter p(this);
-    p.setCompositionMode(QPainter::CompositionMode_Clear);
-    p.fillRect(rect(), Qt::transparent);
-    p.end();
-
     ThemerAgent::drawPreEditBar(this);
 }
 

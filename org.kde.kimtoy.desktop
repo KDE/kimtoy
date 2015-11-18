@@ -75,6 +75,9 @@ Type=Application
 Terminal=false
 Icon=draw-freehand
 Categories=Qt;KDE;Utility;
+StartupNotify=false
+X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.kimtoy
 
 X-KDE-autostart-phase=1
 X-KDE-autostart-after=panel

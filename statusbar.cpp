@@ -122,6 +122,8 @@ StatusBar::StatusBar()
     m_layout = new StatusBarLayout;
     setLayout(m_layout);
 
+    installEventFilter(this);
+
     m_rmbdown = false;
     m_moving = false;
 
@@ -223,12 +225,6 @@ void StatusBar::resizeEvent(QResizeEvent* event)
 void StatusBar::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-
-    QPainter p(this);
-    p.setCompositionMode(QPainter::CompositionMode_Clear);
-    p.fillRect(rect(), Qt::transparent);
-    p.end();
-
     ThemerAgent::drawStatusBar(this);
 }
 

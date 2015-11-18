@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop">
+  <id>org.kde.kimtoy.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>KIMToy</name>
+  <summary>Input method frontend</summary>
+  <description>
+    <p>
+      The KDE input method toy.
+    </p>
+  </description>
+  <url type="homepage">http://kde-apps.org/content/show.php/KIMToy?content=140967</url>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=kimtoy</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://kde-apps.org/CONTENT/content-pre1/140967-1.png</image>
+    </screenshot>
+  </screenshots>
+  <project_group>KDE</project_group>
+  <provides>
+    <binary>kimtoy</binary>
+  </provides>
+</component>

@@ -195,8 +195,8 @@ target_link_libraries(kimtoy
 )
 
 install(TARGETS kimtoy ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS kimtoy.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(PROGRAMS kimtoy.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})
+install(PROGRAMS org.kde.kimtoy.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.kimtoy.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})
 install(FILES kimtoy.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 # install(FILES org.kde.impanel.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
