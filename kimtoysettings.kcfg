@@ -73,7 +73,7 @@
             </default>
         </entry>
         <entry name="SCIMArgs" type="String">
-            <default>-c kconfig4</default>
+            <default>-c kconfig5</default>
         </entry>
         <entry name="SCIMXIM" type="String">
             <default></default>

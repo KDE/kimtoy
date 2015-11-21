@@ -23,6 +23,7 @@ find_package(Qt5 5.3.0 CONFIG REQUIRED
 
 find_package(KF5 5.2.0 REQUIRED
     Archive
+    Config
     ConfigWidgets
     CoreAddons
     DBusAddons
@@ -210,8 +211,8 @@ add_subdirectory(kimgio-apng)
 add_subdirectory(ibus-kconfig)
 add_subdirectory(ibus-panel)
 ########################## scim glue ##########################
-# add_subdirectory(scim-kconfig)
-# add_subdirectory(scim-panel)
+add_subdirectory(scim-kconfig)
+add_subdirectory(scim-panel)
 
 # macro_display_feature_log()
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

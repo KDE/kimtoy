@@ -1,6 +1,5 @@
 
 if(IBUS_FOUND AND GLIB2_FOUND AND GIO_FOUND AND GOBJECT_FOUND)
-    find_package(KF5 5.2.0 REQUIRED Config)
     include_directories(${IBUS_INCLUDE_DIR})
     include_directories(${GLIB2_INCLUDE_DIR})
     include_directories(${GOBJECT_INCLUDE_DIR})
