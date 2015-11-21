@@ -66,8 +66,8 @@ set_package_properties(DBusCXX PROPERTIES DESCRIPTION "dbus-c++" URL "http://dbu
 find_package(SCIM)
 set_package_properties(SCIM PROPERTIES DESCRIPTION "scim" URL "http://www.scim-im.org" PURPOSE "scim support" TYPE OPTIONAL)
 
-find_package(Strigi)
-set_package_properties(Strigi PROPERTIES DESCRIPTION "strigi" URL "http://www.vandenoever.info/software/strigi" PURPOSE "strigi analyzer" TYPE OPTIONAL)
+find_package(KF5FileMetaData)
+set_package_properties(KF5FileMetaData PROPERTIES DESCRIPTION "kfilemetadata" URL "https://projects.kde.org/projects/frameworks/kfilemetadata" PURPOSE "metadata extractor" TYPE OPTIONAL)
 
 find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
@@ -202,7 +202,7 @@ install(FILES kimtoy.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 # install(FILES org.kde.impanel.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
 add_subdirectory(thumbnailer)
-# add_subdirectory(strigi-analyzer)
+add_subdirectory(metadataextractor)
 # add_subdirectory(po)
 
 ######################### apng plugin #########################
