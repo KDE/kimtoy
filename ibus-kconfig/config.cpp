@@ -24,10 +24,10 @@
 #include <string.h>
 #include <gio/gio.h>
 #include <ibus.h>
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <KDE/KConfig>
-#include <KDE/KConfigGroup>
+#include <QString>
+#include <QVariant>
+#include <KConfig>
+#include <KConfigGroup>
 #include "config.h"
 
 #if !IBUS_CHECK_VERSION(1,3,99)
@@ -367,7 +367,7 @@ _from_qvariant (const QVariant &qv)
     case QVariant::Double:
     case QVariant::Bool:
         {
-            char lt = qv.toString().at(0).toAscii();
+            char lt = qv.toString().at(0).toLatin1();
             QString lqv = qv.toString().mid(1);
             switch (lt) {
                 case 'S':
@@ -387,7 +387,7 @@ _from_qvariant (const QVariant &qv)
     case QVariant::List:
         {
             QStringList list = qv.toStringList();
-            char lt = list.first().at(0).toAscii();
+            char lt = list.first().at(0).toLatin1();
             GVariantBuilder builder;
             switch (lt) {
             case 'S':

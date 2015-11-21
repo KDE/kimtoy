@@ -207,8 +207,8 @@ add_subdirectory(thumbnailer)
 ######################### apng plugin #########################
 add_subdirectory(kimgio-apng)
 ########################## ibus glue ##########################
-# add_subdirectory(ibus-kconfig)
-# add_subdirectory(ibus-panel)
+add_subdirectory(ibus-kconfig)
+add_subdirectory(ibus-panel)
 ########################## scim glue ##########################
 # add_subdirectory(scim-kconfig)
 # add_subdirectory(scim-panel)
