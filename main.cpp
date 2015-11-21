@@ -21,7 +21,6 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QDebug>
 #include <QIcon>
 #include <KAboutData>
 #include <KDBusService>
