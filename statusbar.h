@@ -65,6 +65,9 @@ private Q_SLOTS:
     void slotAboutActionTriggered();
     void loadSettings();
     void slotFilterChanged(const QString& objectPath, bool checked);
+    void slotFilterMenuDestroyed();
+    void slotConnectKIMPanel();
+    void slotDisconnectKIMPanel();
 private:
     void updateSize();
     void showFilterMenu();

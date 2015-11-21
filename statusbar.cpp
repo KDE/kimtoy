@@ -127,19 +127,7 @@ StatusBar::StatusBar()
     m_rmbdown = false;
     m_moving = false;
 
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
-                       this, SLOT(slotEnable(bool)));
-    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
-                       this, SLOT(slotRegisterProperties(const QStringList&)));
-    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
-                       this, SLOT(slotUpdateProperty(const QString&)));
-    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RemoveProperty",
-                       this, SLOT(slotRemoveProperty(const QString&)));
-    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
-                       this, SLOT(slotExecDialog(const QString&)));
-    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
-                       this, SLOT(slotExecMenu(const QStringList&)));
+    slotConnectKIMPanel();
 
     KConfigGroup group(KSharedConfig::openConfig(), "General");
     QPoint pos = group.readEntry("XYPosition", QPoint(100, 0));
@@ -541,6 +529,45 @@ void StatusBar::slotFilterChanged(const QString& objectPath, bool checked)
     updateSize();
 }
 
+void StatusBar::slotFilterMenuDestroyed()
+{
+    QTimer::singleShot(100, this, SLOT(slotConnectKIMPanel()));
+}
+
+void StatusBar::slotConnectKIMPanel()
+{
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
+                       this, SLOT(slotEnable(bool)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
+                       this, SLOT(slotRegisterProperties(const QStringList&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
+                       this, SLOT(slotUpdateProperty(const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RemoveProperty",
+                       this, SLOT(slotRemoveProperty(const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
+                       this, SLOT(slotExecDialog(const QString&)));
+    connection.connect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
+                       this, SLOT(slotExecMenu(const QStringList&)));
+}
+
+void StatusBar::slotDisconnectKIMPanel()
+{
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.disconnect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "Enable",
+                          this, SLOT(slotEnable(bool)));
+    connection.disconnect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RegisterProperties",
+                          this, SLOT(slotRegisterProperties(const QStringList&)));
+    connection.disconnect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "UpdateProperty",
+                          this, SLOT(slotUpdateProperty(const QString&)));
+    connection.disconnect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "RemoveProperty",
+                          this, SLOT(slotRemoveProperty(const QString&)));
+    connection.disconnect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecDialog",
+                          this, SLOT(slotExecDialog(const QString&)));
+    connection.disconnect("", "/kimpanel", "org.kde.kimpanel.inputmethod", "ExecMenu",
+                          this, SLOT(slotExecMenu(const QStringList&)));
+}
+
 void StatusBar::updateSize()
 {
     resize(ThemerAgent::sizeHintStatusBar(this));
@@ -562,6 +589,10 @@ void StatusBar::showFilterMenu()
 
     connect(menu, SIGNAL(filterChanged(QString,bool)),
             this, SLOT(slotFilterChanged(QString,bool)));
+
+    connect(menu, SIGNAL(destroyed()), this, SLOT(slotFilterMenuDestroyed()));
+
+    slotDisconnectKIMPanel();
 
     menu->move(mapToGlobal(m_pointPos));
     menu->show();

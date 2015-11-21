@@ -35,9 +35,8 @@
 
 FilterMenu::FilterMenu()
 {
-    setWindowFlags(Qt::Popup);
+    setWindowFlags(Qt::Popup | Qt::WindowDoesNotAcceptFocus);
     setAttribute(Qt::WA_DeleteOnClose);
-    setAttribute(Qt::WA_TranslucentBackground, true);
 
     QVBoxLayout* layout = new QVBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
