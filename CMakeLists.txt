@@ -202,17 +202,25 @@ install(FILES kimtoy.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 # install(FILES org.kde.impanel.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
 add_subdirectory(thumbnailer)
-add_subdirectory(metadataextractor)
+if(KF5FileMetaData_FOUND)
+    add_subdirectory(metadataextractor)
+endif(KF5FileMetaData_FOUND)
 # add_subdirectory(po)
 
 ######################### apng plugin #########################
 add_subdirectory(kimgio-apng)
 ########################## ibus glue ##########################
-add_subdirectory(ibus-kconfig)
-add_subdirectory(ibus-panel)
+if(IBUS_FOUND AND GLIB2_FOUND AND GIO_FOUND AND GOBJECT_FOUND)
+    add_subdirectory(ibus-kconfig)
+    add_subdirectory(ibus-panel)
+endif(IBUS_FOUND AND GLIB2_FOUND AND GIO_FOUND AND GOBJECT_FOUND)
 ########################## scim glue ##########################
-add_subdirectory(scim-kconfig)
-add_subdirectory(scim-panel)
+if(SCIM_FOUND)
+    add_subdirectory(scim-kconfig)
+    if(DBUSCXX_FOUND AND PTHREAD_FOUND)
+        add_subdirectory(scim-panel)
+    endif(DBUSCXX_FOUND AND PTHREAD_FOUND)
+endif(SCIM_FOUND)
 
 # macro_display_feature_log()
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
