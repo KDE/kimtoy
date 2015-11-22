@@ -34,8 +34,8 @@ else (IBUS_LIBRARIES AND IBUS_INCLUDE_DIR)
       endif (NOT IBUS_COMPONENT_DIR)
 
       if (NOT IBUS_LIBEXEC_DIR)
-         _pkgconfig_invoke(ibus-1.0 PC_IBUS EXEC_PREFIX "" --variable=exec_prefix)
-         set(IBUS_LIBEXEC_DIR ${PC_IBUS_EXEC_PREFIX}/libexec CACHE INTERNAL "")
+         _pkgconfig_invoke(ibus-1.0 PC_IBUS EXEC_PREFIX "" --variable=libdir)
+         set(IBUS_LIBEXEC_DIR ${PC_IBUS_EXEC_PREFIX}/ibus CACHE INTERNAL "")
       endif (NOT IBUS_LIBEXEC_DIR)
 
       set(IBUS_DEFINITIONS ${PC_IBUS_CFLAGS_OTHER})

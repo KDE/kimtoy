@@ -108,9 +108,9 @@ endif(${PNG_HAS_APNG_SUPPORT})
 ###################### ibus arguments ######################
 ### NOTE TODO remove following definition when ibus is able to run registered component
 if(IBUS_FOUND)
-    add_definitions(-DIBUS_LIBEXEC_DIR="\\\"${IBUS_LIBEXEC_DIR}\\\"")
+    add_definitions(-DIBUS_LIBEXEC_DIR="${IBUS_LIBEXEC_DIR}")
 else(IBUS_FOUND)
-    add_definitions(-DIBUS_LIBEXEC_DIR="\\\"${CMAKE_INSTALL_PREFIX}/libexec\\\"")
+    add_definitions(-DIBUS_LIBEXEC_DIR="${CMAKE_INSTALL_PREFIX}/lib/ibus")
 endif(IBUS_FOUND)
 
 ########################## kimtoy ##########################

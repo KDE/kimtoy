@@ -41,7 +41,7 @@
         </entry>
         <entry name="IBusCmd" type="Url">
             <default code="true">
-                QUrl::fromLocalFile("ibus-daemon")
+                QUrl::fromLocalFile("/usr/bin/ibus-daemon")
             </default>
         </entry>
         <entry name="IBusArgs" type="String">
@@ -69,7 +69,7 @@
         </entry>
         <entry name="SCIMCmd" type="Url">
             <default code="true">
-                QUrl::fromLocalFile("scim")
+                QUrl::fromLocalFile("/usr/bin/scim")
             </default>
         </entry>
         <entry name="SCIMArgs" type="String">
