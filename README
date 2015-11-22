@@ -21,19 +21,20 @@ License
     GNU GPL v2 or v3 or Later
 
 Build requirements (Development packages)
-    cmake   >= 2.6
-    qt      >= 4.6
-    kdelibs >= 4.5
-    qca2
+    cmake   >= 2.8.12
+    qt      >= 5.2
+    kf5     >= 5.2.0
+    openssl
     gettext
     ibus    >= 1.3.0 (build ibus support)
     scim    >= 1.4.9 (build scim support)
 
 Manual install instruction
     mkdir build && cd build
-    cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+    cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` ..
     make
     sudo make install
+    kbuildsycoca5
 
 FAQ
 Q how to move status bar and preedit bar?
