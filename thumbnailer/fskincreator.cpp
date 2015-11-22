@@ -149,6 +149,9 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
         else if (skininputbar) {
             if (key == "BackImg") {
                 const KArchiveEntry* e = subdir->entry(value);
+                QString symLinkTarget = e->symLinkTarget();
+                if (!symLinkTarget.isEmpty())
+                    e = subdir->entry(symLinkTarget);
                 const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     skin.loadFromData(pix->data());
@@ -179,12 +182,18 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
             }
             else if (key == "BackArrow") {
                 const KArchiveEntry* e = subdir->entry(value);
+                QString symLinkTarget = e->symLinkTarget();
+                if (!symLinkTarget.isEmpty())
+                    e = subdir->entry(symLinkTarget);
                 const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     barrow.loadFromData(pix->data());
             }
             else if (key == "ForwardArrow") {
                 const KArchiveEntry* e = subdir->entry(value);
+                QString symLinkTarget = e->symLinkTarget();
+                if (!symLinkTarget.isEmpty())
+                    e = subdir->entry(symLinkTarget);
                 const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     farrow.loadFromData(pix->data());

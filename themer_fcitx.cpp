@@ -115,6 +115,9 @@ bool ThemerFcitx::loadTheme()
 #define LOAD_PWPIX(p, value) \
     do { \
         const KArchiveEntry* e = subdir->entry(value); \
+        QString symLinkTarget = e->symLinkTarget(); \
+        if (!symLinkTarget.isEmpty()) \
+            e = subdir->entry(symLinkTarget); \
         const KArchiveFile* pix = static_cast<const KArchiveFile*>(e); \
         if (pix) { \
             QPixmap& pwpix = m_pwpix[ p ]; \
@@ -170,6 +173,9 @@ bool ThemerFcitx::loadTheme()
         else if (skinmainbar) {
             if (key == "BackImg") {
                 const KArchiveEntry* e = subdir->entry(value);
+                QString symLinkTarget = e->symLinkTarget();
+                if (!symLinkTarget.isEmpty())
+                    e = subdir->entry(symLinkTarget);
                 const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     statusBarPixmap.loadFromData(pix->data());
@@ -234,6 +240,9 @@ bool ThemerFcitx::loadTheme()
         else if (skininputbar) {
             if (key == "BackImg") {
                 const KArchiveEntry* e = subdir->entry(value);
+                QString symLinkTarget = e->symLinkTarget();
+                if (!symLinkTarget.isEmpty())
+                    e = subdir->entry(symLinkTarget);
                 const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     preEditBarPixmap.loadFromData(pix->data());
@@ -264,12 +273,18 @@ bool ThemerFcitx::loadTheme()
             }
             else if (key == "BackArrow") {
                 const KArchiveEntry* e = subdir->entry(value);
+                QString symLinkTarget = e->symLinkTarget();
+                if (!symLinkTarget.isEmpty())
+                    e = subdir->entry(symLinkTarget);
                 const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     barrow.loadFromData(pix->data());
             }
             else if (key == "ForwardArrow") {
                 const KArchiveEntry* e = subdir->entry(value);
+                QString symLinkTarget = e->symLinkTarget();
+                if (!symLinkTarget.isEmpty())
+                    e = subdir->entry(symLinkTarget);
                 const KArchiveFile* pix = static_cast<const KArchiveFile*>(e);
                 if (pix)
                     farrow.loadFromData(pix->data());
