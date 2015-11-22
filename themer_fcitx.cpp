@@ -343,7 +343,7 @@ QSize ThemerFcitx::sizeHintPreEditBar(const PreEditBar* widget) const
     int pinyinauxw = QFontMetrics(m_preEditFont).width(widget->m_text + widget->m_auxText);
     w = qMax(pinyinauxw + ml + mr, w);
 
-    int candidateh = mt + ych - m_candidateFontHeight + mb;
+    int candidateh = mt + yen + m_preEditFontHeight + ych + mb;
     /// lookuptable
     if (KIMToySettings::self()->verticalPreeditBar()) {
         int count = qMin(widget->m_labels.count(), widget->m_candidates.count());
@@ -512,8 +512,8 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
 
     preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
 
-    int pinyiny = mt + yen - m_preEditFontHeight;
-    int zhongweny = mt + ych - m_candidateFontHeight;
+    int pinyiny = mt + yen;
+    int zhongweny = mt + yen + m_preEditFontHeight + ych;
 
     if (widget->preeditVisible || widget->auxVisible) {
         /// draw preedit / aux text
