@@ -218,6 +218,12 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
     int pinyinw = QFontMetrics(font).width("ABC pinyin");
     int zhongwenw = QFontMetrics(font).width("1candidate");
 
+    // compability with newer skin scheme
+    if (ych < yen + fontHeight) {
+        yen += fontHeight;
+        ych += yen + fontHeight;
+    }
+
     /// save target size
     int targetHeight = height;
     int targetWidth = width;
