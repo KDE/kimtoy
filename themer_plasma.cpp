@@ -215,9 +215,11 @@ void ThemerPlasma::drawPreEditBar(PreEditBar* widget)
     QPainter p(widget);
 
     if (KIMToySettings::self()->backgroundColorizing()) {
-        QPainterPath path;
-        path.addRegion(m_preeditBarSvg.mask());
-        p.fillPath(path, KIMToySettings::self()->preeditBarColorize());
+        p.save();
+        p.fillRect(widget->rect(), KIMToySettings::self()->statusBarColorize());
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.drawPixmap(0, 0, m_preeditBarSvg.alphaMask());
+        p.restore();
     }
 
     m_preeditBarSvg.paintFrame(&p);
@@ -294,9 +296,11 @@ void ThemerPlasma::drawStatusBar(StatusBar* widget)
     QPainter p(widget);
 
     if (KIMToySettings::self()->backgroundColorizing()) {
-        QPainterPath path;
-        path.addRegion(m_statusBarSvg.mask());
-        p.fillPath(path, KIMToySettings::self()->statusBarColorize());
+        p.save();
+        p.fillRect(widget->rect(), KIMToySettings::self()->statusBarColorize());
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.drawPixmap(0, 0, m_statusBarSvg.alphaMask());
+        p.restore();
     }
 
     m_statusBarSvg.paintFrame(&p);
