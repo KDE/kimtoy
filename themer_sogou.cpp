@@ -894,16 +894,27 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
     QColor separatorColor = Qt::transparent;
     int sepl = 0, sepr = 0;
 
+    const SkinPixmap& preEditBarSkin = KIMToySettings::self()->verticalPreeditBar() ? v_preEditBarSkin : h_preEditBarSkin;
+
     QPainter p(widget);
 
     if (KIMToySettings::self()->backgroundColorizing()) {
-        QPainterPath path;
-        path.addRegion(m_preEditBarMask);
-        p.fillPath(path, KIMToySettings::self()->preeditBarColorize());
+        QImage renderedSkin(widget->size(), QImage::Format_ARGB32_Premultiplied);
+        renderedSkin.fill(Qt::transparent);
+        QPainter p2(&renderedSkin);
+        preEditBarSkin.drawPixmap(&p2, widget->width(), widget->height());
+
+        p.save();
+        p.fillRect(widget->rect(), KIMToySettings::self()->preeditBarColorize());
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.drawImage(0, 0, renderedSkin);
+        p.restore();
+        p.drawImage(0, 0, renderedSkin);
     }
+    else
+        preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
 
     if (KIMToySettings::self()->verticalPreeditBar()) {
-        v_preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
         pt = v_pt, pb = v_pb, pl = v_pl, pr = v_pr;
         zt = v_zt, zb = v_zb, zl = v_zl, zr = v_zr;
         opt = v_opt, opb = v_opb, opl = v_opl, opr = v_opr;
@@ -911,7 +922,6 @@ void ThemerSogou::drawPreEditBar(PreEditBar* widget)
         sepl = v_sepl, sepr = v_sepr;
     }
     else {
-        h_preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
         pt = h_pt, pb = h_pb, pl = h_pl, pr = h_pr;
         zt = h_zt, zb = h_zb, zl = h_zl, zr = h_zr;
         opt = h_opt, opb = h_opb, opl = h_opl, opr = h_opr;
@@ -1111,13 +1121,22 @@ void ThemerSogou::drawStatusBar(StatusBar* widget)
     QPainter p(widget);
 
     if (KIMToySettings::self()->backgroundColorizing()) {
-        QPainterPath path;
-        path.addRegion(m_statusBarMask);
-        p.fillPath(path, KIMToySettings::self()->statusBarColorize());
-    }
+        QImage renderedSkin(widget->size(), QImage::Format_ARGB32_Premultiplied);
+        renderedSkin.fill(Qt::transparent);
+        QPainter p2(&renderedSkin);
+        if (m_statusBarSkin)
+        p2.drawPixmap(0, 0, m_statusBarSkin->currentPixmap());
 
-    if (m_statusBarSkin)
-    p.drawPixmap(0, 0, m_statusBarSkin->currentPixmap());
+        p.save();
+        p.fillRect(widget->rect(), KIMToySettings::self()->statusBarColorize());
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.drawImage(0, 0, renderedSkin);
+        p.restore();
+        p.drawImage(0, 0, renderedSkin);
+    }
+    else
+        if (m_statusBarSkin)
+        p.drawPixmap(0, 0, m_statusBarSkin->currentPixmap());
 
     /// draw overlay pixmap
     QHash<QString, OverlayPixmap*>::ConstIterator it = s_overlays.constBegin();

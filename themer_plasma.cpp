@@ -216,7 +216,7 @@ void ThemerPlasma::drawPreEditBar(PreEditBar* widget)
 
     if (KIMToySettings::self()->backgroundColorizing()) {
         p.save();
-        p.fillRect(widget->rect(), KIMToySettings::self()->statusBarColorize());
+        p.fillRect(widget->rect(), KIMToySettings::self()->preeditBarColorize());
         p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
         p.drawPixmap(0, 0, m_preeditBarSvg.alphaMask());
         p.restore();

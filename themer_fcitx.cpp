@@ -505,12 +505,20 @@ void ThemerFcitx::drawPreEditBar(PreEditBar* widget)
     QPainter p(widget);
 
     if (KIMToySettings::self()->backgroundColorizing()) {
-        QPainterPath path;
-        path.addRegion(preEditBarSkin.currentRegion());
-        p.fillPath(path, KIMToySettings::self()->preeditBarColorize());
-    }
+        QImage renderedSkin(widget->size(), QImage::Format_ARGB32_Premultiplied);
+        renderedSkin.fill(Qt::transparent);
+        QPainter p2(&renderedSkin);
+        preEditBarSkin.drawPixmap(&p2, widget->width(), widget->height());
 
-    preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
+        p.save();
+        p.fillRect(widget->rect(), KIMToySettings::self()->preeditBarColorize());
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.drawImage(0, 0, renderedSkin);
+        p.restore();
+        p.drawImage(0, 0, renderedSkin);
+    }
+    else
+        preEditBarSkin.drawPixmap(&p, widget->width(), widget->height());
 
     int pinyiny = mt + yen;
     int zhongweny = mt + yen + m_preEditFontHeight + ych;
@@ -579,12 +587,20 @@ void ThemerFcitx::drawStatusBar(StatusBar* widget)
     QPainter p(widget);
 
     if (KIMToySettings::self()->backgroundColorizing()) {
-        QPainterPath path;
-        path.addRegion(statusBarSkin.currentRegion());
-        p.fillPath(path, KIMToySettings::self()->statusBarColorize());
-    }
+        QImage renderedSkin(widget->size(), QImage::Format_ARGB32_Premultiplied);
+        renderedSkin.fill(Qt::transparent);
+        QPainter p2(&renderedSkin);
+        statusBarSkin.drawPixmap(&p2, widget->width(), widget->height());
 
-    statusBarSkin.drawPixmap(&p, widget->width(), widget->height());
+        p.save();
+        p.fillRect(widget->rect(), KIMToySettings::self()->statusBarColorize());
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.drawImage(0, 0, renderedSkin);
+        p.restore();
+        p.drawImage(0, 0, renderedSkin);
+    }
+    else
+        statusBarSkin.drawPixmap(&p, widget->width(), widget->height());
 }
 
 void ThemerFcitx::drawPropertyWidget(PropertyWidget* widget)
