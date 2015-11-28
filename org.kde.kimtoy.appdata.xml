@@ -5,6 +5,8 @@
   <project_license>GPL-2.0+</project_license>
   <name>KIMToy</name>
   <name xml:lang="ca">KIMToy</name>
+  <name xml:lang="ca-valencia">KIMToy</name>
+  <name xml:lang="en-GB">KIMToy</name>
   <name xml:lang="es">KIMToy</name>
   <name xml:lang="gl">KIMToy</name>
   <name xml:lang="nl">KIMToy</name>
@@ -16,6 +18,8 @@
   <name xml:lang="x-test">xxKIMToyxx</name>
   <summary>Input method frontend</summary>
   <summary xml:lang="ca">Frontal pel mètode d'entrada</summary>
+  <summary xml:lang="ca-valencia">Frontal pel mètode d'entrada</summary>
+  <summary xml:lang="en-GB">Input method frontend</summary>
   <summary xml:lang="es">Interfaz de método de entrada</summary>
   <summary xml:lang="gl">Interface de métodos de entrada</summary>
   <summary xml:lang="nl">Frontend van invoermethode</summary>
@@ -30,6 +34,8 @@
       The KDE input method toy.
     </p>
     <p xml:lang="ca">El creatiu component pel mètode d'entrada al KDE</p>
+    <p xml:lang="ca-valencia">El creatiu component pel mètode d'entrada al KDE</p>
+    <p xml:lang="en-GB">The KDE input method toy.</p>
     <p xml:lang="es">El juguete de método de entrada de KDE.</p>
     <p xml:lang="gl">O xoguete de métodos de entrada de KDE.</p>
     <p xml:lang="nl">Het KDE invoermethodespeeltje.</p>
