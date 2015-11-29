@@ -517,7 +517,7 @@ ibus_config_kconfig_get_value (IBusConfigService      *config,
     return TRUE;
 #else
     GVariant *variant = _from_qvariant (qv);
-    return variant;
+    return g_variant_ref_sink (variant);
 #endif
 }
 
