@@ -70,7 +70,9 @@ x11_fd_dispatch(GSource* source, GSourceFunc callback, gpointer user_data)
             if (!inited)
             {
                 IBusConfig *config = ibus_bus_get_config (bus);
-                GVariant *engines = ibus_config_get_value (config, "general", "preload_engines");
+                GVariant *engines = ibus_config_get_value (config, "general", "preload-engines");
+                if (!engines)
+                    continue;
 
                 int i = 1;
 

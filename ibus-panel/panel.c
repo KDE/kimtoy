@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h> // for setlocale
 #include <ibus.h>
 #if !IBUS_CHECK_VERSION(1,3,99)
 #include <gio/gio.h>
@@ -453,6 +454,65 @@ on_name_acquired (GDBusConnection *connection,
                   const gchar     *name,
                   gpointer         user_data)
 {
+#if IBUS_CHECK_VERSION(1,4,99)
+    // init engine order
+    IBusBus *bus = ((IBusPanelImpanel *)user_data)->bus;
+    IBusConfig *config = ibus_bus_get_config (bus);
+    GVariant *preload_engines = ibus_config_get_value (config, "general", "preload-engines");
+    if (preload_engines)
+        return;
+
+    // init preload engines
+    GVariantBuilder builder;
+    g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
+
+    GList *engines = ibus_bus_list_engines(bus);
+    if (!engines) {
+        // set "xkb:us::eng"
+        g_variant_builder_add (&builder, "s", "xkb:us::eng");
+    }
+    else
+    {
+        // select engines by locale
+        const char* locale = setlocale(LC_CTYPE, NULL);
+        if (!locale || strlen(locale) == 0)
+            locale = "C";
+
+        gchar **langs = g_strsplit ((const gchar *)locale, ".", 2);
+        const gchar *lang = langs[0];
+        gchar **shortlangs = g_strsplit (lang, "_", 2);
+        const gchar *shortlang = shortlangs[0];
+
+        IBusEngineDesc *engine_desc = NULL;
+        GList *node = g_list_first (engines);
+        while (node) {
+            engine_desc = (IBusEngineDesc *)(node->data);
+            node = g_list_next (node);
+
+            const gchar *engine_name = ibus_engine_desc_get_name (engine_desc);
+
+            if (g_str_has_prefix (engine_name, "xkb:"))
+                continue;
+
+            const gchar *engine_language = ibus_engine_desc_get_language (engine_desc);
+            guint engine_rank = ibus_engine_desc_get_rank (engine_desc);
+
+            if ((g_strcmp0 (engine_language, lang) == 0 || g_strcmp0 (engine_language, shortlang) == 0) && engine_rank > 0)
+            {
+                // append engine_name
+                g_variant_builder_add (&builder, "s", engine_name);
+//                 fprintf(stderr, "append %s\n", engine_name);
+            }
+        }
+
+        g_strfreev (shortlangs);
+        g_strfreev (langs);
+
+        g_list_free (engines);
+    }
+
+    ibus_config_set_value(config, "general", "preload-engines", g_variant_builder_end (&builder));
+#endif
 }
 
 static void
@@ -1342,7 +1402,7 @@ ibus_panel_impanel_exec_menu (IBusPanelService *panel)
     g_variant_builder_add (&builder, "s", propstr);
 #else
     IBusConfig *config = ibus_bus_get_config (IBUS_PANEL_IMPANEL (panel)->bus);
-    GVariant *engines = ibus_config_get_value (config, "general", "preload_engines");
+    GVariant *engines = ibus_config_get_value (config, "general", "preload-engines");
 
     const gchar *names[64] = {0};
     int i = 0;
