@@ -37,6 +37,11 @@ extern "C"
     }
 }
 
+static bool value2bool(const QString& value)
+{
+    return value == "True";
+}
+
 static QColor value2color(const QString& value)
 {
     QStringList list = value.split(' ');
@@ -82,6 +87,8 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
     /// parse ini file content
     bool skinfont = false;
     bool skininputbar = false;
+    int fontsize = 10;
+    bool respectdpi = false;
 
     QPixmap skin;
     QString resizemode;
@@ -128,7 +135,10 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
 
         if (skinfont) {
             if (key == "FontSize") {
-                font.setPixelSize(value.toInt());
+                fontsize = value.toInt();
+            }
+            else if (key == "RespectDPI") {
+                respectdpi = value2bool(value);
             }
             else if (key == "InputColor") {
                 color_en = value2color(value);
@@ -213,6 +223,11 @@ bool FskinCreator::create(const QString& path, int width, int height, QImage& im
         }
     }
     while (!line.isNull());
+
+    if (respectdpi)
+        font.setPointSize(fontsize);
+    else
+        font.setPixelSize(fontsize);
 
     int fontHeight = QFontMetrics(font).height();
     int pinyinw = QFontMetrics(font).width("ABC pinyin");

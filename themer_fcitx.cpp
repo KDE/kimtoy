@@ -41,6 +41,11 @@
 
 #include "kimtoysettings.h"
 
+static bool value2bool(const QString& value)
+{
+    return value == "True";
+}
+
 static QColor value2color(const QString& value)
 {
     QStringList list = value.split(' ');
@@ -98,6 +103,8 @@ bool ThemerFcitx::loadTheme()
     bool skinfont = false;
     bool skinmainbar = false;
     bool skininputbar = false;
+    int fontsize = 10;
+    bool respectdpi = false;
 
     QPixmap preEditBarPixmap;
     QPixmap statusBarPixmap;
@@ -151,7 +158,10 @@ bool ThemerFcitx::loadTheme()
 
         if (skinfont) {
             if (key == "FontSize") {
-                font.setPixelSize(value.toInt());
+                fontsize = value.toInt();
+            }
+            else if (key == "RespectDPI") {
+                respectdpi = value2bool(value);
             }
             else if (key == "InputColor") {
                 m_preEditColor = value2color(value);
@@ -319,6 +329,11 @@ bool ThemerFcitx::loadTheme()
     LOAD_PWPIX(SoftKeyboard_Off, "vk_inactive.png")
 
 #undef LOAD_PWPIX
+
+    if (respectdpi)
+        font.setPointSize(fontsize);
+    else
+        font.setPixelSize(fontsize);
 
     preEditBarSkin = SkinPixmap(preEditBarPixmap, ml, preEditBarPixmap.width() - mr, mt, preEditBarPixmap.height() - mb, 0, 0);
     statusBarSkin = SkinPixmap(statusBarPixmap, sml, statusBarPixmap.width() - smr, smt, statusBarPixmap.height() - smb, 0, 0);
