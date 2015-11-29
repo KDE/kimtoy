@@ -10,9 +10,11 @@
   <name xml:lang="es">KIMToy</name>
   <name xml:lang="gl">KIMToy</name>
   <name xml:lang="nl">KIMToy</name>
+  <name xml:lang="pl">KIMToy</name>
   <name xml:lang="pt">KIMToy</name>
   <name xml:lang="pt-BR">KIMToy</name>
   <name xml:lang="sk">KIMToy</name>
+  <name xml:lang="sl">KIMToy</name>
   <name xml:lang="sv">Kimtoy</name>
   <name xml:lang="uk">KIMToy</name>
   <name xml:lang="x-test">xxKIMToyxx</name>
@@ -23,9 +25,11 @@
   <summary xml:lang="es">Interfaz de método de entrada</summary>
   <summary xml:lang="gl">Interface de métodos de entrada</summary>
   <summary xml:lang="nl">Frontend van invoermethode</summary>
+  <summary xml:lang="pl">Nakładka metody wprowadzania</summary>
   <summary xml:lang="pt">Interface de métodos de introdução de dados</summary>
   <summary xml:lang="pt-BR">Interface de método de entrada</summary>
   <summary xml:lang="sk">Frontend vstupnej metódy</summary>
+  <summary xml:lang="sl">Začelje vnosnega načina</summary>
   <summary xml:lang="sv">Gränssnitt för inmatningsmetod</summary>
   <summary xml:lang="uk">Оболонка способів введення</summary>
   <summary xml:lang="x-test">xxInput method frontendxx</summary>
@@ -39,9 +43,11 @@
     <p xml:lang="es">El juguete de método de entrada de KDE.</p>
     <p xml:lang="gl">O xoguete de métodos de entrada de KDE.</p>
     <p xml:lang="nl">Het KDE invoermethodespeeltje.</p>
+    <p xml:lang="pl">Zabawka metody wprowadzania KDE</p>
     <p xml:lang="pt">O brinquedo de métodos de introdução de dados.</p>
     <p xml:lang="pt-BR">A ferramenta de introdução de caracteres do KDE.</p>
     <p xml:lang="sk">Hračka vstupnej metódy KDE.</p>
+    <p xml:lang="sl">Igrača za način vnosa za KDE.</p>
     <p xml:lang="sv">KDE:s inmatningsmetodleksak.</p>
     <p xml:lang="uk">Утиліта роботи зі способами введення тексту для KDE.</p>
     <p xml:lang="x-test">xxThe KDE input method toy.xx</p>
