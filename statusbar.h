@@ -24,6 +24,7 @@
 
 #include <QWidget>
 #include <QHash>
+#include <QTimer>
 
 class QPushButton;
 class QSignalMapper;
@@ -51,6 +52,7 @@ protected:
     virtual void showEvent(QShowEvent* event);
 private Q_SLOTS:
     void slotEnable(bool enable);
+    void slotSetVisibleDelayed();
     void slotTriggerProperty(const QString& objectPath);
     void slotRegisterProperties(const QStringList& props);
     void slotUpdateProperty(const QString& prop);
@@ -87,6 +89,8 @@ private:
     QSignalMapper* m_signalMapper;
     StatusBarLayout* m_layout;
     QStringList m_filters;
+    bool m_visible;
+    QTimer m_visibleDelayer;
 };
 
 #endif // STATUSBAR_H

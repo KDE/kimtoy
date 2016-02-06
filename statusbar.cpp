@@ -127,6 +127,10 @@ StatusBar::StatusBar()
     m_rmbdown = false;
     m_moving = false;
 
+    m_visible = !KIMToySettings::self()->trayiconMode();
+    m_visibleDelayer.setSingleShot(true);
+    connect(&m_visibleDelayer, SIGNAL(timeout()), this, SLOT(slotSetVisibleDelayed()));
+
     slotConnectKIMPanel();
 
     KConfigGroup group(KSharedConfig::openConfig(), "General");
@@ -142,7 +146,7 @@ StatusBar::StatusBar()
 
     IMPanelAgent::PanelCreated();
 
-    setVisible(!KIMToySettings::self()->trayiconMode());
+    m_visibleDelayer.start(100);
 }
 
 StatusBar::~StatusBar()
@@ -225,7 +229,13 @@ void StatusBar::showEvent(QShowEvent* event)
 void StatusBar::slotEnable(bool enable)
 {
     if (!KIMToySettings::self()->trayiconMode())
-        setVisible(enable);
+        m_visible = enable;
+    m_visibleDelayer.start(100);
+}
+
+void StatusBar::slotSetVisibleDelayed()
+{
+    setVisible(m_visible);
 }
 
 void StatusBar::slotTriggerProperty(const QString& objectPath)
