@@ -2,7 +2,7 @@
 /* vim:set et sts=4: */
 /* ibus - The Input Bus
  * Copyright (C) 2010 Peng Huang <shawn.p.huang@gmail.com>
- * Copyright (C) 2011-2015 Ni Hui <shuizhuyuanluo@126.com>
+ * Copyright (C) 2011-2016 Ni Hui <shuizhuyuanluo@126.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
