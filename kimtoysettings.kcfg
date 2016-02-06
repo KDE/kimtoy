@@ -19,7 +19,7 @@
             </default>
         </entry>
         <entry name="FcitxArgs" type="String">
-            <default>-u fcitx-kimpanel-ui</default>
+            <default>-r -u fcitx-kimpanel-ui</default>
         </entry>
         <entry name="FcitxXIM" type="String">
             <default>fcitx</default>
