@@ -86,9 +86,9 @@ StatusBar::StatusBar()
 
     m_tray = new KStatusNotifierItem(this);
     m_tray->setAssociatedWidget(m_tray->contextMenu());
-    m_tray->setIconByName("draw-freehand");
+    m_tray->setIconByName("kimtoy");
     m_tray->setTitle(i18n("KIMToy"));
-    m_tray->setToolTipIconByName("draw-freehand");
+    m_tray->setToolTipIconByName("kimtoy");
     m_tray->setToolTipTitle(i18n("KIMToy"));
     m_tray->setToolTipSubTitle(i18n("Input method toy"));
     m_tray->setCategory(KStatusNotifierItem::ApplicationStatus);
@@ -111,7 +111,7 @@ StatusBar::StatusBar()
     QAction* prefAction = KStandardAction::preferences(this, SLOT(preferences()), 0);
     m_tray->contextMenu()->addAction(prefAction);
 
-    QAction* aboutAction = new QAction(QIcon::fromTheme("draw-freehand"), i18n("&About KIMToy..."), this);
+    QAction* aboutAction = new QAction(QIcon::fromTheme("kimtoy"), i18n("&About KIMToy..."), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(slotAboutActionTriggered()));
     m_tray->contextMenu()->addAction(aboutAction);
 
@@ -478,7 +478,7 @@ void StatusBar::preferences()
         return;
     KConfigDialog* dialog = new KConfigDialog(this, "settings", KIMToySettings::self());
     dialog->setFaceType(KPageDialog::List);
-    dialog->addPage(new InputMethodWidget, i18n("Input method"), "draw-freehand");
+    dialog->addPage(new InputMethodWidget, i18n("Input method"), "kimtoy");
     dialog->addPage(new AppearanceWidget, i18n("Appearance"), "preferences-desktop-color");
     dialog->addPage(new ThemeWidget, i18n("Theme"), "tools-wizard");
     dialog->addPage(new PerformanceWidget, i18n("Performance"), "preferences-system-performance");

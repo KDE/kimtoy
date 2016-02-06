@@ -201,6 +201,7 @@ install(PROGRAMS org.kde.kimtoy.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})
 install(FILES kimtoy.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 # install(FILES org.kde.impanel.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
+add_subdirectory(icons)
 add_subdirectory(thumbnailer)
 if(KF5FileMetaData_FOUND)
     add_subdirectory(metadataextractor)

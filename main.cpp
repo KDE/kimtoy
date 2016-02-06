@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     app.setOrganizationDomain(aboutData.organizationDomain());
     app.setApplicationVersion(aboutData.version());
     app.setApplicationDisplayName(aboutData.displayName());
-    app.setWindowIcon(QIcon::fromTheme("draw-freehand"));
+    app.setWindowIcon(QIcon::fromTheme("kimtoy"));
 
     KDBusService dbusService(KDBusService::Unique);
 
