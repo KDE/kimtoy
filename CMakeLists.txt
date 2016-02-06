@@ -2,7 +2,7 @@ project(kimtoy)
 
 cmake_minimum_required(VERSION 2.8.12)
 
-set(KDE_INSTALL_USE_QT_SYS_PATHS ON)
+set(KDE_INSTALL_USE_QT_SYS_PATHS ON CACHE BOOL "Install mkspecs files, Plugins and Imports to the Qt 5 install dir" FORCE)
 
 find_package(ECM 1.2.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
