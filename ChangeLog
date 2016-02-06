@@ -1,3 +1,11 @@
+2016-02-06 v1.19
+port app and plugins to kf5
+install kimtoy icons
+improve compability with ibus 1.5.8+
+improve compability with new fskin scheme
+proper colorize with two pass skin rendering
+render colorized background with proper frame alphamap
+
 2015-06-04 v1.10.1
 use openssl instead of qca2
 fix theme animation with libpng 1.6+
