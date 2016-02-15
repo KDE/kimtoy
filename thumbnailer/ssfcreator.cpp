@@ -290,43 +290,44 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
         p.save();
         switch (op.alignArea) {
             case 1:
-                p.translate(-op.mr, -op.mb);
+                p.translate(op.ml, op.mt);
                 break;
             case 2:
                 if (op.alignHMode == 0) {
                     p.translate((width + opl - opr - op.pixmap.width()) / 2, 0);
-                    p.translate(0, -op.mb);
+                    p.translate(op.ml / 2, op.mt);
                 }
                 else if (op.alignHMode == 1) {
                     p.translate(opl, 0);
-                    p.translate(op.ml, -op.mb);
+                    p.translate(op.ml, op.mt);
                 }
                 else if (op.alignHMode == 2) {
                     p.translate(width - opr - op.pixmap.width(), 0);
-                    p.translate(-op.mr, -op.mb);
+                    p.translate(-op.mr, op.mt);
                 }
                 break;
             case 3:
                 p.translate(width - opr, 0);
-                p.translate(op.ml, -op.mb);
+                p.translate(-op.mr, op.mt);
                 break;
             case 4:
                 if (op.alignVMode == 0) {
                     p.translate(0, (height - opb + opt - op.pixmap.height()) / 2);
-                    p.translate(-op.mr, 0);
+                    p.translate(op.ml, op.mt / 2);
                 }
                 else if (op.alignVMode == 1) {
                     p.translate(0, opt);
-                    p.translate(-op.mr, op.mt);
+                    p.translate(op.ml, op.mt);
                 }
                 else if (op.alignVMode == 2) {
                     p.translate(0, height - opb - op.pixmap.height());
-                    p.translate(-op.mr, -op.mb);
+                    p.translate(op.ml, -op.mb);
                 }
                 break;
             case 5:
                 if (op.alignHMode == 0) {
                     p.translate((width + opl - opr - op.pixmap.width()) / 2, 0);
+                    p.translate(op.ml / 2, 0);
                 }
                 else if (op.alignHMode == 1) {
                     p.translate(opl, 0);
@@ -338,6 +339,7 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
                 }
                 if (op.alignVMode == 0) {
                     p.translate(0, (height - opb + opt - op.pixmap.height()) / 2);
+                    p.translate(0, op.mt / 2);
                 }
                 else if (op.alignVMode == 1) {
                     p.translate(0, opt);
@@ -351,38 +353,38 @@ bool SsfCreator::create(const QString& path, int width, int height, QImage& img)
             case 6:
                 if (op.alignVMode == 0) {
                     p.translate(width - opr, (height - opb + opt - op.pixmap.height()) / 2);
-                    p.translate(op.ml, 0);
+                    p.translate(-op.mr, op.mt / 2);
                 }
                 else if (op.alignVMode == 1) {
                     p.translate(width - opr, opt);
-                    p.translate(op.ml, op.mt);
+                    p.translate(-op.mr, op.mt);
                 }
                 else if (op.alignVMode == 2) {
                     p.translate(width - opr, height - opb - op.pixmap.height());
-                    p.translate(op.ml, -op.mb);
+                    p.translate(-op.mr, -op.mb);
                 }
                 break;
             case 7:
                 p.translate(0, height - opb);
-                p.translate(-op.mr, op.mt);
+                p.translate(op.ml, -op.mb);
                 break;
             case 8:
                 if (op.alignHMode == 0) {
                     p.translate((width + opl - opr - op.pixmap.width()) / 2, height - opb);
-                    p.translate(0, op.mt);
+                    p.translate(op.ml / 2, -op.mb);
                 }
                 else if (op.alignHMode == 1) {
                     p.translate(opl, height - opb);
-                    p.translate(op.ml, op.mt);
+                    p.translate(op.ml, -op.mb);
                 }
                 else if (op.alignHMode == 2) {
                     p.translate(width - opr - op.pixmap.width(), height - opb);
-                    p.translate(-op.mr, op.mt);
+                    p.translate(-op.mr, -op.mb);
                 }
                 break;
             case 9:
                 p.translate(width - opr, height - opb);
-                p.translate(op.ml, op.mt);
+                p.translate(-op.mr, -op.mb);
                 break;
             default:
                 /// never arrive here
