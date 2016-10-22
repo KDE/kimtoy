@@ -136,13 +136,13 @@ void PreEditBar::paintEvent(QPaintEvent* event)
 
 void PreEditBar::slotUpdateSpotLocation(int x, int y)
 {
+    spotX = x;
+    spotY = y;
+
     // impanel report device pos, so convert to logical pos
     qreal dpr = devicePixelRatioF();
     x /= dpr;
     y /= dpr;
-
-    spotX = x;
-    spotY = y;
 
     QRect screenRect = QApplication::desktop()->screenGeometry(QPoint(x, y));
     x = qMin(x, screenRect.x() + screenRect.width() - width());
