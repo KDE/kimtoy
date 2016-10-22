@@ -86,6 +86,10 @@ StatusBar::StatusBar()
 
     m_tray = new KStatusNotifierItem(this);
     m_tray->setAssociatedWidget(m_tray->contextMenu());
+    // set context menu as associated widget show ugly window frame and taskbar
+    // after changes in https://bugs.kde.org/show_bug.cgi?id=335015   --- nihui
+    m_tray->contextMenu()->installEventFilter(this);
+    m_tray->contextMenu()->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     m_tray->setIconByName("kimtoy");
     m_tray->setTitle(i18n("KIMToy"));
     m_tray->setToolTipIconByName("kimtoy");
@@ -164,6 +168,23 @@ StatusBar::~StatusBar()
 
 bool StatusBar::eventFilter(QObject* object, QEvent* event)
 {
+    if (event->type() == QEvent::Hide) {
+        QWidget* w = static_cast<QWidget*>(object);
+        if (w == m_tray->contextMenu())
+        {
+            m_tray->contextMenu()->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+        }
+    }
+    if (event->type() == QEvent::Show) {
+        QWidget* w = static_cast<QWidget*>(object);
+        if (w == m_tray->contextMenu())
+        {
+            KWindowSystem::setState(m_tray->contextMenu()->winId(), NET::SkipTaskbar | NET::SkipPager | NET::KeepAbove);
+            KWindowSystem::setType(m_tray->contextMenu()->winId(), NET::PopupMenu);
+            KWindowSystem::forceActiveWindow(m_tray->contextMenu()->winId());
+        }
+    }
+
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::RightButton) {
