@@ -33,6 +33,7 @@
 KIMToy::KIMToy(int& argc, char** argv) : QApplication(argc, argv)
 {
 //     QApplication::setAttribute( Qt::AA_DontCreateNativeWidgetSiblings );
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication::setQuitOnLastWindowClosed(false);
 
     m_statusBar = 0;

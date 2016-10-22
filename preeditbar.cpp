@@ -136,6 +136,11 @@ void PreEditBar::paintEvent(QPaintEvent* event)
 
 void PreEditBar::slotUpdateSpotLocation(int x, int y)
 {
+    // impanel report device pos, so convert to logical pos
+    qreal dpr = devicePixelRatioF();
+    x /= dpr;
+    y /= dpr;
+
     spotX = x;
     spotY = y;
 
