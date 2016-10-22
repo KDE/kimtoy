@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     KLocalizedString::setApplicationDomain("kimtoy");
 
     KAboutData aboutData("kimtoy", i18n("KIMToy"),
-                         "1.91", i18n("The KDE input method toy"),
+                         "1.92", i18n("The KDE input method toy"),
                          KAboutLicense::GPL, i18n("(c) 2011-2016, Ni Hui"));
     aboutData.addAuthor(i18n("Ni Hui"), i18n("Author"), "shuizhuyuanluo@126.com");
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
