@@ -30,6 +30,7 @@
 #include <KConfigGroup>
 #include <KFileItemListProperties>
 #include <KIO/CopyJob>
+#define TRANSLATION_DOMAIN "kimtoy"
 #include <KLocalizedString>
 #include <KPluginFactory>
 
