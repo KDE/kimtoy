@@ -5,6 +5,12 @@
             "application/x-ssf"
         ], 
         "Name": "Install Skin", 
+        "Name[ca]": "Instal·la una aparença", 
+        "Name[pt]": "Instalar o Visual", 
+        "Name[sk]": "Nainštalovať skin", 
+        "Name[sv]": "Installera skal", 
+        "Name[uk]": "Встановити оболонку", 
+        "Name[x-test]": "xxInstall Skinxx", 
         "ServiceTypes": [
             "KFileItemAction/Plugin"
         ]
