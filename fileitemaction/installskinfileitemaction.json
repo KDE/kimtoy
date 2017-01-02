@@ -20,6 +20,7 @@
         "Name[sv]": "Installera skal", 
         "Name[uk]": "Встановити оболонку", 
         "Name[x-test]": "xxInstall Skinxx", 
+        "Name[zh_CN]": "安装皮肤", 
         "ServiceTypes": [
             "KFileItemAction/Plugin"
         ]
