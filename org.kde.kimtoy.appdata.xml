@@ -23,6 +23,7 @@
   <name xml:lang="sk">KIMToy</name>
   <name xml:lang="sl">KIMToy</name>
   <name xml:lang="sv">Kimtoy</name>
+  <name xml:lang="tr">KIMToy</name>
   <name xml:lang="uk">KIMToy</name>
   <name xml:lang="x-test">xxKIMToyxx</name>
   <name xml:lang="zh-CN">KIMToy</name>
@@ -44,6 +45,7 @@
   <summary xml:lang="sk">Frontend vstupnej metódy</summary>
   <summary xml:lang="sl">Začelje vnosnega načina</summary>
   <summary xml:lang="sv">Gränssnitt för inmatningsmetod</summary>
+  <summary xml:lang="tr">Girdi yöntemi önyüzü</summary>
   <summary xml:lang="uk">Оболонка способів введення</summary>
   <summary xml:lang="x-test">xxInput method frontendxx</summary>
   <summary xml:lang="zh-CN">输入法前端</summary>
@@ -67,6 +69,7 @@
     <p xml:lang="sk">Hračka vstupnej metódy KDE.</p>
     <p xml:lang="sl">Igrača za način vnosa za KDE.</p>
     <p xml:lang="sv">KDE:s inmatningsmetodleksak.</p>
+    <p xml:lang="tr">KDE girdi yöntemi aracı.</p>
     <p xml:lang="uk">Утиліта роботи зі способами введення тексту для KDE.</p>
     <p xml:lang="x-test">xxThe KDE input method toy.xx</p>
     <p xml:lang="zh-CN">KDE 输入法玩具。</p>
