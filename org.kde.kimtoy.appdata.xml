@@ -8,6 +8,7 @@
   <name xml:lang="ca">KIMToy</name>
   <name xml:lang="ca-valencia">KIMToy</name>
   <name xml:lang="cs">KIMToy</name>
+  <name xml:lang="da">KIMToy</name>
   <name xml:lang="de">KIMToy</name>
   <name xml:lang="el">KIMToy</name>
   <name xml:lang="en-GB">KIMToy</name>
@@ -31,6 +32,7 @@
   <summary xml:lang="ca">Frontal pel mètode d'entrada</summary>
   <summary xml:lang="ca-valencia">Frontal pel mètode d'entrada</summary>
   <summary xml:lang="cs">Nadstavba pro vstupní metody</summary>
+  <summary xml:lang="da">Brugerflade til inputmetode</summary>
   <summary xml:lang="de">Oberfläche für Eingabemethoden</summary>
   <summary xml:lang="el">Περιβάλλον μεθόδου εισαγωγής</summary>
   <summary xml:lang="en-GB">Input method frontend</summary>
@@ -55,6 +57,7 @@
     </p>
     <p xml:lang="ca">El creatiu component pel mètode d'entrada al KDE.</p>
     <p xml:lang="ca-valencia">El creatiu component pel mètode d'entrada al KDE.</p>
+    <p xml:lang="da">Legetøjet til KDE-inputmetode.</p>
     <p xml:lang="de">Eingabemethode für KDE.</p>
     <p xml:lang="el">Το παιχνίδι του KDE για μεθόδους εισαγωγής.</p>
     <p xml:lang="en-GB">The KDE input method toy.</p>
