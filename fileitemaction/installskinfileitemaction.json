@@ -28,6 +28,7 @@
         "Name[uk]": "Встановити оболонку",
         "Name[x-test]": "xxInstall Skinxx",
         "Name[zh_CN]": "安装皮肤",
+        "Name[zh_TW]": "安裝外型",
         "ServiceTypes": [
             "KFileItemAction/Plugin"
         ]
