@@ -346,7 +346,7 @@ bool ThemerFcitx::loadTheme()
     m_labelFontHeight = QFontMetrics(m_labelFont).height();
     m_candidateFontHeight = QFontMetrics(m_candidateFont).height();
 
-    // compability with newer skin scheme
+    // compatibility with newer skin scheme
     if (ych < yen + m_preEditFontHeight) {
         yen += m_preEditFontHeight;
         ych += yen + m_candidateFontHeight;

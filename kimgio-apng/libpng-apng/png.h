@@ -1327,7 +1327,7 @@ PNG_FIXED_EXPORT(228, void, __kimtoy__png_set_alpha_mode_fixed, (png_structrp pn
  *
  * __kimtoy__png_set_alpha_mode(pp, PNG_ALPHA_PNG, PNG_GAMMA_MAC);
  *    In this case the output is assumed to be something like an sRGB conformant
- *    display preceeded by a power-law lookup table of power 1.45.  This is how
+ *    display preceded by a power-law lookup table of power 1.45.  This is how
  *    early Mac systems behaved.
  *
  * __kimtoy__png_set_alpha_mode(pp, PNG_ALPHA_STANDARD, PNG_GAMMA_LINEAR);
@@ -1374,7 +1374,7 @@ PNG_FIXED_EXPORT(228, void, __kimtoy__png_set_alpha_mode_fixed, (png_structrp pn
  *
  * When the default gamma of PNG files doesn't match the output gamma.
  *    If you have PNG files with no gamma information __kimtoy__png_set_alpha_mode allows
- *    you to provide a default gamma, but it also sets the ouput gamma to the
+ *    you to provide a default gamma, but it also sets the output gamma to the
  *    matching value.  If you know your PNG files have a gamma that doesn't
  *    match the output you can take advantage of the fact that
  *    __kimtoy__png_set_alpha_mode always sets the output gamma but only sets the PNG
@@ -2799,7 +2799,7 @@ PNG_EXPORT(207, void, __kimtoy__png_save_uint_16, (png_bytep buf, unsigned int i
  * The simplified API hides the details of both libpng and the PNG file format
  * itself.  It allows PNG files to be read into a very limited number of
  * in-memory bitmap formats or to be written from the same formats.  If these
- * formats do not accomodate your needs then you can, and should, use the more
+ * formats do not accommodate your needs then you can, and should, use the more
  * sophisticated APIs above - these support a wide variety of in-memory formats
  * and a wide variety of sophisticated transformations to those formats as well
  * as a wide variety of APIs to manipulate ancillary information.
@@ -3261,7 +3261,7 @@ PNG_EXPORT(243, int, __kimtoy__png_get_palette_max, (png_const_structp png_ptr,
  * option and 'onoff' is 0 (off) or non-0 (on).  The value returned is given
  * by the PNG_OPTION_ defines below.
  *
- * HARDWARE: normally hardware capabilites, such as the Intel SSE instructions,
+ * HARDWARE: normally hardware capabilities, such as the Intel SSE instructions,
  *           are detected at run time, however sometimes it may be impossible
  *           to do this in user mode, in which case it is necessary to discover
  *           the capabilities in an OS specific way.  Such capabilities are
