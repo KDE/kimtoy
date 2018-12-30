@@ -15,6 +15,7 @@
   <name xml:lang="fi">KIMToy</name>
   <name xml:lang="fr">KIMToy</name>
   <name xml:lang="gl">KIMToy</name>
+  <name xml:lang="id">KIMToy</name>
   <name xml:lang="it">KIMToy</name>
   <name xml:lang="ko">KIMToy</name>
   <name xml:lang="nl">KIMToy</name>
@@ -40,6 +41,7 @@
   <summary xml:lang="fi">Syöttömenetelmäkäyttöliittymä</summary>
   <summary xml:lang="fr">Interface graphique de méthode de saisie</summary>
   <summary xml:lang="gl">Interface de métodos de entrada</summary>
+  <summary xml:lang="id">Frontend metode input</summary>
   <summary xml:lang="it">Interfaccia del metodo di inserimento</summary>
   <summary xml:lang="ko">입력기 프론트엔드</summary>
   <summary xml:lang="nl">Frontend van invoermethode</summary>
@@ -67,6 +69,7 @@
     <p xml:lang="fi">KDE:n syöttömenetelmälelu.</p>
     <p xml:lang="fr">Le composant créatif de méthode de saisie de KDE.</p>
     <p xml:lang="gl">O xoguete de métodos de entrada de KDE.</p>
+    <p xml:lang="id">Mainan metode input KDE</p>
     <p xml:lang="it">Lo strumento del metodo di inserimento di KDE.</p>
     <p xml:lang="ko">KDE 입력기 도구입니다.</p>
     <p xml:lang="nl">Het KDE invoermethodespeeltje.</p>
