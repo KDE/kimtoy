@@ -29,6 +29,7 @@
   <name xml:lang="uk">KIMToy</name>
   <name xml:lang="x-test">xxKIMToyxx</name>
   <name xml:lang="zh-CN">KIMToy</name>
+  <name xml:lang="zh-TW">KIMToy</name>
   <summary>Input method frontend</summary>
   <summary xml:lang="ca">Frontal pel mètode d'entrada</summary>
   <summary xml:lang="ca-valencia">Frontal pel mètode d'entrada</summary>
@@ -55,6 +56,7 @@
   <summary xml:lang="uk">Оболонка способів введення</summary>
   <summary xml:lang="x-test">xxInput method frontendxx</summary>
   <summary xml:lang="zh-CN">输入法前端</summary>
+  <summary xml:lang="zh-TW">輸入法前端</summary>
   <description>
     <p>
       The KDE input method toy.
@@ -83,6 +85,7 @@
     <p xml:lang="uk">Утиліта роботи зі способами введення тексту для KDE.</p>
     <p xml:lang="x-test">xxThe KDE input method toy.xx</p>
     <p xml:lang="zh-CN">KDE 输入法玩具。</p>
+    <p xml:lang="zh-TW">一個 KDE 輸入法玩意。</p>
   </description>
   <url type="homepage">http://kde-apps.org/content/show.php/KIMToy?content=140967</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=kimtoy</url>
